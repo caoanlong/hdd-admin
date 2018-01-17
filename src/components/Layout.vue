@@ -1,9 +1,9 @@
 <template>
-	<div class="app-wrapper clearfix" :class="{hideSidebar:!sidebar.opened}">
+	<div class="app-wrapper clearfix" :class="{hideSidebar: !sidebar.opened}">
 		<sidebar class="sidebar-container"></sidebar>
 		<div class="main-container">
 			<navbar></navbar>
-			<!-- <tags-view></tags-view> -->
+			<tags-view></tags-view>
 			<app-main></app-main>
 		</div>
 	</div>
@@ -12,6 +12,7 @@
 	import Sidebar from './common/SideBar'
 	import Navbar from './common/NavBar'
 	import AppMain from './common/AppMain'
+	import TagsView from './common/TagsView'
 	export default {
 		name: 'layout',
 		computed: {
@@ -23,7 +24,7 @@
 			Navbar,
 			Sidebar,
 			AppMain,
-			// TagsView
+			TagsView
 		}
 	}
 </script>

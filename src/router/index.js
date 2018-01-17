@@ -23,7 +23,7 @@ export const asyncRouterMap = [
 				path: '/home',
 				name: 'home',
 				components: () => import('@/components/Home'),
-				 meta: { title: '首页', icon: 'dashboard', noCache: true }
+				meta: { title: '首页', icon: 'dashboard', noCache: true, roles: ['admin', 'editor']}
 			}
 		]
 	}

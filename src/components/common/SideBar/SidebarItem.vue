@@ -37,9 +37,6 @@ export default {
 			type: Boolean,
 			default: false
 		}
-	},
-	created() {
-		console.log(this.routes)
 	}
 }
 </script>

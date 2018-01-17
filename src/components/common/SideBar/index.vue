@@ -21,6 +21,9 @@ export default {
 			return !this.sidebar.opened
 		}
 	},
+	created() {
+		console.log(this.$route.path)
+	},
 	components: { 
 		SidebarItem,
 		ScrollBar 
