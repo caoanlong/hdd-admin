@@ -1,4 +1,4 @@
-import { routerMap } from '../../router'
+import { asyncRouterMap } from '../../router'
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -33,13 +33,13 @@ function filterAsyncRouter(routerMap, roles) {
 
 const permission = {
 	state: {
-		routers: routerMap,
+		routers: asyncRouterMap,
 		addRouters: []
 	},
 	mutations: {
 		SET_ROUTERS: (state, routers) => {
 			state.addRouters = routers
-			state.routers = routerMap.concat(routers)
+			state.routers = asyncRouterMap.concat(routers)
 		}
 	},
 	actions: {
@@ -48,9 +48,9 @@ const permission = {
 				const { roles } = data
 				let accessedRouters
 				if (roles.includes('admin')) {
-					accessedRouters = routerMap
+					accessedRouters = asyncRouterMap
 				} else {
-					accessedRouters = filterAsyncRouter(routerMap, roles)
+					accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
 				}
 				commit('SET_ROUTERS', accessedRouters)
 				resolve()

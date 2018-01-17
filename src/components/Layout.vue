@@ -3,14 +3,15 @@
 		<sidebar class="sidebar-container"></sidebar>
 		<div class="main-container">
 			<navbar></navbar>
-			<!-- <tags-view></tags-view>
-			<app-main></app-main> -->
+			<!-- <tags-view></tags-view> -->
+			<app-main></app-main>
 		</div>
 	</div>
 </template>
 <script type="text/javascript">
 	import Sidebar from './common/SideBar'
 	import Navbar from './common/NavBar'
+	import AppMain from './common/AppMain'
 	export default {
 		name: 'layout',
 		computed: {
@@ -21,7 +22,7 @@
 		components: {
 			Navbar,
 			Sidebar,
-			// AppMain,
+			AppMain,
 			// TagsView
 		}
 	}

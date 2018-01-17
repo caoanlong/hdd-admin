@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-export const routerMap = [
+let routerMap = [
 	{
 		path: '*',
 		redirect: '/',
@@ -10,20 +10,26 @@ export const routerMap = [
 		path: '/login',
 		name: 'login',
 		component: () => import('@/components/Login')
-	},{
+	}
+]
+export const asyncRouterMap = [
+	{
 		path: '/',
 		name: 'layout',
 		component: () => import('@/components/Layout'),
-		// redirect: {name: 'home'},
-		// children: [
-		// 	{
-		// 		path: '/home',
-		// 		name: 'home',
-		// 		components: () => import('@/components/Home')
-		// 	}
-		// ]
+		redirect: {name: 'home'},
+		children: [
+			{
+				path: '/home',
+				name: 'home',
+				components: () => import('@/components/Home'),
+				 meta: { title: '首页', icon: 'dashboard', noCache: true }
+			}
+		]
 	}
 ]
+
+routerMap = routerMap.concat(asyncRouterMap)
 
 export default new Router({
 	// mode: 'history', // require service support
