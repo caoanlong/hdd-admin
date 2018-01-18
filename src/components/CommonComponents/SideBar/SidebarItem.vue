@@ -1,14 +1,14 @@
 <template>
 	<div class="menu-wrapper">
 		<template v-for="item in routes">
-			<el-menu-item v-if="!item.children || item.children.length == 0" :index="item.name">
+			<el-menu-item v-if="!item.children || item.children.length == 0" :index="item.name" :class="{'submenu-title-noDropdown':!isNest}">
 				<svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-				<span>{{item.meta.title}}</span>
+				<span slot="title">{{item.meta.title}}</span>
 			</el-menu-item>
-			<el-submenu v-else :index="item.name" :key="item.name">
+			<el-submenu v-else :index="item.name">
 				<template slot="title">
 					<svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-					<span>{{item.meta.title}}</span>
+					<span slot="title">{{item.meta.title}}</span>
 				</template>
 				<template v-for="child in item.children">
 					<sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length > 0" :routes="[child]" :key="child.name"></sidebar-item>
@@ -28,6 +28,10 @@ export default {
 	props: {
 		routes: {
 			type: Array
+		},
+		isNest: {
+			type: Boolean,
+			default: false
 		}
 	}
 }

@@ -1,11 +1,10 @@
-import { login } from '../../api/login'
+import { login, logout, getUserInfo } from '../../api/login'
 import { getToken, setToken, removeToken } from '../../common/auth'
 const user = {
 	state: {
-		user: '',
 		name: '',
 		code: '',
-		token: '',
+		token: getToken(),
 		roles: [],
 		avatar: ''
 	},
@@ -30,12 +29,57 @@ const user = {
 			return new Promise((resolve, reject) => {
 				login(username, password).then(response => {
 					const data = response.data
+					commit('SET_NAME', data.username)
+					commit('SET_ROLES', data.roles.split(','))
+					commit('SET_AVATAR', data.avatar)
 					commit('SET_TOKEN', data.token)
-          			setToken(data.token)
+					localStorage.setItem('username', data.username)
+					localStorage.setItem('roles', data.roles)
+					localStorage.setItem('avatar', data.avatar)
+					setToken(data.token)
 					resolve()
 				}).catch(error => {
 					reject(error)
 				})
+			})
+		},
+		LogOut({ commit, state }) {
+			return new Promise((resolve, reject) => {
+				logout(state.token).then(() => {
+					commit('SET_NAME', '')
+					commit('SET_ROLES', [])
+					commit('SET_AVATAR', '')
+					commit('SET_TOKEN', '')
+					removeToken()
+					localStorage.clear()
+					resolve()
+				}).catch(error => {
+					reject(error)
+				})
+			})
+		},
+		GetUserInfo({ commit }, token) {
+			return new Promise((resolve, reject) => {
+				getUserInfo(token).then(response => {
+					const data = response.data
+					commit('SET_NAME', data.username)
+					commit('SET_ROLES', data.roles)
+					commit('SET_AVATAR', data.avatar)
+					resolve(data)
+				}).catch(error => {
+					reject(error)
+				})
+			})
+		},
+		FedLogOut({ commit }) {
+			return new Promise((resolve, reject) => {
+				commit('SET_NAME', '')
+				commit('SET_ROLES', [])
+				commit('SET_AVATAR', '')
+				commit('SET_TOKEN', '')
+				removeToken()
+				localStorage.clear()
+				resolve()
 			})
 		}
 	}

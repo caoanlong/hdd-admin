@@ -14,7 +14,7 @@ import store from './store'
 
 import './assets/icons' // icon
 import './errorLog'// error log
-// import './permission' // permission control
+import './permission' // permission control
 
 Vue.use(Element)
 

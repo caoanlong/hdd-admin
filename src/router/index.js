@@ -1,81 +1,131 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Layout from '../components/Layout'
-import Login from '../components/Login'
-import Temp404 from '../components/404'
+import Layout from '@/components/Layout'
+import Login from '@/components/Login'
+import Temp404 from '@/components/404'
 
 Vue.use(Router)
 
-export const asyncRouterMap = [
+const routesData = [
 	{
-		path: '',
+		path: '/',
 		name: 'home',
-		component: () => import('../components/Home'),
-		meta: { title: '首页', icon: 'dashboard', roles: ['admin', 'editor']}
+		component: '@/components/Home',
+		meta: {
+			title: '首页',
+			icon: 'dashboard',
+			roles: 'admin,editor'
+		},
+		redirect: null,
+		children: null
 	},{
 		path: '/carfreecarrier',
 		name: 'carfreecarrier',
-		component: () => import('../components/CarFreeCarrier'),
-		meta: { title: '无车承运人', icon: 'dashboard', roles: ['admin', 'editor']},
-		redirect: {name: 'cargoupload'},
+		component: '@/components/CarFreeCarrier',
+		meta: {
+			title: '无车承运人',
+			icon: 'dashboard',
+			roles: 'admin,editor'
+		},
+		redirect: '/cargoupload',
 		children: [
 			{
 				path: '/cargoupload',
 				name: 'cargoupload',
-				component: () => import('../components/CarFreeCarrier/CargoUpload'),
+				component: '@/components/CarFreeCarrier/CargoUpload',
+				meta: {
+					title: '货源上传',
+					icon: 'dashboard',
+					roles: 'admin,editor'
+				},
+				redirect: null,
+				children: null
+			},{
+				path: '/truckupload',
+				name: 'truckupload',
+				component: '@/components/CarFreeCarrier/TruckUpload',
+				meta: {
+					title: '车源上传',
+					icon: 'dashboard',
+					roles: 'admin,editor'
+				},
+				redirect: null,
+				children: null
+			}
+		]
+	}
+]
+
+export const asyncRouterMap = [
+	{
+		path: '/',
+		name: 'home',
+		component: () => import('@/components/Home'),
+		meta: { title: '首页', icon: 'dashboard', roles: ['admin', 'editor']}
+	},{
+		path: '/carfreecarrier',
+		name: 'carfreecarrier',
+		component: () => import('@/components/CarFreeCarrier'),
+		meta: { title: '无车承运人', icon: 'dashboard', roles: ['admin', 'editor']},
+		redirect: '/cargoupload',
+		children: [
+			{
+				path: '/cargoupload',
+				name: 'cargoupload',
+				component: () => import('@/components/CarFreeCarrier/CargoUpload'),
 				meta: { title: '货源上传', icon: 'dashboard', roles: ['admin', 'editor']}
 			},{
 				path: '/truckupload',
 				name: 'truckupload',
-				component: () => import('../components/CarFreeCarrier/TruckUpload'),
+				component: () => import('@/components/CarFreeCarrier/TruckUpload'),
 				meta: { title: '车源上传', icon: 'dashboard', roles: ['admin', 'editor']}
 			}
 		]
 	},{
 		path: '/customsevice',
 		name: 'customsevice',
-		component: () => import('../components/CustomSevice'),
+		component: () => import('@/components/CustomSevice'),
 		meta: { title: '客服管理', icon: 'dashboard', roles: ['admin', 'editor']},
 		redirect: {name: 'membercertify'},
 		children: [
 			{
 				path: '/membercertify',
 				name: 'membercertify',
-				component: () => import('../components/CustomSevice/MemberCertify'),
+				component: () => import('@/components/CustomSevice/MemberCertify'),
 				meta: { title: '会员认证', icon: 'dashboard', roles: ['admin', 'editor']}
 			}
 		]
 	},{
 		path: '/businessconfig',
 		name: 'businessconfig',
-		component: () => import('../components/BusinessConfig'),
+		component: () => import('@/components/BusinessConfig'),
 		meta: { title: '业务配置', icon: 'dashboard', roles: ['admin', 'editor']},
 		redirect: {name: 'contentmanage'},
 		children: [
 			{
 				path: '/contentmanage',
 				name: 'contentmanage',
-				component: () => import('../components/BusinessConfig/ContentManage'),
+				component: () => import('@/components/BusinessConfig/ContentManage'),
 				meta: { title: '内容管理', icon: 'dashboard', roles: ['admin', 'editor']}
 			},{
 				path: '/messagemanage',
 				name: 'messagemanage',
-				component: () => import('../components/BusinessConfig/MessageManage'),
+				component: () => import('@/components/BusinessConfig/MessageManage'),
 				meta: { title: '消息管理', icon: 'dashboard', roles: ['admin', 'editor']}
 			},
 		]
 	},{
 		path: '/system',
 		name: 'system',
-		component: () => import('../components/System'),
+		component: () => import('@/components/System'),
 		meta: { title: '系统管理', icon: 'dashboard', roles: ['admin']},
 		redirect: {name: 'systemsetting'},
 		children: [
 			{
 				path: '/systemsetting',
 				name: 'systemsetting',
-				component: () => import('../components/System/SystemSetting'),
+				component: () => import('@/components/System/SystemSetting'),
 				meta: { title: '系统设置', icon: 'dashboard', roles: ['admin']}
 			}
 		]
@@ -84,13 +134,13 @@ export const asyncRouterMap = [
 
 export let routerMap = [
 	{
-		path: '/',
+		path: '',
 		component: Layout,
 		children: asyncRouterMap
 	},
 	{
 		path: '*',
-		redirect: '/',
+		redirect: '/404',
 	},
 	{
 		path: '/login',

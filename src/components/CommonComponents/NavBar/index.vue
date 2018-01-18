@@ -7,22 +7,22 @@
 			<el-tooltip effect="dark" content="navbar.theme" placement="bottom">
 				<!-- <theme-picker class="theme-switch right-menu-item"></theme-picker> -->
 			</el-tooltip>
-			<el-dropdown class="avatar-container right-menu-item" trigger="click">
+			<el-dropdown class="avatar-container right-menu-item">
 				<div class="avatar-wrapper">
-					<img class="user-avatar" src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80">
+					<img class="user-avatar" :src="avatar ? avatar : require('../../../assets/imgs/avatar.gif')">
+					<span class="user-text">你好！{{name}}</span>
 					<i class="el-icon-caret-bottom"></i>
 				</div>
 				<el-dropdown-menu slot="dropdown">
 					<router-link to="/">
-						<el-dropdown-item>
-							首页
-						</el-dropdown-item>
+						<el-dropdown-item>修改头像</el-dropdown-item>
 					</router-link>
-					<a target='_blank' href="https://github.com/PanJiaChen/vue-element-admin/">
-						<el-dropdown-item>
-							github地址
-						</el-dropdown-item>
-					</a>
+					<router-link to="/">
+						<el-dropdown-item>个人资料</el-dropdown-item>
+					</router-link>
+					<router-link to="/">
+						<el-dropdown-item>通讯录</el-dropdown-item>
+					</router-link>
 					<el-dropdown-item divided>
 						<span @click="logout" style="display:block;">退出</span>
 					</el-dropdown-item>
@@ -105,10 +105,14 @@ export default {
 				.user-avatar
 					width 40px
 					height 40px
-					border-radius 10px
+					border-radius 20px
+				.user-text
+					position relative
+					top -15px
+					padding-left 5px
 				.el-icon-caret-bottom
 					position absolute
 					right -20px
-					top 25px
+					top 15px
 					font-size 12px
 </style>
