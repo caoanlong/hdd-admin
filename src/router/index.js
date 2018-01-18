@@ -10,12 +10,12 @@ export const asyncRouterMap = [
 	{
 		path: '',
 		name: 'home',
-		component: () => import('../components/Home/Index'),
+		component: () => import('../components/Home'),
 		meta: { title: '首页', icon: 'dashboard', roles: ['admin', 'editor']}
 	},{
 		path: '/carfreecarrier',
 		name: 'carfreecarrier',
-		component: () => import('../components/CarFreeCarrier/Index'),
+		component: () => import('../components/CarFreeCarrier'),
 		meta: { title: '无车承运人', icon: 'dashboard', roles: ['admin', 'editor']},
 		redirect: {name: 'cargoupload'},
 		children: [
@@ -34,7 +34,7 @@ export const asyncRouterMap = [
 	},{
 		path: '/customsevice',
 		name: 'customsevice',
-		component: () => import('../components/CustomSevice/Index'),
+		component: () => import('../components/CustomSevice'),
 		meta: { title: '客服管理', icon: 'dashboard', roles: ['admin', 'editor']},
 		redirect: {name: 'membercertify'},
 		children: [
