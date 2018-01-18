@@ -27,9 +27,6 @@ export default {
 			return !this.sidebar.opened
 		}
 	},
-	mounted() {
-		console.log(this.permission_routers)
-	},
 	methods: {
 		selectIndex(index) {
 			console.log(index)
