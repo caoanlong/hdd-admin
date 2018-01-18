@@ -1,4 +1,4 @@
-import { asyncRouterMap } from '../../router'
+import { routerMap, asyncRouterMap } from '../../router'
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -15,11 +15,11 @@ function hasPermission(roles, route) {
 
 /**
  * 递归过滤异步路由表，返回符合用户角色权限的路由表
- * @param routerMap
+ * @param routers
  * @param roles
  */
-function filterAsyncRouter(routerMap, roles) {
-	const accessedRouters = routerMap.filter(route => {
+function filterAsyncRouter(routers, roles) {
+	const accessedRouters = routers.filter(route => {
 		if (hasPermission(roles, route)) {
 			if (route.children && route.children.length) {
 				route.children = filterAsyncRouter(route.children, roles)
@@ -39,7 +39,7 @@ const permission = {
 	mutations: {
 		SET_ROUTERS: (state, routers) => {
 			state.addRouters = routers
-			state.routers = asyncRouterMap.concat(routers)
+			state.routers = asyncRouterMap
 		}
 	},
 	actions: {

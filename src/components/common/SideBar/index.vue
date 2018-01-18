@@ -1,17 +1,23 @@
 <template>
 	<scroll-bar>
-		<el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
+		<el-menu 
+			mode="vertical" 
+			:default-active="$route.name" 
+			:collapse="isCollapse" 
+			background-color="#304156" 
+			text-color="#bfcbd9" 
+			active-text-color="#409EFF"
+			@select="selectIndex">
 			<sidebar-item :routes="permission_routers"></sidebar-item>
 		</el-menu>
 	</scroll-bar>
 </template>
-
-<script>
+<script type="text/javascript">
 import { mapGetters } from 'vuex'
-import SidebarItem from './SidebarItem'
 import ScrollBar from '../ScrollBar'
-
+import SidebarItem from './SidebarItem'
 export default {
+	name: 'sideBar',
 	computed: {
 		...mapGetters([
 			'permission_routers',
@@ -21,12 +27,18 @@ export default {
 			return !this.sidebar.opened
 		}
 	},
-	created() {
-		console.log(this.$route.path)
+	mounted() {
+		console.log(this.permission_routers)
+	},
+	methods: {
+		selectIndex(index) {
+			console.log(index)
+			this.$router.push({name: index})
+		}
 	},
 	components: { 
-		SidebarItem,
-		ScrollBar 
+		ScrollBar,
+		SidebarItem
 	}
 }
 </script>
