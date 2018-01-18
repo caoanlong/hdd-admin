@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Layout from '../components/Layout'
 import Login from '../components/Login'
+import Temp404 from '../components/404'
 
 Vue.use(Router)
 
@@ -45,6 +46,39 @@ export const asyncRouterMap = [
 				meta: { title: '会员认证', icon: 'dashboard', roles: ['admin', 'editor']}
 			}
 		]
+	},{
+		path: '/businessconfig',
+		name: 'businessconfig',
+		component: () => import('../components/BusinessConfig'),
+		meta: { title: '业务配置', icon: 'dashboard', roles: ['admin', 'editor']},
+		redirect: {name: 'contentmanage'},
+		children: [
+			{
+				path: '/contentmanage',
+				name: 'contentmanage',
+				component: () => import('../components/BusinessConfig/ContentManage'),
+				meta: { title: '内容管理', icon: 'dashboard', roles: ['admin', 'editor']}
+			},{
+				path: '/messagemanage',
+				name: 'messagemanage',
+				component: () => import('../components/BusinessConfig/MessageManage'),
+				meta: { title: '消息管理', icon: 'dashboard', roles: ['admin', 'editor']}
+			},
+		]
+	},{
+		path: '/system',
+		name: 'system',
+		component: () => import('../components/System'),
+		meta: { title: '系统管理', icon: 'dashboard', roles: ['admin']},
+		redirect: {name: 'systemsetting'},
+		children: [
+			{
+				path: '/systemsetting',
+				name: 'systemsetting',
+				component: () => import('../components/System/SystemSetting'),
+				meta: { title: '系统设置', icon: 'dashboard', roles: ['admin']}
+			}
+		]
 	}
 ]
 
@@ -53,13 +87,20 @@ export let routerMap = [
 		path: '/',
 		component: Layout,
 		children: asyncRouterMap
-	},{
+	},
+	{
 		path: '*',
 		redirect: '/',
-	},{
+	},
+	{
 		path: '/login',
 		name: 'login',
 		component: Login
+	},
+	{
+		path: '/404',
+		name: '404',
+		component: Temp404
 	}
 ]
 

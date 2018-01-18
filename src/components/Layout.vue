@@ -9,10 +9,10 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import Sidebar from './common/SideBar'
-	import Navbar from './common/NavBar'
-	import AppMain from './common/AppMain'
-	import TagsView from './common/TagsView'
+	import Sidebar from './CommonComponents/SideBar'
+	import Navbar from './CommonComponents/NavBar'
+	import AppMain from './CommonComponents/AppMain'
+	import TagsView from './CommonComponents/TagsView'
 	export default {
 		name: 'layout',
 		computed: {
