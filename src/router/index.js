@@ -1,35 +1,67 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Layout from '../components/Layout'
+import Login from '../components/Login'
+
 Vue.use(Router)
-let routerMap = [
-	{
-		path: '*',
-		redirect: '/',
-	},{
-		path: '/login',
-		name: 'login',
-		component: () => import('@/components/Login')
-	}
-]
+
 export const asyncRouterMap = [
 	{
-		path: '/',
-		name: 'layout',
-		component: () => import('@/components/Layout'),
-		redirect: {name: 'home'},
+		path: '',
+		name: 'home',
+		component: () => import('../components/Home'),
+		meta: { title: '首页', icon: 'dashboard', roles: ['admin', 'editor']}
+	},{
+		path: '/carfreecarrier',
+		name: 'carfreecarrier',
+		component: () => import('../components/CarFreeCarrier'),
+		meta: { title: '无车承运人', icon: 'dashboard', roles: ['admin', 'editor']},
+		redirect: {name: 'cargoupload'},
 		children: [
 			{
-				path: '/home',
-				name: 'home',
-				components: () => import('@/components/Home'),
-				meta: { title: '首页', icon: 'dashboard', noCache: true, roles: ['admin', 'editor']}
+				path: '/cargoupload',
+				name: 'cargoupload',
+				component: () => import('../components/CarFreeCarrier/CargoUpload'),
+				meta: { title: '货源上传', icon: 'dashboard', roles: ['admin', 'editor']}
+			},{
+				path: '/truckupload',
+				name: 'truckupload',
+				component: () => import('../components/CarFreeCarrier/TruckUpload'),
+				meta: { title: '车源上传', icon: 'dashboard', roles: ['admin', 'editor']}
+			}
+		]
+	},{
+		path: '/customsevice',
+		name: 'customsevice',
+		component: () => import('../components/CustomSevice'),
+		meta: { title: '客服管理', icon: 'dashboard', roles: ['admin', 'editor']},
+		redirect: {name: 'membercertify'},
+		children: [
+			{
+				path: '/membercertify',
+				name: 'membercertify',
+				component: () => import('../components/CustomSevice/MemberCertify'),
+				meta: { title: '会员认证', icon: 'dashboard', roles: ['admin', 'editor']}
 			}
 		]
 	}
 ]
 
-routerMap = routerMap.concat(asyncRouterMap)
+export let routerMap = [
+	{
+		path: '/',
+		component: Layout,
+		children: asyncRouterMap
+	},{
+		path: '*',
+		redirect: '/',
+	},{
+		path: '/login',
+		name: 'login',
+		component: Login
+	}
+]
 
 export default new Router({
 	// mode: 'history', // require service support

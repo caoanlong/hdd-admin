@@ -14,7 +14,7 @@ function hasPermission(roles, permissionRoles) {
 	return roles.some(role => permissionRoles.includes(role))
 }
 
-const whiteList = ['/login', '/', '/home'] // 登录白名单
+const whiteList = ['/login', '/', '/home', '/carfreecarrier/cargoupload', '/carfreecarrier/truckupload', '/membercertify'] // 登录白名单
 
 router.beforeEach((to, from, next) => {
 	NProgress.start() // start progress bar
