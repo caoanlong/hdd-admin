@@ -2,70 +2,59 @@
 	<div class="main-content">
 		<el-card class="box-card">
 		  <div slot="header" class="clearfix">
-		    <span>消息模板列表</span>
+		    <span>定时任务</span>
 		  </div>
-
-		  <div class="tableControl">
-		  	
-		  	<el-form :inline="true"  class="form-inline">
-				<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
-			  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-			  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
-			  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+		  <div class="search">
+		  	<el-form :inline="true"  class="demo-form-inline"  size="small">
+			  <el-form-item label="托运单号：">
+			    <el-input  placeholder="托运单号"></el-input>
+			  </el-form-item>
+			  <el-form-item label="承运人：">
+			    <el-input  placeholder="承运人"></el-input>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-button type="primary">查询</el-button>
+			    <el-button type="default">重置</el-button>
+			  </el-form-item>
 			</el-form>
+		  </div>
+		  <div class="tableControl">
+		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
 		  	<el-table :data="tableData5" border style="width: 100%" size="mini">
-		  		<el-table-column type="selection" align="center" ></el-table-column>
 		  		<el-table-column type="expand">
 		  			<template slot-scope="props">
 				        <el-form label-position="left" inline class="table-expand">
-					        <el-form-item label="跳转URL">
-					          	<span>{{ props.row.name }}</span>
+					        <el-form-item label="装货地点">
+					          	<span>{{ props.row.address }}</span>
 							</el-form-item>
-							<el-form-item label="代码">
-					          	<span>{{ props.row.name }}</span>
-							</el-form-item>
-							<el-form-item label="极光类型">
-					          	<span>{{ props.row.name }}</span>
-							</el-form-item>
-							<el-form-item label="图标">
-					          	<span>{{ props.row.name }}</span>
-							</el-form-item>
-							<el-form-item label="格式">
-					          	<span>{{ props.row.name }}</span>
-							</el-form-item>
-							<el-form-item label="JSON跳转样例">
-					          	<span>{{ props.row.name }}</span>
-							</el-form-item>
-							<el-form-item label="JSON样例">
-					          	<span>{{ props.row.name }}</span>
+							<el-form-item label="错误描述">
+					          	<span>{{ props.row.desc }}</span>
 							</el-form-item>
 				        </el-form>
 				    </template>
 		  		</el-table-column>
-			    <el-table-column label="APP页面">
+			    <el-table-column sortable label="托运单号">
 			    </el-table-column>
-			    <el-table-column label="名称">
+			    <el-table-column sortable label="承运人">
 			    </el-table-column>
-			    <el-table-column label="标题" >
+			    <el-table-column sortable label="托运时间">
 			    </el-table-column>
-			    <el-table-column label="是否有效">
+			    <el-table-column sortable label="实际发运时间" width="140">
 			    </el-table-column>
-			    <el-table-column label="创建时间">
+			    <el-table-column sortable label="收货时间">
 			    </el-table-column>
-			    <el-table-column label="创建人">
+			    <el-table-column sortable label="发货人">
 			    </el-table-column>
-			    <el-table-column label="更新时间">
+			    <el-table-column sortable label="收货人">
 			    </el-table-column>
-			    <el-table-column label="修改人">
+			    <el-table-column sortable label="状态">
 			    </el-table-column>
-			    <el-table-column label="是否删除">
-			    </el-table-column>
-			    <el-table-column label="删除时间">
-			    </el-table-column>
-			    <el-table-column label="删除人">
+			    <el-table-column sortable label="创建时间">
 			    </el-table-column>
 			    <el-table-column label="操作" width="160" align="center">
 			    	<template slot-scope="scope">
@@ -78,7 +67,7 @@
 			    </el-table-column>
 			  </el-table>
 			  <div class="pagination">
-			  	<el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
+			  	<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
 			  </div>
 		  </div>
 		</el-card>
@@ -132,5 +121,5 @@
 				.el-form-item
 					margin-right 0
 					margin-bottom 0
-					width 50%
+					width 100%
 </style>
