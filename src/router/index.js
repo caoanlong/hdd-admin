@@ -80,6 +80,16 @@ export const asyncRouterMap = [
 				name: 'truckupload',
 				component: () => import('@/components/CarFreeCarrier/TruckUpload'),
 				meta: { title: '车源上传', icon: 'dashboard', roles: ['admin', 'editor']}
+			},{
+				path: '/waybill',
+				name: 'waybill',
+				component: () => import('../components/CarFreeCarrier/Waybill'),
+				meta: { title: '运单上传', icon: 'dashboard', roles: ['admin', 'editor']}
+			},{
+				path: '/interfaceConfig',
+				name: 'interfaceConfig',
+				component: () => import('../components/CarFreeCarrier/InterfaceConfig'),
+				meta: { title: '接口配置', icon: 'dashboard', roles: ['admin', 'editor']}
 			}
 		]
 	},{
@@ -113,7 +123,12 @@ export const asyncRouterMap = [
 				name: 'messagemanage',
 				component: () => import('@/components/BusinessConfig/MessageManage'),
 				meta: { title: '消息管理', icon: 'dashboard', roles: ['admin', 'editor']}
-			},
+			},{
+				path: '/crontab',
+				name: 'crontab',
+				component: () => import('../components/BusinessConfig/Crontab'),
+				meta: { title: '定时任务', icon: 'dashboard', roles: ['admin', 'editor']}
+			}
 		]
 	},{
 		path: '/system',
