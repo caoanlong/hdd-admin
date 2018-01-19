@@ -141,7 +141,15 @@ export const asyncRouterMap = [
 				path: '/systemsetting',
 				name: 'systemsetting',
 				component: () => import('@/components/System/SystemSetting'),
-				meta: { title: '系统设置', icon: 'dashboard', roles: ['admin']}
+				meta: { title: '系统设置', icon: 'dashboard', roles: ['admin']},
+				children: [
+					{
+						path: '/menumanage',
+						name: 'menumanage',
+						component: () => import('@/components/System/MenuManage'),
+						meta: {title: '菜单管理', icon: 'dashboard', roles: ['admin']}
+					}
+				]
 			}
 		]
 	}
