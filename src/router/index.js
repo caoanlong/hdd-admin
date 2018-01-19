@@ -12,7 +12,6 @@ Vue.use(Router)
 function modifyComponent (routers) {
 	if (routers) {
 		for (let i = 0; i < routers.length; i++) {
-			console.log(routers[i].component)
 			routers[i].component = require('@/components' + routers[i].component).default
 			if (routers[i].children) {
 				modifyComponent(routers[i].children)
