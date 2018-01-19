@@ -6,7 +6,8 @@
 		"meta": {
 			"title": "首页",
 			"icon": "home",
-			"roles": "admin,editor"
+			"roles": "admin,editor",
+			"isMenu": true
 		},
 		"redirect": null,
 		"children": null
@@ -17,7 +18,8 @@
 		"meta": {
 			"title": "无车承运人",
 			"icon": "truck_icon",
-			"roles": "admin,editor"
+			"roles": "admin,editor",
+			"isMenu": true
 		},
 		"redirect": "/cargoupload",
 		"children": [
@@ -28,7 +30,8 @@
 				"meta": {
 					"title": "货源上传",
 					"icon": "CargoUpload",
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -39,7 +42,8 @@
 				"meta": {
 					"title": "车源上传",
 					"icon": "CargoUpload",
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -50,7 +54,8 @@
 				"meta": {
 					"title": "运单上传",
 					"icon": "WaybillUpload",
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -61,7 +66,8 @@
 				"meta": {
 					"title": "接口配置",
 					"icon": "settings",
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -74,7 +80,8 @@
 		"meta": {
 			"title": "客服管理",
 			"icon": "truck_icon",
-			"roles": "admin,editor"
+			"roles": "admin,editor",
+			"isMenu": true
 		},
 		"redirect": "/membercertify",
 		"children": [
@@ -85,7 +92,8 @@
 				"meta": {
 					"title": "会员认证",
 					"icon": "MemberCertify",
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -98,7 +106,8 @@
 		"meta": {
 			"title": "业务配置",
 			"icon": "BusinessConfig",
-			"roles": "admin,editor"
+			"roles": "admin,editor",
+			"isMenu": true
 		},
 		"redirect": "/contentmanage",
 		"children": [
@@ -109,7 +118,8 @@
 				"meta": { 
 					"title": "内容管理", 
 					"icon": "ContentManage", 
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -120,7 +130,8 @@
 				"meta": { 
 					"title": "消息管理", 
 					"icon": "MessageManage", 
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -131,7 +142,8 @@
 				"meta": { 
 					"title": "定时任务", 
 					"icon": "Schedule", 
-					"roles": "admin,editor"
+					"roles": "admin,editor",
+					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
@@ -144,7 +156,8 @@
 		"meta": { 
 			"title": "系统管理", 
 			"icon": "System", 
-			"roles": "admin"
+			"roles": "admin",
+			"isMenu": true
 		},
 		"redirect": "/systemsetting",
 		"children": [
@@ -155,7 +168,8 @@
 				"meta": { 
 					"title": "系统设置", 
 					"icon": "System", 
-					"roles": "admin"
+					"roles": "admin",
+					"isMenu": true
 				},
 				"redirect": "/menumanage",
 				"children": [
@@ -166,7 +180,20 @@
 						"meta": { 
 							"title": "菜单管理", 
 							"icon": null, 
-							"roles": "admin"
+							"roles": "admin",
+							"isMenu": true
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/addmenu",
+						"name": "addmenu",
+						"component": "/System/SystemSetting/MenuManage/AddMenu",
+						"meta": { 
+							"title": "添加菜单", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": false
 						},
 						"redirect": null,
 						"children": null
@@ -177,7 +204,8 @@
 						"meta": { 
 							"title": "用户管理", 
 							"icon": null,
-							"roles": "admin"
+							"roles": "admin",
+							"isMenu": true
 						},
 						"redirect": null,
 						"children": null
@@ -188,7 +216,8 @@
 						"meta": { 
 							"title": "角色管理", 
 							"icon": null,
-							"roles": "admin"
+							"roles": "admin",
+							"isMenu": true
 						},
 						"redirect": null,
 						"children": null
