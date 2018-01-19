@@ -25,10 +25,10 @@
 			    </el-table-column>
 			    <el-table-column  label="权限标识">
 			    </el-table-column>
-			    <el-table-column label="操作">
+			    <el-table-column label="操作" width="360" align="center">
 			    	<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view"></el-button><el-button type="primary" size="mini" icon="el-icon-edit" title></el-button><el-button type="default" size="mini" icon="el-icon-delete"></el-button><el-button type="danger" size="mini" icon="el-icon-plus"></el-button>
+							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button><el-button type="primary" size="mini" icon="el-icon-edit" title>编辑</el-button><el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button><el-button type="success" size="mini" icon="el-icon-plus">添加下级菜单</el-button>
 						</el-button-group>
 				    </template>
 			    </el-table-column>

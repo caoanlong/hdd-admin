@@ -1,6 +1,6 @@
 <template>
-	<div class="dialog">
-		<el-dialog title="收货地址" :visible.sync="AddDialogVisible">
+	<div class="main-content">
+		<el-dialog title="添加菜单">
 			<el-form :model="form">
 				<el-form-item label="活动名称" :label-width="formLabelWidth">
 					<el-input v-model="form.name" auto-complete="off"></el-input>
@@ -23,14 +23,6 @@
 	export default {
 		data() {
 	      	return {
-		        tableData: [{url: '2016-05-02',
-		          name: '无车承运人',
-		          url:'/home',
-		          sort: '1',
-		          visibility:'可见',
-		          permission:''
-		        }],
-		        AddDialogVisible:false,
 		        form: {
 					name: '',
 					region: '',
