@@ -188,9 +188,45 @@
 					},{
 						"path": "/addmenu",
 						"name": "addmenu",
-						"component": "/System/SystemSetting/MenuManage/AddMenu",
+						"component": "/System/SystemSetting/MenuManage/Menu",
 						"meta": { 
 							"title": "添加菜单", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": false
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/editmenu",
+						"name": "editmenu",
+						"component": "/System/SystemSetting/MenuManage/Menu",
+						"meta": { 
+							"title": "修改菜单", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": false
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/menudetail",
+						"name": "menudetail",
+						"component": "/System/SystemSetting/MenuManage/Menu",
+						"meta": { 
+							"title": "查看菜单", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": false
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/addsubmenu",
+						"name": "addsubmenu",
+						"component": "/System/SystemSetting/MenuManage/Menu",
+						"meta": { 
+							"title": "添加下级菜单", 
 							"icon": null, 
 							"roles": "admin",
 							"isMenu": false

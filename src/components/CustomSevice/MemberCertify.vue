@@ -13,17 +13,17 @@
 			    <el-input  placeholder="关键字"></el-input>
 			  </el-form-item>
 			  <el-form-item label="状态：">
-			    <el-select placeholder="请选择" style="width:100px">
-			      <el-option label="启用" value=" "></el-option>
-			      <el-option label="封停" value=" "></el-option>
+			    <el-select placeholder="请选择" style="width:100px" value=''>
+			      <el-option label="启用" value="启用"></el-option>
+			      <el-option label="封停" value="封停"></el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="认证状态：">
-			    <el-select placeholder="请选择" style="width:100px">
-			      <el-option label="草稿" value=" "></el-option>
-			      <el-option label="已提交" value=" "></el-option>
-			      <el-option label="成功" value=" "></el-option>
-			      <el-option label="失败" value=" "></el-option>
+			    <el-select placeholder="请选择" style="width:100px" value=''>
+			      <el-option label="草稿" value="草稿"></el-option>
+			      <el-option label="已提交" value="已提交"></el-option>
+			      <el-option label="成功" value="成功"></el-option>
+			      <el-option label="失败" value="失败"></el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item>
@@ -36,7 +36,7 @@
 		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
-		  	<el-table :data="tableData" border style="width: 100%" size="mini">
+		  	<el-table border style="width: 100%" size="mini">
 			    <el-table-column sortable label="会员类型">
 			    </el-table-column>
 			    <el-table-column sortable label="姓名">
