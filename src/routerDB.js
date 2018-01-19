@@ -47,6 +47,7 @@ export let updateData = (name, updatePer) => {
 			for (let attr in updatePer) {
 				router[attr] = updatePer[attr]
 			}
+			localStorage.setItem('routersData', JSON.stringify(routerDB))
 			return
 		}
 	})
@@ -54,6 +55,7 @@ export let updateData = (name, updatePer) => {
 export let deleteData = (name) => {
 	findRecursion(routerDB, router => {
 		if (router.name == name) {
+			delete '' // todo 未完成
 			return router
 		}
 	})
