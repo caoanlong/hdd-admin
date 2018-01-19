@@ -1,8 +1,8 @@
 import { INDEXDB } from './common/DataBase'
 
 (function () {
-	const routeMenu = {
-		"id": "ddddd",
+	const routeMenu = [{
+		"id": "home",
 		"path": "/",
 		"name": "home",
 		"component": "/Home",
@@ -14,14 +14,14 @@ import { INDEXDB } from './common/DataBase'
 		},
 		"redirect": null,
 		"children": null
-	}
+	}]
 	let myDB = {
 		name: 'hddAdmin',
 		version: 1,
 		db: null,
 		ojstore: {
 			name: 'routersMenu',//存储空间表的名字
-			keyPath: 'name'//主键
+			keypath: 'id'//主键
 		}
 	}
 	INDEXDB.openDB(myDB, myDB.name, myDB.version).then(res => {
