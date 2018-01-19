@@ -10,7 +10,7 @@ import './assets/styles/index.css'
 import './assets/styles/sidebar.css'
 import App from './App'
 import { saveRouterDB } from './routerDB'
-import './indexedDB'
+// import './indexedDB'
 import router from './router'
 import store from './store'
 
