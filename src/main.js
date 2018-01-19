@@ -9,11 +9,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/styles/index.css'
 import './assets/styles/sidebar.css'
 import App from './App'
+import { saveRouterDB } from './routerDB'
 import router from './router'
 import store from './store'
 
 import './assets/icons' // icon
-import './errorLog'// error log
+// import './errorLog'// error log
 import './permission' // permission control
 
 Vue.use(Element)

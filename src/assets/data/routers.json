@@ -1,0 +1,200 @@
+[
+	{
+		"path": "/",
+		"name": "home",
+		"component": "/Home",
+		"meta": {
+			"title": "首页",
+			"icon": "home",
+			"roles": "admin,editor"
+		},
+		"redirect": null,
+		"children": null
+	},{
+		"path": "/carfreecarrier",
+		"name": "carfreecarrier",
+		"component": "/CarFreeCarrier",
+		"meta": {
+			"title": "无车承运人",
+			"icon": "truck_icon",
+			"roles": "admin,editor"
+		},
+		"redirect": "/cargoupload",
+		"children": [
+			{
+				"path": "/cargoupload",
+				"name": "cargoupload",
+				"component": "/CarFreeCarrier/CargoUpload",
+				"meta": {
+					"title": "货源上传",
+					"icon": "CargoUpload",
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/truckupload",
+				"name": "truckupload",
+				"component": "/CarFreeCarrier/TruckUpload",
+				"meta": {
+					"title": "车源上传",
+					"icon": "CargoUpload",
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/waybill",
+				"name": "waybill",
+				"component": "/CarFreeCarrier/Waybill",
+				"meta": {
+					"title": "运单上传",
+					"icon": "WaybillUpload",
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/interfaceConfig",
+				"name": "interfaceConfig",
+				"component": "/CarFreeCarrier/InterfaceConfig",
+				"meta": {
+					"title": "接口配置",
+					"icon": "settings",
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			}
+		]
+	},{
+		"path": "/customsevice",
+		"name": "customsevice",
+		"component": "/CustomSevice",
+		"meta": {
+			"title": "客服管理",
+			"icon": "truck_icon",
+			"roles": "admin,editor"
+		},
+		"redirect": "/membercertify",
+		"children": [
+			{
+				"path": "/membercertify",
+				"name": "membercertify",
+				"component": "/CustomSevice/MemberCertify",
+				"meta": {
+					"title": "会员认证",
+					"icon": "MemberCertify",
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			}
+		]
+	},{
+		"path": "/businessconfig",
+		"name": "businessconfig",
+		"component": "/BusinessConfig",
+		"meta": {
+			"title": "业务配置",
+			"icon": "BusinessConfig",
+			"roles": "admin,editor"
+		},
+		"redirect": "/contentmanage",
+		"children": [
+			{
+				"path": "/contentmanage",
+				"name": "contentmanage",
+				"component": "/BusinessConfig/ContentManage",
+				"meta": { 
+					"title": "内容管理", 
+					"icon": "ContentManage", 
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/messagemanage",
+				"name": "messagemanage",
+				"component": "/BusinessConfig/MessageManage",
+				"meta": { 
+					"title": "消息管理", 
+					"icon": "MessageManage", 
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/schedule",
+				"name": "schedule",
+				"component": "/BusinessConfig/Schedule",
+				"meta": { 
+					"title": "定时任务", 
+					"icon": "Schedule", 
+					"roles": "admin,editor"
+				},
+				"redirect": null,
+				"children": null
+			}
+		]
+	},{
+		"path": "/system",
+		"name": "system",
+		"component": "/System",
+		"meta": { 
+			"title": "系统管理", 
+			"icon": "System", 
+			"roles": "admin"
+		},
+		"redirect": "/systemsetting",
+		"children": [
+			{
+				"path": "/systemsetting",
+				"name": "systemsetting",
+				"component": "/System/SystemSetting",
+				"meta": { 
+					"title": "系统设置", 
+					"icon": "System", 
+					"roles": "admin"
+				},
+				"redirect": "/menumanage",
+				"children": [
+					{
+						"path": "/menumanage",
+						"name": "menumanage",
+						"component": "/System/SystemSetting/MenuManage",
+						"meta": { 
+							"title": "菜单管理", 
+							"icon": null, 
+							"roles": "admin"
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/usermanage",
+						"name": "usermanage",
+						"component": "/System/SystemSetting/UserManage",
+						"meta": { 
+							"title": "用户管理", 
+							"icon": null,
+							"roles": "admin"
+						},
+						"redirect": null,
+						"children": null
+					},{
+						"path": "/rolemanage",
+						"name": "rolemanage",
+						"component": "/System/SystemSetting/RoleManage",
+						"meta": { 
+							"title": "角色管理", 
+							"icon": null,
+							"roles": "admin"
+						},
+						"redirect": null,
+						"children": null
+					}
+				]
+			}
+		]
+	}
+]
