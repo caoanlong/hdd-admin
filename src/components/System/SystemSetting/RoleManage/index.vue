@@ -36,11 +36,11 @@
 				<el-table-column label="操作">
 					<template slot-scope="scope">
 						<el-button-group>
-						<el-button type="default" size="mini" icon="el-icon-view"></el-button>
-						  <el-button type="primary" size="mini" icon="el-icon-edit" title></el-button>
-						  <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
-						  <el-button type="default" size="mini" icon="el-icon-setting"></el-button>
-						  <el-button type="default" size="mini" icon="el-icon-plus"></el-button>
+							<el-button type="default" size="mini" icon="el-icon-view"></el-button>
+							<el-button type="primary" size="mini" icon="el-icon-edit" title></el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
+							<el-button type="default" size="mini" icon="el-icon-setting"></el-button>
+							<el-button type="default" size="mini" icon="el-icon-plus"></el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>

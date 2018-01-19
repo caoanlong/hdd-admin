@@ -5,9 +5,8 @@
 		    <span>菜单列表</span>
 		  </div>
 		  <div class="tableControl">
-		  	<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('/addmenu')">添加</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-edit">修改</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 		  	<el-button type="default" size="mini"><svg-icon icon-class="save_icon"></svg-icon> 保存排序</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
@@ -28,7 +27,7 @@
 			    <el-table-column label="操作" width="360" align="center">
 			    	<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button><el-button type="primary" size="mini" icon="el-icon-edit" title>编辑</el-button><el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button><el-button type="success" size="mini" icon="el-icon-plus">添加下级菜单</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="jump('menudetail','view')">查看</el-button><el-button type="primary" size="mini" icon="el-icon-edit" @click="jump('editmenu','edit')">修改</el-button><el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button><el-button type="success" size="mini" icon="el-icon-plus" @click="jump('addsubmenu','addsub')">添加下级菜单</el-button>
 						</el-button-group>
 				    </template>
 			    </el-table-column>
@@ -60,9 +59,9 @@
 			handleDelete(index, row) {
 				console.log(index, row);
 			},
-			jump(to){
+			jump(to,params){
 				if (this.$router) {
-			        this.$router.push(to)
+			        this.$router.push({name:to,query:{type:params}})
 			      }
 			}
 		
