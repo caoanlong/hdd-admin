@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import { getRouterDB } from '../routerDB'
+import { findAll } from '../routerDB'
 
 import Layout from '@/components/Layout'
 import Login from '@/components/Login'
@@ -23,7 +23,7 @@ function modifyComponent (routers) {
 	}
 }
 
-export const asyncRouterMap = modifyComponent(getRouterDB())
+export const asyncRouterMap = modifyComponent(findAll())
 
 export let routerMap = [
 	{
