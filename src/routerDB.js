@@ -15,8 +15,10 @@ export let saveRouterDB = (function () {
 	localStorage.setItem('routersData', JSON.stringify(routersData))
 })()
 
+// 查找所有
 export let findAll = () => routerDB
 
+// 通过name查找
 export let findByname = (name) => {
 	findRecursion(routerDB, router => {
 		if (router == name) {
@@ -24,8 +26,10 @@ export let findByname = (name) => {
 		}
 	})
 }
+
+// 新建一条
 export let createData = (data) => {
-	if (!data.parent || data.parent == null || data.parent == 'null') {
+	if (!data.meta.parent || data.meta.parent == null || data.meta.parent == 'null') {
 		routers.push(data)
 		return
 	}
@@ -41,6 +45,8 @@ export let createData = (data) => {
 		}
 	})
 }
+
+// 更新一条
 export let updateData = (name, updatePer) => {
 	findRecursion(routerDB, router => {
 		if (router.name == name) {
@@ -52,6 +58,8 @@ export let updateData = (name, updatePer) => {
 		}
 	})
 }
+
+// 删除一条
 export let deleteData = (name) => {
 	findRecursion(routerDB, router => {
 		if (router.name == name) {
