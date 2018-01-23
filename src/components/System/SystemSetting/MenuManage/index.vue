@@ -8,7 +8,7 @@
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 				<el-button type="default" size="mini">
-					<svg-icon icon-class="save_icon"></svg-icon> 保存排序</el-button>
+					<svg-icon icon-class="save-icon"></svg-icon> 保存排序</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 			</div>
 			<div class="table">
@@ -16,7 +16,7 @@
 					<el-table-column type="selection" align="center" width="42"></el-table-column>
 					<el-table-column label="名称">
 						<template slot-scope="scope">
-							<svg-icon icon-class="meun_icon" class="meun_icon"></svg-icon> {{scope.row.meta.title}}
+							<svg-icon icon-class="meun-icon" class="meun_icon"></svg-icon> {{scope.row.meta.title}}
 						</template>
 					</el-table-column>
 					<el-table-column label="图标">
