@@ -15,10 +15,16 @@
 			    <el-table-column  type="selection" align="center">
 			    </el-table-column>
 			    <el-table-column  label="名称" prop="name">
+			    	<template slot-scope="scope">
+						<svg-icon icon-class="meun_icon"></svg-icon> {{scope.row.name}}
+					</template>
 			    </el-table-column>
 			    <el-table-column  label="链接" prop="url">
 			    </el-table-column>
-			    <el-table-column  label="排序" prop="sort" width="120" align="center">
+			    <el-table-column  label="排序" width="120" align="center">
+					<template slot-scope="scope">
+						<el-input :value="scope.row.sort" size="mini" class="sort_input"></el-input>
+					</template>
 			    </el-table-column>
 			    <el-table-column  label="可见" prop="visibility" width="120" align="center">
 			    </el-table-column>
@@ -69,5 +75,7 @@
 	}
 </script>
 <style lang="stylus">
-
+.sort_input
+	input
+		text-align center
 </style>
