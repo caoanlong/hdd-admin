@@ -1,10 +1,9 @@
 <template>
-	<scroll-bar>
+	<div>
 		<tree-menu-item :routes="routes"></tree-menu-item>
-	</scroll-bar>
+	</div>
 </template>
 <script type="text/javascript">
-import ScrollBar from '../ScrollBar'
 import TreeMenuItem from './TreeMenuItem'
 export default {
 	name: 'tree-menu',
@@ -32,7 +31,6 @@ export default {
 	methods: {
 	},
 	components: { 
-		ScrollBar,
 		TreeMenuItem
 	}
 }
