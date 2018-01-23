@@ -13,24 +13,26 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center" width="42">
-					</el-table-column>
-					<el-table-column label="名称" prop="name">
+					<el-table-column type="selection" align="center" width="42"></el-table-column>
+					<el-table-column label="名称">
 						<template slot-scope="scope">
-							<svg-icon icon-class="meun_icon" class="meun_icon"></svg-icon> {{scope.row.name}}
+							<svg-icon icon-class="meun_icon" class="meun_icon"></svg-icon> {{scope.row.meta.title}}
 						</template>
 					</el-table-column>
-					<el-table-column label="链接" prop="url">
+					<el-table-column label="图标">
+						<template slot-scope="scope">
+							<svg-icon :icon-class="scope.row.meta.icon"></svg-icon> {{scope.row.meta.icon}}
+						</template>
 					</el-table-column>
-					<el-table-column label="排序" width="80" align="center">
+					<el-table-column label="链接" prop="path"></el-table-column>
+					<el-table-column label="组件" prop="component"></el-table-column>
+					<!-- <el-table-column label="排序" width="80" align="center">
 						<template slot-scope="scope">
 							<el-input :value="scope.row.sort" size="mini" class="sort_input"></el-input>
 						</template>
-					</el-table-column>
-					<el-table-column label="可见" prop="visibility" width="120" align="center">
-					</el-table-column>
-					<el-table-column label="权限标识">
-					</el-table-column>
+					</el-table-column> -->
+					<el-table-column label="可见" prop="meta.isMenu" width="120" align="center"></el-table-column>
+					<el-table-column label="权限标识" prop="meta.roles"></el-table-column>
 					<el-table-column label="操作" width="350" align="center">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" icon="el-icon-view" @click="jump('menudetail','view')">查看</el-button>
@@ -48,30 +50,46 @@
 	</div>
 </template>
 <script type="text/javascript">
+import { findAll, routerDB } from '../../../../routerDB'
 export default {
 	data() {
 		return {
-			tableData: [{
-				url: '2016-05-02',
-				name: '无车承运人',
-				url: '/home',
-				sort: '1',
-				visibility: '可见',
-				permission: ''
-			}]
+			tableData: [
+				{
+					"path": "/",
+					"name": "home",
+					"component": "/Home",
+					"meta": {
+						"title": "首页",
+						"icon": "home_icon",
+						"roles": "admin,editor",
+						"parent": null,
+						"isMenu": true
+					},
+					"redirect": null,
+					"children": null
+				}
+			]
 		}
+	},
+	created() {
+		this.getMenus()
 	},
 	methods: {
 		handleEdit(index, row) {
-			console.log(index, row);
+			console.log(index, row)
 		},
 		handleDelete(index, row) {
-			console.log(index, row);
+			console.log(index, row)
 		},
 		jump(to, params) {
 			if (this.$router) {
 				this.$router.push({ name: to, query: { type: params } })
 			}
+		},
+		getMenus() {
+			this.tableData = routerDB
+			console.log(routerDB)
 		}
 
 	}

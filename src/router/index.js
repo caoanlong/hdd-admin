@@ -23,7 +23,8 @@ function modifyComponent (routers) {
 	}
 }
 
-export const asyncRouterMap = modifyComponent(findAll())
+let routers = findAll()
+export const asyncRouterMap = modifyComponent(routers)
 
 export let routerMap = [
 	{

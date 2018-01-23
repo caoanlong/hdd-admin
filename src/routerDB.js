@@ -1,6 +1,6 @@
 import routersData from '../src/assets/data/routers.json'
 
-const routerDB = JSON.parse(localStorage.getItem('routersData'))
+export let routerDB = JSON.parse(localStorage.getItem('routersData'))
 
 function findRecursion (routers, callback) {
 	for (let i = 0; i < routers.length; i++) {
