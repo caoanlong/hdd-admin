@@ -1,10 +1,12 @@
 <template>
 	<div>
-		<h1>内容管理</h1>
+		<router-view></router-view>
 	</div>
 </template>
 <script type="text/javascript">
-	
+	export default {
+		
+	}
 </script>
 <style lang="stylus">
 	

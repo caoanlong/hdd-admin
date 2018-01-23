@@ -9,7 +9,7 @@
 		  	
 		  	<el-form :inline="true"  class="form-inline">
 				<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 			  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 			  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 			  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
@@ -113,12 +113,6 @@
 </script>
 <style lang="stylus">
 	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
 		.table
 			th
 				.cell

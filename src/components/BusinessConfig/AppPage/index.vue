@@ -2,26 +2,11 @@
 	<div class="main-content">
 		<el-card class="box-card">
 		  <div slot="header" class="clearfix">
-		    <span>定时任务</span>
-		  </div>
-		  <div class="search">
-		  	<el-form :inline="true"  class="demo-form-inline"  size="small">
-			  <el-form-item label="托运单号：">
-			    <el-input  placeholder="托运单号"></el-input>
-			  </el-form-item>
-			  <el-form-item label="承运人：">
-			    <el-input  placeholder="承运人"></el-input>
-			  </el-form-item>
-			  <el-form-item>
-			    <el-button type="primary">查询</el-button>
-			    <el-button type="default">重置</el-button>
-			  </el-form-item>
-			</el-form>
+		    <span>APP页面</span>
 		  </div>
 		  <div class="tableControl">
 		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
@@ -102,12 +87,6 @@
 </script>
 <style lang="stylus">
 	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
 		.table
 			th
 				.cell
