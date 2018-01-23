@@ -5,10 +5,10 @@
 				<span>菜单列表</span>
 			</div>
 			<div class="tableControl">
-			  	<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
-			  	<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-			  	<el-button type="default" size="mini"><svg-icon icon-class="save-icon"></svg-icon> 保存排序</el-button>
-			  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+				<!-- <el-button type="default" size="mini"><svg-icon icon-class="save-icon"></svg-icon> 保存排序</el-button>
+				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button> -->
 			  </div>
 			<div>
 				<tree-menu :routes="tableData"></tree-menu>
@@ -109,12 +109,15 @@ export default {
 
 </script>
 <style lang="stylus">
-.table
-	.sort_input
-		input 
-			text-align center
-	.el-button--mini 
-		padding 7px 8px 
-	.meun_icon 
-		cursor pointer
+.main-content
+	.box-card
+		width 300px
+// .table
+// 	.sort_input
+// 		input 
+// 			text-align center
+// 	.el-button--mini 
+// 		padding 7px 8px 
+// 	.meun_icon 
+// 		cursor pointer
 </style>
