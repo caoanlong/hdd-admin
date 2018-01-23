@@ -72,8 +72,8 @@
 			    <el-table-column label="操作" width="160" align="center">
 			    	<template slot-scope="scope">
 				        <el-button-group>
-						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view"></el-button>
-						  <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title></el-button>
+						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-view"></el-button>
+						  <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"></el-button>
 						  <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
 						</el-button-group>
 				    </template>
