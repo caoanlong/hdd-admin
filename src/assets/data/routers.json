@@ -5,7 +5,7 @@
 		"component": "/Home",
 		"meta": {
 			"title": "首页",
-			"icon": "home_icon",
+			"icon": "home-icon",
 			"roles": "admin,editor",
 			"parent": null,
 			"isMenu": true
@@ -18,7 +18,7 @@
 		"component": "/CarFreeCarrier",
 		"meta": {
 			"title": "无车承运人",
-			"icon": "truck_icon",
+			"icon": "truck-icon",
 			"roles": "admin,editor",
 			"parent": null,
 			"isMenu": true
@@ -31,7 +31,7 @@
 				"component": "/CarFreeCarrier/CargoUpload",
 				"meta": {
 					"title": "货源上传",
-					"icon": "upload_icon1",
+					"icon": "upload-icon1",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -44,7 +44,7 @@
 				"component": "/CarFreeCarrier/TruckUpload",
 				"meta": {
 					"title": "车源上传",
-					"icon": "upload_icon1",
+					"icon": "upload-icon1",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -57,7 +57,7 @@
 				"component": "/CarFreeCarrier/Waybill",
 				"meta": {
 					"title": "运单上传",
-					"icon": "upload_icon2",
+					"icon": "upload-icon2",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -70,7 +70,7 @@
 				"component": "/CarFreeCarrier/InterfaceConfig",
 				"meta": {
 					"title": "接口配置",
-					"icon": "settings_icon",
+					"icon": "settings-icon",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -85,7 +85,7 @@
 		"component": "/CustomSevice",
 		"meta": {
 			"title": "客服管理",
-			"icon": "user",
+			"icon": "user-icon",
 			"roles": "admin,editor",
 			"parent": null,
 			"isMenu": true
@@ -98,7 +98,7 @@
 				"component": "/CustomSevice/MemberCertify",
 				"meta": {
 					"title": "会员认证",
-					"icon": "member_icon",
+					"icon": "member-icon",
 					"roles": "admin,editor",
 					"parent": "customsevice",
 					"isMenu": true
@@ -113,7 +113,7 @@
 		"component": "/BusinessConfig",
 		"meta": {
 			"title": "业务配置",
-			"icon": "BusinessConfig",
+			"icon": "config-icon",
 			"roles": "admin,editor",
 			"parent": null,
 			"isMenu": true
@@ -126,7 +126,7 @@
 				"component": "/BusinessConfig/ContentManage",
 				"meta": { 
 					"title": "内容管理", 
-					"icon": "list_th_icon", 
+					"icon": "list-th-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
 					"isMenu": true
@@ -168,7 +168,7 @@
 				"component": "/BusinessConfig/MessageManage",
 				"meta": { 
 					"title": "消息管理", 
-					"icon": "msg_icon", 
+					"icon": "msg-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
 					"isMenu": true
@@ -181,7 +181,7 @@
 				"component": "/BusinessConfig/AppPage",
 				"meta": { 
 					"title": "APP页面", 
-					"icon": "list_icon", 
+					"icon": "list-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
 					"isMenu": true
@@ -196,7 +196,7 @@
 		"component": "/System",
 		"meta": { 
 			"title": "系统管理", 
-			"icon": "system_icon", 
+			"icon": "system-icon", 
 			"roles": "admin",
 			"parent": null,
 			"isMenu": true
@@ -209,7 +209,7 @@
 				"component": "/System/SystemSetting",
 				"meta": { 
 					"title": "系统设置", 
-					"icon": "settings_icon", 
+					"icon": "settings-icon", 
 					"roles": "admin",
 					"parent": "system",
 					"isMenu": true
