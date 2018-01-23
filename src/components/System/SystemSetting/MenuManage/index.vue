@@ -4,7 +4,10 @@
 			<div slot="header" class="clearfix">
 				<span>菜单列表</span>
 			</div>
-			<div class="tableControl">
+			<div>
+				<tree-menu :routes="tableData"></tree-menu>
+			</div>
+			<!-- <div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 				<el-button type="default" size="mini">
@@ -26,11 +29,11 @@
 					</el-table-column>
 					<el-table-column label="链接" prop="path"></el-table-column>
 					<el-table-column label="组件" prop="component"></el-table-column>
-					<!-- <el-table-column label="排序" width="80" align="center">
+					<el-table-column label="排序" width="80" align="center">
 						<template slot-scope="scope">
 							<el-input :value="scope.row.sort" size="mini" class="sort_input"></el-input>
 						</template>
-					</el-table-column> -->
+					</el-table-column>
 					<el-table-column label="可见" prop="meta.isMenu" width="120" align="center"></el-table-column>
 					<el-table-column label="权限标识" prop="meta.roles"></el-table-column>
 					<el-table-column label="操作" width="350" align="center">
@@ -45,11 +48,12 @@
 				<div class="pagination">
 					<el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
 				</div>
-			</div>
+			</div> -->
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+import TreeMenu from '../../../CommonComponents/TreeMenu'
 import { findAll, routerDB } from '../../../../routerDB'
 export default {
 	data() {
@@ -92,6 +96,9 @@ export default {
 			console.log(routerDB)
 		}
 
+	},
+	components: {
+		TreeMenu
 	}
 }
 
