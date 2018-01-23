@@ -12,16 +12,16 @@
 		  </div>
 		  <div class="table">
 		  	<el-table :data="tableData" border style="width: 100%" size="mini">
-			    <el-table-column  type="selection" align="center">
+			    <el-table-column  type="selection" align="center" width="42">
 			    </el-table-column>
 			    <el-table-column  label="名称" prop="name">
 			    	<template slot-scope="scope">
-						<svg-icon icon-class="meun_icon"></svg-icon> {{scope.row.name}}
+						<svg-icon icon-class="meun_icon" class="meun_icon"></svg-icon> {{scope.row.name}}
 					</template>
 			    </el-table-column>
 			    <el-table-column  label="链接" prop="url">
 			    </el-table-column>
-			    <el-table-column  label="排序" width="120" align="center">
+			    <el-table-column  label="排序" width="80" align="center">
 					<template slot-scope="scope">
 						<el-input :value="scope.row.sort" size="mini" class="sort_input"></el-input>
 					</template>
@@ -30,11 +30,11 @@
 			    </el-table-column>
 			    <el-table-column  label="权限标识">
 			    </el-table-column>
-			    <el-table-column label="操作" width="360" align="center">
+			    <el-table-column label="操作" width="350" align="center">
 			    	<template slot-scope="scope">
-						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view" @click="jump('menudetail','view')">查看</el-button><el-button type="primary" size="mini" icon="el-icon-edit" @click="jump('editmenu','edit')">修改</el-button><el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button><el-button type="success" size="mini" icon="el-icon-plus" @click="jump('addsubmenu','addsub')">添加下级菜单</el-button>
-						</el-button-group>
+						<el-button type="default" size="mini" icon="el-icon-view" @click="jump('menudetail','view')">查看</el-button>
+						<el-button type="primary" size="mini" icon="el-icon-edit" @click="jump('editmenu','edit')">修改</el-button>
+						<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button><el-button type="success" size="mini" icon="el-icon-plus" @click="jump('addsubmenu','addsub')">添加下级菜单</el-button>
 				    </template>
 			    </el-table-column>
 			  </el-table>
@@ -75,7 +75,12 @@
 	}
 </script>
 <style lang="stylus">
-.sort_input
-	input
-		text-align center
+.table
+	.sort_input
+		input
+			text-align center
+	.el-button--mini
+		padding 7px 8px
+	.meun_icon
+		cursor pointer
 </style>
