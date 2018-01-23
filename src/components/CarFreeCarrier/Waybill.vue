@@ -28,13 +28,34 @@
 		  	<el-table :data="tableData" border style="width: 100%" size="mini">
 			    <el-table-column sortable label="托运单号">
 			    </el-table-column>
-			    <el-table-column sortable label="承运人" prop="name" align="center">
+			    <el-table-column sortable label="承运人" align="center">
+			    	<template slot-scope="scope">
+						<el-popover trigger="hover" placement="top-start">
+							<p>姓名: {{ scope.row.name }}</p>
+							<p>装货住址: {{ scope.row.address }}</p>
+							<div slot="reference" class="name-wrapper">
+								<el-tag size="mini">{{ scope.row.name }}</el-tag>
+							</div>
+						</el-popover>
+					</template>
 			    </el-table-column>
 			    <el-table-column sortable label="托运时间" prop="date" align="center">
+					<template slot-scope="scope">
+						<i class="el-icon-time"></i>
+						<span>{{ scope.row.date }}</span>
+					</template>
 			    </el-table-column>
 			    <el-table-column sortable label="实际发运时间" width="140" prop="date" align="center">
+		    		<template slot-scope="scope">
+						<i class="el-icon-time"></i>
+						<span>{{ scope.row.date }}</span>
+					</template>
 			    </el-table-column>
 			    <el-table-column sortable label="收货时间" prop="date" align="center">
+			    	<template slot-scope="scope">
+						<i class="el-icon-time"></i>
+						<span>{{ scope.row.date }}</span>
+					</template>
 			    </el-table-column>
 			    <el-table-column sortable label="发货人" prop="name" align="center">
 			    </el-table-column>
@@ -51,8 +72,8 @@
 			    <el-table-column label="操作" width="160" align="center">
 			    	<template slot-scope="scope">
 				        <el-button-group>
-						  <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title></el-button>
 						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view"></el-button>
+						  <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title></el-button>
 						  <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
 						</el-button-group>
 				    </template>

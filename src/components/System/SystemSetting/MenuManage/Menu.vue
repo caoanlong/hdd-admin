@@ -139,7 +139,6 @@ export default {
 </script>
 <style lang="stylus">
 .main-content
-	padding 20px
 	.tips
 		color #ccc
 		margin 0

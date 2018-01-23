@@ -17,8 +17,7 @@
 		  </div>
 		  <div class="tableControl">
 			<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-			<el-button type="default" size="mini" icon="el-icon-edit">修改</el-button>
-			<el-button type="default" size="mini" icon="el-icon-delete">添加</el-button>
+			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 			<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
@@ -33,14 +32,14 @@
 				</el-table-column>
 				<el-table-column label="数据范围" prop="dataArea">
 				</el-table-column>
-				<el-table-column label="操作">
+				<el-table-column label="操作" width="430" align="center">
 					<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view"></el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" title></el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
-							<el-button type="default" size="mini" icon="el-icon-setting"></el-button>
-							<el-button type="default" size="mini" icon="el-icon-plus"></el-button>
+							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
+							<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
+							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>
@@ -87,11 +86,5 @@
 }
 </script>
 <style lang="stylus">
-	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
+
 </style>

@@ -69,11 +69,5 @@
 	}
 </script>
 <style lang="stylus">
-	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
+
 </style>

@@ -40,3 +40,6 @@ code a:hover{color:#20a0ff;}
 /*refine vue-multiselect plugin*/
 .multiselect{line-height:16px;}
 .multiselect--active{z-index:1000!important;}
+.main-content{padding:20px}
+.main-content .tableControl{margin-bottom:10px}
+.main-content .pagination{margin-top:10px;text-align:center}

@@ -23,27 +23,27 @@
 		  </div>
 		  <div class="table">
 		  	<el-table :data="tableData" border style="width: 100%" size="mini">
-			    <el-table-column sortable label="报文参考号">
+			    <el-table-column label="报文参考号">
 			    </el-table-column>
-			    <el-table-column sortable label="发送时间">
+			    <el-table-column label="发送时间">
 			    </el-table-column>
-			    <el-table-column sortable label="发货人">
+			    <el-table-column label="发货人">
 			    </el-table-column>
-			    <el-table-column sortable label="出发地">
+			    <el-table-column label="出发地">
 			    </el-table-column>
-			    <el-table-column sortable label="费用总金额">
+			    <el-table-column label="费用总金额">
 			    </el-table-column>
-			    <el-table-column sortable label="车辆分类">
+			    <el-table-column label="车辆分类">
 			    </el-table-column>
-			    <el-table-column sortable label="货物名称">
+			    <el-table-column label="货物名称">
 			    </el-table-column>
-			    <el-table-column sortable label="货物毛重">
+			    <el-table-column label="货物毛重">
 			    </el-table-column>
-			    <el-table-column sortable label="状态">
+			    <el-table-column label="状态">
 			    </el-table-column>
-			    <el-table-column sortable label="失败描述">
+			    <el-table-column label="失败描述">
 			    </el-table-column>
-			    <el-table-column sortable label="创建时间">
+			    <el-table-column label="创建时间">
 			    </el-table-column>
 			    <el-table-column label="操作">
 			    </el-table-column>
@@ -60,15 +60,4 @@
 	
 </script>
 <style lang="stylus">
-	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
-		.table
-			th
-				.cell
-					text-align center
 </style>

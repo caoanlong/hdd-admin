@@ -5,7 +5,7 @@
 		"component": "/Home",
 		"meta": {
 			"title": "首页",
-			"icon": "home",
+			"icon": "home_icon",
 			"roles": "admin,editor",
 			"isMenu": true
 		},
@@ -29,7 +29,7 @@
 				"component": "/CarFreeCarrier/CargoUpload",
 				"meta": {
 					"title": "货源上传",
-					"icon": "CargoUpload",
+					"icon": "upload_icon1",
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -41,7 +41,7 @@
 				"component": "/CarFreeCarrier/TruckUpload",
 				"meta": {
 					"title": "车源上传",
-					"icon": "CargoUpload",
+					"icon": "upload_icon1",
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -53,7 +53,7 @@
 				"component": "/CarFreeCarrier/Waybill",
 				"meta": {
 					"title": "运单上传",
-					"icon": "WaybillUpload",
+					"icon": "upload_icon2",
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -65,7 +65,7 @@
 				"component": "/CarFreeCarrier/InterfaceConfig",
 				"meta": {
 					"title": "接口配置",
-					"icon": "settings",
+					"icon": "settings_icon",
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -79,7 +79,7 @@
 		"component": "/CustomSevice",
 		"meta": {
 			"title": "客服管理",
-			"icon": "truck_icon",
+			"icon": "user",
 			"roles": "admin,editor",
 			"isMenu": true
 		},
@@ -91,7 +91,7 @@
 				"component": "/CustomSevice/MemberCertify",
 				"meta": {
 					"title": "会员认证",
-					"icon": "MemberCertify",
+					"icon": "member_icon",
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -117,31 +117,58 @@
 				"component": "/BusinessConfig/ContentManage",
 				"meta": { 
 					"title": "内容管理", 
-					"icon": "ContentManage", 
+					"icon": "list_th_icon", 
 					"roles": "admin,editor",
 					"isMenu": true
 				},
-				"redirect": null,
-				"children": null
+				"redirect": "/contentmanage",
+				"children": [
+					{
+						"path": "/setcolumn",
+						"name": "setcolumn",
+						"component": "/BusinessConfig/ContentManage/SetColumn",
+						"meta": { 
+							"title": "栏目管理", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": true
+						},
+						"redirect": null,
+						"children": null
+					},
+					{
+						"path": "/setcontent",
+						"name": "setcontent",
+						"component": "/BusinessConfig/ContentManage/SetContent",
+						"meta": { 
+							"title": "内容管理", 
+							"icon": null, 
+							"roles": "admin",
+							"isMenu": true
+						},
+						"redirect": null,
+						"children": null
+					}
+				]
 			},{
 				"path": "/messagemanage",
 				"name": "messagemanage",
 				"component": "/BusinessConfig/MessageManage",
 				"meta": { 
 					"title": "消息管理", 
-					"icon": "MessageManage", 
+					"icon": "msg_icon", 
 					"roles": "admin,editor",
 					"isMenu": true
 				},
 				"redirect": null,
 				"children": null
 			},{
-				"path": "/schedule",
-				"name": "schedule",
-				"component": "/BusinessConfig/Schedule",
+				"path": "/apppage",
+				"name": "apppage",
+				"component": "/BusinessConfig/AppPage",
 				"meta": { 
-					"title": "定时任务", 
-					"icon": "Schedule", 
+					"title": "APP页面", 
+					"icon": "list_icon", 
 					"roles": "admin,editor",
 					"isMenu": true
 				},
@@ -155,7 +182,7 @@
 		"component": "/System",
 		"meta": { 
 			"title": "系统管理", 
-			"icon": "System", 
+			"icon": "system_icon", 
 			"roles": "admin",
 			"isMenu": true
 		},
@@ -167,7 +194,7 @@
 				"component": "/System/SystemSetting",
 				"meta": { 
 					"title": "系统设置", 
-					"icon": "System", 
+					"icon": "settings_icon", 
 					"roles": "admin",
 					"isMenu": true
 				},
