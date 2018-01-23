@@ -93,7 +93,6 @@ export default {
 		},
 		getMenus() {
 			this.tableData = routerDB
-			console.log(routerDB)
 		}
 
 	},
