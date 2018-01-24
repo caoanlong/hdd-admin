@@ -5,61 +5,25 @@
 				<span>菜单列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-				<!-- <el-button type="default" size="mini"><svg-icon icon-class="save-icon"></svg-icon> 保存排序</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button> -->
-			  </div>
+				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加顶级节点</el-button>
+				<!-- <el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button> -->
+			</div>
 			<div>
-				<tree-menu :routes="tableData"></tree-menu>
+				<el-tree
+					class="expand-tree"
+					:data="tableData"
+					:props="defaultProps"
+					node-key="name"
+					highlight-current
+					:render-content="renderContent"
+					@node-click="handleNodeClick">
+				</el-tree>
 			</div>
-			<!-- <div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-				<el-button type="default" size="mini">
-					<svg-icon icon-class="save-icon"></svg-icon> 保存排序</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
-			</div>
-			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center" width="42"></el-table-column>
-					<el-table-column label="名称">
-						<template slot-scope="scope">
-							<svg-icon icon-class="meun-icon" class="meun_icon"></svg-icon> {{scope.row.meta.title}}
-						</template>
-					</el-table-column>
-					<el-table-column label="图标">
-						<template slot-scope="scope">
-							<svg-icon :icon-class="scope.row.meta.icon"></svg-icon> {{scope.row.meta.icon}}
-						</template>
-					</el-table-column>
-					<el-table-column label="链接" prop="path"></el-table-column>
-					<el-table-column label="组件" prop="component"></el-table-column>
-					<el-table-column label="排序" width="80" align="center">
-						<template slot-scope="scope">
-							<el-input :value="scope.row.sort" size="mini" class="sort_input"></el-input>
-						</template>
-					</el-table-column>
-					<el-table-column label="可见" prop="meta.isMenu" width="120" align="center"></el-table-column>
-					<el-table-column label="权限标识" prop="meta.roles"></el-table-column>
-					<el-table-column label="操作" width="350" align="center">
-						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-view" @click="jump('menudetail','view')">查看</el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" @click="jump('editmenu','edit')">修改</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
-							<el-button type="success" size="mini" icon="el-icon-plus" @click="jump('addsubmenu','addsub')">添加下级菜单</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
-				</div>
-			</div> -->
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import TreeMenu from '../../../CommonComponents/TreeMenu'
+import TreeRender from '../../../CommonComponents/TreeRender'
 import { findAll, routerDB } from '../../../../routerDB'
 export default {
 	data() {
@@ -69,28 +33,55 @@ export default {
 					"path": "/",
 					"name": "home",
 					"component": "/Home",
+					"title": "首页",
 					"meta": {
 						"title": "首页",
 						"icon": "home_icon",
 						"roles": "admin,editor",
 						"parent": null,
-						"isMenu": true
+						"isMenu": true,
+						"isEdit": false
 					},
 					"redirect": null,
 					"children": null
 				}
-			]
+			],
+			defaultProps: {
+				children: 'children',
+				label: 'title'
+			},
+			currentNode: null
 		}
 	},
 	created() {
 		this.getMenus()
 	},
 	methods: {
-		handleEdit(index, row) {
-			console.log(index, row)
+		handleNodeClick(d) {
+			// console.log(d)
+			d.meta.isEdit = false
+			this.currentNode = d
 		},
-		handleDelete(index, row) {
-			console.log(index, row)
+		renderContent(h, {node, data, store}) {
+			let that = this//指向vue
+			return h(TreeRender, {
+				props: {
+					DATA: data, //节点数据
+					NODE: node, //节点内容
+					STORE: store, //完整树形内容
+					CURRENTNODE: this.currentNode // 当前选择的节点
+				},
+				on: {//绑定方法
+					nodeAdd: ((s, d, n) => that.handleAdd(s, d, n)),
+					nodeDel: ((s, d, n) => that.handleDelete(s, d, n))
+				}
+			})
+		},
+		handleAdd(s, d, n){//增加节点
+			console.log(s, d, n)
+		},
+		handleDelete(s, d, n){//删除节点
+			console.log(s, d, n)
 		},
 		jump(to, params) {
 			if (this.$router) {
@@ -103,21 +94,14 @@ export default {
 
 	},
 	components: {
-		TreeMenu
 	}
 }
 
 </script>
 <style lang="stylus">
-.main-content
-	.box-card
-		width 300px
-// .table
-// 	.sort_input
-// 		input 
-// 			text-align center
-// 	.el-button--mini 
-// 		padding 7px 8px 
-// 	.meun_icon 
-// 		cursor pointer
+	.main-content
+		.box-card
+			width 360px
+			.expand-tree
+				font-size 14px
 </style>

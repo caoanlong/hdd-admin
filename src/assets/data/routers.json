@@ -3,12 +3,14 @@
 		"path": "/",
 		"name": "home",
 		"component": "/Home",
+		"title": "首页",
 		"meta": {
 			"title": "首页",
 			"icon": "home-icon",
 			"roles": "admin,editor",
 			"parent": null,
-			"isMenu": true
+			"isMenu": true,
+			"isEdit": false
 		},
 		"redirect": null,
 		"children": null
@@ -16,12 +18,14 @@
 		"path": "/carfreecarrier",
 		"name": "carfreecarrier",
 		"component": "/CarFreeCarrier",
+		"title": "无车承运人",
 		"meta": {
 			"title": "无车承运人",
 			"icon": "truck-icon",
 			"roles": "admin,editor",
 			"parent": null,
-			"isMenu": true
+			"isMenu": true,
+			"isEdit": false
 		},
 		"redirect": "/cargoupload",
 		"children": [
@@ -29,12 +33,14 @@
 				"path": "/cargoupload",
 				"name": "cargoupload",
 				"component": "/CarFreeCarrier/CargoUpload",
+				"title": "货源上传",
 				"meta": {
 					"title": "货源上传",
 					"icon": "upload-icon1",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -42,12 +48,14 @@
 				"path": "/truckupload",
 				"name": "truckupload",
 				"component": "/CarFreeCarrier/TruckUpload",
+				"title": "车源上传",
 				"meta": {
 					"title": "车源上传",
 					"icon": "upload-icon1",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -55,12 +63,14 @@
 				"path": "/waybill",
 				"name": "waybill",
 				"component": "/CarFreeCarrier/Waybill",
+				"title": "运单上传",
 				"meta": {
 					"title": "运单上传",
 					"icon": "upload-icon2",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -68,12 +78,14 @@
 				"path": "/interfaceConfig",
 				"name": "interfaceConfig",
 				"component": "/CarFreeCarrier/InterfaceConfig",
+				"title": "接口配置",
 				"meta": {
 					"title": "接口配置",
 					"icon": "settings-icon",
 					"roles": "admin,editor",
 					"parent": "carfreecarrier",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -83,12 +95,14 @@
 		"path": "/customsevice",
 		"name": "customsevice",
 		"component": "/CustomSevice",
+		"title": "客服管理",
 		"meta": {
 			"title": "客服管理",
 			"icon": "user-icon",
 			"roles": "admin,editor",
 			"parent": null,
-			"isMenu": true
+			"isMenu": true,
+			"isEdit": false
 		},
 		"redirect": "/membercertify",
 		"children": [
@@ -96,12 +110,14 @@
 				"path": "/membercertify",
 				"name": "membercertify",
 				"component": "/CustomSevice/MemberCertify",
+				"title": "会员认证",
 				"meta": {
 					"title": "会员认证",
 					"icon": "member-icon",
 					"roles": "admin,editor",
 					"parent": "customsevice",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -111,12 +127,14 @@
 		"path": "/businessconfig",
 		"name": "businessconfig",
 		"component": "/BusinessConfig",
+		"title": "业务配置",
 		"meta": {
 			"title": "业务配置",
 			"icon": "config-icon",
 			"roles": "admin,editor",
 			"parent": null,
-			"isMenu": true
+			"isMenu": true,
+			"isEdit": false
 		},
 		"redirect": "/contentmanage",
 		"children": [
@@ -124,12 +142,14 @@
 				"path": "/contentmanage",
 				"name": "contentmanage",
 				"component": "/BusinessConfig/ContentManage",
+				"title": "内容管理",
 				"meta": { 
 					"title": "内容管理", 
 					"icon": "list-th-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": "/contentmanage",
 				"children": [
@@ -137,12 +157,14 @@
 						"path": "/setcolumn",
 						"name": "setcolumn",
 						"component": "/BusinessConfig/ContentManage/SetColumn",
+						"title": "栏目管理",
 						"meta": { 
 							"title": "栏目管理", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "contentmanage",
-							"isMenu": true
+							"isMenu": true,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -151,12 +173,14 @@
 						"path": "/setcontent",
 						"name": "setcontent",
 						"component": "/BusinessConfig/ContentManage/SetContent",
+						"title": "内容管理",
 						"meta": { 
 							"title": "内容管理", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "contentmanage",
-							"isMenu": true
+							"isMenu": true,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -166,12 +190,14 @@
 				"path": "/messagemanage",
 				"name": "messagemanage",
 				"component": "/BusinessConfig/MessageManage",
+				"title": "消息管理",
 				"meta": { 
 					"title": "消息管理", 
 					"icon": "msg-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -179,12 +205,14 @@
 				"path": "/apppage",
 				"name": "apppage",
 				"component": "/BusinessConfig/AppPage",
+				"title": "APP页面",
 				"meta": { 
 					"title": "APP页面", 
 					"icon": "list-icon", 
 					"roles": "admin,editor",
 					"parent": "businessconfig",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": null,
 				"children": null
@@ -194,12 +222,14 @@
 		"path": "/system",
 		"name": "system",
 		"component": "/System",
+		"title": "系统管理",
 		"meta": { 
 			"title": "系统管理", 
 			"icon": "system-icon", 
 			"roles": "admin",
 			"parent": null,
-			"isMenu": true
+			"isMenu": true,
+			"isEdit": false
 		},
 		"redirect": "/systemsetting",
 		"children": [
@@ -207,12 +237,14 @@
 				"path": "/systemsetting",
 				"name": "systemsetting",
 				"component": "/System/SystemSetting",
+				"title": "系统设置",
 				"meta": { 
 					"title": "系统设置", 
 					"icon": "settings-icon", 
 					"roles": "admin",
 					"parent": "system",
-					"isMenu": true
+					"isMenu": true,
+					"isEdit": false
 				},
 				"redirect": "/menumanage",
 				"children": [
@@ -220,12 +252,14 @@
 						"path": "/menumanage",
 						"name": "menumanage",
 						"component": "/System/SystemSetting/MenuManage",
+						"title": "菜单管理",
 						"meta": { 
 							"title": "菜单管理", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": true
+							"isMenu": true,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -233,12 +267,14 @@
 						"path": "/addmenu",
 						"name": "addmenu",
 						"component": "/System/SystemSetting/MenuManage/Menu",
+						"title": "添加菜单",
 						"meta": { 
 							"title": "添加菜单", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": false
+							"isMenu": false,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -246,12 +282,14 @@
 						"path": "/editmenu",
 						"name": "editmenu",
 						"component": "/System/SystemSetting/MenuManage/Menu",
+						"title": "修改菜单",
 						"meta": { 
 							"title": "修改菜单", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": false
+							"isMenu": false,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -259,12 +297,14 @@
 						"path": "/menudetail",
 						"name": "menudetail",
 						"component": "/System/SystemSetting/MenuManage/Menu",
+						"title": "查看菜单",
 						"meta": { 
 							"title": "查看菜单", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": false
+							"isMenu": false,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -272,12 +312,14 @@
 						"path": "/addsubmenu",
 						"name": "addsubmenu",
 						"component": "/System/SystemSetting/MenuManage/Menu",
+						"title": "添加下级菜单",
 						"meta": { 
 							"title": "添加下级菜单", 
 							"icon": null, 
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": false
+							"isMenu": false,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -285,12 +327,14 @@
 						"path": "/usermanage",
 						"name": "usermanage",
 						"component": "/System/SystemSetting/UserManage",
+						"title": "用户管理",
 						"meta": { 
 							"title": "用户管理", 
 							"icon": null,
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": true
+							"isMenu": true,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
@@ -298,12 +342,14 @@
 						"path": "/rolemanage",
 						"name": "rolemanage",
 						"component": "/System/SystemSetting/RoleManage",
+						"title": "角色管理",
 						"meta": { 
 							"title": "角色管理", 
 							"icon": null,
 							"roles": "admin",
 							"parent": "systemsetting",
-							"isMenu": true
+							"isMenu": true,
+							"isEdit": false
 						},
 						"redirect": null,
 						"children": null
