@@ -1,65 +1,104 @@
 <template>
 	<div class="main-content">
-		<el-card class="box-card">
+		<el-card class="box-card menu-list">
 			<div slot="header" class="clearfix">
 				<span>菜单列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="jump('addmenu','add')">添加顶级节点</el-button>
-				<!-- <el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button> -->
+				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
 			</div>
-			<div>
-				<el-tree
-					class="expand-tree"
-					:data="tableData"
-					:props="defaultProps"
-					node-key="name"
-					highlight-current
-					:render-content="renderContent"
-					@node-click="handleNodeClick">
-				</el-tree>
+			<el-tree
+				class="expand-tree"
+				:data="menus"
+				:props="defaultProps"
+				node-key="name"
+				highlight-current
+				:expand-on-click-node="false"
+				:render-content="renderContent"
+				@node-click="handleNodeClick">
+			</el-tree>
+		</el-card>
+		<el-card class="box-card menu-info">
+			<div slot="header" class="clearfix">
+				<span>{{title}}</span>
 			</div>
+			<el-form ref="form" :model="currentNode" label-width="80px">
+				<el-form-item label="标题">
+					<el-input v-model="currentNode.title"></el-input>
+				</el-form-item>
+				<el-form-item label="名字">
+					<el-input v-model="currentNode.name"></el-input>
+				</el-form-item>
+				<el-form-item label="路径">
+					<el-input v-model="currentNode.path"></el-input>
+				</el-form-item>
+				<el-form-item label="组件">
+					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
+						<el-option :label="item" :value="item" v-for="item in components" :key="item"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="是否菜单">
+					<el-switch v-model="currentNode.meta.isMenu"></el-switch>
+				</el-form-item>
+				<el-form-item label="角色权限">
+					<el-checkbox-group v-model="currentNode.meta.roles">
+						<el-checkbox label="admin"></el-checkbox>
+						<el-checkbox label="editor"></el-checkbox>
+						<el-checkbox label="devloper"></el-checkbox>
+					</el-checkbox-group>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
+					<el-button>取消</el-button>
+				</el-form-item>
+			</el-form>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+import { mapGetters } from 'vuex'
 import TreeRender from '../../../CommonComponents/TreeRender'
-import { findAll, routerDB } from '../../../../routerDB'
+import components from '../../../../assets/data/componentPath.json'
+import {reloadRouter} from '../../../../router'
 export default {
 	data() {
 		return {
-			tableData: [
-				{
-					"path": "/",
-					"name": "home",
-					"component": "/Home",
-					"title": "首页",
-					"meta": {
-						"title": "首页",
-						"icon": "home_icon",
-						"roles": "admin,editor",
-						"parent": null,
-						"isMenu": true,
-						"isEdit": false
-					},
-					"redirect": null,
-					"children": null
-				}
-			],
+			menuData: [],
 			defaultProps: {
 				children: 'children',
 				label: 'title'
 			},
-			currentNode: null
+			currentNode: {
+				"meta": {
+					"roles": [],
+					"isMenu": true
+				}
+			},
+			title: '添加顶级节点',
+			button: '立即创建'
 		}
 	},
-	created() {
-		this.getMenus()
+	computed: {
+		...mapGetters([
+			'menus'
+		]),
+		components: () => components
 	},
 	methods: {
+		addRoot() {
+			this.title = '添加顶级节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				"meta": {
+					"roles": [],
+					"isMenu": true,
+					"parent": null
+				}
+			}
+		},
 		handleNodeClick(d) {
-			// console.log(d)
-			d.meta.isEdit = false
+			this.title = '编辑'
+			this.button = '确认修改'
 			this.currentNode = d
 		},
 		renderContent(h, {node, data, store}) {
@@ -78,30 +117,82 @@ export default {
 			})
 		},
 		handleAdd(s, d, n){//增加节点
-			console.log(s, d, n)
-		},
-		handleDelete(s, d, n){//删除节点
-			console.log(s, d, n)
-		},
-		jump(to, params) {
-			if (this.$router) {
-				this.$router.push({ name: to, query: { type: params } })
+			this.title = '添加子节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				"meta": {
+					"roles": [],
+					"isMenu": true,
+					"parent": d.name
+				}
 			}
 		},
-		getMenus() {
-			this.tableData = routerDB
+		handleDelete(s, d, n){//删除节点
+			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.$store.dispatch('deleteMenu', d)
+				this.addRoot()
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})         
+			})
+		},
+		submitForm(type) {
+			if (!this.currentNode.title) {
+				this.$message.error('标题不能为空！')
+				return
+			}
+			if (!this.currentNode.name) {
+				this.$message.error('名字不能为空！')
+				return
+			}
+			if (!this.currentNode.path) {
+				this.$message.error('路径不能为空！')
+				return
+			}
+			if (!this.currentNode.component) {
+				this.$message.error('组件不能为空！')
+				return
+			}
+			// 创建
+			if (type == '立即创建') {
+				this.currentNode.meta.title = this.currentNode.title
+				this.currentNode.children = null
+				this.$store.dispatch('addMenu', this.currentNode)
+				this.addRoot()
+				this.$message.success('创建成功！')
+			// 编辑
+			} else {
+				this.$store.dispatch('editMenu', this.currentNode)
+				this.addRoot()
+				this.$message.success('编辑成功！')
+			}
+			reloadRouter()
 		}
-
 	},
 	components: {
 	}
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 	.main-content
+		display flex
 		.box-card
-			width 360px
+			&.menu-list
+				flex 0 0 360px
+				margin-right 20px
+			&.menu-info
+				flex 1
 			.expand-tree
 				font-size 14px
 </style>

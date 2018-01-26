@@ -8,7 +8,7 @@
 			text-color="#bfcbd9" 
 			active-text-color="#409EFF"
 			@select="selectIndex">
-			<sidebar-item :routes="permission_routers"></sidebar-item>
+			<sidebar-item :routes="menus"></sidebar-item>
 		</el-menu>
 	</scroll-bar>
 </template>
@@ -19,8 +19,12 @@ import SidebarItem from './SidebarItem'
 export default {
 	name: 'sideBar',
 	computed: {
+		// ...mapGetters([
+		// 	'permission_routers',
+		// 	'sidebar'
+		// ]),
 		...mapGetters([
-			'permission_routers',
+			'menus',
 			'sidebar'
 		]),
 		isCollapse() {

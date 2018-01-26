@@ -61,10 +61,23 @@ export let updateData = (name, updatePer) => {
 
 // 删除一条
 export let deleteData = (name) => {
-	findRecursion(routerDB, router => {
-		if (router.name == name) {
-			delete '' // todo 未完成
-			return router
+	// findRecursion(routerDB, router => {
+	// 	if (router.name == name) {
+	// 		delete router.name
+	// 		return
+	// 	}
+	// })
+	let findRecursion = (routers) => {
+		for (let i = 0; i < routers.length; i++) {
+			if (routers[i].name == name) {
+				delete routers[i]
+				localStorage.setItem('routersData', JSON.stringify(routers))
+				return
+			}
+			if (routers[i].children) {
+				findRecursion(routers[i].children)
+			}
 		}
-	})
+	}
+	findRecursion(routerDB)
 }

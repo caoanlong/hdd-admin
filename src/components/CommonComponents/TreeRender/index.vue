@@ -1,11 +1,6 @@
 <template>
 	<span class="tree-expand">
-		<span class="tree-input" v-show="DATA.meta.isEdit">
-			<el-input class="edit" size="mini" 
-			v-model="DATA.title"
-			:ref="'treeInput' + DATA.name"></el-input>
-		</span>
-		<span class="tree-label" v-show="!DATA.meta.isEdit">
+		<span class="tree-label">
 			<span>{{DATA.title}}</span>
 		</span>
 		<span class="tree-btn" v-show="CURRENTNODE ? CURRENTNODE.name == DATA.name : false">
@@ -35,7 +30,6 @@
 	.tree-expand
 		display flex
 		width 100%
-		.tree-input
 		.tree-label
 			flex 1
 		.tree-btn

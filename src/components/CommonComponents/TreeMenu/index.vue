@@ -18,7 +18,7 @@ export default {
 					"meta": {
 						"title": "首页",
 						"icon": "home-icon",
-						"roles": "admin,editor",
+						"roles": ["admin","editor"],
 						"parent": null,
 						"isMenu": true
 					},

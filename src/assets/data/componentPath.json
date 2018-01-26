@@ -1,0 +1,21 @@
+[
+	"/Home",
+	"/CarFreeCarrier",
+	"/CarFreeCarrier/CargoUpload",
+	"/CarFreeCarrier/TruckUpload",
+	"/CarFreeCarrier/Waybill",
+	"/CarFreeCarrier/InterfaceConfig",
+	"/CustomSevice",
+	"/CustomSevice/MemberCertify",
+	"/BusinessConfig",
+	"/BusinessConfig/ContentManage",
+	"/BusinessConfig/ContentManage/SetColumn",
+	"/BusinessConfig/ContentManage/SetContent",
+	"/BusinessConfig/MessageManage",
+	"/BusinessConfig/AppPage",
+	"/System",
+	"/System/SystemSetting",
+	"/System/SystemSetting/MenuManage",
+	"/System/SystemSetting/UserManage",
+	"/System/SystemSetting/RoleManage"
+]

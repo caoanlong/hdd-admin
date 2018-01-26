@@ -9,7 +9,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/styles/index.css'
 import './assets/styles/sidebar.css'
 import App from './App'
-import { saveRouterDB } from './routerDB'
 import router from './router'
 import store from './store'
 
@@ -22,10 +21,12 @@ Vue.use(Element)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+let VueObj = new Vue({
 	el: '#app',
 	router,
 	store,
 	components: { App },
 	template: '<App/>'
 })
+
+export default VueObj

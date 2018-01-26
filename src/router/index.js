@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueObj from '../main.js'
 
-import { findAll } from '../routerDB'
-
+import store from '../store'
 import Layout from '@/components/Layout'
 import Login from '@/components/Login'
 import Temp404 from '@/components/404'
@@ -22,15 +22,15 @@ function modifyComponent (routers) {
 		throw new Error('routers is not existence!')
 	}
 }
+store.dispatch('saveAllmenu')
 
-let routers = findAll()
-export const asyncRouterMap = modifyComponent(routers)
+export let asyncRouterMap = () => modifyComponent(store.getters.menus)
 
-export let routerMap = [
+export let routerMap = () => [
 	{
 		path: '',
 		component: Layout,
-		children: asyncRouterMap
+		children: asyncRouterMap()
 	},
 	{
 		path: '*',
@@ -48,8 +48,16 @@ export let routerMap = [
 	}
 ]
 
-export default new Router({
+let router = new Router({
 	// mode: 'history', // require service support
 	scrollBehavior: () => ({ y: 0 }),
-	routes: routerMap
+	routes: routerMap()
 })
+
+export let reloadRouter = () => {
+	console.log(routerMap())
+	// console.log(VueObj.$router)
+	// router.options.routes = routerMap
+}
+
+export default router
