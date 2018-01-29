@@ -37,6 +37,9 @@
 						<el-option :label="item" :value="item" v-for="item in components" :key="item"></el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="排序">
+					<el-input-number v-model="currentNode.sort" :min="1" label="描述文字"></el-input-number>
+				</el-form-item>
 				<el-form-item label="是否菜单">
 					<el-switch v-model="currentNode.meta.isMenu"></el-switch>
 				</el-form-item>
@@ -170,7 +173,7 @@ export default {
 					component: this.currentNode.component,
 					title: this.currentNode.title,
 					sort: this.currentNode.sort,
-					icon: this.currentNode.icon,
+					icon: this.currentNode.meta.icon,
 					parent: this.currentNode.meta.parent,
 					isMenu: this.currentNode.meta.isMenu,
 					roles: this.currentNode.meta.roles
@@ -187,7 +190,7 @@ export default {
 					component: this.currentNode.component,
 					title: this.currentNode.title,
 					sort: this.currentNode.sort,
-					icon: this.currentNode.icon,
+					icon: this.currentNode.meta.icon,
 					parent: this.currentNode.meta.parent,
 					isMenu: this.currentNode.meta.isMenu,
 					roles: this.currentNode.meta.roles

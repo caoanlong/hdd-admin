@@ -5,7 +5,6 @@ import reloadVueObj from '../../main'
 const menu = {
 	state: {
 		menus: JSON.parse(localStorage.getItem('menus'))
-		// menus: []
 	},
 	mutations: {
 		SAVE_ALLMENU: (state, menus) => {
