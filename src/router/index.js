@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueObj from '../main.js'
+
+import {getMenus} from '../api/menu'
 
 import store from '../store'
 import Layout from '@/components/Layout'
@@ -12,7 +13,9 @@ Vue.use(Router)
 function modifyComponent (routers) {
 	if (routers) {
 		for (let i = 0; i < routers.length; i++) {
-			routers[i].component = require('@/components' + routers[i].component).default
+			if (typeof routers[i].component == 'string') {
+				routers[i].component = require('@/components' + routers[i].component).default
+			}
 			if (routers[i].children) {
 				modifyComponent(routers[i].children)
 			}
@@ -22,15 +25,12 @@ function modifyComponent (routers) {
 		throw new Error('routers is not existence!')
 	}
 }
-store.dispatch('saveAllmenu')
 
-export let asyncRouterMap = () => modifyComponent(store.getters.menus)
-
-export let routerMap = () => [
+let routerMap = [
 	{
 		path: '',
 		component: Layout,
-		children: asyncRouterMap()
+		children: []
 	},
 	{
 		path: '*',
@@ -48,16 +48,30 @@ export let routerMap = () => [
 	}
 ]
 
-let router = new Router({
-	// mode: 'history', // require service support
-	scrollBehavior: () => ({ y: 0 }),
-	routes: routerMap()
-})
-
-export let reloadRouter = () => {
-	console.log(routerMap())
-	// console.log(VueObj.$router)
-	// router.options.routes = routerMap
+export let _initRouter_ = (first) => {
+	return new Promise((resolve, reject) => {
+		let router
+		if (first) {
+			if (store.getters.menus) {
+				routerMap[0].children = modifyComponent(store.getters.menus)
+			}
+			router = new Router({
+				scrollBehavior: () => ({ y: 0 }),
+				routes: routerMap
+			})
+			resolve(router)
+		} else {
+			getMenus().then(res => {
+				store.dispatch('saveAllmenu', res)
+				localStorage.setItem('menus', JSON.stringify(res))
+				routerMap[0].children = modifyComponent(res)
+				router = new Router({
+					scrollBehavior: () => ({ y: 0 }),
+					routes: routerMap
+				})
+				resolve(router)
+			})
+		}
+	})
 }
 
-export default router

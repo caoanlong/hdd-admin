@@ -4,11 +4,11 @@
 			<div class="title-container">
 				<h3 class="title">货多多后台管理系统</h3>
 			</div>
-			<el-form-item prop="username">
+			<el-form-item prop="name">
 				<span class="svg-container svg-container_login">
 					<svg-icon icon-class="user"/>
 				</span>
-				<el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
+				<el-input name="name" type="text" v-model="loginForm.name" autoComplete="on" placeholder="请输入用户名" />
 			</el-form-item>
 			<el-form-item prop="password">
 				<span class="svg-container">
@@ -24,16 +24,18 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import reloadVueObj from '../main'
+	import { Message } from 'element-ui'
 	import {isvalidUsername} from '../common/validator'
 	export default {
 		data () {
-			const validateUsername = (rule, value, callback) => {
-				if (!isvalidUsername(value)) {
-					callback(new Error('请输入正确的用户名！'))
-				} else {
-					callback()
-				}
-			}
+			// const validateUsername = (rule, value, callback) => {
+			// 	if (!isvalidUsername(value)) {
+			// 		callback(new Error('请输入正确的用户名！'))
+			// 	} else {
+			// 		callback()
+			// 	}
+			// }
 			const validatePassword = (rule, value, callback) => {
 				if (value.length < 6) {
 					callback(new Error('密码不能少于6位！'))
@@ -43,11 +45,11 @@
 			}
 			return {
 				loginForm: {
-					username: 'admin',
-					password: '1111111'
+					name: '',
+					password: ''
 				},
 				loginRules: {
-					username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+					name: [{ required: true, trigger: 'blur' }],
 					password: [{ required: true, trigger: 'blur', validator: validatePassword }]
 				},
 				passwordType: 'password',
@@ -66,11 +68,14 @@
 				this.$refs.loginForm.validate(valid => {
 					if (valid) {
 						this.loading = true
-						this.$store.dispatch('Login', this.loginForm).then(() => {
+						this.$store.dispatch('Login', this.loginForm).then((res) => {
 							this.loading = false
+							Message.success('登录成功')
 							this.$router.push({ path: '/' })
+							reloadVueObj()
 						}).catch((err) => {
 							console.log(err)
+							Message.error(err)
 							this.loading = false
 						})
 					} else {

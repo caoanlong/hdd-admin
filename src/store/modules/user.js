@@ -2,11 +2,10 @@ import { login, logout, getUserInfo } from '../../api/login'
 import { getToken, setToken, removeToken } from '../../common/auth'
 const user = {
 	state: {
-		name: '',
-		code: '',
+		name: localStorage.getItem('name'),
 		token: getToken(),
-		roles: [],
-		avatar: ''
+		role: localStorage.getItem('role'),
+		avatar: localStorage.getItem('avatar')
 	},
 	mutations: {
 		SET_NAME: (state, name) => {
@@ -15,8 +14,8 @@ const user = {
 		SET_TOKEN: (state, token) => {
 			state.token = token
 		},
-		SET_ROLES: (state, roles) => {
-			state.roles = roles
+		SET_ROLE: (state, role) => {
+			state.role = role
 		},
 		SET_AVATAR: (state, avatar) => {
 			state.avatar = avatar
@@ -24,20 +23,21 @@ const user = {
 	},
 	actions: {
 		Login ({commit}, userInfo) {
-			const username = userInfo.username.trim()
+			const name = userInfo.name.trim()
 			const password = userInfo.password
 			return new Promise((resolve, reject) => {
-				login(username, password).then(response => {
-					const data = response.data
-					commit('SET_NAME', data.username)
-					commit('SET_ROLES', data.roles.split(','))
-					commit('SET_AVATAR', data.avatar)
-					commit('SET_TOKEN', data.token)
-					localStorage.setItem('username', data.username)
-					localStorage.setItem('roles', data.roles)
-					localStorage.setItem('avatar', data.avatar)
-					setToken(data.token)
-					resolve()
+				login(name, password).then(response => {
+					let data = response.data
+					if (data.code == 0) {
+						console.log(data)
+						localStorage.setItem('name', data.data.name)
+						localStorage.setItem('role', data.data.role)
+						localStorage.setItem('avatar', data.data.avatar)
+						setToken(data.token)
+						resolve(data.data)
+					} else {
+						reject(data.msg)
+					}
 				}).catch(error => {
 					reject(error)
 				})
@@ -47,7 +47,7 @@ const user = {
 			return new Promise((resolve, reject) => {
 				logout(state.token).then(() => {
 					commit('SET_NAME', '')
-					commit('SET_ROLES', [])
+					commit('SET_ROLE', '')
 					commit('SET_AVATAR', '')
 					commit('SET_TOKEN', '')
 					removeToken()
@@ -63,7 +63,7 @@ const user = {
 				getUserInfo(token).then(response => {
 					const data = response.data
 					commit('SET_NAME', data.username)
-					commit('SET_ROLES', data.roles)
+					commit('SET_ROLE', data.role)
 					commit('SET_AVATAR', data.avatar)
 					resolve(data)
 				}).catch(error => {
@@ -74,7 +74,7 @@ const user = {
 		FedLogOut({ commit }) {
 			return new Promise((resolve, reject) => {
 				commit('SET_NAME', '')
-				commit('SET_ROLES', [])
+				commit('SET_ROLE', [])
 				commit('SET_AVATAR', '')
 				commit('SET_TOKEN', '')
 				removeToken()
