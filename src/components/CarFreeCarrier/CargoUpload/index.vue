@@ -16,13 +16,13 @@
 			</el-form>
 		  </div>
 		  <div class="tableControl">
-		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('cargo','add')">添加</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
-		  	<el-table :data="tableData" border style="width: 100%" size="mini">
+		  	<el-table border style="width: 100%" size="mini">
 			    <el-table-column label="报文参考号">
 			    </el-table-column>
 			    <el-table-column label="发送时间">
@@ -57,7 +57,15 @@
 	</div>
 </template>
 <script type="text/javascript">
-	
+	export default {
+		methods: {
+			jump(routerName, params) {
+				if (this.$router) {
+					this.$router.push({ name: routerName, query: { type: params } })
+				}
+			}
+		}
+	}
 </script>
 <style lang="stylus">
 </style>
