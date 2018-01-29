@@ -31,9 +31,9 @@
 				"path": "/cargoupload",
 				"name": "cargoupload",
 				"component": "/CarFreeCarrier/CargoUpload",
-				"title": "货源上传",
+				"title": "货源管理",
 				"meta": {
-					"title": "货源上传",
+					"title": "货源列表",
 					"icon": "upload-icon1",
 					"roles": ["admin","editor"],
 					"parent": "carfreecarrier",
@@ -42,13 +42,55 @@
 				"redirect": null,
 				"children": null
 			},{
+				"path": "/cargo",
+				"name": "cargo",
+				"component": "/CarFreeCarrier/CargoUpload/Cargo",
+				"title": "货源",
+				"meta": {
+					"title": "货源管理",
+					"icon": "upload-icon1",
+					"roles": ["admin","editor"],
+					"parent": null,
+					"isMenu": false
+				},
+				"redirect": null,
+				"children": null
+			},{
 				"path": "/truckupload",
 				"name": "truckupload",
 				"component": "/CarFreeCarrier/TruckUpload",
-				"title": "车源上传",
+				"title": "车源管理",
 				"meta": {
-					"title": "车源上传",
+					"title": "车源列表",
 					"icon": "upload-icon1",
+					"roles": ["admin","editor"],
+					"parent": "carfreecarrier",
+					"isMenu": true
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/truck",
+				"name": "truck",
+				"component": "/CarFreeCarrier/TruckUpload/Truck",
+				"title": "车源",
+				"meta": {
+					"title": "车源管理",
+					"icon": "upload-icon1",
+					"roles": ["admin","editor"],
+					"parent": null,
+					"isMenu": false
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/waybillupload",
+				"name": "waybillupload",
+				"component": "/CarFreeCarrier/WaybillUpload",
+				"title": "运单管理",
+				"meta": {
+					"title": "运单列表",
+					"icon": "upload-icon2",
 					"roles": ["admin","editor"],
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -58,11 +100,25 @@
 			},{
 				"path": "/waybill",
 				"name": "waybill",
-				"component": "/CarFreeCarrier/Waybill",
-				"title": "运单上传",
+				"component": "/CarFreeCarrier/WaybillUpload/Waybill",
+				"title": "运单",
 				"meta": {
-					"title": "运单上传",
-					"icon": "upload-icon2",
+					"title": "运单管理",
+					"icon": "upload-icon1",
+					"roles": ["admin","editor"],
+					"parent": null,
+					"isMenu": false
+				},
+				"redirect": null,
+				"children": null
+			},{
+				"path": "/interfaceconfig",
+				"name": "interfaceconfig",
+				"component": "/CarFreeCarrier/InterfaceConfig",
+				"title": "接口配置",
+				"meta": {
+					"title": "接口列表",
+					"icon": "settings-icon",
 					"roles": ["admin","editor"],
 					"parent": "carfreecarrier",
 					"isMenu": true
@@ -70,16 +126,16 @@
 				"redirect": null,
 				"children": null
 			},{
-				"path": "/interfaceConfig",
-				"name": "interfaceConfig",
-				"component": "/CarFreeCarrier/InterfaceConfig",
-				"title": "接口配置",
+				"path": "/interface",
+				"name": "interface",
+				"component": "/CarFreeCarrier/InterfaceConfig/Interface",
+				"title": "接口",
 				"meta": {
-					"title": "接口配置",
-					"icon": "settings-icon",
+					"title": "接口管理",
+					"icon": "upload-icon1",
 					"roles": ["admin","editor"],
-					"parent": "carfreecarrier",
-					"isMenu": true
+					"parent": null,
+					"isMenu": false
 				},
 				"redirect": null,
 				"children": null

@@ -19,7 +19,7 @@
 			</el-form>
 		  </div>
 		  <div class="tableControl">
-		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('truck','add')">添加</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
@@ -63,23 +63,14 @@
 </template>
 <script type="text/javascript">
 	export default {
-		data() {
-			return {
-				tableData: null
+		methods: {
+			jump(routerName, params) {
+				if (this.$router) {
+					this.$router.push({ name: routerName, query: { type: params } })
+				}
 			}
 		}
-	}
+	}	
 </script>
 <style lang="stylus">
-	.main-content
-		padding 20px
-		.tableControl
-			margin-bottom 10px
-		.pagination
-			margin-top 10px
-			text-align center
-		.table
-			th
-				.cell
-					text-align center
 </style>
