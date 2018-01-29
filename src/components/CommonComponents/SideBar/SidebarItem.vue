@@ -1,6 +1,6 @@
 <template>
 	<div class="menu-wrapper">
-		<template v-for="item in routes" v-if="item.meta.isMenu">
+		<template v-for="item in sortList" v-if="item.meta.isMenu">
 			<el-menu-item v-if="!item.children || item.children.length == 0" :index="item.name" :class="{'submenu-title-noDropdown':!isNest}">
 				<svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
 				<span slot="title">{{item.title}}</span>
@@ -23,6 +23,9 @@
 </template>
 
 <script>
+function sortNumber (a, b) {
+	return a.sort - b.sort
+}
 export default {
 	name: 'SidebarItem',
 	props: {
@@ -32,6 +35,11 @@ export default {
 		isNest: {
 			type: Boolean,
 			default: false
+		}
+	},
+	computed: {
+		sortList: function () {
+			return this.routes.sort(sortNumber)
 		}
 	}
 }
