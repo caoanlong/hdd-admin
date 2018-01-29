@@ -7,9 +7,9 @@
 <script>
 export default {
 	name: 'App',
-	created() {
-		this.$store.dispatch('saveAllmenu')
-	}
+	// created () {
+	// 	reloadVueObj()
+	// }
 }
 </script>
 <style lang="stylus" scoped>

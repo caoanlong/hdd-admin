@@ -59,7 +59,6 @@
 import { mapGetters } from 'vuex'
 import TreeRender from '../../../CommonComponents/TreeRender'
 import components from '../../../../assets/data/componentPath.json'
-import {reloadRouter} from '../../../../router'
 export default {
 	data() {
 		return {
@@ -123,7 +122,7 @@ export default {
 				"meta": {
 					"roles": [],
 					"isMenu": true,
-					"parent": d.name
+					"parent": d._id
 				}
 			}
 		},
@@ -165,18 +164,38 @@ export default {
 			}
 			// 创建
 			if (type == '立即创建') {
-				this.currentNode.meta.title = this.currentNode.title
-				this.currentNode.children = null
-				this.$store.dispatch('addMenu', this.currentNode)
+				let params = {
+					path: this.currentNode.path,
+					name: this.currentNode.name,
+					component: this.currentNode.component,
+					title: this.currentNode.title,
+					sort: this.currentNode.sort,
+					icon: this.currentNode.icon,
+					parent: this.currentNode.meta.parent,
+					isMenu: this.currentNode.meta.isMenu,
+					roles: this.currentNode.meta.roles
+				}
+				this.$store.dispatch('addMenu', params)
 				this.addRoot()
 				this.$message.success('创建成功！')
 			// 编辑
 			} else {
-				this.$store.dispatch('editMenu', this.currentNode)
+				let params = {
+					id: this.currentNode._id,
+					path: this.currentNode.path,
+					name: this.currentNode.name,
+					component: this.currentNode.component,
+					title: this.currentNode.title,
+					sort: this.currentNode.sort,
+					icon: this.currentNode.icon,
+					parent: this.currentNode.meta.parent,
+					isMenu: this.currentNode.meta.isMenu,
+					roles: this.currentNode.meta.roles
+				}
+				this.$store.dispatch('editMenu', params)
 				this.addRoot()
 				this.$message.success('编辑成功！')
 			}
-			reloadRouter()
 		}
 	},
 	components: {

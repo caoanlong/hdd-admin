@@ -33,7 +33,6 @@ export default {
 	},
 	methods: {
 		selectIndex(index) {
-			console.log(index)
 			this.$router.push({name: index})
 		}
 	},
