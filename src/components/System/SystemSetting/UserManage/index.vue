@@ -1,12 +1,11 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-		  <div slot="header" class="clearfix">
 			<div slot="header" class="clearfix">
 				<span>用户列表</span>
 			</div>
 			<div class="search">
-				<el-form :inline="true"  class="demo-form-inline"  size="small">
+				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="归属公司">
 						<el-input  placeholder="归属公司"></el-input>
 					</el-form-item>
@@ -27,13 +26,13 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="users" border style="width: 100%" size="mini">
+				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center">
 					</el-table-column>
 					<el-table-column label="登录名" sortable prop="username">
@@ -51,9 +50,9 @@
 					<el-table-column label="操作" width="240" align="center">
 						<template slot-scope="scope">
 							<el-button-group>
-								<el-button type="default" size="mini" icon="el-icon-view" @click.native="viewUser">查看</el-button>
-								<el-button type="primary" size="mini" icon="el-icon-edit" @click.native="editUser">编辑</el-button>
-								<el-button type="danger" size="mini" icon="el-icon-delete" @click.native="deleteUser">删除</el-button>
+								<el-button type="default" size="mini" icon="el-icon-view" @click.native="viewUser(scope.row._id)">查看</el-button>
+								<el-button type="primary" size="mini" icon="el-icon-edit" @click.native="editUser(scope.row._id)">编辑</el-button>
+								<el-button type="danger" size="mini" icon="el-icon-delete" @click.native="deleteUser(scope.row._id)">删除</el-button>
 							</el-button-group>
 						</template>
 					</el-table-column>
@@ -76,6 +75,7 @@ export default {
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
+			selectedUsers: []
 		}
 	},
 	created() {
@@ -107,15 +107,35 @@ export default {
 		addUser() {
 			this.$router.push({name: 'adduser'})
 		},
-		deleteUser() {
+		deleteUser(ids) {
+			let data = {
+				ids: [].concat(ids)
+			}
+			request({
+				url: '/user/delete',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					console.log(res.data)
+					Message.success(res.data.msg)
+					this.getUsers()
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		},
-
 		editUser(id) {
 			this.$router.push({name: 'edituser', query: {id: id, type: 'edit'}})
 		},
-
 		viewUser(id) {
 			this.$router.push({name: 'edituser', query: {id: id, type: 'view'}})
+		},
+		selectionChange(data) {
+			this.selectedUsers = data.map(item => item._id)
+		},
+		delUserMutiple() {
+			this.deleteUser(this.selectedUsers)
 		},
 		getUsers(pageIndex) {
 			let params = {
