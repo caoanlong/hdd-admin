@@ -119,14 +119,15 @@ export default {
 			this.title = '编辑'
 			this.button = '确认修改'
 			this.currentNode = d
-			console.log(this.currentNode.component)
-			console.log(typeof this.currentNode.component != 'string')
 			if (typeof this.currentNode.component != 'string') {
-				let curNode = this.currentNode.component.__file.split('components')[1]
+				let curNode = this.currentNode.component.__file.split('components')[1].split('.vue')[0]
 				if (curNode.includes('index')) {
 					this.currentNode.component = curNode.split('index')[0].replace(/\\/g, "/")
+				} else {
+					this.currentNode.component = curNode.replace(/\\/g, "/")
 				}
 			}
+			console.log(this.currentNode)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this//指向vue

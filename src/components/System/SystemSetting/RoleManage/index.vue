@@ -17,11 +17,11 @@
 		  </div>
 		  <div class="tableControl">
 			<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addRole">添加</el-button>
-			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+			<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delRoleMutiple">批量删除</el-button>
 			<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getRoles">刷新</el-button>
 		  </div>
 		  <div class="table">
-			<el-table :data="roles" border style="width: 100%" size="mini">
+			<el-table :data="roles" @selection-change="selectionChange" border style="width: 100%" size="mini">
 				<el-table-column type="selection" align="center">
 				</el-table-column>
 				<el-table-column label="角色名称" prop="name">
@@ -45,7 +45,7 @@
 				</el-table-column>
 				</el-table>
 				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="count" :page-count="pages" @current-change="pageChange"></el-pagination>
+					<el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
 				</div>
 		  </div>
 		</el-card>
@@ -61,7 +61,7 @@
 				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
-				pages: 0,
+				selectedRoles: []
 			}
 		},
 		created() {
@@ -73,6 +73,9 @@
 			},
 			pageChange(index) {
 				this.getRoles(index)
+			},
+			selectionChange(data) {
+				this.selectedRoles = data.map(item => item._id)
 			},
 			getRoles(pageIndex) {
 				let params = {
@@ -86,16 +89,18 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.count = res.data.data.count
-						this.pages = res.data.data.pages
 						this.roles = res.data.data.roles
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			delRole(id) {
+			delRoleMutiple() {
+				this.delRole(this.selectedRoles)
+			},
+			delRole(ids) {
 				let data = {
-					ids: [].concat(id)
+					ids: [].concat(ids)
 				}
 				request({
 					url: '/role/delete',
