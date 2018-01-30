@@ -94,6 +94,11 @@ export default {
 				dataArea: '所有数据'
 			}]
 		}
+	},
+	methods: {
+		addUser() {
+			this.$router.push({name: 'adduser'})
+		}
 	}
 }
 </script>
