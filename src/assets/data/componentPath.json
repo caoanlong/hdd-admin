@@ -22,6 +22,10 @@
 	"/System/SystemSetting/MenuManage",
 	"/System/SystemSetting/UserManage",
 	"/System/SystemSetting/UserManage/AddUser",
+	"/System/SystemSetting/UserManage/EditUser",
+	"/System/SystemSetting/UserManage/UserInfo",
 	"/System/SystemSetting/RoleManage",
-	"/System/SystemSetting/RoleManage/AddRole"
+	"/System/SystemSetting/RoleManage/AddRole",
+	"/System/SystemSetting/RoleManage/EditRole",
+	"/System/SystemSetting/RoleManage/RoleInfo"
 ]
