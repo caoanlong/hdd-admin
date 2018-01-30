@@ -37,7 +37,7 @@
 						<el-button-group>
 							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
 							<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.$index, scope.row)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
 						</el-button-group>
@@ -79,7 +79,26 @@
 						Message.error(res.data.msg)
 					}
 				})
-			}
+			},
+			delRole(index, id) {
+				console.log(index, id)
+				// let data = {
+				// 	id: id
+				// }
+				// request({
+				// 	url: '/role/delete',
+				// 	method: 'post',
+				// 	data
+				// }).then(res => {
+				// 	if (res.data.code == 0) {
+				// 		console.log(res.data)
+				// 		Message.success(res.data.msg)
+				// 		this.getRoles()
+				// 	} else {
+				// 		Message.error(res.data.msg)
+				// 	}
+				// })
+			},
 		}
 	}
 </script>
