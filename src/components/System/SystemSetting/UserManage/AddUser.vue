@@ -7,12 +7,16 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<!-- <el-form-item label="头像">
-							<el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/":show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"  v-model="user.avatar">
-								<img v-if="imageUrl" :src="avatar" class="avatar">
+						<el-form-item label="头像">
+							<el-upload 
+								class="avatar-uploader"
+								action="http://39.108.245.177:3001/uploadImg" 
+								:show-file-list="false" 
+								:on-success="handleAvatarSuccess">
+								<img v-if="user.avatar" :src="user.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
-						</el-form-item> -->
+						</el-form-item>
 						<el-form-item label="归属公司">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.company">
 								<el-option label="总公司" value="总公司"></el-option>
@@ -64,19 +68,16 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-checkbox-group  v-model="user.role">
-								<el-checkbox label="管理员"></el-checkbox>
-								<el-checkbox label="客服人员"></el-checkbox>
-								<el-checkbox label="系统管理员"></el-checkbox>
-								<el-checkbox label="运维管理员"></el-checkbox>
+							<el-checkbox-group v-model="user.role">
+								<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
 							</el-checkbox-group>
-						</el-form-item>					
+						</el-form-item>				
 						<el-form-item label="备注">
 							<el-input type="textarea" resize="none" v-model="user.desc" :rows="5"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click.native="addUser">立即创建</el-button>
-							<el-button>取消</el-button>
+							<el-button @click.native="back">取消</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -106,8 +107,12 @@
 					isDisabled: '',
 					lastLoginTime: '',
 					lastLoginIp: ''
-				}
+				},
+				roles: []
 			}
+		},
+		created() {
+			this.getRoles()
 		},
 		methods: {
 			addUser() {
@@ -126,6 +131,25 @@
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			getRoles() {
+				let params = {
+					pageSize: 50
+				}
+				request({
+					url: '/role',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.roles = res.data.data.roles
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			handleAvatarSuccess(res, file) {
+				this.user.avatar = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

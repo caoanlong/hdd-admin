@@ -7,13 +7,17 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<!-- <el-form-item label="头像">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false"  v-model="user.avatar" v-if="isEdit">
-								<img v-if="avatar" :src="avatar" class="avatar">
+						<el-form-item label="头像">
+							<el-upload 
+								:disabled="!isEdit"
+								class="avatar-uploader"
+								action="http://39.108.245.177:3001/uploadImg" 
+								:show-file-list="false" 
+								:on-success="handleAvatarSuccess">
+								<img v-if="user.avatar" :src="user.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
-							<img v-else :src="avatar" class="avatar">
-						</el-form-item> -->
+						</el-form-item>
 						<el-form-item label="归属公司">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.company" :disabled="!isEdit">
 								<el-option label="总公司" value="总公司"></el-option>
@@ -70,11 +74,8 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-checkbox-group  v-model="user.role" :disabled="!isEdit">
-								<el-checkbox label="管理员"></el-checkbox>
-								<el-checkbox label="客服人员"></el-checkbox>
-								<el-checkbox label="系统管理员"></el-checkbox>
-								<el-checkbox label="运维管理员"></el-checkbox>
+							<el-checkbox-group v-model="user.role" :disabled="!isEdit">
+								<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
 							</el-checkbox-group>
 						</el-form-item>					
 						<el-form-item label="备注">
@@ -115,12 +116,14 @@
 					isDisabled: '',
 					lastLoginTime: '',
 					lastLoginIp: ''
-				}
+				},
+				roles: []
 			}
 		},
 		created() {
 			this.isEdit = this.$route.query.type == 'edit'
 			this.getUser()
+			this.getRoles()
 		},
 		methods: {
 			getUser() {
@@ -133,13 +136,14 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data)
 						this.user = res.data.data
-						Message.success(res.data.msg)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			handleAvatarSuccess(res, file) {
+				this.user.avatar = 'http://39.108.245.177:4000' + res.data
 			},
 			addUser() {
 				let data = this.user
@@ -159,6 +163,22 @@
 					}
 				})
 			},
+			getRoles() {
+				let params = {
+					pageSize: 50
+				}
+				request({
+					url: '/role',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.roles = res.data.data.roles
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
 			back() {
 				this.$router.go(-1)
 			}
@@ -166,5 +186,24 @@
 	}
 </script>
 <style lang="stylus">
-	
+	.avatar-uploader
+		.el-upload
+			border 1px dashed #d9d9d9
+			border-radius 6px
+			cursor pointer
+			position relative
+			overflow hidden
+			&:hover
+				border-color #409EFF
+		.avatar-uploader-icon
+			font-size 28px
+			color #8c939d
+			width 98px
+			height 98px
+			line-height 98px
+			text-align center
+		.avatar
+			width 98px
+			height 98px
+			display block
 </style>
