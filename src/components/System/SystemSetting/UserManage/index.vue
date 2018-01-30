@@ -1,6 +1,7 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
+		  <div slot="header" class="clearfix">
 			<div slot="header" class="clearfix">
 				<span>用户列表</span>
 			</div>
@@ -70,6 +71,7 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+
 			users: [],
 			pageIndex: 1,
 			pageSize: 10,
@@ -107,13 +109,32 @@ export default {
 		},
 		deleteUser() {
 		},
-		editUser() {
-			this.$router.push({name: 'edituser'})
+
+		editUser(id) {
+			this.$router.push({name: 'edituser', query: {id: id, type: 'edit'}})
 		},
-		viewUser() {
-			this.$router.push({name: 'userinfo'})
+
+		viewUser(id) {
+			this.$router.push({name: 'edituser', query: {id: id, type: 'view'}})
+		},
+		getUsers(pageIndex) {
+			let params = {
+				pageIndex: pageIndex || 1,
+				pageSize: this.pageSize
+			}
+			request({
+				url: '/user',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.users = res.data.data.users
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		}
-		
 	}
 }
 </script>
