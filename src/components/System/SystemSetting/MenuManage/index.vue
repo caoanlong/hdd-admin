@@ -33,7 +33,7 @@
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon iconClass="add"></svg-icon> 添加图标</el-button>
+					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon iconClass="add-icon"></svg-icon> 添加图标</el-button>
 				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
@@ -60,9 +60,9 @@
 			</el-form>
 		</el-card>
 		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%">
-			<div class="iconList">
-				<svg-icon iconClass=""></svg-icon>
-			</div>
+			<ul class="iconList clearfix">
+				<li v-for="icon in svgicons" :key="icon" ><svg-icon :iconClass="icon"></svg-icon></li>
+			</ul>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="selectIcondialog = false">取 消</el-button>
 				<el-button type="primary" @click="selectIcondialog = false">确 定</el-button>
@@ -74,6 +74,7 @@
 import { mapGetters } from 'vuex'
 import TreeRender from '../../../CommonComponents/TreeRender'
 import components from '../../../../assets/data/componentPath.json'
+import { requireAllName, req } from '../../../../assets/icons'
 export default {
 	data() {
 		return {
@@ -90,13 +91,15 @@ export default {
 			},
 			title: '添加顶级节点',
 			button: '立即创建',
-			selectIcondialog: false
+			selectIcondialog: false,
+			isSelected:false
 		}
 	},
 	computed: {
 		...mapGetters([
 			'menus'
 		]),
+		svgicons: () => requireAllName(req),
 		components: () => components
 	},
 	methods: {
@@ -240,4 +243,21 @@ export default {
 				font-size 14px
 	.svg-icon
 		vertical-align top
+	.iconList
+		padding 0
+		&:after
+			clearfix
+		li
+			list-style-type none
+			float left
+			font-size 18px
+			width 44px
+			height 44px
+			padding 10px
+			text-align center
+			cursor pointer
+			&:hover
+			&.selected
+				color #409EFF
+				
 </style>
