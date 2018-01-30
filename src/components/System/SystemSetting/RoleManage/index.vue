@@ -35,7 +35,7 @@
 				<el-table-column label="操作" width="430" align="center">
 					<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
 							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
@@ -72,7 +72,10 @@
 				this.$router.push({name: 'addrole'})
 			},
 			editRole(id) {
-				this.$router.push({name: 'editrole', query: {id: id}})
+				this.$router.push({name: 'editrole', query: {id: id, type: 'edit'}})
+			},
+			viewPole(id) {
+				this.$router.push({name: 'editrole', query: {id: id, type: 'view'}})
 			},
 			pageChange(index) {
 				this.getRoles(index)
