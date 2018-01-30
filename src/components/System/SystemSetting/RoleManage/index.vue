@@ -38,7 +38,7 @@
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
 							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
-							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row._id)">权限设置</el-button>
+							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
 						</el-button-group>
 					</template>
@@ -54,10 +54,11 @@
 				:data="menus"
 				show-checkbox
 				default-expand-all
-				node-key="id"
+				node-key="_id"
 				ref="tree"
 				highlight-current
-				:props="defaultProps">
+				:props="defaultProps"
+				@check-change="selectMenu">
 			</el-tree>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showSetAuth = false">取 消</el-button>
@@ -82,8 +83,9 @@
 				showSetAuth: false,
 				defaultProps: {
 					children: 'children',
-					label: 'label'
-				}
+					label: 'title'
+				},
+				selectedMenuId: []
 			}
 		},
 		computed: {
@@ -149,12 +151,39 @@
 					}
 				})
 			},
-			setAuth(id) {
-				this.setAuthId = id
+			setAuth(data) {
+				this.setAuthId = data._id
 				this.showSetAuth = true
+				this.$nextTick(() => {
+					this.$refs.tree.setCheckedKeys(data.permissions)
+					this.getRoles()
+				})
 			},
 			submitSetAuth() {
-				this.showSetAuth = false
+				let data = {
+					id: this.setAuthId,
+					permissions: this.selectedMenuId
+				}
+				request({
+					url: '/role/update',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						console.log(res.data)
+						Message.success(res.data.msg)
+					} else {
+						Message.error(res.data.msg)
+					}
+					this.showSetAuth = false
+				})
+			},
+			selectMenu(data, isSelected) {
+				if (isSelected) {
+					this.selectedMenuId.push(data._id)
+				} else {
+					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data._id), 1)
+				}
 			}
 		}
 	}
