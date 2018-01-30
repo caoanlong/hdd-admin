@@ -33,7 +33,7 @@
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon iconClass="add-icon"></svg-icon> 添加图标</el-button>
+					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.icon ? currentNode.icon : 'add-icon'"></svg-icon> {{iconTxt}}</el-button>
 				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
@@ -61,11 +61,11 @@
 		</el-card>
 		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%">
 			<ul class="iconList clearfix">
-				<li v-for="icon in svgicons" :key="icon" ><svg-icon :iconClass="icon"></svg-icon></li>
+				<li v-for="icon in svgicons" :key="icon" :class="{'selected':selectedIcon == icon}" @click="selectIcon(icon)"><svg-icon :iconClass="icon"></svg-icon></li>
 			</ul>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="selectIcondialog = false">取 消</el-button>
-				<el-button type="primary" @click="selectIcondialog = false">确 定</el-button>
+				<el-button type="primary" @click="submitSelect">确 定</el-button>
 			</span>
 		</el-dialog>
 	</div>
@@ -92,7 +92,8 @@ export default {
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
-			isSelected:false
+			selectedIcon: '',
+			iconTxt: '添加图标'
 		}
 	},
 	computed: {
@@ -223,7 +224,15 @@ export default {
 				this.addRoot()
 				this.$message.success('编辑成功！')
 			}
+		},
+		selectIcon(icon) {
+			this.selectedIcon= icon
+		},
+		submitSelect() {
+			this.iconTxt = this.currentNode.icon = this.selectedIcon
+			this.selectIcondialog = false
 		}
+
 	},
 	components: {
 	}
