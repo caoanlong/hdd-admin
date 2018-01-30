@@ -2,19 +2,19 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>编辑角色</span>
+				<span>{{isEdit ? '编辑角色' : '查看角色'}}</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="名称">
-							<el-input auto-complete="off" v-model="role.name"></el-input>
+							<el-input auto-complete="off" v-model="role.name" :disabled="!isEdit"></el-input>
 						</el-form-item>
 						<el-form-item label="英文名称">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off" v-model="role.enName" :disabled="!isEdit"></el-input>
 						</el-form-item>
 						<el-form-item label="组织机构">
-							<el-select style="width: 100%" placeholder="请选择" v-model="role.organization">
+							<el-select style="width: 100%" placeholder="请选择" v-model="role.organization" :disabled="!isEdit">
 								<el-option label="总公司" value="总公司"></el-option>
 								<el-option label="市场部" value="市场部"></el-option>
 								<el-option label="行政部" value="行政部"></el-option>
@@ -22,14 +22,14 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="角色类型">
-							<el-select style="width: 100%" placeholder="请选择" v-model="role.type">
+							<el-select style="width: 100%" placeholder="请选择" v-model="role.type" :disabled="!isEdit">
 								<el-option label="任务分配" value="任务分配"></el-option>
 								<el-option label="管理角色" value="管理角色"></el-option>
 								<el-option label="普通角色" value="普通角色"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="数据范围">
-							<el-select style="width: 100%" placeholder="请选择" v-model="role.dataRange">
+							<el-select style="width: 100%" placeholder="请选择" v-model="role.dataRange" :disabled="!isEdit">
 								<el-option label="所有数据" value="所有数据"></el-option>
 								<el-option label="所在公司及以下数据" value="所在公司及以下数据"></el-option>
 								<el-option label="所在公司数据" value="所在公司数据"></el-option>
@@ -40,23 +40,23 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="是否系统数据">
-							<el-radio-group v-model="role.isSystem">
+							<el-radio-group v-model="role.isSystem" :disabled="!isEdit">
 								<el-radio :label="true">是</el-radio>
 								<el-radio :label="false">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="是否可用">
-							<el-radio-group v-model="role.isDisabled">
+							<el-radio-group v-model="role.isDisabled" :disabled="!isEdit">
 								<el-radio :label="false">是</el-radio>
 								<el-radio :label="true">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="备注">
-							<el-input type="textarea" resize="none" v-model="role.desc"></el-input>
+							<el-input type="textarea" resize="none" v-model="role.desc" :disabled="!isEdit"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="editRole">提交修改</el-button>
-							<el-button @click.native="back">取消</el-button>
+							<el-button type="primary" @click.native="editRole" v-show="isEdit">提交修改</el-button>
+							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -79,10 +79,12 @@
 					dataRange: '',
 					isDisabled: false,
 					desc: ''
-				}
+				},
+				isEdit: true
 			}
 		},
 		created() {
+			this.isEdit = this.$route.query.type == 'edit'
 			this.getRole()
 		},
 		methods: {
@@ -106,6 +108,7 @@
 			},
 			editRole() {
 				let data = this.role
+				data.id = this.role._id
 				console.log(JSON.stringify(data))
 				request({
 					url: '/role/update',
