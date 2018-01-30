@@ -36,7 +36,7 @@
 					<template slot-scope="scope">
 						<el-button-group>
 							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
+							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
@@ -70,6 +70,9 @@
 		methods: {
 			addRole() {
 				this.$router.push({name: 'addrole'})
+			},
+			editRole(id) {
+				this.$router.push({name: 'editrole', query: {id: id}})
 			},
 			pageChange(index) {
 				this.getRoles(index)
