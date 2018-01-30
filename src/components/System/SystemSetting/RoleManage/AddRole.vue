@@ -66,6 +66,7 @@
 </template>
 <script type="text/javascript">
 	import request from '../../../../common/request'
+	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
@@ -90,7 +91,13 @@
 					method: 'post',
 					data
 				}).then(res => {
-					console.log(res.data)
+					if (res.data.code == 0) {
+						console.log(res.data)
+						Message.success(res.data.msg)
+						this.$router.push({name: 'rolemanage'})
+					} else {
+						Message.error(res.data.msg)
+					}
 				})
 			}
 		}

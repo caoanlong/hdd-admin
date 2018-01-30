@@ -33,7 +33,7 @@
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.icon ? currentNode.icon : 'add-icon'"></svg-icon> {{iconTxt}}</el-button>
+					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.meta.icon ? currentNode.meta.icon : 'add-icon'"></svg-icon> {{iconTxt}}</el-button>
 				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
@@ -229,7 +229,7 @@ export default {
 			this.selectedIcon= icon
 		},
 		submitSelect() {
-			this.iconTxt = this.currentNode.icon = this.selectedIcon
+			this.iconTxt = this.currentNode.meta.icon = this.selectedIcon
 			this.selectIcondialog = false
 		}
 

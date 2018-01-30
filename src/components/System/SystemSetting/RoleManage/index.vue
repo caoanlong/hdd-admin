@@ -18,19 +18,19 @@
 		  <div class="tableControl">
 			<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addRole">添加</el-button>
 			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-			<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+			<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getRoles">刷新</el-button>
 		  </div>
 		  <div class="table">
 			<el-table :data="roles" border style="width: 100%" size="mini">
 				<el-table-column type="selection" align="center">
 				</el-table-column>
-				<el-table-column label="角色名称" prop="roleName">
+				<el-table-column label="角色名称" prop="name">
 				</el-table-column>
-				<el-table-column label="英文名称" prop="name">
+				<el-table-column label="英文名称" prop="enName">
 				</el-table-column>
-				<el-table-column label="归属机构" prop="affiliation">
+				<el-table-column label="归属机构" prop="organization">
 				</el-table-column>
-				<el-table-column label="数据范围" prop="dataArea">
+				<el-table-column label="数据范围" prop="dataRange">
 				</el-table-column>
 				<el-table-column label="操作" width="430" align="center">
 					<template slot-scope="scope">
@@ -57,31 +57,6 @@
 	export default {
 		data() {
 			return {
-				tableData: [{
-					id:'1',
-					roleName:'管理员',
-					name: 'Admin',
-					affiliation: '',
-					dataArea: '所有数据'
-				},{
-					id:'2',
-					roleName:'客服人员',
-					name: 'Customer Service',
-					affiliation: '总公司',
-					dataArea: '所有数据'
-				},{
-					id:'3',
-					roleName:'系统管理员',
-					name: 'Administrator',
-					affiliation: '总公司',
-					dataArea: '所有数据'
-				},{
-					id:'4',
-					roleName:'运维管理员',
-					name: 'Operations Manager',
-					affiliation: '总公司',
-					dataArea: '所有数据'
-				}],
 				roles: []
 			}
 		},
