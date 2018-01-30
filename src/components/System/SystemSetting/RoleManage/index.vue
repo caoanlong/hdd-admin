@@ -32,15 +32,13 @@
 				</el-table-column>
 				<el-table-column label="数据范围" prop="dataRange">
 				</el-table-column>
-				<el-table-column label="操作" width="430" align="center">
+				<el-table-column label="操作" width="500" align="center">
 					<template slot-scope="scope">
-						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
-							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
-							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
-						</el-button-group>
+						<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
+						<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
+						<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
+						<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
+						<el-button type="default" size="mini" icon="el-icon-plus"  @click="SetUser">分配用户</el-button>
 					</template>
 				</el-table-column>
 				</el-table>
@@ -65,6 +63,14 @@
 				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog title="分配用户" :visible.sync="showSetUser" width="536px">
+			<el-transfer v-model="selectedUsers" :props="{key: '_id',label: 'name'}" :data="users" @change="handleChange">
+  			</el-transfer>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showSetUser = false">取 消</el-button>
+				<el-button type="primary" @click="submitSetUser">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 <script type="text/javascript">
@@ -80,12 +86,15 @@
 				count: 0,
 				selectedRoles: [],
 				setAuthId: '',
+				users:[],
 				showSetAuth: false,
+				showSetUser:false,
 				defaultProps: {
 					children: 'children',
 					label: 'title'
 				},
-				selectedMenuId: []
+				selectedMenuId: [],
+				selectedUsers:[]
 			}
 		},
 		computed: {
@@ -184,6 +193,35 @@
 				} else {
 					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data._id), 1)
 				}
+			},
+			getUsers(pageIndex) {
+				let params = {
+					pageIndex: pageIndex || 1,
+					pageSize: this.pageSize
+				}
+				request({
+					url: '/user',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.count = res.data.data.count
+						this.users = res.data.data.users
+						console.log(this.users)
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			SetUser() {
+				this.showSetUser = true
+				this.getUsers()
+			},
+			handleChange(value, direction, movedKeys) {
+				console.log(value, direction, movedKeys)
+			},
+			submitSetUser() {
+				this.showSetUser = false
 			}
 		}
 	}
