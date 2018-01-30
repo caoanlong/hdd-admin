@@ -26,6 +26,5 @@
 	"/System/SystemSetting/UserManage/UserInfo",
 	"/System/SystemSetting/RoleManage",
 	"/System/SystemSetting/RoleManage/AddRole",
-	"/System/SystemSetting/RoleManage/EditRole",
-	"/System/SystemSetting/RoleManage/RoleInfo"
+	"/System/SystemSetting/RoleManage/EditRole"
 ]
