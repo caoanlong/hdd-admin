@@ -1,22 +1,28 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
+
 			<div slot="header" class="clearfix">
 				<span>用户列表</span>
 			</div>
 			<div class="search">
+
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="归属公司">
-						<el-input  placeholder="归属公司"></el-input>
+
+						<el-input placeholder="归属公司"></el-input>
 					</el-form-item>
 					<el-form-item label="登录名">
-						<el-input  placeholder="登录名"></el-input>
+
+						<el-input placeholder="登录名"></el-input>
 					</el-form-item>
 					<el-form-item label="归属部门">
-						<el-input  placeholder="归属部门"></el-input>
+
+						<el-input placeholder="归属部门"></el-input>
 					</el-form-item>
 					<el-form-item label="姓名">
-						<el-input  placeholder="姓名"></el-input>
+
+						<el-input placeholder="姓名"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary">查询</el-button>
@@ -26,12 +32,14 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
+
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
 			</div>
 			<div class="table">
+
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center">
 					</el-table-column>
@@ -47,13 +55,13 @@
 					</el-table-column>
 					<el-table-column label="归属部门" sortable prop="department">
 					</el-table-column>
-					<el-table-column label="操作" width="240" align="center">
+
+					<el-table-column label="操作" width="280" align="center">
 						<template slot-scope="scope">
-							<el-button-group>
-								<el-button type="default" size="mini" icon="el-icon-view" @click.native="viewUser(scope.row._id)">查看</el-button>
-								<el-button type="primary" size="mini" icon="el-icon-edit" @click.native="editUser(scope.row._id)">编辑</el-button>
-								<el-button type="danger" size="mini" icon="el-icon-delete" @click.native="deleteUser(scope.row._id)">删除</el-button>
-							</el-button-group>
+
+							<el-button size="mini" icon="el-icon-delete" @click="viewUser(scope.row._id)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="delUser(scope.row._id)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -70,7 +78,6 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-
 			users: [],
 			pageIndex: 1,
 			pageSize: 10,
@@ -105,7 +112,7 @@ export default {
 			})
 		},
 		addUser() {
-			this.$router.push({name: 'adduser'})
+			this.$router.push({ name: 'adduser' })
 		},
 		deleteUser(ids) {
 			let data = {
@@ -126,10 +133,10 @@ export default {
 			})
 		},
 		editUser(id) {
-			this.$router.push({name: 'edituser', query: {id: id, type: 'edit'}})
+			this.$router.push({ name: 'edituser', query: { id: id, type: 'edit' } })
 		},
 		viewUser(id) {
-			this.$router.push({name: 'edituser', query: {id: id, type: 'view'}})
+			this.$router.push({ name: 'edituser', query: { id: id, type: 'view' } })
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item._id)
@@ -157,7 +164,9 @@ export default {
 		}
 	}
 }
+
 </script>
 <style lang="stylus">
+
 
 </style>
