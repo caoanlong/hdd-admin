@@ -16,7 +16,7 @@
 			</el-form>
 		  </div>
 		  <div class="tableControl">
-			<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+			<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addRole">添加</el-button>
 			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 			<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
@@ -56,34 +56,39 @@
 	export default {
 		data() {
 			return {
-			tableData: [{
-				id:'1',
-				roleName:'管理员',
-				name: 'Admin',
-				affiliation: '',
-				dataArea: '所有数据'
-			},{
-				id:'2',
-				roleName:'客服人员',
-				name: 'Customer Service',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			},{
-				id:'3',
-				roleName:'系统管理员',
-				name: 'Administrator',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			},{
-				id:'4',
-				roleName:'运维管理员',
-				name: 'Operations Manager',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			}]
+				tableData: [{
+					id:'1',
+					roleName:'管理员',
+					name: 'Admin',
+					affiliation: '',
+					dataArea: '所有数据'
+				},{
+					id:'2',
+					roleName:'客服人员',
+					name: 'Customer Service',
+					affiliation: '总公司',
+					dataArea: '所有数据'
+				},{
+					id:'3',
+					roleName:'系统管理员',
+					name: 'Administrator',
+					affiliation: '总公司',
+					dataArea: '所有数据'
+				},{
+					id:'4',
+					roleName:'运维管理员',
+					name: 'Operations Manager',
+					affiliation: '总公司',
+					dataArea: '所有数据'
+				}]
+			}
+		},
+		methods: {
+			addRole() {
+				this.$router.push({name: 'addrole'})
+			}
 		}
 	}
-}
 </script>
 <style lang="stylus">
 
