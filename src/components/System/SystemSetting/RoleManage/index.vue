@@ -21,7 +21,7 @@
 			<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 		  </div>
 		  <div class="table">
-			<el-table :data="tableData" border style="width: 100%" size="mini">
+			<el-table :data="roles" border style="width: 100%" size="mini">
 				<el-table-column type="selection" align="center">
 				</el-table-column>
 				<el-table-column label="角色名称" prop="roleName">
@@ -49,10 +49,11 @@
 			  </div>
 		  </div>
 		</el-card>
-
 	</div>
 </template>
 <script type="text/javascript">
+	import request from '../../../../common/request'
+	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
@@ -80,12 +81,29 @@
 					name: 'Operations Manager',
 					affiliation: '总公司',
 					dataArea: '所有数据'
-				}]
+				}],
+				roles: []
 			}
+		},
+		created() {
+			this.getRoles()
 		},
 		methods: {
 			addRole() {
 				this.$router.push({name: 'addrole'})
+			},
+			getRoles() {
+				request({
+					url: '/role',
+					method: 'get'
+				}).then(res => {
+					if (res.data.code == 0) {
+						console.log(res.data.data)
+						this.roles = res.data.data.roles
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
 			}
 		}
 	}
