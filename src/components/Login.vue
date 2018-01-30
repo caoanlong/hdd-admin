@@ -4,11 +4,11 @@
 			<div class="title-container">
 				<h3 class="title">货多多后台管理系统</h3>
 			</div>
-			<el-form-item prop="name">
+			<el-form-item prop="username">
 				<span class="svg-container svg-container_login">
 					<svg-icon icon-class="user"/>
 				</span>
-				<el-input name="name" type="text" v-model="loginForm.name" autoComplete="on" placeholder="请输入用户名" />
+				<el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
 			</el-form-item>
 			<el-form-item prop="password">
 				<span class="svg-container">
@@ -45,11 +45,11 @@
 			}
 			return {
 				loginForm: {
-					name: '',
+					username: '',
 					password: ''
 				},
 				loginRules: {
-					name: [{ required: true, trigger: 'blur' }],
+					username: [{ required: true, trigger: 'blur' }],
 					password: [{ required: true, trigger: 'blur', validator: validatePassword }]
 				},
 				passwordType: 'password',
