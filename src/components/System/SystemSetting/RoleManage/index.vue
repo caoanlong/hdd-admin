@@ -38,7 +38,7 @@
 						<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 						<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
 						<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
-						<el-button type="default" size="mini" icon="el-icon-plus"  @click="SetUser">分配用户</el-button>
+						<el-button type="default" size="mini" icon="el-icon-plus"  @click="SetUser(scope.row.enName)">分配用户</el-button>
 					</template>
 				</el-table-column>
 				</el-table>
@@ -64,7 +64,14 @@
 			</span>
 		</el-dialog>
 		<el-dialog title="分配用户" :visible.sync="showSetUser" width="536px">
-			<el-transfer v-model="selectedUsers" :props="{key: '_id',label: 'name'}" :data="users" @change="handleChange">
+			<el-transfer 
+				v-model="selectedUsers" 
+				:left-default-checked="roleUsers"
+				:right-default-checked="roleUsers"
+				:titles="['所有用户', '当前选择']"
+				:props="{key: '_id', label: 'name'}" 
+				:data="users" 
+				@change="handleChange">
   			</el-transfer>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showSetUser = false">取 消</el-button>
@@ -86,7 +93,10 @@
 				count: 0,
 				selectedRoles: [],
 				setAuthId: '',
+				// 所有的用户
 				users:[],
+				// 当前角色权限的用户
+				roleUsers: [],
 				showSetAuth: false,
 				showSetUser:false,
 				defaultProps: {
@@ -194,10 +204,10 @@
 					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data._id), 1)
 				}
 			},
+			// 获取所有用户
 			getUsers(pageIndex) {
 				let params = {
-					pageIndex: pageIndex || 1,
-					pageSize: this.pageSize
+					pageSize: 50
 				}
 				request({
 					url: '/user',
@@ -205,17 +215,34 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.count = res.data.data.count
 						this.users = res.data.data.users
-						console.log(this.users)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			SetUser() {
+			// 获取符合当前角色权限的用户
+			getUsersFromRole(role) {
+				let params = {
+					role: role,
+				}
+				request({
+					url: '/user/role',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.roleUsers = res.data.data.map(item => item._id)
+						console.log(this.roleUsers)
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			SetUser(role) {
 				this.showSetUser = true
 				this.getUsers()
+				this.getUsersFromRole(role)
 			},
 			handleChange(value, direction, movedKeys) {
 				console.log(value, direction, movedKeys)
