@@ -56,7 +56,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click.native="addRole">立即创建</el-button>
-							<el-button>取消</el-button>
+							<el-button @click.native="back">取消</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -99,6 +99,9 @@
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
 		}
 	}
