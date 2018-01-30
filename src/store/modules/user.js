@@ -2,14 +2,14 @@ import { login, logout, getUserInfo } from '../../api/login'
 import { getToken, setToken, removeToken } from '../../common/auth'
 const user = {
 	state: {
-		name: localStorage.getItem('name'),
+		username: localStorage.getItem('username'),
 		token: getToken(),
 		role: localStorage.getItem('role'),
 		avatar: localStorage.getItem('avatar')
 	},
 	mutations: {
-		SET_NAME: (state, name) => {
-			state.name = name
+		SET_NAME: (state, username) => {
+			state.username = username
 		},
 		SET_TOKEN: (state, token) => {
 			state.token = token
@@ -23,14 +23,14 @@ const user = {
 	},
 	actions: {
 		Login ({commit}, userInfo) {
-			const name = userInfo.name.trim()
+			const username = userInfo.username.trim()
 			const password = userInfo.password
 			return new Promise((resolve, reject) => {
-				login(name, password).then(response => {
+				login(username, password).then(response => {
 					let data = response.data
 					if (data.code == 0) {
 						console.log(data)
-						localStorage.setItem('name', data.data.name)
+						localStorage.setItem('username', data.data.username)
 						localStorage.setItem('role', data.data.role)
 						localStorage.setItem('avatar', data.data.avatar)
 						setToken(data.token)

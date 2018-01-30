@@ -1,8 +1,8 @@
 import request from '../common/request'
 
-export function login(name, password) {
+export function login(username, password) {
 	const data = {
-		name,
+		username,
 		password
 	}
 	return request({

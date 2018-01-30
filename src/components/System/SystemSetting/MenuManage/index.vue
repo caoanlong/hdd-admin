@@ -48,9 +48,7 @@
 				</el-form-item>
 				<el-form-item label="角色权限">
 					<el-checkbox-group v-model="currentNode.meta.roles">
-						<el-checkbox label="admin"></el-checkbox>
-						<el-checkbox label="editor"></el-checkbox>
-						<el-checkbox label="devloper"></el-checkbox>
+						<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
 					</el-checkbox-group>
 				</el-form-item>
 				<el-form-item>
@@ -75,10 +73,12 @@ import { mapGetters } from 'vuex'
 import TreeRender from '../../../CommonComponents/TreeRender'
 import components from '../../../../assets/data/componentPath.json'
 import { requireAllName, req } from '../../../../assets/icons'
+import request from '../../../../common/request'
 export default {
 	data() {
 		return {
 			menuData: [],
+			roles: [],
 			defaultProps: {
 				children: 'children',
 				label: 'title'
@@ -102,6 +102,9 @@ export default {
 		]),
 		svgicons: () => requireAllName(req),
 		components: () => components
+	},
+	created() {
+		this.getRoles()
 	},
 	methods: {
 		addRoot() {
@@ -232,8 +235,23 @@ export default {
 		submitSelect() {
 			this.iconTxt = this.currentNode.meta.icon = this.selectedIcon
 			this.selectIcondialog = false
+		},
+		getRoles() {
+			let params = {
+				pageSize: 50
+			}
+			request({
+				url: '/role',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.roles = res.data.data.roles
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		}
-
 	},
 	components: {
 	}

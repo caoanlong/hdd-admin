@@ -38,7 +38,7 @@
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
 							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
-							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
+							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row._id)">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
 						</el-button-group>
 					</template>
@@ -49,9 +49,25 @@
 				</div>
 		  </div>
 		</el-card>
+		<el-dialog title="权限设置" :visible.sync="showSetAuth" width="30%">
+			<el-tree
+				:data="menus"
+				show-checkbox
+				default-expand-all
+				node-key="id"
+				ref="tree"
+				highlight-current
+				:props="defaultProps">
+			</el-tree>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showSetAuth = false">取 消</el-button>
+				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 <script type="text/javascript">
+	import { mapGetters } from 'vuex'
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
 	export default {
@@ -61,8 +77,19 @@
 				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
-				selectedRoles: []
+				selectedRoles: [],
+				setAuthId: '',
+				showSetAuth: false,
+				defaultProps: {
+					children: 'children',
+					label: 'label'
+				}
 			}
+		},
+		computed: {
+			...mapGetters([
+				'menus'
+			])
 		},
 		created() {
 			this.getRoles()
@@ -122,6 +149,13 @@
 					}
 				})
 			},
+			setAuth(id) {
+				this.setAuthId = id
+				this.showSetAuth = true
+			},
+			submitSetAuth() {
+				this.showSetAuth = false
+			}
 		}
 	}
 </script>
