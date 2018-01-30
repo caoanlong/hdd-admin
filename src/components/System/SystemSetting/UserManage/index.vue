@@ -26,16 +26,16 @@
 		  </div>
 		  <div class="tableControl">
 			<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
-			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+			<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUsersMutiple">批量删除</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+		  	<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
 		  </div>
 		  <div class="table">
-			<el-table :data="tableData" border style="width: 100%" size="mini">
+			<el-table :data="users" border style="width: 100%" size="mini">
 				<el-table-column type="selection" align="center">
 				</el-table-column>
-				<el-table-column label="登录名" sortable prop="roleName">
+				<el-table-column label="登录名" sortable prop="name">
 				</el-table-column>
 				<el-table-column label="姓名" sortable prop="name">
 				</el-table-column>
@@ -50,9 +50,9 @@
 				<el-table-column label="操作" width="240" align="center">
 					<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view" @click.native="viewUser">查看</el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" @click.native="editUser">编辑</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete" @click.native="deleteUser">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewUser(scope.row._id)">查看</el-button>
+							<el-button type="primary" size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delUser(scope.row._id)">删除</el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>
@@ -65,50 +65,67 @@
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../../common/request'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			tableData: [{
-				id:'1',
-				roleName:'管理员',
-				name: 'Admin',
-				affiliation: '',
-				dataArea: '所有数据'
-			},{
-				id:'2',
-				roleName:'客服人员',
-				name: 'Customer Service',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			},{
-				id:'3',
-				roleName:'系统管理员',
-				name: 'Administrator',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			},{
-				id:'4',
-				roleName:'运维管理员',
-				name: 'Operations Manager',
-				affiliation: '总公司',
-				dataArea: '所有数据'
-			}]
+			users: [],
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			selectedUsers: []
 		}
+	},
+	created() {
+		this.getUsers()
 	},
 	methods: {
 		addUser() {
 			this.$router.push({name: 'adduser'})
 		},
-		deleteUser() {
-
+		delUser(ids) {
+			let data = {
+				ids: [].concat(ids)
+			}
+			request({
+				url: '/user/delete',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					console.log(res.data)
+					Message.success(res.data.msg)
+					this.getUsers()
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		},
-		editUser() {
-			this.$router.push({name: 'edituser'})
+		editUser(id) {
+			this.$router.push({name: 'edituser', query: {id: id, type: 'edit'}})
 		},
-		viewUser() {
-			this.$router.push({name: 'userinfo'})
+		viewUser(id) {
+			this.$router.push({name: 'edituser', query: {id: id, type: 'view'}})
+		},
+		getUsers(pageIndex) {
+			let params = {
+				pageIndex: pageIndex || 1,
+				pageSize: this.pageSize
+			}
+			request({
+				url: '/user',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.users = res.data.data.users
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		}
-		
 	}
 }
 </script>
