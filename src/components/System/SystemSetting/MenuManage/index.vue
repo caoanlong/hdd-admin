@@ -33,7 +33,7 @@
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-input v-model="currentNode.meta.icon"></el-input>
+					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon iconClass="add"></svg-icon> 添加图标</el-button>
 				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
@@ -59,6 +59,15 @@
 				</el-form-item>
 			</el-form>
 		</el-card>
+		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%">
+			<div class="iconList">
+				<svg-icon iconClass=""></svg-icon>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="selectIcondialog = false">取 消</el-button>
+				<el-button type="primary" @click="selectIcondialog = false">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 <script type="text/javascript">
@@ -80,7 +89,8 @@ export default {
 				}
 			},
 			title: '添加顶级节点',
-			button: '立即创建'
+			button: '立即创建',
+			selectIcondialog: false
 		}
 	},
 	computed: {
@@ -228,4 +238,6 @@ export default {
 				flex 1
 			.expand-tree
 				font-size 14px
+	.svg-icon
+		vertical-align top
 </style>
