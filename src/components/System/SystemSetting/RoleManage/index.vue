@@ -37,16 +37,16 @@
 						<el-button-group>
 							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
 							<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.$index, scope.row)">删除</el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus">分配用户</el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>
-			  </el-table>
-			  <div class="pagination">
-			  <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-			  </div>
+				</el-table>
+				<div class="pagination">
+					<el-pagination background layout="prev, pager, next" :total="count" :page-count="pages" @current-change="pageChange"></el-pagination>
+				</div>
 		  </div>
 		</el-card>
 	</div>
@@ -57,7 +57,11 @@
 	export default {
 		data() {
 			return {
-				roles: []
+				roles: [],
+				pageIndex: 1,
+				pageSize: 10,
+				count: 0,
+				pages: 0,
 			}
 		},
 		created() {
@@ -67,37 +71,45 @@
 			addRole() {
 				this.$router.push({name: 'addrole'})
 			},
-			getRoles() {
+			pageChange(index) {
+				this.getRoles(index)
+			},
+			getRoles(pageIndex) {
+				let params = {
+					pageIndex: pageIndex || 1,
+					pageSize: this.pageSize
+				}
 				request({
 					url: '/role',
-					method: 'get'
+					method: 'get',
+					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data.data)
+						this.count = res.data.data.count
+						this.pages = res.data.data.pages
 						this.roles = res.data.data.roles
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			delRole(index, id) {
-				console.log(index, id)
-				// let data = {
-				// 	id: id
-				// }
-				// request({
-				// 	url: '/role/delete',
-				// 	method: 'post',
-				// 	data
-				// }).then(res => {
-				// 	if (res.data.code == 0) {
-				// 		console.log(res.data)
-				// 		Message.success(res.data.msg)
-				// 		this.getRoles()
-				// 	} else {
-				// 		Message.error(res.data.msg)
-				// 	}
-				// })
+			delRole(id) {
+				let data = {
+					ids: [].concat(id)
+				}
+				request({
+					url: '/role/delete',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						console.log(res.data)
+						Message.success(res.data.msg)
+						this.getRoles()
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
 			},
 		}
 	}
