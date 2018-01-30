@@ -35,17 +35,17 @@
 			<el-table :data="users" border style="width: 100%" size="mini">
 				<el-table-column type="selection" align="center">
 				</el-table-column>
-				<el-table-column label="登录名" sortable prop="name">
+				<el-table-column label="登录名" sortable prop="username">
 				</el-table-column>
 				<el-table-column label="姓名" sortable prop="name">
 				</el-table-column>
-				<el-table-column label="电话" sortable prop="affiliation">
+				<el-table-column label="电话" sortable prop="tel">
 				</el-table-column>
-				<el-table-column label="手机" sortable>
+				<el-table-column label="手机" sortable prop="mobile">
 				</el-table-column>
-				<el-table-column label="归属公司" sortable>
+				<el-table-column label="归属公司" sortable prop="company">
 				</el-table-column>
-				<el-table-column label="归属部门" sortable>
+				<el-table-column label="归属部门" sortable prop="department">
 				</el-table-column>
 				<el-table-column label="操作" width="240" align="center">
 					<template slot-scope="scope">

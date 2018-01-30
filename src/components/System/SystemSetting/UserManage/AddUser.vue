@@ -7,25 +7,23 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="头像">
+						<!-- <el-form-item label="头像">
 							<el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/":show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"  v-model="user.avatar">
-								<img v-if="imageUrl" :src="imageUrl" class="avatar">
+								<img v-if="imageUrl" :src="avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
-						</el-form-item>
+						</el-form-item> -->
 						<el-form-item label="归属公司">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.company">
 								<el-option label="总公司" value="总公司"></el-option>
-								<el-option label="市场部" value="市场部"></el-option>
-								<el-option label="行政部" value="行政部"></el-option>
-								<el-option label="研发部" value="研发部"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="归属部门">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.department">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option label="市场部" value="市场部"></el-option>
+								<el-option label="行政部" value="行政部"></el-option>
+								<el-option label="财务部" value="财务部"></el-option>
+								<el-option label="技术部" value="技术部"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="工号">
@@ -60,13 +58,13 @@
 						</el-form-item>
 						<el-form-item label="用户类型">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.type">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option label="系统管理" value="系统管理"></el-option>
+								<el-option label="部门经理" value="部门经理"></el-option>
+								<el-option label="普通用户" value="普通用户"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="用户角色" v-model="user.role">
-							<el-checkbox-group>
+						<el-form-item label="用户角色">
+							<el-checkbox-group  v-model="user.role">
 								<el-checkbox label="管理员"></el-checkbox>
 								<el-checkbox label="客服人员"></el-checkbox>
 								<el-checkbox label="系统管理员"></el-checkbox>
@@ -104,7 +102,7 @@
 					type: '',
 					desc: '',
 					avatar: '',
-					role: '',
+					role: [],
 					isDisabled: '',
 					lastLoginTime: '',
 					lastLoginIp: ''
