@@ -50,9 +50,9 @@
 				<el-table-column label="操作" width="240" align="center">
 					<template slot-scope="scope">
 						<el-button-group>
-							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
-							<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
-							<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click.native="viewUser">查看</el-button>
+							<el-button type="primary" size="mini" icon="el-icon-edit" @click.native="editUser">编辑</el-button>
+							<el-button type="danger" size="mini" icon="el-icon-delete" @click.native="deleteUser">删除</el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>
@@ -98,7 +98,17 @@ export default {
 	methods: {
 		addUser() {
 			this.$router.push({name: 'adduser'})
+		},
+		deleteUser() {
+
+		},
+		editUser() {
+			this.$router.push({name: 'edituser'})
+		},
+		viewUser() {
+			this.$router.push({name: 'userinfo'})
 		}
+		
 	}
 }
 </script>

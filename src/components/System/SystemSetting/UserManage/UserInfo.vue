@@ -71,7 +71,7 @@
 							</el-checkbox-group>
 						</el-form-item>					
 						<el-form-item label="备注">
-							<el-input type="textarea" resize="none" v-model="role.desc" rows="5"></el-input>
+							<el-input type="textarea" resize="none" v-model="role.desc" :rows="5"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button>返回</el-button>

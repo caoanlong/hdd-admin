@@ -26,28 +26,28 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="工号">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="姓名">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="登录名">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="密码">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="确认密码">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="手机">
-							<el-input auto-complete="off" v-model="role.enName"></el-input>
+							<el-input auto-complete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="是否允许登录">
 							<el-radio-group v-model="role.isDisabled">
@@ -71,7 +71,7 @@
 							</el-checkbox-group>
 						</el-form-item>					
 						<el-form-item label="备注">
-							<el-input type="textarea" resize="none" v-model="role.desc" rows="5"></el-input>
+							<el-input type="textarea" resize="none" v-model="role.desc" :rows="5"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click.native="addUser">立即保存</el-button>
@@ -101,17 +101,7 @@
 			}
 		},
 		methods: {
-			addUser() {
-				let data = this.role
-				console.log(JSON.stringify(data))
-				request({
-					url: '/role/add',
-					method: 'post',
-					data
-				}).then(res => {
-					console.log(res.data)
-				})
-			}
+
 		}
 	}
 </script>
