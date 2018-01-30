@@ -38,11 +38,14 @@
 						<el-form-item label="登录名">
 							<el-input auto-complete="off" v-model="user.username" :disabled="!isEdit"></el-input>
 						</el-form-item>
-						<el-form-item label="密码" v-model="user.password" v-if="isEdit">
-							<el-input auto-complete="off"></el-input>
+						<el-form-item label="密码" v-if="isEdit">
+							<el-input auto-complete="off"  v-model="user.password"></el-input>
 						</el-form-item>
-						<el-form-item label="确认密码" v-model="user.password2" v-if="isEdit">
-							<el-input auto-complete="off"></el-input>
+						<el-form-item label="密码" v-if="!isEdit">
+							<el-input auto-complete="off"  type="password" v-model="user.password" :disabled="true"></el-input>
+						</el-form-item>
+						<el-form-item label="确认密码"  v-if="isEdit">
+							<el-input auto-complete="off" v-model="user.password2"></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱">
 							<el-input auto-complete="off" v-model="user.email" :disabled="!isEdit"></el-input>
@@ -79,10 +82,10 @@
 						</el-form-item>
 						<el-form-item v-if="isEdit">
 							<el-button type="primary" @click.native="addUser">立即保存</el-button>
-							<el-button>取消</el-button>
+							<el-button @click="back">取消</el-button>
 						</el-form-item>
 						<el-form-item v-else>
-							<el-button>返回</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
