@@ -25,7 +25,7 @@
 			</el-form>
 		  </div>
 		  <div class="tableControl">
-			<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+			<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
 			<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 		  	<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>

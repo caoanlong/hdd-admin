@@ -21,6 +21,7 @@
 	"/System/SystemSetting",
 	"/System/SystemSetting/MenuManage",
 	"/System/SystemSetting/UserManage",
+	"/System/SystemSetting/UserManage/AddUser",
 	"/System/SystemSetting/RoleManage",
 	"/System/SystemSetting/RoleManage/AddRole"
 ]
