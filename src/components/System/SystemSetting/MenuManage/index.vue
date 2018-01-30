@@ -32,6 +32,9 @@
 				<el-form-item label="路径">
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
+				<el-form-item label="图标">
+					<el-input v-model="currentNode.meta.icon"></el-input>
+				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
 						<el-option :label="item" :value="item" v-for="item in components" :key="item"></el-option>
@@ -102,6 +105,14 @@ export default {
 			this.title = '编辑'
 			this.button = '确认修改'
 			this.currentNode = d
+			console.log(this.currentNode.component)
+			console.log(typeof this.currentNode.component != 'string')
+			if (typeof this.currentNode.component != 'string') {
+				let curNode = this.currentNode.component.__file.split('components')[1]
+				if (curNode.includes('index')) {
+					this.currentNode.component = curNode.split('index')[0].replace(/\\/g, "/")
+				}
+			}
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this//指向vue
