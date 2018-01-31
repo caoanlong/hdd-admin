@@ -98,9 +98,7 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data)
 						this.role = res.data.data
-						Message.success(res.data.msg)
 					} else {
 						Message.error(res.data.msg)
 					}
