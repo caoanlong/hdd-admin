@@ -185,7 +185,7 @@
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 	.avatar-uploader
 		.el-upload
 			border 1px dashed #d9d9d9
