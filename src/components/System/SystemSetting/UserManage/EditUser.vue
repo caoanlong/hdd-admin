@@ -193,6 +193,7 @@
 			cursor pointer
 			position relative
 			overflow hidden
+			vertical-align top
 			&:hover
 				border-color #409EFF
 		.avatar-uploader-icon
@@ -206,4 +207,7 @@
 			width 98px
 			height 98px
 			display block
+	.el-checkbox
+		margin-left 0!important
+		margin-right 30px
 </style>
