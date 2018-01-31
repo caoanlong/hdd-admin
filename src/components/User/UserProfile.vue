@@ -9,46 +9,51 @@
 				<el-row :gutter="20">
 					<el-col :span="12" :offset="4">
 						<el-form-item label="头像">
-							<el-upload class="avatar-uploader"
-							  action=""  :show-file-list="false" :disabled="!isEdit">
-							  <i class="el-icon-plus avatar-uploader-icon"></i>
+							<el-upload 
+								class="avatar-uploader"
+								action="http://39.108.245.177:3001/uploadImg"  
+								:show-file-list="false" 
+								:on-success="handleAvatarSuccess"
+								:disabled="!isEdit">
+								<img v-if="user.avatar" :src="user.avatar" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item> 
 						<el-form-item label="姓名">
-							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
+							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.name"></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
+							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.email"></el-input>
 						</el-form-item>
 						<el-form-item label="手机">
-							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
+							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.mobile"></el-input>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
+							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.tel"></el-input>
 						</el-form-item>
 						<el-form-item label="公司">
-							<el-input auto-complete="off" disabled></el-input>
+							<el-input auto-complete="off" disabled v-model="user.company"></el-input>
 						</el-form-item>
 						<el-form-item label="部门">
-							<el-input auto-complete="off" disabled></el-input>
+							<el-input auto-complete="off" disabled v-model="user.department"></el-input>
 						</el-form-item>
 						<el-form-item label="用户名">
-							<el-input auto-complete="off" disabled></el-input>
+							<el-input auto-complete="off" disabled v-model="user.username"></el-input>
 						</el-form-item>
 						<el-form-item label="注册手机号码">
-							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
+							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.mobile"></el-input>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-input auto-complete="off" disabled></el-input>
+							<el-input auto-complete="off" disabled v-model="user.role.join('，')"></el-input>
 						</el-form-item>
 						<el-form-item label="用户类型">
-							<el-input auto-complete="off"  disabled></el-input>
+							<el-input auto-complete="off"  disabled v-model="user.type"></el-input>
 						</el-form-item>
 						<el-form-item label="备注">
-							 <el-input type="textarea" :rows="4" resize="none" :disabled="!isEdit"></el-input>
+							 <el-input type="textarea" :rows="4" resize="none" :disabled="!isEdit" v-model="user.desc"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" v-show="isEdit">保存</el-button>
+							<el-button type="primary" v-show="isEdit" @click="editUser">保存</el-button>
 							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-col>
@@ -58,12 +63,34 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import request from '../../common/request'
+	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
 				isEdit: false,
-				userInfo: {}
+				user: {
+					name: '',
+					username: '',
+					tel: '',
+					mobile: '',
+					password: '',
+					company: '',
+					department: '',
+					email: '',
+					jobNo: '',
+					type: '',
+					desc: '',
+					avatar: '',
+					role: [],
+					isDisabled: '',
+					lastLoginTime: '',
+					lastLoginIp: ''
+				}
 			}
+		},
+		created() {
+			this.getUseInfo()
 		},
 		methods: {
 			editInfo() {
@@ -71,15 +98,35 @@
 			},
 			getUseInfo() {
 				request({
-					url: '/user/info',
+					url: '/user/detail',
 					method: 'get',
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.userInfo = res.data.data
+						this.user = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			editUser() {
+				let data = this.user
+				data.id = this.user._id
+				request({
+					url: '/user/update',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						Message.success(res.data.msg)
+						this.isEdit = !this.isEdit
+						this.getUseInfo()
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			handleAvatarSuccess(res, file) {
+				this.user.avatar = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

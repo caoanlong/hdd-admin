@@ -27,7 +27,7 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
+				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
 			</div>
@@ -65,6 +65,16 @@
 <script type="text/javascript">
 import request from '../../../../common/request'
 import { Message } from 'element-ui'
+import UploadExcel from '../../../CommonComponents/UploadExcel'
+const userMap = {
+	'Id': '_id',
+	'登录名': 'username',
+	'姓名': 'name',
+	'电话': 'tel',
+	'手机': 'mobile',
+	'归属公司': 'company',
+	'归属部门': 'department'
+}
 export default {
 	data() {
 		return {
@@ -85,7 +95,7 @@ export default {
 			this.downloadLoading = true
 			import('../../../../common/Export2Excel').then(excel => {
 				const tHeader = ['Id', '登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
-				const filterVal = ['_id', 'username', 'name', 'tel', 'mobile', 'company', 'department']
+				const filterVal = [userMap['Id'], userMap['登录名'], userMap['姓名'], userMap['电话'], userMap['手机'], userMap['归属公司'], userMap['归属部门']]
 				const data = this.formatJson(filterVal, this.users)
 				excel.export_json_to_excel(tHeader, data, this.filename)
 				this.downloadLoading = false
@@ -99,6 +109,38 @@ export default {
 					return v[j]
 				}
 			}))
+		},
+		onSelectedFile(result) {
+			new Promise((resolve, reject) => {
+				let uploadExcelUsers = []
+				result.forEach(item => {
+					let excelUser = {}
+					for (let key in item) {
+						excelUser[userMap[key]] = item[key]
+					}
+					uploadExcelUsers.push(excelUser)
+				})
+				resolve(uploadExcelUsers)
+			}).then(users => {
+				this.addUserMutiple(users)
+			})
+		},
+		addUserMutiple(users) {
+			let data = {
+				users: users,
+			}
+			request({
+				url: '/user/addmutip',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					console.log(res.data)
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		},
 		pageChange(index) {
 			this.getUsers(index)
@@ -154,6 +196,9 @@ export default {
 		delUserMutiple() {
 			this.delUser(this.selectedUsers)
 		}
+	},
+	components: {
+		UploadExcel
 	}
 }
 
