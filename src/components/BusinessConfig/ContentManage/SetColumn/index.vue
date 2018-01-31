@@ -19,14 +19,12 @@
 					</el-table-column>
 					<el-table-column label="类型" prop="sortType">
 					</el-table-column>
-					<el-table-column label="是否启用" align="center" prop="Enabled">
+					<el-table-column label="是否启用" width="120" sortable align="center" prop="Enabled">
 					</el-table-column>
-					<el-table-column label="操作" width="170" align="center">
+					<el-table-column label="操作" width="190" align="center">
 						<template slot-scope="scope">
-							<el-button-group>
-								<el-button type="primary" size="mini" icon="el-icon-edit" title>修改</el-button>
-								<el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
-							</el-button-group>
+							<el-button type="default" size="mini" icon="el-icon-edit" title>修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

@@ -38,15 +38,15 @@
 			    </el-table-column>
 			    <el-table-column sortable label="车辆长度">
 			    </el-table-column>
-			    <el-table-column sortable label="核定载质量">
+			    <el-table-column label="核定载质量">
 			    </el-table-column>
-			    <el-table-column sortable label="出发地">
+			    <el-table-column label="出发地">
 			    </el-table-column>
-			    <el-table-column sortable label="目的地">
+			    <el-table-column label="目的地">
 			    </el-table-column>
 			    <el-table-column sortable label="状态">
 			    </el-table-column>
-			    <el-table-column sortable label="描述">
+			    <el-table-column label="描述">
 			    </el-table-column>
 			    <el-table-column sortable label="创建时间">
 			    </el-table-column>
