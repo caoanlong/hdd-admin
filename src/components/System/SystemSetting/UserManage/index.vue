@@ -28,12 +28,12 @@
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
+				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center">
+					<el-table-column label="Id" type="selection" align="center">
 					</el-table-column>
 					<el-table-column label="登录名" sortable prop="username">
 					</el-table-column>
@@ -68,6 +68,8 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			downloadLoading: false,
+			filename: '用户数据',
 			users: [],
 			pageIndex: 1,
 			pageSize: 10,
@@ -79,6 +81,25 @@ export default {
 		this.getUsers()
 	},
 	methods: {
+		exportExcel() {
+			this.downloadLoading = true
+			import('../../../../common/Export2Excel').then(excel => {
+				const tHeader = ['Id', '登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
+				const filterVal = ['_id', 'username', 'name', 'tel', 'mobile', 'company', 'department']
+				const data = this.formatJson(filterVal, this.users)
+				excel.export_json_to_excel(tHeader, data, this.filename)
+				this.downloadLoading = false
+			})
+		},
+		formatJson(filterVal, jsonData) {
+			return jsonData.map(v => filterVal.map(j => {
+				if (j === 'timestamp') {
+					return parseTime(v[j])
+				} else {
+					return v[j]
+				}
+			}))
+		},
 		pageChange(index) {
 			this.getUsers(index)
 		},

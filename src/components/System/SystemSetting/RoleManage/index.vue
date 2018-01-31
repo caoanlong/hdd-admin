@@ -21,7 +21,11 @@
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getRoles">刷新</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="roles" @selection-change="selectRoleChange" border style="width: 100%" size="mini">
+				<el-table 
+					ref="roleTable" 
+					:data="roles" 
+					@selection-change="selectRoleChange" 
+					border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center">
 					</el-table-column>
 					<el-table-column label="角色名称" prop="name">
@@ -38,7 +42,7 @@
 							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
 							<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
-							<el-button type="default" size="mini" icon="el-icon-plus"  @click="SetUser(scope.row.enName)">分配用户</el-button>
+							<el-button type="default" size="mini" icon="el-icon-plus"  @click="setUser(scope.row)">分配用户</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -65,6 +69,7 @@
 		</el-dialog>
 		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px">
 			<el-table 
+				ref="usersTable"
 				:data="users" 
 				height="400"
 				@selection-change="selectUserChange" 
@@ -110,7 +115,9 @@
 					label: 'title'
 				},
 				selectedMenuId: [],
-				selectedUsers:[]
+				selectedUsers:[],
+				// 当前分配用户的角色
+				currentRole: null
 			}
 		},
 		computed: {
@@ -138,7 +145,7 @@
 				this.selectedRoles = data.map(item => item._id)
 			},
 			selectUserChange(data) {
-				console.log(data)
+				this.selectedUsers = data
 			},
 			getRoles(pageIndex) {
 				let params = {
@@ -214,7 +221,7 @@
 				}
 			},
 			// 获取所有用户
-			getUsers(pageIndex) {
+			getUsers(role) {
 				let params = {
 					pageSize: 100
 				}
@@ -225,20 +232,49 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.users = res.data.data.users
+						this.selectedUsers = this.users.filter(user => {
+							return user.role.includes(role)
+						})
+						this.defaultCheck(this.selectedUsers)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			SetUser(role) {
+			setUser(role) {
 				this.showSetUser = true
-				this.getUsers()
+				this.currentRole = role
+				this.getUsers(role.enName)
+			},
+			defaultCheck(users) {
+				this.$nextTick(() => {
+					users.forEach(user => {
+						this.$refs.usersTable.toggleRowSelection(user)
+					})
+				})
 			},
 			handleChange(value, direction, movedKeys) {
 				console.log(value, direction, movedKeys)
 			},
 			submitSetUser() {
 				this.showSetUser = false
+				let userIds = this.selectedUsers.map(item => item._id)
+				let data = {
+					roleEnName: this.currentRole.enName,
+					userIds: userIds
+				}
+				request({
+					url: '/role/users',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						console.log(res.data)
+						Message.success(res.data.msg)
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
 			}
 		}
 	}

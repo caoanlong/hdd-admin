@@ -2,6 +2,7 @@ import { login, logout, getUserInfo } from '../../api/login'
 import { getToken, setToken, removeToken } from '../../common/auth'
 const user = {
 	state: {
+		name: localStorage.getItem('name'),
 		username: localStorage.getItem('username'),
 		token: getToken(),
 		role: localStorage.getItem('role'),
@@ -30,6 +31,7 @@ const user = {
 					let data = response.data
 					if (data.code == 0) {
 						console.log(data)
+						localStorage.setItem('name', data.data.name)
 						localStorage.setItem('username', data.data.username)
 						localStorage.setItem('role', data.data.role)
 						localStorage.setItem('avatar', data.data.avatar)
