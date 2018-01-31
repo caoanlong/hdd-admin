@@ -2,21 +2,18 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span v-show="isEdit">编辑个人资料</span>
-				<span v-show="!isEdit">个人资料</span>
-				<el-button style="float: right; padding: 3px 0" type="text" @click="editInfo">编辑</el-button>
+				<span>{{isEdit ? '编辑个人资料' : '查看个人资料'}}</span>
+				<el-button style="float: right; padding: 3px 0" type="text" @click="editInfo">{{isEdit ? '取消编辑' : '编辑'}}</el-button>
 			</div>
 			<el-form label-width="160px">
 				<el-row :gutter="20">
-					<el-col :span="3">
+					<el-col :span="12" :offset="4">
 						<el-form-item label="头像">
 							<el-upload class="avatar-uploader"
 							  action=""  :show-file-list="false" :disabled="!isEdit">
 							  <i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item> 
-					</el-col>
-					<el-col :span="12">
 						<el-form-item label="姓名">
 							<el-input auto-complete="off" :disabled="!isEdit"></el-input>
 						</el-form-item>
@@ -50,12 +47,9 @@
 						<el-form-item label="备注">
 							 <el-input type="textarea" :rows="4" resize="none" :disabled="!isEdit"></el-input>
 						</el-form-item>
-						<el-form-item v-show="isEdit">
-							<el-button type="primary">保存</el-button>
-							<el-button>取消</el-button>
-						</el-form-item>
-						<el-form-item v-show="!isEdit">
-							<el-button type="primary">返回</el-button>
+						<el-form-item>
+							<el-button type="primary" v-show="isEdit">保存</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -67,13 +61,28 @@
 	export default {
 		data() {
 			return {
-				isEdit: false
+				isEdit: false,
+				userInfo: {}
 			}
 		},
 		methods: {
 			editInfo() {
 				this.isEdit = !this.isEdit
-				console.log(this.isEdit)
+			},
+			getUseInfo() {
+				request({
+					url: '/user/info',
+					method: 'get',
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.userInfo = res.data.data
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
 		}
 	}
