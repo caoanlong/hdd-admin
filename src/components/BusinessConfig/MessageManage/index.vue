@@ -51,29 +51,27 @@
 			    </el-table-column>
 			    <el-table-column label="标题" >
 			    </el-table-column>
-			    <el-table-column label="是否有效">
+			    <el-table-column label="是否有效" sortable>
 			    </el-table-column>
-			    <el-table-column label="创建时间">
+			    <el-table-column label="创建时间" sortable>
 			    </el-table-column>
 			    <el-table-column label="创建人">
 			    </el-table-column>
-			    <el-table-column label="更新时间">
+			    <el-table-column label="更新时间" sortable>
 			    </el-table-column>
 			    <el-table-column label="修改人">
 			    </el-table-column>
-			    <el-table-column label="是否删除">
+			    <el-table-column label="是否删除" sortable>
 			    </el-table-column>
-			    <el-table-column label="删除时间">
+			    <el-table-column label="删除时间" sortable>
 			    </el-table-column>
 			    <el-table-column label="删除人">
 			    </el-table-column>
-			    <el-table-column label="操作" width="160" align="center">
+			    <el-table-column label="操作" width="275" align="center">
 			    	<template slot-scope="scope">
-				        <el-button-group>
-						  <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title></el-button>
-						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view"></el-button>
-						  <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
-						</el-button-group>
+						  <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
+						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
+						  <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
 				    </template>
 			    </el-table-column>
 			  </el-table>

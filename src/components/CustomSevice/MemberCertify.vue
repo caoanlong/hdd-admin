@@ -45,11 +45,11 @@
 				</el-table-column>
 				<el-table-column label="车牌/企业名" prop="accountTitle">
 				</el-table-column>
-				<el-table-column label="注册时间" align="center" prop="regDate" width="140">
+				<el-table-column label="注册时间" sortable align="center" prop="regDate" width="140">
 				</el-table-column>
 				<el-table-column label="最后登录" align="center" prop="lastvisitDate" width="140">
 				</el-table-column>
-				<el-table-column label="状态" align="center" prop="status" width="60">
+				<el-table-column label="状态" sortable align="center" prop="status" width="80">
 				</el-table-column>
 				<el-table-column label="申请时间" align="center" prop="creatDate" width="140">
 				</el-table-column>
@@ -68,16 +68,16 @@
 				<el-table-column label="操作" width="266" align="center">
 					<template slot-scope="scope">
 						  <el-button type="default" size="mini">
-							<svg-icon icon-class="file_icon"></svg-icon> 个人
+							<svg-icon icon-class="file-icon"></svg-icon> 个人
 						  </el-button>
 						  <el-button type="default" size="mini">
-							<svg-icon icon-class="file_icon"></svg-icon> 企业
+							<svg-icon icon-class="file-icon"></svg-icon> 企业
 						  </el-button>
 						  <el-button type="default" size="mini" v-if="scope.row.status=='启用'">
-							<svg-icon icon-class="stop_icon"></svg-icon> 封停
+							<svg-icon icon-class="stop-icon"></svg-icon> 封停
 						  </el-button>
 						  <el-button type="default" size="mini" v-else>
-							<svg-icon icon-class="start_icon"></svg-icon> 启用
+							<svg-icon icon-class="start-icon"></svg-icon> 启用
 						  </el-button>
 					</template>
 				</el-table-column>
