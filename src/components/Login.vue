@@ -14,7 +14,7 @@
 				<span class="svg-container">
 					<svg-icon icon-class="password"/>
 				</span>
-				<el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码" />
+				<el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码"/>
 				<span class="show-pwd" @click="showPwd">
 					<svg-icon icon-class="eye"/>
 				</span>
@@ -102,11 +102,11 @@
 				color #eee
 				height 47px
 				&:-webkit-autofill
-					-webkit-box-shadow 0 0 0px 1000px #2d3a4b inset !important
+					-webkit-box-shadow 0 0 0px 1000px #283443 inset !important
 					-webkit-text-fill-color #fff !important
 		.el-form-item
 			border 1px solid rgba(255, 255, 255, 0.1)
-			background rgba(0, 0, 0, 0.1)
+			background #283443
 			border-radius 5px
 			color #454545
 </style>
