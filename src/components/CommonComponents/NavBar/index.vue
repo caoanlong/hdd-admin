@@ -14,10 +14,7 @@
 					<i class="el-icon-caret-bottom"></i>
 				</div>
 				<el-dropdown-menu slot="dropdown">
-					<router-link to="/">
-						<el-dropdown-item>修改头像</el-dropdown-item>
-					</router-link>
-					<router-link to="/">
+					<router-link :to="{name:'userprofile'}">
 						<el-dropdown-item>个人资料</el-dropdown-item>
 					</router-link>
 					<router-link to="/">
