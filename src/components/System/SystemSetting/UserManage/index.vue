@@ -28,8 +28,8 @@
 					</el-form-item>
 					
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary" @click.native="getUsers">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -154,10 +154,21 @@ export default {
 		pageChange(index) {
 			this.getUsers(index)
 		},
+		// 重置搜索表单
+		reset() {
+			this.findName = ''
+			this.findUsername = ''
+			this.findCompany = ''
+			this.findDepartment = ''
+		},
 		getUsers(pageIndex) {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-				pageSize: this.$route.query.pageSize || this.pageSize
+				pageSize: this.$route.query.pageSize || this.pageSize,
+				name: this.findName,
+				username: this.findUsername,
+				company: this.findCompany,
+				department: this.findDepartment
 			}
 			request({
 				url: '/user',
