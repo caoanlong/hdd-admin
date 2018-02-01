@@ -45,7 +45,7 @@
 							<p v-text="user.type"></p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<p>{{user.role.join()}}</p>
+							<p>{{user.role.join(',')}}</p>
 						</el-form-item>					
 						<el-form-item label="备注">
 							<p v-text="user.desc"></p>
@@ -77,7 +77,7 @@
 					type: '',
 					desc: '',
 					avatar: '',
-					role: '',
+					role: [],
 					isDisabled: '',
 					lastLoginTime: '',
 					lastLoginIp: ''
@@ -171,6 +171,7 @@
 	width 98px
 	height 98px
 	display block
+
 .el-form-item__content
 	p
 		margin 0
@@ -178,9 +179,9 @@
 		border-bottom-color #dcdfe6
 		padding 0 15px
 		height 40px
-	    font-family sans-serif
-	    line-height 40px
-	    color #999
+		font-family 'sans-serif'
+		line-height 40px
+		color #999
 	.el-input__inner
 		vertical-align top
 </style>

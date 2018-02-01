@@ -2,18 +2,13 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{isEdit ? '编辑用户' : '查看用户'}}</span>
+				<span>编辑用户</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload
-							
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								:show-file-list="false" 
-								:on-success="handleAvatarSuccess">
+							<el-upload class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" :show-file-list="false" :on-success="handleAvatarSuccess">
 								<img v-if="user.avatar" :src="user.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -42,15 +37,6 @@
 						<el-form-item label="登录名">
 							<el-input auto-complete="off" v-model="user.username"></el-input>
 						</el-form-item>
-						<el-form-item label="密码" v-if="isEdit">
-							<el-input auto-complete="off"  v-model="user.password"></el-input>
-						</el-form-item>
-						<el-form-item label="密码" v-if="!isEdit">
-							<el-input auto-complete="off"  type="password" v-model="user.password" :disabled="true"></el-input>
-						</el-form-item>
-						<el-form-item label="确认密码"  v-if="isEdit">
-							<el-input auto-complete="off" v-model="user.password2"></el-input>
-						</el-form-item>
 						<el-form-item label="邮箱">
 							<el-input auto-complete="off" v-model="user.email"></el-input>
 						</el-form-item>
@@ -60,8 +46,8 @@
 						<el-form-item label="手机">
 							<el-input auto-complete="off" v-model="user.mobile"></el-input>
 						</el-form-item>
-						<el-form-item label="是否允许登录">
-							<el-radio-group v-model="user.isDisabled">
+						<el-form-item label="是否允许登录" >
+							<el-radio-group v-model="user.isDisabled" >
 								<el-radio :label="false">是</el-radio>
 								<el-radio :label="true">否</el-radio>
 							</el-radio-group>
@@ -81,12 +67,9 @@
 						<el-form-item label="备注">
 							<el-input type="textarea" resize="none" v-model="user.desc" :rows="5"></el-input>
 						</el-form-item>
-						<el-form-item v-if="isEdit">
+						<el-form-item>
 							<el-button type="primary" @click.native="addUser">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
-						</el-form-item>
-						<el-form-item v-else>
-							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -121,7 +104,6 @@
 			}
 		},
 		created() {
-			this.isEdit = this.$route.query.type == 'edit'
 			this.getUser()
 			this.getRoles()
 		},
@@ -186,28 +168,28 @@
 	}
 </script>
 <style lang="stylus" scoped>
-	.avatar-uploader
-		.el-upload
-			border 1px dashed #d9d9d9
-			border-radius 6px
-			cursor pointer
-			position relative
-			overflow hidden
-			vertical-align top
-			&:hover
-				border-color #409EFF
-		.avatar-uploader-icon
-			font-size 28px
-			color #8c939d
-			width 98px
-			height 98px
-			line-height 98px
-			text-align center
-		.avatar
-			width 98px
-			height 98px
-			display block
-	.el-checkbox
-		margin-left 0!important
-		margin-right 30px
+.avatar-uploader
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
+	.el-upload
+		border 1px dashed #d9d9d9
+		border-radius 6px
+		cursor pointer
+		position relative
+		overflow hidden
+		vertical-align top
+		&:hover
+			border-color #409EFF
+.el-checkbox
+	margin-left 0!important
+	margin-right 30px
 </style>
