@@ -36,12 +36,12 @@
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center"></el-table-column>
-					<el-table-column label="登录名" prop="username"></el-table-column>
-					<el-table-column label="姓名" prop="name"></el-table-column>
-					<el-table-column label="电话" prop="tel"></el-table-column>
-					<el-table-column label="手机" prop="mobile"></el-table-column>
-					<el-table-column label="归属公司" prop="company"></el-table-column>
-					<el-table-column label="归属部门" prop="department"></el-table-column>
+					<el-table-column label="登录名" prop="username" align="left"></el-table-column>
+					<el-table-column label="姓名" prop="name" align="left"></el-table-column>
+					<el-table-column label="电话" prop="tel" align="left"></el-table-column>
+					<el-table-column label="手机" prop="mobile" align="left"></el-table-column>
+					<el-table-column label="归属公司" prop="company" align="left"></el-table-column>
+					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
 					<el-table-column label="操作" width="280" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-delete" @click="viewUser(scope.row._id)">查看</el-button>
