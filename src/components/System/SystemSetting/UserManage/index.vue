@@ -30,6 +30,7 @@
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
+				<a href="../../../../../static/template.xlsx" download="template" class="download-btn fr"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 			</div>
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -204,6 +205,17 @@ export default {
 
 </script>
 <style lang="stylus">
-
-
+.download-btn
+	font-size 12px
+	color #606266
+	height 29px
+	line-height 29px
+	padding 0 15px
+	border 1px solid #dcdfe6
+	border-radius 3px
+	background #fff
+	&:hover
+		border-color #c6e2ff
+		color #409eff
+		background #ecf5ff
 </style>

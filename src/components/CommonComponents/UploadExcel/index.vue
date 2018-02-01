@@ -80,6 +80,7 @@
 <style lang="stylus">
 .excel-upload
 	display inline-block
+	margin 0 10px
 	#excel-upload-input
 		display none
 		z-index -9999
