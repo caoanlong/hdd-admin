@@ -212,7 +212,7 @@ export default {
 			this.$router.push({ name: 'edituser', query: { id: id} })
 		},
 		viewUser(id) {
-			this.$router.push({ name: 'userdetail', query: { id: id} })
+			this.$router.push({ name: 'viewuser', query: { id: id} })
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item._id)

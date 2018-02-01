@@ -23,7 +23,7 @@
 	"/System/SystemSetting/UserManage",
 	"/System/SystemSetting/UserManage/AddUser",
 	"/System/SystemSetting/UserManage/EditUser",
-	"/System/SystemSetting/UserManage/UserDetail",
+	"/System/SystemSetting/UserManage/ViewUser",
 	"/System/SystemSetting/RoleManage",
 	"/System/SystemSetting/RoleManage/AddRole",
 	"/System/SystemSetting/RoleManage/EditRole",
