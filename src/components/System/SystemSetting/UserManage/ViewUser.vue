@@ -77,7 +77,7 @@
 					type: '',
 					desc: '',
 					avatar: '',
-					role: '',
+					role: [],
 					isDisabled: '',
 					lastLoginTime: '',
 					lastLoginIp: ''

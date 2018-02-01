@@ -2,14 +2,13 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{isEdit ? '编辑用户' : '查看用户'}}</span>
+				<span>编辑用户</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
 							<el-upload
-							
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
 								:show-file-list="false" 
