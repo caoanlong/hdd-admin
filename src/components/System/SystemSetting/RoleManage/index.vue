@@ -60,7 +60,7 @@
 				ref="tree"
 				highlight-current
 				:props="defaultProps"
-				@check-change="selectMenu">
+				@check-change="selectMenu" style="height:400px;overflow-y:auto">
 			</el-tree>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showSetAuth = false">取 消</el-button>
