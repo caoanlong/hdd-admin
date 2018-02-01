@@ -7,21 +7,23 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="姓名">
-						<el-input placeholder="姓名"></el-input>
+						<el-input placeholder="姓名" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item label="登录名">
-						<el-input placeholder="登录名"></el-input>
+						<el-input placeholder="登录名" v-model="findUsername"></el-input>
 					</el-form-item>
 					<el-form-item label="归属公司">
-						<el-select v-model="value" placeholder="请选择">
-							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						<el-select v-model="findCompany" placeholder="请选择">
+							<el-option label="总公司" value="总公司"></el-option>
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="归属部门">
-						<el-select v-model="value" placeholder="请选择">
-							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-							</el-option>
+						<el-select v-model="findDepartment" placeholder="请选择">
+							<el-option label="市场部" value="市场部"></el-option>
+							<el-option label="行政部" value="行政部"></el-option>
+							<el-option label="财务部" value="财务部"></el-option>
+							<el-option label="技术部" value="技术部"></el-option>
 						</el-select>
 					</el-form-item>
 					
@@ -86,6 +88,10 @@ export default {
 			users: [],
 			pageIndex: 1,
 			pageSize: 10,
+			findName: '',
+			findUsername: '',
+			findCompany: '',
+			findDepartment: '',
 			count: 0,
 			selectedUsers: []
 		}
@@ -195,7 +201,7 @@ export default {
 			this.$router.push({ name: 'edituser', query: { id: id} })
 		},
 		viewUser(id) {
-			this.$router.push({ name: 'userdetail', query: { id: id} })
+			this.$router.push({ name: 'viewuser', query: { id: id} })
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item._id)
