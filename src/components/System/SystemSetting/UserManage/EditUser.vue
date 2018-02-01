@@ -21,16 +21,14 @@
 						<el-form-item label="归属公司">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.company" :disabled="!isEdit">
 								<el-option label="总公司" value="总公司"></el-option>
-								<el-option label="市场部" value="市场部"></el-option>
-								<el-option label="行政部" value="行政部"></el-option>
-								<el-option label="研发部" value="研发部"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="归属部门">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.department" :disabled="!isEdit">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option label="市场部" value="市场部"></el-option>
+								<el-option label="行政部" value="行政部"></el-option>
+								<el-option label="财务部" value="财务部"></el-option>
+								<el-option label="技术部" value="技术部"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="工号">
