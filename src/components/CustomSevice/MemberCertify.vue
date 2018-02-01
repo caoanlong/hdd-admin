@@ -65,7 +65,7 @@
 				</el-table-column>
 				<el-table-column label="认证状态" width="80">
 				</el-table-column>
-				<el-table-column label="操作" width="266" align="center">
+				<el-table-column label="操作" width="230" align="center">
 					<template slot-scope="scope">
 						  <el-button type="default" size="mini">
 							<svg-icon icon-class="file-icon"></svg-icon> 个人

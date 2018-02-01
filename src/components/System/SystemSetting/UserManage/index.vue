@@ -42,7 +42,7 @@
 					<el-table-column label="手机" prop="mobile" align="left"></el-table-column>
 					<el-table-column label="归属公司" prop="company" align="left"></el-table-column>
 					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
-					<el-table-column label="操作" width="280" align="center">
+					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-delete" @click="viewUser(scope.row._id)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>

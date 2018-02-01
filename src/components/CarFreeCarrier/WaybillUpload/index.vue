@@ -69,7 +69,7 @@
 					</el-table-column>
 					<el-table-column sortable label="创建时间" prop="date" align="center">
 					</el-table-column>
-					<el-table-column label="操作" width="270" align="center">
+					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 								<el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-view">查看</el-button>
 								<el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit">编辑</el-button>

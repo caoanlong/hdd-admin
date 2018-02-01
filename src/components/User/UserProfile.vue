@@ -20,41 +20,52 @@
 							</el-upload>
 						</el-form-item> 
 						<el-form-item label="姓名">
-							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.name"></el-input>
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.name"></el-input>
+							<p v-text="user.name" v-else></p>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.email"></el-input>
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.email"></el-input>
+							<p v-text="user.email" v-else></p>
 						</el-form-item>
 						<el-form-item label="手机">
-							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.mobile"></el-input>
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.mobile"></el-input>
+							<p v-text="user.mobile" v-else></p>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.tel"></el-input>
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.tel"></el-input>
+							<p v-text="user.tel" v-else></p>
 						</el-form-item>
 						<el-form-item label="公司">
-							<el-input auto-complete="off" disabled v-model="user.company"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.company" v-if="isEdit"></el-input>
+							<p v-text="user.company" v-else></p>
 						</el-form-item>
 						<el-form-item label="部门">
-							<el-input auto-complete="off" disabled v-model="user.department"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.department" v-if="isEdit"></el-input>
+							<p v-text="user.department" v-else></p>
 						</el-form-item>
 						<el-form-item label="用户名">
-							<el-input auto-complete="off" disabled v-model="user.username"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.username" v-if="isEdit"></el-input>
+							<p v-text="user.username" v-else></p>
 						</el-form-item>
 						<el-form-item label="注册手机号码">
-							<el-input auto-complete="off" :disabled="!isEdit" v-model="user.mobile"></el-input>
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.mobile"></el-input>
+							<p v-text="user.mobile" v-else></p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-input auto-complete="off" disabled v-model="user.role.join('，')"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.role.join('，')" v-if="isEdit"></el-input>
+							<p v-text="user.role.join('，')" v-else></p>
 						</el-form-item>
 						<el-form-item label="用户类型">
-							<el-input auto-complete="off"  disabled v-model="user.type"></el-input>
+							<el-input auto-complete="off"  disabled v-model="user.type" v-if="isEdit"></el-input>
+							<p v-text="user.type" v-else></p>
 						</el-form-item>
 						<el-form-item label="备注">
-							 <el-input type="textarea" :rows="4" resize="none" :disabled="!isEdit" v-model="user.desc"></el-input>
+							 <el-input auto-complete="off" v-if="isEdit" v-model="user.desc"></el-input>
+							 <p v-text="user.desc" v-else></p>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" v-show="isEdit" @click="editUser">保存</el-button>
 							<el-button @click="back">返回</el-button>
+							<el-button type="primary" v-show="isEdit" @click="editUser">保存</el-button>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -156,4 +167,17 @@
 	width 98px
 	height 98px
 	display block
+
+.el-form-item__content
+	p
+		margin 0
+		border 1px solid #fff
+		border-bottom-color #dcdfe6
+		padding 0 15px
+		height 40px
+	    font-family sans-serif
+	    line-height 40px
+	    color #999
+	.el-input__inner
+		vertical-align top
 </style>

@@ -36,7 +36,7 @@
 					</el-table-column>
 					<el-table-column label="数据范围" prop="dataRange" align="left">
 					</el-table-column>
-					<el-table-column label="操作" width="500" align="center">
+					<el-table-column label="操作" width="420" align="center">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
 							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>

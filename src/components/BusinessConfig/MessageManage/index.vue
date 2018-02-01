@@ -67,10 +67,10 @@
 			    </el-table-column>
 			    <el-table-column label="删除人">
 			    </el-table-column>
-			    <el-table-column label="操作" width="275" align="center">
+			    <el-table-column label="操作" width="230" align="center">
 			    	<template slot-scope="scope">
-						  <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
 						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
+						  <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
 						  <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
 				    </template>
 			    </el-table-column>
