@@ -28,13 +28,13 @@
 					border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center">
 					</el-table-column>
-					<el-table-column label="角色名称" prop="name">
+					<el-table-column label="角色名称" prop="name" align="left">
 					</el-table-column>
-					<el-table-column label="英文名称" prop="enName">
+					<el-table-column label="英文名称" prop="enName" align="left">
 					</el-table-column>
-					<el-table-column label="归属机构" prop="organization">
+					<el-table-column label="归属机构" prop="organization" align="left">
 					</el-table-column>
-					<el-table-column label="数据范围" prop="dataRange">
+					<el-table-column label="数据范围" prop="dataRange" align="left">
 					</el-table-column>
 					<el-table-column label="操作" width="500" align="center">
 						<template slot-scope="scope">
