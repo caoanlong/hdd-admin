@@ -51,7 +51,7 @@
 					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-delete" @click="viewUser(scope.row._id)">查看</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row._id)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-delete" @click="delUser(scope.row._id)">删除</el-button>
 						</template>
@@ -192,10 +192,10 @@ export default {
 			})
 		},
 		editUser(id) {
-			this.$router.push({ name: 'edituser', query: { id: id, type: 'edit' } })
+			this.$router.push({ name: 'edituser', query: { id: id} })
 		},
 		viewUser(id) {
-			this.$router.push({ name: 'edituser', query: { id: id, type: 'view' } })
+			this.$router.push({ name: 'userdetail', query: { id: id} })
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item._id)
