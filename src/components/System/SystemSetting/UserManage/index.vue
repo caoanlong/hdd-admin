@@ -30,7 +30,7 @@
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<a href="../../../../../static/template.xlsx" download="template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 				
 			</div>
 			<div class="table">
@@ -74,6 +74,7 @@ export default {
 	data() {
 		return {
 			downloadLoading: false,
+			refreshing: false,
 			filename: '用户数据',
 			users: [],
 			pageIndex: 1,
@@ -190,6 +191,13 @@ export default {
 		},
 		delUserMutiple() {
 			this.delUser(this.selectedUsers)
+		},
+		refresh() {
+			this.refreshing = true
+			this.getUsers()
+			setTimeout(() => {
+				this.refreshing = false
+			}, 500)
 		}
 	},
 	components: {
