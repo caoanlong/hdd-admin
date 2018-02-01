@@ -143,8 +143,8 @@ export default {
 		},
 		getUsers(pageIndex) {
 			let params = {
-				pageIndex: pageIndex || 1,
-				pageSize: this.pageSize
+				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
+				pageSize: this.$route.query.pageSize || this.pageSize
 			}
 			request({
 				url: '/user',
@@ -154,6 +154,10 @@ export default {
 				if (res.data.code == 0) {
 					this.count = res.data.data.count
 					this.users = res.data.data.users
+					this.setRouteQuery({
+						pageIndex: res.data.data.pageIndex,
+						pageSize: res.data.data.pageSize,
+					})
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -198,6 +202,11 @@ export default {
 			setTimeout(() => {
 				this.refreshing = false
 			}, 500)
+		},
+		setRouteQuery(json) {
+			for (let attr in json) {
+				this.$route.query[attr] = json[attr]
+			}
 		}
 	},
 	components: {

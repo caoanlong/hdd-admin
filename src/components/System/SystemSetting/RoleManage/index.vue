@@ -7,11 +7,11 @@
 			<div class="search">
 				<el-form :inline="true"  class="demo-form-inline"  size="small">
 					<el-form-item label="角色名称：">
-						<el-input  placeholder="角色名称"></el-input>
+						<el-input placeholder="角色名称" v-model="findRoleName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary" @click.native="getRoles">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -105,6 +105,7 @@
 				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
+				findRoleName: '',
 				selectedRoles: [],
 				setAuthId: '',
 				// 所有的用户
@@ -148,10 +149,15 @@
 			selectUserChange(data) {
 				this.selectedUsers = data
 			},
+			// 重置搜索表单
+			reset() {
+				this.findRoleName = ''
+			},
 			getRoles(pageIndex) {
 				let params = {
-					pageIndex: pageIndex || 1,
-					pageSize: this.pageSize
+					pageIndex: pageIndex || this.$route.query.pageIndex || 1,
+					pageSize: this.$route.query.pageSize || this.pageSize,
+					name: this.findRoleName
 				}
 				request({
 					url: '/role',
@@ -161,6 +167,10 @@
 					if (res.data.code == 0) {
 						this.count = res.data.data.count
 						this.roles = res.data.data.roles
+						this.setRouteQuery({
+							pageIndex: res.data.data.pageIndex,
+							pageSize: res.data.data.pageSize,
+						})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -283,6 +293,11 @@
 				setTimeout(() => {
 					this.refreshing = false
 				}, 500)
+			},
+			setRouteQuery(json) {
+				for (let attr in json) {
+					this.$route.query[attr] = json[attr]
+				}
 			}
 		}
 	}
