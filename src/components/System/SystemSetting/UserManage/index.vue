@@ -29,8 +29,9 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
+				<a href="../../../../../static/template.xlsx" download="template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="getUsers">刷新</el-button>
-				<a href="../../../../../static/template.xlsx" download="template" class="download-btn fr"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				
 			</div>
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -207,8 +208,13 @@ export default {
 	border 1px solid #dcdfe6
 	border-radius 3px
 	background #fff
+	margin 0 10px
+	display inline-block
 	&:hover
 		border-color #c6e2ff
 		color #409eff
 		background #ecf5ff
+	&:active
+		border-color #3a8ee6
+		color #3a8ee6
 </style>
