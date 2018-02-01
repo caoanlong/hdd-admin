@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{isEdit ? '编辑用户' : '查看用户'}}</span>
+				<span>查看用户</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
@@ -121,7 +121,6 @@
 			}
 		},
 		created() {
-			this.isEdit = this.$route.query.type == 'edit'
 			this.getUser()
 			this.getRoles()
 		},

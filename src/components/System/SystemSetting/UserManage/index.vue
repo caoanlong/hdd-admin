@@ -6,18 +6,25 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
-					<el-form-item label="归属公司">
-						<el-input placeholder="归属公司"></el-input>
+					<el-form-item label="姓名">
+						<el-input placeholder="姓名"></el-input>
 					</el-form-item>
 					<el-form-item label="登录名">
 						<el-input placeholder="登录名"></el-input>
 					</el-form-item>
+					<el-form-item label="归属公司">
+						<el-select v-model="value" placeholder="请选择">
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="归属部门">
-						<el-input placeholder="归属部门"></el-input>
+						<el-select v-model="value" placeholder="请选择">
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
 					</el-form-item>
-					<el-form-item label="姓名">
-						<el-input placeholder="姓名"></el-input>
-					</el-form-item>
+					
 					<el-form-item>
 						<el-button type="primary">查询</el-button>
 						<el-button type="default">重置</el-button>
