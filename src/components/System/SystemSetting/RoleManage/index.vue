@@ -17,7 +17,7 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addRole">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delRoleMutiple">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
@@ -38,9 +38,9 @@
 					</el-table-column>
 					<el-table-column label="操作" width="420" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-view" @click="viewPole(scope.row._id)">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewRole(scope.row._id)">查看</el-button>
 							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole(scope.row._id)">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row._id)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus"  @click="setUser(scope.row)">分配用户</el-button>
 						</template>
@@ -135,10 +135,10 @@
 				this.$router.push({name: 'addrole'})
 			},
 			editRole(id) {
-				this.$router.push({name: 'editrole', query: {id: id, type: 'edit'}})
+				this.$router.push({name: 'editrole', query: {id: id}})
 			},
-			viewPole(id) {
-				this.$router.push({name: 'editrole', query: {id: id, type: 'view'}})
+			viewRole(id) {
+				this.$router.push({name: 'viewrole', query: {id: id}})
 			},
 			pageChange(index) {
 				this.getRoles(index)
@@ -176,12 +176,33 @@
 					}
 				})
 			},
-			delRoleMutiple() {
-				this.delRole(this.selectedRoles)
+			deleteConfirm(id) {
+				let ids = []
+				if (id && typeof id == 'string') {
+					ids = [].concat(id)
+				} else {
+					ids = this.selectedRoles
+				}
+				this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.delRole(ids)
+					this.$message({
+						type: 'success',
+						message: '删除成功!'
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					})
+				})
 			},
 			delRole(ids) {
 				let data = {
-					ids: [].concat(ids)
+					ids: ids
 				}
 				request({
 					url: '/role/delete',
@@ -189,8 +210,6 @@
 					data
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data)
-						Message.success(res.data.msg)
 						this.getRoles()
 					} else {
 						Message.error(res.data.msg)

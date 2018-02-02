@@ -27,6 +27,7 @@
 	"/System/SystemSetting/RoleManage",
 	"/System/SystemSetting/RoleManage/AddRole",
 	"/System/SystemSetting/RoleManage/EditRole",
+	"/System/SystemSetting/RoleManage/ViewRole",
 	"/User",
 	"/User/UserProfile"
 ]

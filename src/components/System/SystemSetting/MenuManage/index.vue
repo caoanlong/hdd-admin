@@ -287,5 +287,6 @@ export default {
 			&:hover
 			&.selected
 				color #409EFF
-				
+	.el-checkbox
+		margin 0 30px 0 0 		
 </style>
