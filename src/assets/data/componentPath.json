@@ -14,6 +14,8 @@
 	"/BusinessConfig",
 	"/BusinessConfig/ContentManage",
 	"/BusinessConfig/ContentManage/SetColumn",
+	"/BusinessConfig/ContentManage/SetColumn/AddColumn",
+	"/BusinessConfig/ContentManage/SetColumn/EditColumn",
 	"/BusinessConfig/ContentManage/SetContent",
 	"/BusinessConfig/MessageManage",
 	"/BusinessConfig/AppPage",

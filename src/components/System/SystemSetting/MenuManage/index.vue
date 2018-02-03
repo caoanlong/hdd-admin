@@ -288,5 +288,5 @@ export default {
 			&.selected
 				color #409EFF
 	.el-checkbox
-		margin 0 30px 0 0 		
+		margin 0 30px 0 0	
 </style>

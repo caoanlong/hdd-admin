@@ -169,26 +169,19 @@
 </script>
 <style lang="stylus" scoped>
 .avatar-uploader
-	.avatar-uploader-icon
-		font-size 28px
-		color #8c939d
-		width 98px
-		height 98px
-		line-height 98px
-		text-align center
-	.avatar
-		width 98px
-		height 98px
-		display block
-	.el-upload
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
-		vertical-align top
-		&:hover
-			border-color #409EFF
+	line-height 1
+.avatar-uploader-icon 
+	font-size 28px
+	color #8c939d
+	width 98px
+	height 98px
+	line-height 98px
+	text-align center
+.avatar 
+	width 98px
+	height 98px
+	display block
+	border-radius 6px
 .el-checkbox
 	margin-left 0!important
 	margin-right 30px
