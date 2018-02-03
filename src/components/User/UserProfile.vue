@@ -175,9 +175,9 @@
 		border-bottom-color #dcdfe6
 		padding 0 15px
 		height 40px
-	    font-family sans-serif
-	    line-height 40px
-	    color #999
+		font-family 'sans-serif'
+		line-height 40px
+		color #999
 	.el-input__inner
 		vertical-align top
 </style>
