@@ -153,7 +153,7 @@
 				let params = {
 					pageIndex: pageIndex || this.$route.query.pageIndex || 1,
 					pageSize: this.$route.query.pageSize || this.pageSize,
-					name: this.findRoleName
+					Name: this.findRoleName
 				}
 				request({
 					url: '/sys_role/list',
@@ -267,7 +267,7 @@
 				})
 			},
 			// 获取所有用户
-			getUsers() {
+			getUsers(callback) {
 				let params = {
 					pageSize: 100
 				}
@@ -277,7 +277,16 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.users = res.data.data.rows
+						this.users = res.data.data.rows.map(item => {
+							return {
+								User_ID: item.User_ID,
+								LoginName: item.LoginName,
+								Name: item.Name,
+								Phone: item.Phone,
+								Mobile: item.Mobile
+							}
+						})
+						callback && callback()
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -286,40 +295,17 @@
 			setUser(data) {
 				this.setUserId = data.Role_ID
 				this.showSetUser = true
-				this.getUsers()
-				this.getRole(data.Role_ID, res => {
-					new Promise((resolve, reject) => {
-						resolve(res.sys_users.map(item => {
+				this.getUsers(() => {
+					this.getRole(data.Role_ID, res => {
+						let users = res.sys_users.map(item => {
 							return {
 								User_ID: item.User_ID,
-								Company_ID: item.Company_ID,
-								Organization_ID: item.Organization_ID,
 								LoginName: item.LoginName,
-								Password: item.Password,
-								PayPassword: item.PayPassword,
-								JobNo: item.JobNo,
 								Name: item.Name,
-								Sex: item.Sex,
-								Email: item.Email,
 								Phone: item.Phone,
-								Mobile: item.Mobile,
-								Type: item.Type,
-								Photo: item.Photo,
-								PCID: item.PCID,
-								LastLoginTime: item.LastLoginTime,
-								LoginFlag: item.LoginFlag,
-								CreateBy: item.CreateBy,
-								CreateDate: item.CreateDate,
-								UpdateBy: item.UpdateBy,
-								UpdateDate: item.UpdateDate,
-								Remark: item.Remark,
-								DelFlag: item.DelFlag,
-								QrCode: item.QrCode,
-								Sign: item.Sign
+								Mobile: item.Mobile
 							}
-						}))
-					}).then(users => {
-						console.log(users)
+						})
 						this.$nextTick(() => {
 							users.forEach(user => {
 								this.$refs.usersTable.toggleRowSelection(user)
