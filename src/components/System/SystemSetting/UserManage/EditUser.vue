@@ -63,12 +63,12 @@
 								<el-option label="普通角色" value="普通角色"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="用户角色">
-							<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
+						<el-form-item label="角色权限">
+							<el-select style="width: 100%" v-model="user.sys_roles" multiple placeholder="请选择">
 								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
 								</el-option>
 							</el-select>
-						</el-form-item>				
+						</el-form-item>					
 						<el-form-item label="备注">
 							<el-input type="textarea" resize="none" v-model="user.Remark" :rows="5"></el-input>
 						</el-form-item>
@@ -102,10 +102,10 @@
 					Photo:'',
 					PCID:'',
 					LoginFlag:'',
-					Remark:''
+					Remark:'',
+					sys_roles:[]
 				},
 				roles: [],
-				selectedRoles: [],
 				isAllowLogin: true
 			}
 		},
@@ -126,7 +126,7 @@
 					if (res.data.code == 0) {
 						this.user = res.data.data
 						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
-						this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
+						this.roles = res.data.data.sys_roles.map(item => item.Role_ID)
 						console.log(this.user)
 					} else {
 						Message.error(res.data.msg)
@@ -152,7 +152,8 @@
 					Photo:this.user.Photo,
 					PCID:this.user.PCID,
 					LoginFlag:this.user.LoginFlag,
-					Remark:this.user.Remark
+					Remark:this.user.Remark,
+					sys_roles: this.user.sys_roles
 				}
 				console.log(data)
 				request({
@@ -178,7 +179,7 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.roles = res.data.data.rows
+						this.user.sys_roles = res.data.data.rows
 					} else {
 						Message.error(res.data.msg)
 					}

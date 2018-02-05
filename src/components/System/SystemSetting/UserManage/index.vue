@@ -230,6 +230,7 @@ export default {
 				}
 			})
 		},
+
 		editUser(id) {
 			this.$router.push({ name: 'edituser', query: { User_ID: id} })
 		},
@@ -238,6 +239,7 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item.User_ID)
+			console.log(this.selectedUsers)
 		},
 		refresh() {
 			this.refreshing = true

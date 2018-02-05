@@ -8,7 +8,7 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload 
+							<el-upload
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
 								:show-file-list="false" 
@@ -76,7 +76,7 @@
 							</el-checkbox-group>
 						</el-form-item>	 -->
 						<el-form-item label="角色权限">
-							<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
+							<el-select style="width: 100%" v-model="user.sys_roles" multiple placeholder="请选择">
 								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
 								</el-option>
 							</el-select>
@@ -117,10 +117,10 @@
 					Photo:'',
 					PCID:'',
 					LoginFlag:'N',
-					Remark:''
+					Remark:'',
+					sys_roles:[]
 				},
-				roles: [],
-				selectedRoles: []
+				roles: []
 			}
 		},
 		created() {
@@ -146,7 +146,7 @@
 					PCID:this.user.PCID,
 					LoginFlag: this.user.LoginFlag,
 					Remark:this.user.Remark,
-					sys_roles: ''
+					sys_roles: this.user.sys_roles
 				}
 				console.log(data)
 				request({
@@ -180,13 +180,14 @@
 								Name: item.Name
 							}
 						})
+						console.log(this.roles)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
 			handleAvatarSuccess(res, file) {
-				this.user.avatar = 'http://39.108.245.177:4000' + res.data
+				this.user.Photo = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

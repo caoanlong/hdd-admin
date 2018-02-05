@@ -45,7 +45,7 @@
 							<p>{{user.Type}}</p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<!-- <p>{{user.role.join(',')}}</p> -->
+							<p>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
 						</el-form-item>					
 						<el-form-item label="备注">
 							<p>{{user.Remark}}</p>
@@ -82,15 +82,14 @@
 					Photo:'',
 					PCID:'',
 					LoginFlag:'',
-					Remark:''
+					Remark:'',
+					sys_roles: []
 				},
-				roles: [],
 				isAllowLogin: true
 			}
 		},
 		created() {
 			this.getUser()
-			// this.getRoles()
 		},
 		methods: {
 			getUser() {
@@ -104,6 +103,7 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.user = res.data.data
+						console.log(this.user.sys_roles)
 						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
 					} else {
 						Message.error(res.data.msg)
@@ -112,22 +112,6 @@
 			},
 			handleAvatarSuccess(res, file) {
 				this.user.avatar = 'http://39.108.245.177:4000' + res.data
-			},
-			getRoles() {
-				let params = {
-					pageSize: 50
-				}
-				request({
-					url: '/role',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.roles = res.data.data.roles
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
 			},
 			back() {
 				this.$router.go(-1)
