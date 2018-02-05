@@ -144,7 +144,7 @@
 				this.getRoles(index)
 			},
 			selectRoleChange(data) {
-				this.selectedRoles = data.map(item => item._id)
+				this.selectedRoles = data.map(item => item.Role_ID)
 			},
 			selectUserChange(data) {
 				this.selectedUsers = data
@@ -205,7 +205,7 @@
 					ids: ids
 				}
 				request({
-					url: '/role/delete',
+					url: '/sys_role/delete',
 					method: 'post',
 					data
 				}).then(res => {
