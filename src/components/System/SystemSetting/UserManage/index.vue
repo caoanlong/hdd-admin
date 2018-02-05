@@ -53,9 +53,9 @@
 					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row._id)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row._id)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row.User_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row.User_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.User_ID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -231,13 +231,13 @@ export default {
 			})
 		},
 		editUser(id) {
-			this.$router.push({ name: 'edituser', query: { id: id} })
+			this.$router.push({ name: 'edituser', query: { User_ID: id} })
 		},
 		viewUser(id) {
-			this.$router.push({ name: 'viewuser', query: { id: id} })
+			this.$router.push({ name: 'viewuser', query: { User_ID: id} })
 		},
 		selectionChange(data) {
-			this.selectedUsers = data.map(item => item._id)
+			this.selectedUsers = data.map(item => item.User_ID)
 		},
 		refresh() {
 			this.refreshing = true

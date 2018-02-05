@@ -8,47 +8,47 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" 
+						<!-- 	<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" 
 								:show-file-list="false" :on-success="handleAvatarSuccess">
 								<img v-if="user.avatar" :src="user.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							</el-upload> -->
 						</el-form-item>
 						<el-form-item label="归属公司">
-							<p v-text="user.company"></p>
+							<p>{{user.Company_ID}}</p>
 						</el-form-item>
 						<el-form-item label="归属部门">
-							<p v-text="user.department"></p>
+							<p>{{user.Organization_ID}}</p>
 						</el-form-item>
 						<el-form-item label="工号">
-							<p v-text="user.jobNo"></p>
+							<p>{{user.JobNo}}</p>
 						</el-form-item>
 						<el-form-item label="姓名">
-							<p v-text="user.name"></p>
+							<p>{{user.Name}}</p>
 						</el-form-item>
 						<el-form-item label="登录名">
-							<p v-text="user.username"></p>
+							<p>{{user.LoginName}}</p>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<p v-text="user.email"></p>
+							<p>{{user.Email}}</p>
 						</el-form-item>
 						<el-form-item label="电话">
-							<p v-text="user.tel"></p>
+							<p>{{user.Phone}}</p>
 						</el-form-item>
 						<el-form-item label="手机">
-							<p v-text="user.mobile"></p>
+							<p>{{user.Mobile}}</p>
 						</el-form-item>
 						<el-form-item label="是否允许登录">
-							<p>{{user.isDisabled?'是':'否'}}</p>
+							<p>{{isAllowLogin?'是':'否'}}</p>
 						</el-form-item>
 						<el-form-item label="用户类型">
-							<p v-text="user.type"></p>
+							<p>{{user.Type}}</p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<p>{{user.role.join(',')}}</p>
+							<!-- <p>{{user.role.join(',')}}</p> -->
 						</el-form-item>					
 						<el-form-item label="备注">
-							<p v-text="user.desc"></p>
+							<p>{{user.Remark}}</p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -66,41 +66,45 @@
 		data() {
 			return {
 				user: {
-					name: '',
-					username: '',
-					tel: '',
-					mobile: '',
-					password: '',
-					company: '',
-					department: '',
-					jobNo: '',
-					type: '',
-					desc: '',
-					avatar: '',
-					role: [],
-					isDisabled: '',
-					lastLoginTime: '',
-					lastLoginIp: ''
+					Company_ID:'',
+					Organization_ID:'',
+					LoginName:'',
+					Password:'',
+					Password2:'',
+					PayPassword:'',
+					JobNo:'',
+					Name:'',
+					Sex:'',
+					Email:'',
+					Phone:'',
+					Mobile:'',
+					Type:'',
+					Photo:'',
+					PCID:'',
+					LoginFlag:'',
+					Remark:''
 				},
-				roles: []
+				roles: [],
+				isAllowLogin: true
 			}
 		},
 		created() {
 			this.getUser()
-			this.getRoles()
+			// this.getRoles()
 		},
 		methods: {
 			getUser() {
 				let params = {
-					id: this.$route.query.id
+					User_ID: this.$route.query.User_ID
 				}
 				request({
-					url: '/user/info',
+					url: '/sys_user/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.user = res.data.data
+						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -108,24 +112,6 @@
 			},
 			handleAvatarSuccess(res, file) {
 				this.user.avatar = 'http://39.108.245.177:4000' + res.data
-			},
-			addUser() {
-				let data = this.user
-				data.id = this.user._id
-				console.log(JSON.stringify(data))
-				request({
-					url: '/user/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						console.log(res.data)
-						Message.success(res.data.msg)
-						this.$router.push({name: 'usermanage'})
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
 			},
 			getRoles() {
 				let params = {
@@ -164,16 +150,18 @@
 	height 98px
 	display block
 	border-radius 6px
-.el-form-item__content
-	p
-		margin 0
-		border 1px solid #fff
-		border-bottom-color #dcdfe6
-		padding 0 15px
-		height 40px
-		font-family 'sans-serif'
-		line-height 40px
-		color #999
-	.el-input__inner
-		vertical-align top
+.el-form-item
+	margin-bottom 10px
+	.el-form-item__content
+		p
+			margin 0
+			border 1px solid #fff
+			border-bottom-color #dcdfe6
+			padding 0 15px
+			height 40px
+			font-family 'sans-serif'
+			line-height 40px
+			color #999
+		.el-input__inner
+			vertical-align top
 </style>
