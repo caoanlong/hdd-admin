@@ -8,28 +8,28 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="名称">
-							<p v-text="role.name"></p>
+							<p v-text="role.Name"></p>
 						</el-form-item>
 						<el-form-item label="英文名称">
-							<p v-text="role.enName"></p>
+							<p v-text="role.EnName"></p>
 						</el-form-item>
 						<el-form-item label="组织机构">
-							<p v-text="role.organization"></p>
+							<p v-text="role.Organization_ID"></p>
 						</el-form-item>
 						<el-form-item label="角色类型">
-							<p v-text="role.type"></p>
+							<p v-text="role.RoleType"></p>
 						</el-form-item>
 						<el-form-item label="数据范围">
-							<p v-text="role.dataRange"></p>
+							<p v-text="role.DataScope"></p>
 						</el-form-item>
 						<el-form-item label="是否系统数据">
-							<p>{{role.isSystem?'是':'否'}}</p>
+							<p>{{role.Issys == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
 						<el-form-item label="是否可用">
-							<p>{{role.isDisabled?'是':'否'}}</p>
+							<p>{{role.Useable == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
 						<el-form-item label="备注">
-							<p v-text="role.desc"></p>
+							<p v-text="role.Remark"></p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click.native="back">返回</el-button>
@@ -47,29 +47,27 @@
 		data() {
 			return {
 				role: {
-					name: '',
-					enName: '',
-					organization: '',
-					type: '',
-					isSystem: false,
-					dataRange: '',
-					isDisabled: false,
-					desc: ''
-				},
-				isEdit: true
+					Name: '',
+					EnName: '',
+					Organization_ID: '',
+					RoleType: '',
+					DataScope: '',
+					Issys: '',
+					Useable: '',
+					Remark: ''
+				}
 			}
 		},
 		created() {
-			this.isEdit = this.$route.query.type == 'edit'
 			this.getRole()
 		},
 		methods: {
 			getRole() {
 				let params = {
-					id: this.$route.query.id
+					Role_ID: this.$route.query.Role_ID
 				}
 				request({
-					url: '/role/info',
+					url: '/sys_role/info',
 					method: 'get',
 					params
 				}).then(res => {
