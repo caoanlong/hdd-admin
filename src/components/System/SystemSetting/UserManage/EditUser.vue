@@ -65,7 +65,7 @@
 						</el-form-item>
 						<el-form-item label="角色权限">
 							<el-select style="width: 100%" v-model="user.sys_roles" multiple placeholder="请选择">
-								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
+								<el-option v-for="role in roles" :key="role.Role_ID" :label="role.Name" :value="role.Role_ID">
 								</el-option>
 							</el-select>
 						</el-form-item>					
@@ -126,7 +126,7 @@
 					if (res.data.code == 0) {
 						this.user = res.data.data
 						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
-						this.roles = res.data.data.sys_roles.map(item => item.Role_ID)
+						this.user.sys_roles = res.data.data.sys_roles.map(item => item.Role_ID)
 						console.log(this.user)
 					} else {
 						Message.error(res.data.msg)
@@ -179,7 +179,7 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.user.sys_roles = res.data.data.rows
+						this.roles = res.data.data.rows
 					} else {
 						Message.error(res.data.msg)
 					}
