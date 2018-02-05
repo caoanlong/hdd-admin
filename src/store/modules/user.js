@@ -2,15 +2,18 @@ import { login, logout, getUserInfo } from '../../api/login'
 import { getToken, setToken, removeToken } from '../../common/auth'
 const user = {
 	state: {
-		name: localStorage.getItem('name'),
-		username: localStorage.getItem('username'),
+		Name: localStorage.getItem('Name'),
+		LoginName: localStorage.getItem('LoginName'),
 		token: getToken(),
-		role: localStorage.getItem('role'),
-		avatar: localStorage.getItem('avatar')
+		// role: localStorage.getItem('role'),
+		Photo: localStorage.getItem('Photo')
 	},
 	mutations: {
-		SET_NAME: (state, username) => {
-			state.username = username
+		SET_LOGIN_NAME: (state, LoginName) => {
+			state.LoginName = LoginName
+		},
+		SET_NAME: (state, Name) => {
+			state.Name = Name
 		},
 		SET_TOKEN: (state, token) => {
 			state.token = token
@@ -18,24 +21,24 @@ const user = {
 		SET_ROLE: (state, role) => {
 			state.role = role
 		},
-		SET_AVATAR: (state, avatar) => {
-			state.avatar = avatar
+		SET_AVATAR: (state, Photo) => {
+			state.Photo = Photo
 		}
 	},
 	actions: {
 		Login ({commit}, userInfo) {
-			const username = userInfo.username.trim()
-			const password = userInfo.password
+			const LoginName = userInfo.LoginName.trim()
+			const Password = userInfo.Password
 			return new Promise((resolve, reject) => {
-				login(username, password).then(response => {
+				login(LoginName, Password).then(response => {
 					let data = response.data
 					if (data.code == 0) {
 						console.log(data)
-						localStorage.setItem('name', data.data.name)
-						localStorage.setItem('username', data.data.username)
-						localStorage.setItem('role', data.data.role)
-						localStorage.setItem('avatar', data.data.avatar)
-						setToken(data.token)
+						setToken(response.headers['x-access-token'])
+						localStorage.setItem('Name', data.data.Name)
+						localStorage.setItem('LoginName', data.data.LoginName)
+						// localStorage.setItem('role', data.data.role)
+						localStorage.setItem('Photo', data.data.Photo)
 						resolve(data.data)
 					} else {
 						reject(data.msg)
@@ -48,12 +51,14 @@ const user = {
 		LogOut({ commit, state }) {
 			return new Promise((resolve, reject) => {
 				logout(state.token).then(() => {
+					commit('SET_LOGIN_NAME', '')
 					commit('SET_NAME', '')
-					commit('SET_ROLE', '')
+					// commit('SET_ROLE', '')
 					commit('SET_AVATAR', '')
 					commit('SET_TOKEN', '')
 					removeToken()
 					localStorage.clear()
+					sessionStorage.clear()
 					resolve()
 				}).catch(error => {
 					reject(error)
@@ -64,9 +69,10 @@ const user = {
 			return new Promise((resolve, reject) => {
 				getUserInfo(token).then(response => {
 					const data = response.data
-					commit('SET_NAME', data.username)
-					commit('SET_ROLE', data.role)
-					commit('SET_AVATAR', data.avatar)
+					commit('SET_LOGIN_NAME', data.LoginName)
+					commit('SET_NAME', data.Name)
+					// commit('SET_ROLE', data.role)
+					commit('SET_AVATAR', data.Photo)
 					resolve(data)
 				}).catch(error => {
 					reject(error)
@@ -76,7 +82,7 @@ const user = {
 		FedLogOut({ commit }) {
 			return new Promise((resolve, reject) => {
 				commit('SET_NAME', '')
-				commit('SET_ROLE', [])
+				// commit('SET_ROLE', [])
 				commit('SET_AVATAR', '')
 				commit('SET_TOKEN', '')
 				removeToken()

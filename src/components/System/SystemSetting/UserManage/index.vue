@@ -35,7 +35,7 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="delUserMutiple">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<a href="../../../../../static/template.xlsx" download="template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
@@ -45,17 +45,17 @@
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center"></el-table-column>
-					<el-table-column label="登录名" prop="username" align="left"></el-table-column>
-					<el-table-column label="姓名" prop="name" align="left"></el-table-column>
-					<el-table-column label="电话" prop="tel" align="left"></el-table-column>
-					<el-table-column label="手机" prop="mobile" align="left"></el-table-column>
+					<el-table-column label="登录名" prop="LoginName" align="left"></el-table-column>
+					<el-table-column label="姓名" prop="Name" align="left"></el-table-column>
+					<el-table-column label="电话" prop="Phone" align="left"></el-table-column>
+					<el-table-column label="手机" prop="Mobile" align="left"></el-table-column>
 					<el-table-column label="归属公司" prop="company" align="left"></el-table-column>
 					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row._id)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="editUser(scope.row._id)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="delUser(scope.row._id)">删除</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row._id)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -72,10 +72,10 @@ import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
 const userMap = {
 	'Id': '_id',
-	'登录名': 'username',
-	'姓名': 'name',
-	'电话': 'tel',
-	'手机': 'mobile',
+	'登录名': 'LoginName',
+	'姓名': 'Name',
+	'电话': 'Phone',
+	'手机': 'Mobile',
 	'归属公司': 'company',
 	'归属部门': 'department'
 }
@@ -171,13 +171,13 @@ export default {
 				department: this.findDepartment
 			}
 			request({
-				url: '/user',
+				url: '/sys_user/list',
 				method: 'get',
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.count = res.data.data.count
-					this.users = res.data.data.users
+					this.users = res.data.data.rows
 					this.setRouteQuery({
 						pageIndex: res.data.data.pageIndex,
 						pageSize: res.data.data.pageSize,
@@ -190,9 +190,33 @@ export default {
 		addUser() {
 			this.$router.push({ name: 'adduser' })
 		},
+		deleteConfirm(id) {
+			let ids = []
+			if (id && typeof id == 'string') {
+				ids = [].concat(id)
+			} else {
+				ids = this.selectedUsers
+			}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delUser(ids)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})
+			})
+		},
 		delUser(ids) {
 			let data = {
-				ids: [].concat(ids)
+				ids: ids
 			}
 			request({
 				url: '/user/delete',
@@ -200,8 +224,6 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					console.log(res.data)
-					Message.success(res.data.msg)
 					this.getUsers()
 				} else {
 					Message.error(res.data.msg)
@@ -216,9 +238,6 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item._id)
-		},
-		delUserMutiple() {
-			this.delUser(this.selectedUsers)
 		},
 		refresh() {
 			this.refreshing = true

@@ -21,6 +21,8 @@ Vue.use(Element)
 
 Vue.config.productionTip = false
 
+Vue.prototype.imgUrl = "http://develop.we-service.cn/hdd/image"
+
 /* eslint-disable no-new */
 
 // 重新载入vue

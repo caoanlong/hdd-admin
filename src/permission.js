@@ -5,6 +5,8 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '../src/common/auth' // getToken from cookie
 
+import reloadVueObj from './main'
+
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
 // permissiom judge function
@@ -25,6 +27,7 @@ export let permissions = (router) => {
 				next({ path: '/' })
 				NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
 			} else {
+				// reloadVueObj()
 				next()
 				// if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
 				// 	store.dispatch('GetUserInfo', getToken()).then(res => { // 拉取user_info

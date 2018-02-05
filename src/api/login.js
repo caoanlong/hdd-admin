@@ -1,12 +1,12 @@
 import request from '../common/request'
 
-export function login(username, password) {
+export function login(LoginName, Password) {
 	const data = {
-		username,
-		password
+		LoginName,
+		Password
 	}
 	return request({
-		url: '/login',
+		url: '/sys_user/login',
 		method: 'post',
 		data
 	})

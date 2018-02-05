@@ -14,6 +14,8 @@
 	"/BusinessConfig",
 	"/BusinessConfig/ContentManage",
 	"/BusinessConfig/ContentManage/SetColumn",
+	"/BusinessConfig/ContentManage/SetColumn/AddColumn",
+	"/BusinessConfig/ContentManage/SetColumn/EditColumn",
 	"/BusinessConfig/ContentManage/SetContent",
 	"/BusinessConfig/MessageManage",
 	"/BusinessConfig/AppPage",
@@ -27,6 +29,7 @@
 	"/System/SystemSetting/RoleManage",
 	"/System/SystemSetting/RoleManage/AddRole",
 	"/System/SystemSetting/RoleManage/EditRole",
+	"/System/SystemSetting/RoleManage/ViewRole",
 	"/User",
 	"/User/UserProfile"
 ]

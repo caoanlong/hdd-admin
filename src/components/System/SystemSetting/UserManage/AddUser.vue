@@ -67,11 +67,17 @@
 								<el-option label="普通用户" value="普通用户"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="用户角色">
+						<!-- <el-form-item label="用户角色">
 							<el-checkbox-group v-model="user.role">
 								<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
 							</el-checkbox-group>
-						</el-form-item>				
+						</el-form-item>	 -->
+						<el-form-item label="角色权限">
+							<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
+								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>			
 						<el-form-item label="备注">
 							<el-input type="textarea" resize="none" v-model="user.desc" :rows="5"></el-input>
 						</el-form-item>
@@ -108,7 +114,8 @@
 					lastLoginTime: '',
 					lastLoginIp: ''
 				},
-				roles: []
+				roles: [],
+				selectedRoles: []
 			}
 		},
 		created() {
@@ -116,8 +123,24 @@
 		},
 		methods: {
 			addUser() {
-				let data = this.user
-				console.log(JSON.stringify(data))
+				let data = {
+					name: this.user.name,
+					username: '',
+					tel: '',
+					mobile: '',
+					password: '',
+					company: '',
+					department: '',
+					jobNo: '',
+					type: '',
+					desc: '',
+					avatar: '',
+					role: [],
+					isDisabled: '',
+					lastLoginTime: '',
+					lastLoginIp: '',
+					sys_roles: this.selectedRoles
+				}
 				request({
 					url: '/user/add',
 					method: 'post',
@@ -134,15 +157,21 @@
 			},
 			getRoles() {
 				let params = {
-					pageSize: 50
+					pageSize: 100
 				}
 				request({
-					url: '/role',
+					url: '/sys_role/list',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.roles = res.data.data.roles
+						let Oroles = res.data.data.rows
+						this.roles = Oroles.map(item => {
+							return {
+								Role_ID: item.Role_ID,
+								Name: item.Name
+							}
+						})
 					} else {
 						Message.error(res.data.msg)
 					}

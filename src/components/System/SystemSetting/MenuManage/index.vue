@@ -33,7 +33,7 @@
 					<el-input v-model="currentNode.path"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.meta.icon ? currentNode.meta.icon : 'add-icon'"></svg-icon> {{iconTxt}}</el-button>
+					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> {{currentNode.Icon ? currentNode.Icon : iconTxt}}</el-button>
 				</el-form-item>
 				<el-form-item label="组件">
 					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
@@ -41,15 +41,16 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.sort" :min="1" label="描述文字"></el-input-number>
+					<el-input-number v-model="currentNode.SortNumber" :min="1" label="描述文字"></el-input-number>
 				</el-form-item>
 				<el-form-item label="是否菜单">
-					<el-switch v-model="currentNode.meta.isMenu"></el-switch>
+					<el-switch v-model="isMenuShow"></el-switch>
 				</el-form-item>
 				<el-form-item label="角色权限">
-					<el-checkbox-group v-model="currentNode.meta.roles">
-						<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
-					</el-checkbox-group>
+					<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
+						<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
+						</el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
@@ -59,7 +60,9 @@
 		</el-card>
 		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%">
 			<ul class="iconList clearfix">
-				<li v-for="icon in svgicons" :key="icon" :class="{'selected':selectedIcon == icon}" @click="selectIcon(icon)"><svg-icon :iconClass="icon"></svg-icon></li>
+				<li v-for="icon in svgicons" :key="icon" :class="{'selected':selectedIcon == icon}" @click="selectIcon(icon)">
+					<svg-icon :iconClass="icon"></svg-icon>
+				</li>
 			</ul>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="selectIcondialog = false">取 消</el-button>
@@ -70,6 +73,7 @@
 </template>
 <script type="text/javascript">
 import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender'
 import components from '../../../../assets/data/componentPath.json'
 import { requireAllName, req } from '../../../../assets/icons'
@@ -79,16 +83,22 @@ export default {
 		return {
 			menuData: [],
 			roles: [],
+			selectedRoles: [],
 			defaultProps: {
 				children: 'children',
 				label: 'title'
 			},
 			currentNode: {
-				"meta": {
-					"roles": [],
-					"isMenu": true
-				}
+				name: '',
+				title: '',
+				SortNumber: '',
+				path: '',
+				component: '',
+				Icon: '',
+				IsShow: '',
+				sys_roles: []
 			},
+			isMenuShow: false,
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
@@ -111,26 +121,20 @@ export default {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				"meta": {
-					"roles": [],
-					"isMenu": true,
-					"parent": null
-				}
+				name: '',
+				title: '',
+				SortNumber: '',
+				path: '',
+				component: '',
+				Icon: '',
+				IsShow: '',
+				sys_roles: []
 			}
 		},
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			this.currentNode = d
-			if (typeof this.currentNode.component != 'string') {
-				let curNode = this.currentNode.component.__file.split('components')[1].split('.vue')[0]
-				if (curNode.includes('index')) {
-					this.currentNode.component = curNode.split('index')[0].replace(/\\/g, "/")
-				} else {
-					this.currentNode.component = curNode.replace(/\\/g, "/")
-				}
-			}
-			console.log(this.currentNode)
+			this.getMenu(d.Menu_ID)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this//指向vue
@@ -151,11 +155,15 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				"meta": {
-					"roles": [],
-					"isMenu": true,
-					"parent": d._id
-				}
+				Menu_PID: this.currentNode.Menu_ID,
+				name: '',
+				title: '',
+				SortNumber: '',
+				path: '',
+				component: '',
+				Icon: '',
+				IsShow: '',
+				sys_roles: []
 			}
 		},
 		handleDelete(s, d, n){//删除节点
@@ -201,11 +209,11 @@ export default {
 					name: this.currentNode.name,
 					component: this.currentNode.component,
 					title: this.currentNode.title,
-					sort: this.currentNode.sort,
-					icon: this.currentNode.meta.icon,
-					parent: this.currentNode.meta.parent,
-					isMenu: this.currentNode.meta.isMenu,
-					roles: this.currentNode.meta.roles
+					SortNumber: this.currentNode.SortNumber,
+					Icon: this.currentNode.Icon,
+					Menu_PID: this.currentNode.Menu_PID,
+					IsShow: this.isMenuShow ? 'Y' : 'N',
+					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('addMenu', params)
 				this.addRoot()
@@ -213,16 +221,16 @@ export default {
 			// 编辑
 			} else {
 				let params = {
-					id: this.currentNode._id,
+					Menu_ID: this.currentNode.Menu_ID,
 					path: this.currentNode.path,
 					name: this.currentNode.name,
 					component: this.currentNode.component,
 					title: this.currentNode.title,
-					sort: this.currentNode.sort,
-					icon: this.currentNode.meta.icon,
-					parent: this.currentNode.meta.parent,
-					isMenu: this.currentNode.meta.isMenu,
-					roles: this.currentNode.meta.roles
+					SortNumber: this.currentNode.SortNumber,
+					Icon: this.currentNode.Icon,
+					Menu_PID: this.currentNode.Menu_PID,
+					IsShow: this.isMenuShow ? 'Y' : 'N',
+					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('editMenu', params)
 				this.addRoot()
@@ -233,27 +241,51 @@ export default {
 			this.selectedIcon= icon
 		},
 		submitSelect() {
-			this.iconTxt = this.currentNode.meta.icon = this.selectedIcon
+			this.iconTxt = this.currentNode.Icon = this.selectedIcon
 			this.selectIcondialog = false
 		},
-		getRoles() {
+		// 获取菜单详情
+		getMenu(Menu_ID) {
 			let params = {
-				pageSize: 50
+				Menu_ID
 			}
 			request({
-				url: '/role',
+				url: '/sys_menu/info',
 				method: 'get',
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.roles = res.data.data.roles
+					this.currentNode = res.data.data
+					this.isMenuShow = res.data.data.IsShow == 'Y' ? true : false
+					this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 获取角色
+		getRoles() {
+			let params = {
+				pageSize: 100
+			}
+			request({
+				url: '/sys_role/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					let Oroles = res.data.data.rows
+					this.roles = Oroles.map(item => {
+						return {
+							Role_ID: item.Role_ID,
+							Name: item.Name
+						}
+					})
 				} else {
 					Message.error(res.data.msg)
 				}
 			})
 		}
-	},
-	components: {
 	}
 }
 
@@ -287,5 +319,6 @@ export default {
 			&:hover
 			&.selected
 				color #409EFF
-				
+	.el-checkbox
+		margin 0 30px 0 0	
 </style>

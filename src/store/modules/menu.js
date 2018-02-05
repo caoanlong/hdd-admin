@@ -1,10 +1,10 @@
-// import routersData from '../../assets/data/routers.json'
 import {addMenu, getMenus, updateMenu, delMenu} from '../../api/menu'
-import {_initRouter_} from '../../router'
+
 import reloadVueObj from '../../main'
+
 const menu = {
 	state: {
-		menus: JSON.parse(localStorage.getItem('menus'))
+		menus: JSON.parse(sessionStorage.getItem('menus'))
 	},
 	mutations: {
 		SAVE_ALLMENU: (state, menus) => {
@@ -12,16 +12,19 @@ const menu = {
 		},
 		ADD_MENU: (state, menu) => {
 			addMenu(menu).then(res => {
+				console.log(res.data)
 				reloadVueObj()
 			})
 		},
 		EDIT_MENU: (state, menu) => {
 			updateMenu(menu).then(res => {
+				console.log(res.data)
 				reloadVueObj()
 			})
 		},
 		DELETE_MENU: (state, menu) => {
-			delMenu({id: menu._id}).then(res => {
+			delMenu({Menu_ID: menu.Menu_ID}).then(res => {
+				console.log(res.data)
 				reloadVueObj()
 			})
 		}

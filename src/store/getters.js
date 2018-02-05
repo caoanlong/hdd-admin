@@ -1,8 +1,8 @@
 const getters = {
 	token: state => state.user.token,
-	avatar: state => state.user.avatar,
-	name: state => state.user.name,
-	username: state => state.user.username,
+	Photo: state => state.user.Photo,
+	Name: state => state.user.Name,
+	LoginName: state => state.user.LoginName,
 	roles: state => state.user.roles,
 	sidebar: state => state.app.sidebar,
 	menus: state => state.menu.menus,

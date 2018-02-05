@@ -3,7 +3,7 @@ import request from '../common/request'
 // 获取菜单
 export function getMenus () {
 	return new Promise((resolve, reject) => { request({
-			url: '/menu',
+			url: '/sys_menu/list',
 			method: 'get'
 		}).then(res => {
 			resolve(res.data.data)
@@ -14,7 +14,7 @@ export function getMenus () {
 // 添加菜单
 export function addMenu (data) {
 	return request({
-		url: '/menu/add',
+		url: '/sys_menu/add',
 		method: 'post',
 		data
 	})
@@ -23,7 +23,7 @@ export function addMenu (data) {
 // 修改菜单
 export function updateMenu (data) {
 	return request({
-		url: '/menu/update',
+		url: '/sys_menu/update',
 		method: 'post',
 		data
 	})
@@ -32,7 +32,7 @@ export function updateMenu (data) {
 // 删除菜单
 export function delMenu (data) {
 	return request({
-		url: '/menu/delete',
+		url: '/sys_menu/delete',
 		method: 'post',
 		data
 	})

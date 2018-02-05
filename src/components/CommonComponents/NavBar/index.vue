@@ -4,13 +4,11 @@
 		<breadcrumb class="breadcrumb-container"></breadcrumb>
 		<div class="right-menu">
 			<error-log class="errLog-container right-menu-item"></error-log>
-			<el-tooltip effect="dark" content="navbar.theme" placement="bottom">
-				<!-- <theme-picker class="theme-switch right-menu-item"></theme-picker> -->
-			</el-tooltip>
+			<el-tooltip effect="dark" content="navbar.theme" placement="bottom"></el-tooltip>
 			<el-dropdown class="avatar-container right-menu-item">
 				<div class="avatar-wrapper">
-					<img class="user-avatar" :src="avatar ? avatar : require('../../../assets/imgs/avatar.gif')">
-					<span class="user-text">你好！{{name}}</span>
+					<img class="user-avatar" :src="imgUrl + Photo" @error="errorImg">
+					<span class="user-text">你好！{{Name}}</span>
 					<i class="el-icon-caret-bottom"></i>
 				</div>
 				<el-dropdown-menu slot="dropdown">
@@ -34,20 +32,18 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '../Breadcrumb'
 import Hamburger from '../Hamburger'
 import ErrorLog from '../ErrorLog'
-// import ThemePicker from '../ThemePicker'
 
 export default {
 	components: {
 		Breadcrumb,
 		Hamburger,
-		ErrorLog,
-		// ThemePicker
+		ErrorLog
 	},
 	computed: {
 		...mapGetters([
 			'sidebar',
-			'name',
-			'avatar'
+			'Name',
+			'Photo'
 		])
 	},
 	methods: {
@@ -58,6 +54,10 @@ export default {
 			this.$store.dispatch('LogOut').then(() => {
 				location.reload()// In order to re-instantiate the vue-router object to avoid bugs
 			})
+		},
+		errorImg (e) {
+			e.target.src = require('../../../assets/imgs/avatar.gif')
+			e.target.onerror = null
 		}
 	}
 }

@@ -4,17 +4,17 @@
 			<div class="title-container">
 				<h3 class="title">货多多后台管理系统</h3>
 			</div>
-			<el-form-item prop="username">
+			<el-form-item prop="LoginName">
 				<span class="svg-container svg-container_login">
 					<svg-icon icon-class="user"/>
 				</span>
-				<el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
+				<el-input name="LoginName" type="text" v-model="loginForm.LoginName" autoComplete="on" placeholder="请输入用户名" />
 			</el-form-item>
-			<el-form-item prop="password">
+			<el-form-item prop="Password">
 				<span class="svg-container">
 					<svg-icon icon-class="password"/>
 				</span>
-				<el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码"/>
+				<el-input name="Password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.Password" autoComplete="on" placeholder="请输入密码"/>
 				<span class="show-pwd" @click="showPwd">
 					<svg-icon icon-class="eye"/>
 				</span>
@@ -45,12 +45,12 @@
 			}
 			return {
 				loginForm: {
-					username: '',
-					password: ''
+					LoginName: '',
+					Password: ''
 				},
 				loginRules: {
-					username: [{ required: true, trigger: 'blur' }],
-					password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+					LoginName: [{ required: true, trigger: 'blur' }],
+					Password: [{ required: true, trigger: 'blur', validator: validatePassword }]
 				},
 				passwordType: 'password',
 				loading: false

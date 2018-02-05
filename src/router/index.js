@@ -13,6 +13,7 @@ Vue.use(Router)
 function modifyComponent (routers) {
 	if (routers) {
 		for (let i = 0; i < routers.length; i++) {
+			routers[i].meta = {title: routers[i].title}
 			if (typeof routers[i].component == 'string') {
 				routers[i].component = require('@/components' + routers[i].component).default
 			}
@@ -63,7 +64,7 @@ export let _initRouter_ = (first) => {
 		} else {
 			getMenus().then(res => {
 				store.dispatch('saveAllmenu', res)
-				localStorage.setItem('menus', JSON.stringify(res))
+				sessionStorage.setItem('menus', JSON.stringify(res))
 				routerMap[0].children = modifyComponent(res)
 				router = new Router({
 					scrollBehavior: () => ({ y: 0 }),
