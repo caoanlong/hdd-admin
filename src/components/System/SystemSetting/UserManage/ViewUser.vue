@@ -45,7 +45,7 @@
 							<p>{{user.Type}}</p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<!-- <p>{{user.role.join(',')}}</p> -->
+							<p>{{user.role.join(',')}}</p>
 						</el-form-item>					
 						<el-form-item label="备注">
 							<p>{{user.Remark}}</p>
@@ -90,7 +90,7 @@
 		},
 		created() {
 			this.getUser()
-			// this.getRoles()
+			this.getRoles()
 		},
 		methods: {
 			getUser() {

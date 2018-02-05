@@ -109,7 +109,7 @@
 		},
 		created() {
 			this.getUser()
-			// this.getRoles()
+			this.getRoles()
 		},
 		methods: {
 			getUser() {
@@ -170,7 +170,7 @@
 					pageSize: 50
 				}
 				request({
-					url: '/role',
+					url: '/sys_role/list',
 					method: 'get',
 					params
 				}).then(res => {

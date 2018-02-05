@@ -8,7 +8,7 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload 
+							<el-upload
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
 								:show-file-list="false" 
@@ -186,7 +186,7 @@
 				})
 			},
 			handleAvatarSuccess(res, file) {
-				this.user.avatar = 'http://39.108.245.177:4000' + res.data
+				this.user.Photo = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)
