@@ -56,7 +56,7 @@
 				:data="menus"
 				show-checkbox
 				default-expand-all
-				node-key="_id"
+				node-key="Menu_ID"
 				ref="tree"
 				highlight-current
 				:props="defaultProps"
@@ -75,16 +75,11 @@
 				@selection-change="selectUserChange" 
 				border style="width: 100%" 
 				size="mini">
-				<el-table-column type="selection" align="center">
-				</el-table-column>
-				<el-table-column label="登录名" prop="username">
-				</el-table-column>
-				<el-table-column label="姓名" prop="name">
-				</el-table-column>
-				<el-table-column label="电话" prop="tel">
-				</el-table-column>
-				<el-table-column label="手机" prop="mobile">
-				</el-table-column>
+				<el-table-column type="selection" align="center"></el-table-column>
+				<el-table-column label="登录名" prop="LoginName"></el-table-column>
+				<el-table-column label="姓名" prop="Name"></el-table-column>
+				<el-table-column label="电话" prop="Phone"></el-table-column>
+				<el-table-column label="手机" prop="Mobile"></el-table-column>
 			</el-table>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showSetUser = false">取 消</el-button>
@@ -102,12 +97,14 @@
 			return {
 				refreshing: false,
 				roles: [],
+				role: {},
 				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
 				findRoleName: '',
 				selectedRoles: [],
 				setAuthId: '',
+				setUserId: '',
 				// 所有的用户
 				users:[],
 				showSetAuth: false,
@@ -118,8 +115,6 @@
 				},
 				selectedMenuId: [],
 				selectedUsers:[],
-				// 当前分配用户的角色
-				currentRole: null
 			}
 		},
 		computed: {
@@ -147,6 +142,7 @@
 				this.selectedRoles = data.map(item => item.Role_ID)
 			},
 			selectUserChange(data) {
+				console.log(data)
 				this.selectedUsers = data
 			},
 			// 重置搜索表单
@@ -217,25 +213,27 @@
 				})
 			},
 			setAuth(data) {
-				this.setAuthId = data._id
+				this.setAuthId = data.Role_ID
 				this.showSetAuth = true
-				this.$nextTick(() => {
-					this.$refs.tree.setCheckedKeys(data.permissions)
-					this.getRoles()
+				this.getRole(data.Role_ID, res => {
+					let menusID = res.sys_menus.map(item => item.Menu_ID)
+					this.$nextTick(() => {
+						this.$refs.tree.setCheckedKeys(menusID)
+						this.getRoles()
+					})
 				})
 			},
 			submitSetAuth() {
 				let data = {
-					id: this.setAuthId,
-					permissions: this.selectedMenuId
+					Role_ID: this.setAuthId,
+					sys_menus: this.selectedMenuId
 				}
 				request({
-					url: '/role/update',
+					url: '/sys_role/update/menu',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data)
 						Message.success(res.data.msg)
 					} else {
 						Message.error(res.data.msg)
@@ -245,41 +243,89 @@
 			},
 			selectMenu(data, isSelected) {
 				if (isSelected) {
-					this.selectedMenuId.push(data._id)
+					this.selectedMenuId.push(data.Menu_ID)
 				} else {
-					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data._id), 1)
+					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data.Menu_ID), 1)
 				}
 			},
-			// 获取所有用户
-			getUsers(role) {
+			// 获取当前角色详情
+			getRole(Role_ID, callback) {
 				let params = {
-					pageSize: 100
+					Role_ID
 				}
 				request({
-					url: '/user',
+					url: '/sys_role/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.users = res.data.data.users
-						this.selectedUsers = this.users.filter(user => {
-							return user.role.includes(role)
-						})
-						this.defaultCheck(this.selectedUsers)
+						this.role = res.data.data
+						callback && callback(res.data.data)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			setUser(role) {
-				this.showSetUser = true
-				this.currentRole = role
-				this.getUsers(role.enName)
+			// 获取所有用户
+			getUsers() {
+				let params = {
+					pageSize: 100
+				}
+				request({
+					url: '/sys_user/list',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.users = res.data.data.rows
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
 			},
-			defaultCheck(users) {
-				this.$nextTick(() => {
-					users.forEach(user => {
-						this.$refs.usersTable.toggleRowSelection(user)
+			setUser(data) {
+				this.setUserId = data.Role_ID
+				this.showSetUser = true
+				this.getUsers()
+				this.getRole(data.Role_ID, res => {
+					new Promise((resolve, reject) => {
+						resolve(res.sys_users.map(item => {
+							return {
+								User_ID: item.User_ID,
+								Company_ID: item.Company_ID,
+								Organization_ID: item.Organization_ID,
+								LoginName: item.LoginName,
+								Password: item.Password,
+								PayPassword: item.PayPassword,
+								JobNo: item.JobNo,
+								Name: item.Name,
+								Sex: item.Sex,
+								Email: item.Email,
+								Phone: item.Phone,
+								Mobile: item.Mobile,
+								Type: item.Type,
+								Photo: item.Photo,
+								PCID: item.PCID,
+								LastLoginTime: item.LastLoginTime,
+								LoginFlag: item.LoginFlag,
+								CreateBy: item.CreateBy,
+								CreateDate: item.CreateDate,
+								UpdateBy: item.UpdateBy,
+								UpdateDate: item.UpdateDate,
+								Remark: item.Remark,
+								DelFlag: item.DelFlag,
+								QrCode: item.QrCode,
+								Sign: item.Sign
+							}
+						}))
+					}).then(users => {
+						console.log(users)
+						this.$nextTick(() => {
+							users.forEach(user => {
+								this.$refs.usersTable.toggleRowSelection(user)
+							})
+							this.getRoles()
+						})
 					})
 				})
 			},
@@ -288,18 +334,17 @@
 			},
 			submitSetUser() {
 				this.showSetUser = false
-				let userIds = this.selectedUsers.map(item => item._id)
+				let userIds = this.selectedUsers.map(item => item.User_ID)
 				let data = {
-					roleEnName: this.currentRole.enName,
-					userIds: userIds
+					Role_ID: this.setUserId,
+					sys_users: userIds
 				}
 				request({
-					url: '/role/users',
+					url: '/sys_role/update/user',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 0) {
-						console.log(res.data)
 						Message.success(res.data.msg)
 					} else {
 						Message.error(res.data.msg)

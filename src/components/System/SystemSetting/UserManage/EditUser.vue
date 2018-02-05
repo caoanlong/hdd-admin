@@ -61,10 +61,11 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-checkbox-group v-model="user.role">
-								<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
-							</el-checkbox-group>
-						</el-form-item>					
+							<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
+								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>				
 						<el-form-item label="备注">
 							<el-input type="textarea" resize="none" v-model="user.desc" :rows="5"></el-input>
 						</el-form-item>
@@ -101,12 +102,13 @@
 					Remark:''
 				},
 				roles: [],
+				selectedRoles: [],
 				isAllowLogin: true
 			}
 		},
 		created() {
 			this.getUser()
-			// this.getRoles()
+			this.getRoles()
 		},
 		methods: {
 			getUser() {
@@ -121,6 +123,7 @@
 					if (res.data.code == 0) {
 						this.user = res.data.data
 						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
+						this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
 						console.log(this.user)
 					} else {
 						Message.error(res.data.msg)
@@ -154,12 +157,12 @@
 					pageSize: 50
 				}
 				request({
-					url: '/role',
+					url: '/sys_role/list',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.roles = res.data.data.roles
+						this.roles = res.data.data.rows
 					} else {
 						Message.error(res.data.msg)
 					}
