@@ -165,10 +165,10 @@ export default {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
 				pageSize: this.$route.query.pageSize || this.pageSize,
-				name: this.findName,
+				LoginName: this.findName,
 				username: this.findUsername,
-				company: this.findCompany,
-				department: this.findDepartment
+				Company_ID: this.findCompany,
+				Organization_ID: this.findDepartment
 			}
 			request({
 				url: '/sys_user/list',
@@ -219,7 +219,7 @@ export default {
 				ids: ids
 			}
 			request({
-				url: '/user/delete',
+				url: '/sys_user/delete',
 				method: 'post',
 				data
 			}).then(res => {

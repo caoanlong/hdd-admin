@@ -8,11 +8,11 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-						<!-- 	<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" 
+							<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg"
 								:show-file-list="false" :on-success="handleAvatarSuccess">
-								<img v-if="user.avatar" :src="user.avatar" class="avatar">
+								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload> -->
+							</el-upload>
 						</el-form-item>
 						<el-form-item label="归属公司">
 							<p>{{user.Company_ID}}</p>
@@ -138,18 +138,25 @@
 <style lang="stylus" scoped>
 .avatar-uploader
 	line-height 1
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
 	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
+		vertical-align top
 .el-form-item
 	margin-bottom 10px
 	.el-form-item__content

@@ -13,7 +13,7 @@
 								action="http://39.108.245.177:3001/uploadImg" 
 								:show-file-list="false" 
 								:on-success="handleAvatarSuccess">
-								<img v-if="user.avatar" :src="user.avatar" class="avatar">
+								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -58,7 +58,10 @@
 							<el-input auto-complete="off" v-model="user.Mobile"></el-input>
 						</el-form-item>
 						<el-form-item label="是否允许登录">
-							<el-switch v-model="isAllowLogin"></el-switch>
+							<el-radio-group v-model="user.LoginFlag">
+								<el-radio label="Y">是</el-radio>
+								<el-radio label="N">否</el-radio>
+							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="用户类型">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Type">
@@ -113,10 +116,9 @@
 					Type:'',
 					Photo:'',
 					PCID:'',
-					LoginFlag:'',
+					LoginFlag:'N',
 					Remark:''
 				},
-				isAllowLogin: false,
 				roles: [],
 				selectedRoles: []
 			}
@@ -142,7 +144,7 @@
 					Type:0,
 					Photo:this.user.Photo,
 					PCID:this.user.PCID,
-					LoginFlag: this.user.isAllowLogin ? 'Y' : 'N',
+					LoginFlag: this.user.LoginFlag,
 					Remark:this.user.Remark,
 					sys_roles: ''
 				}
@@ -192,27 +194,26 @@
 		}
 	}
 </script>
-<style lang="stylus">
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
+<style lang="stylus" scoped>
+.avatar-uploader
+	line-height 1
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
+	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
 		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
-
 </style>
