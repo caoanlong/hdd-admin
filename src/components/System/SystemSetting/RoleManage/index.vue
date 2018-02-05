@@ -38,9 +38,9 @@
 					</el-table-column>
 					<el-table-column label="操作" width="420" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-view" @click="viewRole(scope.row._id)">查看</el-button>
-							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row._id)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row._id)">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewRole(scope.row.Role_ID)">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row.Role_ID)">修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Role_ID)">删除</el-button>
 							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row)">权限设置</el-button>
 							<el-button type="default" size="mini" icon="el-icon-plus"  @click="setUser(scope.row)">分配用户</el-button>
 						</template>
@@ -135,10 +135,10 @@
 				this.$router.push({name: 'addrole'})
 			},
 			editRole(id) {
-				this.$router.push({name: 'editrole', query: {id: id}})
+				this.$router.push({name: 'editrole', query: {Role_ID: id}})
 			},
 			viewRole(id) {
-				this.$router.push({name: 'viewrole', query: {id: id}})
+				this.$router.push({name: 'viewrole', query: {Role_ID: id}})
 			},
 			pageChange(index) {
 				this.getRoles(index)
