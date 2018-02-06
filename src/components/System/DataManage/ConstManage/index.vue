@@ -42,7 +42,11 @@
 					<el-table-column label="描述" prop="Description"></el-table-column>
 					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
 					<el-table-column label="更新人" prop="UpdateBy"width="100" align="center"></el-table-column>
-					<el-table-column label="更新日期" prop="UpdateTime" align="center"></el-table-column>
+					<el-table-column label="更新日期" align="center">
+						<template slot-scope="scope">
+							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewConstant(scope.row.ConstStd_ID)">查看</el-button>
