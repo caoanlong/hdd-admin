@@ -20,7 +20,7 @@
 							<el-input auto-complete="off" v-model="dict.Description"></el-input>
 						</el-form-item>
 						<el-form-item label="排序">
-							<el-input auto-complete="off" v-model="dict.SortNumber"></el-input>
+							<el-input-number v-model="dict.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
 
 						<el-form-item>

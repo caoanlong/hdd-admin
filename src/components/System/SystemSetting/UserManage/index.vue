@@ -45,12 +45,12 @@
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center"></el-table-column>
-					<el-table-column label="登录名" prop="LoginName" align="left"></el-table-column>
-					<el-table-column label="姓名" prop="Name" align="left"></el-table-column>
-					<el-table-column label="电话" prop="Phone" align="left"></el-table-column>
-					<el-table-column label="手机" prop="Mobile" align="left"></el-table-column>
-					<el-table-column label="归属公司" prop="company" align="left"></el-table-column>
-					<el-table-column label="归属部门" prop="department" align="left"></el-table-column>
+					<el-table-column label="登录名" prop="LoginName"></el-table-column>
+					<el-table-column label="姓名" prop="Name"></el-table-column>
+					<el-table-column label="电话" prop="Phone"></el-table-column>
+					<el-table-column label="手机" prop="Mobile" align="center" width="100"></el-table-column>
+					<el-table-column label="归属公司" prop="company"></el-table-column>
+					<el-table-column label="归属部门" prop="department"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row.User_ID)">查看</el-button>

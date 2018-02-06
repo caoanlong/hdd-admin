@@ -7,13 +7,18 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="常量类型">
-						<el-input placeholder="常量类型"></el-input>
+						<el-select placeholder="请选择" v-model="selectedConstantType">
+							<el-option v-for="item in ConstantTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
+								<span style="float: left">{{ item.VALUE }}</span>
+								<span style="float: right; color: #8492a6; font-size: 12px">{{ item.NAME }}</span>
+							</el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item label="名称">
 						<el-input placeholder="名称"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConfig">查询</el-button>
+						<el-button type="primary" @click.native="getConstants">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -29,15 +34,15 @@
 			</div>
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center"></el-table-column>
+					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="常量类型" prop="Type"></el-table-column>
 					<el-table-column label="代码" prop="Code"></el-table-column>
 					<el-table-column label="名称" prop="Name"></el-table-column>
 					<el-table-column label="值" prop="Value"></el-table-column>
 					<el-table-column label="描述" prop="Description"></el-table-column>
-					<el-table-column label="排序" prop="SortNumber"></el-table-column>
-					<el-table-column label="更新人" prop="UpdateBy"></el-table-column>
-					<el-table-column label="更新日期" prop="UpdateTime"></el-table-column>
+					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
+					<el-table-column label="更新人" prop="UpdateBy" align="center"></el-table-column>
+					<el-table-column label="更新日期" prop="UpdateTime" align="center"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewConstant(scope.row.ConstStd_ID)">查看</el-button>
@@ -79,11 +84,14 @@ export default {
 			findCompany: '',
 			findDepartment: '',
 			count: 0,
-			selectedConstants: []
+			selectedConstants: [],
+			selectedConstantType:'',
+			ConstantTypeList:[]
 		}
 	},
 	created() {
 		this.getConstants()
+		this.getConstantType()
 	},
 	methods: {
 		exportExcel() {
@@ -144,11 +152,34 @@ export default {
 		reset() {
 			this.findName = ''
 		},
+		getConstantType(){
+			let params = {
+				TYPE:'base_constsand'
+			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.ConstantTypeList = res.data.data
+					console.log(res.data.data)
+					this.setRouteQuery({
+						pageIndex: res.data.data.pageIndex,
+						pageSize: res.data.data.pageSize,
+					})
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
 		getConstants(pageIndex) {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-				pageSize: this.$route.query.pageSize || this.pageSize
+				pageSize: this.$route.query.pageSize || this.pageSize,
+				Type: this.selectedConstantType
 			}
+			console.log(this.selectedConstantType)
 			request({
 				url: '/base_conststand/list',
 				method: 'get',
