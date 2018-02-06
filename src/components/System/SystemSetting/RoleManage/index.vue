@@ -67,7 +67,7 @@
 				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px" @click.native="gouxuan">
+		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px">
 			<el-table 
 				ref="usersTable"
 				:data="users" 
@@ -142,7 +142,7 @@
 				this.selectedRoles = data.map(item => item.Role_ID)
 			},
 			selectUserChange(data) {
-				console.log(data)
+				// console.log(data)
 				this.selectedUsers = data
 			},
 			// 重置搜索表单
@@ -277,18 +277,8 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.users = res.data.data.rows.map(item => {
-							return {
-								User_ID: item.User_ID,
-								LoginName: item.LoginName,
-								Name: item.Name,
-								Phone: item.Phone,
-								Mobile: item.Mobile
-							}
-						})
-						this.$nextTick(() => {
-							callback && callback()
-						})
+						this.users = res.data.data.rows
+						callback && callback()
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -298,39 +288,14 @@
 				this.setUserId = data.Role_ID
 				this.showSetUser = true
 				this.getUsers(() => {
-					// this.getRole(data.Role_ID, res => {
-					// 	let users = res.sys_users.map(item => {
-					// 		return {
-					// 			User_ID: item.User_ID,
-					// 			LoginName: item.LoginName,
-					// 			Name: item.Name,
-					// 			Phone: item.Phone,
-					// 			Mobile: item.Mobile
-					// 		}
-					// 	})
-					// 	this.$nextTick(() => {
-					// 		users.forEach(user => {
-					// 			this.$refs.usersTable.toggleRowSelection(user, true)
-					// 		})
-					// 		this.getRoles()
-					// 	})
-					// })
-				})
-			},
-			gouxuan() {
-				this.getRole(this.setUserId, res => {
-					let users = res.sys_users.map(item => {
-						return {
-							User_ID: item.User_ID,
-							LoginName: item.LoginName,
-							Name: item.Name,
-							Phone: item.Phone,
-							Mobile: item.Mobile
-						}
-					})
-					this.$nextTick(() => {
+					this.getRole(data.Role_ID, res => {
+						let usersID = res.sys_users.map(item => item.User_ID)
+						let users = this.users.filter(user => {
+							return usersID.includes(user.User_ID)
+						})
+						console.log(users)
 						users.forEach(user => {
-							this.$refs.usersTable.toggleRowSelection(user, true)
+							this.$refs.usersTable.toggleRowSelection(user)
 						})
 						this.getRoles()
 					})
