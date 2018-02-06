@@ -26,7 +26,7 @@
 					:data="roles" 
 					@selection-change="selectRoleChange" 
 					border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center">
+					<el-table-column type="selection" align="center" width="40">
 					</el-table-column>
 					<el-table-column label="角色名称" prop="Name" align="left">
 					</el-table-column>

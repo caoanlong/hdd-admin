@@ -28,12 +28,12 @@
 			</div>
 			<div class="table">
 				<el-table :data="dicts" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center"></el-table-column>
+					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="键值" prop="VALUE"></el-table-column>
 					<el-table-column label="标签" prop="NAME"></el-table-column>
 					<el-table-column label="类型" prop="TYPE"></el-table-column>
 					<el-table-column label="描述" prop="Description"></el-table-column>
-					<el-table-column label="排序" prop="SortNumber"></el-table-column>
+					<el-table-column label="排序" prop="SortNumber" align="center" width="60"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewDict(scope.row.Dict_ID)">查看</el-button>
