@@ -67,7 +67,7 @@
 				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px">
+		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px" @click.native="gouxuan">
 			<el-table 
 				ref="usersTable"
 				:data="users" 
@@ -286,7 +286,9 @@
 								Mobile: item.Mobile
 							}
 						})
-						callback && callback()
+						this.$nextTick(() => {
+							callback && callback()
+						})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -296,22 +298,41 @@
 				this.setUserId = data.Role_ID
 				this.showSetUser = true
 				this.getUsers(() => {
-					this.getRole(data.Role_ID, res => {
-						let users = res.sys_users.map(item => {
-							return {
-								User_ID: item.User_ID,
-								LoginName: item.LoginName,
-								Name: item.Name,
-								Phone: item.Phone,
-								Mobile: item.Mobile
-							}
+					// this.getRole(data.Role_ID, res => {
+					// 	let users = res.sys_users.map(item => {
+					// 		return {
+					// 			User_ID: item.User_ID,
+					// 			LoginName: item.LoginName,
+					// 			Name: item.Name,
+					// 			Phone: item.Phone,
+					// 			Mobile: item.Mobile
+					// 		}
+					// 	})
+					// 	this.$nextTick(() => {
+					// 		users.forEach(user => {
+					// 			this.$refs.usersTable.toggleRowSelection(user, true)
+					// 		})
+					// 		this.getRoles()
+					// 	})
+					// })
+				})
+			},
+			gouxuan() {
+				this.getRole(this.setUserId, res => {
+					let users = res.sys_users.map(item => {
+						return {
+							User_ID: item.User_ID,
+							LoginName: item.LoginName,
+							Name: item.Name,
+							Phone: item.Phone,
+							Mobile: item.Mobile
+						}
+					})
+					this.$nextTick(() => {
+						users.forEach(user => {
+							this.$refs.usersTable.toggleRowSelection(user, true)
 						})
-						this.$nextTick(() => {
-							users.forEach(user => {
-								this.$refs.usersTable.toggleRowSelection(user)
-							})
-							this.getRoles()
-						})
+						this.getRoles()
 					})
 				})
 			},
