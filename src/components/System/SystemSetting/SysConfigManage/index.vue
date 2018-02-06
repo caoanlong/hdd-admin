@@ -2,43 +2,42 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>字典列表</span>
+				<span>系统配置列表</span>
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
-					<el-form-item label="类型">
-						<el-select placeholder="请选择" value>
-							<el-option label="app_user_type" value="app_user_type"></el-option>
-							</el-option>
-						</el-select>
+					<el-form-item label="代码">
+						<el-input placeholder="代码"></el-input>
 					</el-form-item>
-					<el-form-item label="描述">
-						<el-input placeholder="描述"></el-input>
+					<el-form-item label="名称">
+						<el-input placeholder="名称"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getDict">查询</el-button>
+						<el-button type="primary" @click.native="getConfig">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addDict">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addConfig">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="dicts" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="config" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center"></el-table-column>
-					<el-table-column label="键值" prop="VALUE"></el-table-column>
-					<el-table-column label="标签" prop="NAME"></el-table-column>
-					<el-table-column label="类型" prop="TYPE"></el-table-column>
-					<el-table-column label="描述" prop="Description"></el-table-column>
+					<el-table-column label="代码" prop="Code"></el-table-column>
+					<el-table-column label="名称" prop="Name"></el-table-column>
+					<el-table-column label="值" prop="Value"></el-table-column>
 					<el-table-column label="排序" prop="SortNumber"></el-table-column>
+					<el-table-column label="描述" prop="Description"></el-table-column>
+					<el-table-column label="更新人" prop="UpdateBy"></el-table-column>
+					<el-table-column label="更新日期" prop="UpdateDate"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewDict(scope.row.Dict_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editDict(scope.row.Dict_ID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Dict_ID)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewConfig(scope.row.Setting_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editConfig(scope.row.Setting_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Setting_ID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -55,39 +54,39 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			dicts:[],
+			config:[],
 			count:0,
 			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
-			selectedDicts: []
+			selectedConfig: []
 		}
 	},
 	created() {
-		this.getDict()
+		this.getConfig()
 	},
 	methods: {
 		pageChange(index) {
-			this.getDict(index)
+			this.getConfig(index)
 		},
 		// 重置搜索表单
 		reset() {
 			this.findName = ''
 			this.findUsername = ''
 		},
-		getDict(pageIndex) {
+		getConfig(pageIndex) {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
 				pageSize: this.$route.query.pageSize || this.pageSize
 			}
 			request({
-				url: '/sys_dict/list',
+				url: '/sys_settings/list',
 				method: 'get',
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.count = res.data.data.count
-					this.dicts = res.data.data.rows
+					this.config = res.data.data.rows
 					this.setRouteQuery({
 						pageIndex: res.data.data.pageIndex,
 						pageSize: res.data.data.pageSize,
@@ -97,22 +96,22 @@ export default {
 				}
 			})
 		},
-		addDict() {
-			this.$router.push({ name: 'adddict' })
+		addConfig() {
+			this.$router.push({ name: 'addsysconfig' })
 		},
 		deleteConfirm(id) {
 			let ids = []
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				ids = this.selectedDicts
+				ids = this.selectedConfig
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delDict(ids)
+				this.delConfig(ids)
 				this.$message({
 					type: 'success',
 					message: '删除成功!'
@@ -124,36 +123,36 @@ export default {
 				})
 			})
 		},
-		delDict(ids) {
+		delConfig(ids) {
 			let data = {
 				ids: ids
 			}
 			request({
-				url: '/sys_dict/delete',
+				url: '/sys_settings/delete',
 				method: 'post',
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.getDict()
+					this.getConfig()
 				} else {
 					Message.error(res.data.msg)
 				}
 			})
 		},
 
-		editDict(id) {
-			this.$router.push({ name: 'editdict', query: { Dict_ID: id} })
+		editConfig(id) {
+			this.$router.push({ name: 'editsysconfig', query: { Setting_ID: id} })
 		},
-		viewDict(id) {
-			this.$router.push({ name: 'viewdict', query: { Dict_ID: id} })
+		viewConfig(id) {
+			this.$router.push({ name: 'viewsysconfig', query: { Setting_ID: id} })
 		},
 		selectionChange(data) {
-			this.selectedDicts = data.map(item => item.Dict_ID)
-			console.log(this.selectedDicts)
+			this.selectedConfig = data.map(item => item.Setting_ID)
+			console.log(this.selectedConfig)
 		},
 		refresh() {
 			this.refreshing = true
-			this.getDict()
+			this.getConfig()
 			setTimeout(() => {
 				this.refreshing = false
 			}, 500)

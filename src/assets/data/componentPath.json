@@ -35,6 +35,10 @@
 	"/System/SystemSetting/DictManage/AddDict",
 	"/System/SystemSetting/DictManage/EditDict",
 	"/System/SystemSetting/DictManage/ViewDict",
+	"/System/SystemSetting/SysConfigManage",
+	"/System/SystemSetting/SysConfigManage/AddSysConfig",
+	"/System/SystemSetting/SysConfigManage/EditSysConfig",
+	"/System/SystemSetting/SysConfigManage/ViewSysConfig",
 	"/User",
 	"/User/UserProfile"
 ]

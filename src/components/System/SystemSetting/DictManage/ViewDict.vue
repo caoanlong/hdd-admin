@@ -2,53 +2,25 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>查看用户</span>
+				<span>查看字典</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="头像">
-							<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg"
-								:show-file-list="false" :on-success="handleAvatarSuccess">
-								<img v-if="user.Photo" :src="user.Photo" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+						<el-form-item label="键值">
+							<p>{{dict.VALUE}}</p>
 						</el-form-item>
-						<el-form-item label="归属公司">
-							<p>{{user.Company_ID}}</p>
+						<el-form-item label="标签">
+							<p>{{dict.NAME}}</p>
 						</el-form-item>
-						<el-form-item label="归属部门">
-							<p>{{user.Organization_ID}}</p>
+						<el-form-item label="类型">
+							<p>{{dict.TYPE}}</p>
 						</el-form-item>
-						<el-form-item label="工号">
-							<p>{{user.JobNo}}</p>
+						<el-form-item label="描述">
+							<p>{{dict.Description}}</p>
 						</el-form-item>
-						<el-form-item label="姓名">
-							<p>{{user.Name}}</p>
-						</el-form-item>
-						<el-form-item label="登录名">
-							<p>{{user.LoginName}}</p>
-						</el-form-item>
-						<el-form-item label="邮箱">
-							<p>{{user.Email}}</p>
-						</el-form-item>
-						<el-form-item label="电话">
-							<p>{{user.Phone}}</p>
-						</el-form-item>
-						<el-form-item label="手机">
-							<p>{{user.Mobile}}</p>
-						</el-form-item>
-						<el-form-item label="是否允许登录">
-							<p>{{isAllowLogin?'是':'否'}}</p>
-						</el-form-item>
-						<el-form-item label="用户类型">
-							<p>{{user.Type}}</p>
-						</el-form-item>
-						<el-form-item label="用户角色">
-							<p>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
-						</el-form-item>					
-						<el-form-item label="备注">
-							<p>{{user.Remark}}</p>
+						<el-form-item label="排序">
+							<p>{{dict.SortNumber}}</p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -65,53 +37,35 @@
 	export default {
 		data() {
 			return {
-				user: {
-					Company_ID:'',
-					Organization_ID:'',
-					LoginName:'',
-					Password:'',
-					Password2:'',
-					PayPassword:'',
-					JobNo:'',
-					Name:'',
-					Sex:'',
-					Email:'',
-					Phone:'',
-					Mobile:'',
-					Type:'',
-					Photo:'',
-					PCID:'',
-					LoginFlag:'',
-					Remark:'',
-					sys_roles: []
-				},
-				isAllowLogin: true
+				dict: {
+					Dict_ID:'',
+					TYPE:'',
+					NAME:'',
+					VALUE:'',
+					Description:'',
+					SortNumber:''
+				}
 			}
 		},
 		created() {
-			this.getUser()
+			this.getDict()
 		},
 		methods: {
-			getUser() {
+			getDict() {
 				let params = {
-					User_ID: this.$route.query.User_ID
+					Dict_ID: this.$route.query.Dict_ID
 				}
 				request({
-					url: '/sys_user/info',
+					url: '/sys_dict/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.user = res.data.data
-						console.log(this.user.sys_roles)
-						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
+						this.dict = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
-			},
-			handleAvatarSuccess(res, file) {
-				this.user.avatar = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

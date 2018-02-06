@@ -2,30 +2,28 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>编辑用户</span>
+				<span>查看字典</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="键值">
-							<el-input auto-complete="off" v-model="dict.VALUE"></el-input>
+							<p>{{dict.VALUE}}</p>
 						</el-form-item>
 						<el-form-item label="标签">
-							<el-input auto-complete="off" v-model="dict.NAME"></el-input>
+							<p>{{dict.NAME}}</p>
 						</el-form-item>
 						<el-form-item label="类型">
-							<el-input auto-complete="off" v-model="dict.TYPE"></el-input>
+							<p>{{dict.TYPE}}</p>
 						</el-form-item>
 						<el-form-item label="描述">
-							<el-input auto-complete="off" v-model="dict.Description"></el-input>
+							<p>{{dict.Description}}</p>
 						</el-form-item>
 						<el-form-item label="排序">
-							<el-input auto-complete="off" v-model="dict.SortNumber"></el-input>
+							<p>{{dict.SortNumber}}</p>
 						</el-form-item>
-
 						<el-form-item>
-							<el-button type="primary" @click.native="editDict">立即保存</el-button>
-							<el-button @click="back">取消</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -39,7 +37,7 @@
 	export default {
 		data() {
 			return {
-				dict: {
+				consfig: {
 					Dict_ID:'',
 					TYPE:'',
 					NAME:'',
@@ -64,30 +62,6 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.dict = res.data.data
-						console.log(this.dict)
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			editDict() {
-				let data= {
-					Dict_ID:this.dict.Dict_ID,
-					TYPE:this.dict.TYPE,
-					NAME:this.dict.NAME,
-					VALUE:this.dict.VALUE,
-					Description:this.dict.Description,
-					SortNumber:this.dict.SortNumber
-				}
-				console.log(data)
-				request({
-					url: '/sys_dict/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'dictmanage'})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -121,7 +95,18 @@
 		height 98px
 		display block
 		vertical-align top
-.el-checkbox
-	margin-left 0!important
-	margin-right 30px
+.el-form-item
+	margin-bottom 10px
+	.el-form-item__content
+		p
+			margin 0
+			border 1px solid #fff
+			border-bottom-color #dcdfe6
+			padding 0 15px
+			height 40px
+			font-family 'sans-serif'
+			line-height 40px
+			color #999
+		.el-input__inner
+			vertical-align top
 </style>
