@@ -46,8 +46,7 @@
 						<template slot-scope="scope">
 							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
-					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					</el-table-column>					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewConstant(scope.row.ConstStd_ID)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="editConstant(scope.row.ConstStd_ID)">编辑</el-button>
