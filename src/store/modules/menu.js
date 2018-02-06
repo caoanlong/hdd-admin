@@ -2,6 +2,7 @@ import {addMenu, getMenus, updateMenu, delMenu} from '../../api/menu'
 
 import reloadVueObj from '../../main'
 
+
 const menu = {
 	state: {
 		menus: JSON.parse(sessionStorage.getItem('menus'))
