@@ -20,7 +20,7 @@
 							<el-input auto-complete="off" v-model="constant.Value"></el-input>
 						</el-form-item>
 						<el-form-item label="排序" >
-							<el-input auto-complete="off" v-model="constant.SortNumber"></el-input>
+							<el-input-number v-model="constant.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
 						<el-form-item label="描述" >
 							<el-input auto-complete="off" type="textarea" v-model="constant.Description"></el-input>

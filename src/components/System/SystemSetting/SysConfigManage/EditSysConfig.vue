@@ -17,7 +17,7 @@
 							<el-input auto-complete="off" v-model="config.Value"></el-input>
 						</el-form-item>
 						<el-form-item label="排序">
-							<el-input auto-complete="off" v-model="config.SortNumber"></el-input>
+							<el-input-number v-model="config.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
 						<el-form-item label="描述">
 							<el-input auto-complete="off" v-model="config.Description"></el-input>

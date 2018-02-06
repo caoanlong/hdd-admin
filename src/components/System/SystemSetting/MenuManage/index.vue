@@ -41,7 +41,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.SortNumber" :min="1" label="描述文字"></el-input-number>
+					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item label="是否菜单">
 					<el-switch v-model="isMenuShow"></el-switch>

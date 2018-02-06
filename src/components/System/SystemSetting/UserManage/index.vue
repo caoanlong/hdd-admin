@@ -38,7 +38,7 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
-				<a href="../../../../../static/template.xlsx" download="template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				<a href="../../../../../static/user_template.xlsx" download="user_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 				
 			</div>
@@ -71,7 +71,6 @@ import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
 const userMap = {
-	'Id': '_id',
 	'登录名': 'LoginName',
 	'姓名': 'Name',
 	'电话': 'Phone',
@@ -103,8 +102,8 @@ export default {
 		exportExcel() {
 			this.downloadLoading = true
 			import('../../../../common/Export2Excel').then(excel => {
-				const tHeader = ['Id', '登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
-				const filterVal = [userMap['Id'], userMap['登录名'], userMap['姓名'], userMap['电话'], userMap['手机'], userMap['归属公司'], userMap['归属部门']]
+				const tHeader = ['登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
+				const filterVal = [userMap['登录名'], userMap['姓名'], userMap['电话'], userMap['手机'], userMap['归属公司'], userMap['归属部门']]
 				const data = this.formatJson(filterVal, this.users)
 				excel.export_json_to_excel(tHeader, data, this.filename)
 				this.downloadLoading = false
@@ -139,7 +138,7 @@ export default {
 				users: users,
 			}
 			request({
-				url: '/user/addmutip',
+				url: '/sys_user/addmutip',
 				method: 'post',
 				data
 			}).then(res => {

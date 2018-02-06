@@ -23,7 +23,7 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
-				<a href="../../../../../static/template.xlsx" download="template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				<a href="../../../../../static/constant_template.xlsx" download="constant_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 				
 			</div>
@@ -58,7 +58,6 @@ import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
 const userMap = {
-	'Id': '_id',
 	'常量类型':'Type',
 	'代码':'Code',
 	'名称':'Name',
@@ -90,8 +89,8 @@ export default {
 		exportExcel() {
 			this.downloadLoading = true
 			import('../../../../common/Export2Excel').then(excel => {
-				const tHeader = ['Id', '常量类型','代码','名称','值','描述','排序']
-				const filterVal = [userMap['Id'], userMap['常量类型'], userMap['代码'], userMap['名称'], userMap['值'], userMap['描述'], userMap['排序']]
+				const tHeader = ['常量类型','代码','名称','值','描述','排序']
+				const filterVal = [userMap['常量类型'], userMap['代码'], userMap['名称'], userMap['值'], userMap['描述'], userMap['排序']]
 				const data = this.formatJson(filterVal, this.constants)
 				excel.export_json_to_excel(tHeader, data, this.filename)
 				this.downloadLoading = false
@@ -121,12 +120,12 @@ export default {
 				this.addUserMutiple(constants)
 			})
 		},
-		addUserMutiple(constants) {
+		addUserMutiple(consts) {
 			let data = {
-				constants: constants,
+				consts: consts,
 			}
 			request({
-				url: '/user/addmutip',
+				url: '/base_conststand/addmutip',
 				method: 'post',
 				data
 			}).then(res => {
