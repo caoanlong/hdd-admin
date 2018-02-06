@@ -39,6 +39,11 @@
 	"/System/SystemSetting/SysConfigManage/AddSysConfig",
 	"/System/SystemSetting/SysConfigManage/EditSysConfig",
 	"/System/SystemSetting/SysConfigManage/ViewSysConfig",
+	"/System/DataManage",
+	"/System/DataManage/ConstManage",
+	"/System/DataManage/ConstManage/AddConstant",
+	"/System/DataManage/ConstManage/EditConstant",
+	"/System/DataManage/ConstManage/ViewConstant",
 	"/User",
 	"/User/UserProfile"
 ]

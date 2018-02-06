@@ -2,28 +2,31 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>编辑用户</span>
+				<span>编辑基础常量</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="代码">
-							<el-input auto-complete="off" v-model="config.Code"></el-input>
+						<el-form-item label="常量类型" >
+							<el-input auto-complete="off" v-model="constant.Type"></el-input>
 						</el-form-item>
-						<el-form-item label="名称">
-							<el-input auto-complete="off" v-model="config.Name"></el-input>
+						<el-form-item label="代码" >
+							<el-input auto-complete="off" v-model="constant.Code"></el-input>
 						</el-form-item>
-						<el-form-item label="值">
-							<el-input auto-complete="off" v-model="config.Value"></el-input>
+						<el-form-item label="名称" >
+							<el-input auto-complete="off" v-model="constant.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="排序">
-							<el-input auto-complete="off" v-model="config.SortNumber"></el-input>
+						<el-form-item label="值" >
+							<el-input auto-complete="off" v-model="constant.Value"></el-input>
 						</el-form-item>
-						<el-form-item label="描述">
-							<el-input auto-complete="off" v-model="config.Description"></el-input>
+						<el-form-item label="排序" >
+							<el-input auto-complete="off" v-model="constant.SortNumber"></el-input>
+						</el-form-item>
+						<el-form-item label="描述" >
+							<el-input auto-complete="off" type="textarea" v-model="constant.Description"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="editConfig">立即保存</el-button>
+							<el-button type="primary" @click.native="editConstant">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -38,54 +41,56 @@
 	export default {
 		data() {
 			return {
-				config: {
-					Setting_ID:'',
+				constant: {
+					ConstStd_ID:'',
+					Type:'',
 					Code:'',
 					Name:'',
 					Value:'',
-					SortNumber:'',
-					Description:''
+					Description:'',
+					SortNumber:''
 				}
 			}
 		},
 		created() {
-			this.getConfig()
+			this.getConstants()
 		},
 		methods: {
-			getConfig() {
+			getConstants() {
 				let params = {
-					Setting_ID: this.$route.query.Setting_ID
+					ConstStd_ID: this.$route.query.ConstStd_ID
 				}
 				request({
-					url: '/sys_settings/info',
+					url: '/base_conststand/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.config = res.data.data
+						this.constant = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			editConfig() {
+			editConstant() {
 				let data= {
-					Setting_ID:this.config.Setting_ID,
-					Code:this.config.Code,
-					Name:this.config.Name,
-					Value:this.config.Value,
-					SortNumber:this.config.SortNumber,
-					Description:this.config.Description
+					ConstStd_ID:this.constant.ConstStd_ID,
+					Type:this.constant.Type,
+					Code:this.constant.Code,
+					Name:this.constant.Name,
+					Value:this.constant.Value,
+					Description:this.constant.Description,
+					SortNumber:this.constant.SortNumber
 				}
 				console.log(data)
 				request({
-					url: '/sys_settings/update',
+					url: '/base_conststand/update',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 0) {
 						Message.success(res.data.msg)
-						this.$router.push({name: 'sysconfigmanage'})
+						this.$router.push({name: 'constmanage'})
 					} else {
 						Message.error(res.data.msg)
 					}

@@ -2,25 +2,28 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>查看字典</span>
+				<span>查看基础常量</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="代码">
-							<p>{{config.Code}}</p>
+						<el-form-item label="常量类型" >
+							<p>{{constant.Type}}</p>
 						</el-form-item>
-						<el-form-item label="名称">
-							<p>{{config.Name}}</p>
+						<el-form-item label="代码" >
+							<p>{{constant.Code}}</p>
 						</el-form-item>
-						<el-form-item label="值">
-							<p>{{config.Value}}</p>
+						<el-form-item label="名称" >
+							<p>{{constant.Name}}</p>
 						</el-form-item>
-						<el-form-item label="排序">
-							<p>{{config.SortNumber}}</p>
+						<el-form-item label="值" >
+							<p>{{constant.Value}}</p>
 						</el-form-item>
-						<el-form-item label="描述">
-							<p>{{config.Description}}</p>
+						<el-form-item label="排序" >
+							<p>{{constant.SortNumber}}</p>
+						</el-form-item>
+						<el-form-item label="描述" >
+							<p>{{constant.Description}}</p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -37,31 +40,32 @@
 	export default {
 		data() {
 			return {
-				config: {
-					Setting_ID:'',
+				constant: {
+					ConstStd_ID:'',
+					Type:'',
 					Code:'',
 					Name:'',
 					Value:'',
-					SortNumber:'',
-					Description:''
+					Description:'',
+					SortNumber:''
 				}
 			}
 		},
 		created() {
-			this.getConfig()
+			this.getConstant()
 		},
 		methods: {
-			getConfig() {
+			getConstant(pageIndex) {
 				let params = {
-					Setting_ID: this.$route.query.Setting_ID
+					ConstStd_ID: this.$route.query.ConstStd_ID
 				}
 				request({
-					url: '/sys_settings/info',
+					url: '/base_conststand/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.config = res.data.data
+						this.constant = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
