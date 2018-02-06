@@ -31,6 +31,10 @@
 	"/System/SystemSetting/RoleManage/EditRole",
 	"/System/SystemSetting/RoleManage/ViewRole",
 	"/System/SystemSetting/OrgManage",
+	"/System/SystemSetting/DictManage",
+	"/System/SystemSetting/DictManage/AddDict",
+	"/System/SystemSetting/DictManage/EditDict",
+	"/System/SystemSetting/DictManage/ViewDict",
 	"/User",
 	"/User/UserProfile"
 ]
