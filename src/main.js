@@ -12,10 +12,16 @@ import App from './App'
 import {routerMap} from './router'
 import {_initRouter_} from './router'
 import store from './store'
+import * as filters from './filters' // global filters
 
 import './assets/icons' // icon
 import './errorLog'// error log
 import { permissions } from './permission' // permission control
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+	Vue.filter(key, filters[key])
+})
 
 Vue.use(Element)
 
