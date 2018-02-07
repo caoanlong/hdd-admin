@@ -9,8 +9,6 @@
 					<el-form-item label="常量类型" >
 						<el-select placeholder="请选择" v-model="selectedConstantType" class="constantSelect">
 							<el-option v-for="item in ConstantTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
-								<span>{{ item.VALUE }}</span>
-								<span>{{ item.NAME }}</span>
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -294,13 +292,4 @@ export default {
 	&:active
 		border-color #3a8ee6
 		color #3a8ee6
-.constantSelect
-	width 300px
-.el-select-dropdown__item
-	span
-		font-size 12px
-		float left
-		&:last-child
-			color #8492a6
-			float right
 </style>

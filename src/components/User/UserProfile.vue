@@ -15,53 +15,49 @@
 								:show-file-list="false" 
 								:on-success="handleAvatarSuccess"
 								:disabled="!isEdit">
-								<img v-if="user.avatar" :src="user.avatar" class="avatar">
+								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item> 
 						<el-form-item label="姓名">
-							<el-input auto-complete="off" v-if="isEdit" v-model="user.name"></el-input>
-							<p v-text="user.name" v-else></p>
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.Name"></el-input>
+							<p v-text="user.Name" v-else></p>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<el-input auto-complete="off" v-if="isEdit" v-model="user.email"></el-input>
-							<p v-text="user.email" v-else></p>
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.Email"></el-input>
+							<p v-text="user.Email" v-else></p>
 						</el-form-item>
 						<el-form-item label="手机">
-							<el-input auto-complete="off"  v-if="isEdit" v-model="user.mobile"></el-input>
-							<p v-text="user.mobile" v-else></p>
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Mobile"></el-input>
+							<p v-text="user.Mobile" v-else></p>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input auto-complete="off"  v-if="isEdit" v-model="user.tel"></el-input>
-							<p v-text="user.tel" v-else></p>
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Phone"></el-input>
+							<p v-text="user.Phone" v-else></p>
 						</el-form-item>
 						<el-form-item label="公司">
-							<el-input auto-complete="off" disabled v-model="user.company" v-if="isEdit"></el-input>
-							<p v-text="user.company" v-else></p>
+							<el-input auto-complete="off" disabled v-model="user.Company_ID" v-if="isEdit"></el-input>
+							<p v-text="user.Company_ID" v-else></p>
 						</el-form-item>
 						<el-form-item label="部门">
-							<el-input auto-complete="off" disabled v-model="user.department" v-if="isEdit"></el-input>
-							<p v-text="user.department" v-else></p>
+							<el-input auto-complete="off" disabled v-model="user.Organization_ID" v-if="isEdit"></el-input>
+							<p v-text="user.Organization_ID" v-else></p>
 						</el-form-item>
 						<el-form-item label="用户名">
-							<el-input auto-complete="off" disabled v-model="user.username" v-if="isEdit"></el-input>
-							<p v-text="user.username" v-else></p>
-						</el-form-item>
-						<el-form-item label="注册手机号码">
-							<el-input auto-complete="off"  v-if="isEdit" v-model="user.mobile"></el-input>
-							<p v-text="user.mobile" v-else></p>
+							<el-input auto-complete="off" disabled v-model="user.LoginName" v-if="isEdit"></el-input>
+							<p v-text="user.LoginName" v-else></p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<el-input auto-complete="off" disabled v-model="user.role.join('，')" v-if="isEdit"></el-input>
-							<p v-text="user.role.join('，')" v-else></p>
+							<el-input auto-complete="off" disabled v-model="user.sys_roles.map(item => item.Name).join(',')" v-if="isEdit"></el-input>
+							<p v-else>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
 						</el-form-item>
-						<el-form-item label="用户类型">
-							<el-input auto-complete="off"  disabled v-model="user.type" v-if="isEdit"></el-input>
-							<p v-text="user.type" v-else></p>
-						</el-form-item>
+						<!-- <el-form-item label="用户类型">
+							<el-input auto-complete="off" disabled v-model="user.Type" v-if="isEdit"></el-input>
+							<p v-else>{{user.Type}}</p>
+						</el-form-item> -->
 						<el-form-item label="备注">
-							 <el-input auto-complete="off" v-if="isEdit" v-model="user.desc"></el-input>
-							 <p v-text="user.desc" v-else></p>
+							 <el-input auto-complete="off" v-if="isEdit" v-model="user.Remark"></el-input>
+							 <p v-text="user.Remark" v-else></p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -81,22 +77,16 @@
 			return {
 				isEdit: false,
 				user: {
-					name: '',
-					username: '',
-					tel: '',
-					mobile: '',
-					password: '',
-					company: '',
-					department: '',
-					email: '',
-					jobNo: '',
-					type: '',
-					desc: '',
-					avatar: '',
-					role: [],
-					isDisabled: '',
-					lastLoginTime: '',
-					lastLoginIp: ''
+					Name: '',
+					LoginName: '',
+					Phone: '',
+					Mobile: '',
+					Company_ID: '',
+					Organization_ID: '',
+					Email: '',
+					Remark: '',
+					Photo: '',
+					sys_roles: [],
 				}
 			}
 		},
@@ -109,19 +99,26 @@
 			},
 			getUseInfo() {
 				request({
-					url: '/user/detail',
+					url: '/user/info',
 					method: 'get',
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.user = res.data.data
+						console.log(res.data.data)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
 			editUser() {
-				let data = this.user
-				data.id = this.user._id
+				let data  ={
+					Name: this.user.Name,
+					Phone: this.user.Phone,
+					Mobile: this.user.Mobile,
+					Email: this.user.Email,
+					Remark: this.user.Remark,
+					Photo: this.user.Photo
+				}
 				request({
 					url: '/user/update',
 					method: 'post',
@@ -137,7 +134,7 @@
 				})
 			},
 			handleAvatarSuccess(res, file) {
-				this.user.avatar = 'http://39.108.245.177:4000' + res.data
+				this.user.Photo = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

@@ -6,7 +6,7 @@ export function login(LoginName, Password) {
 		Password
 	}
 	return request({
-		url: '/sys_user/login',
+		url: '/user/login',
 		method: 'post',
 		data
 	})
