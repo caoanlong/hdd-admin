@@ -143,8 +143,8 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					console.log(res.data)
 					Message.success(res.data.msg)
+					this.getUsers()
 				} else {
 					Message.error(res.data.msg)
 				}

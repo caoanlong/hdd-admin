@@ -35,18 +35,19 @@
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="常量类型" prop="Type"></el-table-column>
+					<el-table-column label="常量类型" prop="Type" sortable></el-table-column>
 					<el-table-column label="代码" prop="Code"></el-table-column>
 					<el-table-column label="名称" prop="Name"></el-table-column>
 					<el-table-column label="值" prop="Value" width="100"></el-table-column>
 					<el-table-column label="描述" prop="Description"></el-table-column>
 					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
 					<el-table-column label="更新人" prop="UpdateBy"width="100" align="center"></el-table-column>
-					<el-table-column label="更新日期" align="center">
+					<el-table-column label="更新日期" sortable align="center" width="140">
 						<template slot-scope="scope">
 							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
-					</el-table-column>					<el-table-column label="操作" width="230" align="center">
+					</el-table-column>
+					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewConstant(scope.row.ConstStd_ID)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="editConstant(scope.row.ConstStd_ID)">编辑</el-button>
@@ -141,8 +142,9 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					console.log(res.data)
+					// console.log(res.data)
 					Message.success(res.data.msg)
+					this.getConstants()
 				} else {
 					Message.error(res.data.msg)
 				}
