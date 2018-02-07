@@ -309,6 +309,9 @@ export default {
 			&.menu-list
 				flex 0 0 360px
 				margin-right 20px
+				.expand-tree
+					height 600px
+					overflow-y auto
 			&.menu-info
 				flex 1
 			.expand-tree
