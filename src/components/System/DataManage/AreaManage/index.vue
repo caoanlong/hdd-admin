@@ -26,10 +26,10 @@
 			<el-form ref="form" :model="currentNode" label-width="80px">
 				<el-form-item label="区域类型">
 					<el-select style="width: 100%" v-model="currentNode.Depth" placeholder="请选择">
-						<el-option value="1" label="省份/直辖市">省份/直辖市</el-option>
-						<el-option value="2" label="地市/区县">地市/区县</el-option>
-						<el-option value="3" label="区县">区县</el-option>
-						<el-option value="0" label="国家">国家</el-option>
+						<el-option :value="1" label="省份/直辖市"></el-option>
+						<el-option :value="2" label="地市/区县"></el-option>
+						<el-option :value="3" label="区县"></el-option>
+						<el-option :value="0" label="国家"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="区域编码">
@@ -94,14 +94,13 @@ export default {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				name: '',
-				title: '',
-				SortNumber: '',
-				path: '',
-				component: '',
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
+				Depth: '',
+				Code: '',
+				Name: '',
+				Lng: '',
+				Lat: '',
+				HotspotStatus: '',
+				SortNumber: ''
 			}
 		},
 		handleNodeClick(d) {
@@ -128,15 +127,14 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Menu_PID: this.currentNode.Menu_ID,
-				name: '',
-				title: '',
-				SortNumber: '',
-				path: '',
-				component: '',
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
+				Area_PID: this.currentNode.Area_ID,
+				Depth: '',
+				Code: '',
+				Name: '',
+				Lng: '',
+				Lat: '',
+				HotspotStatus: '',
+				SortNumber: ''
 			}
 		},
 		handleDelete(s, d, n){//删除节点

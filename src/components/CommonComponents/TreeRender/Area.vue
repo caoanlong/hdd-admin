@@ -5,7 +5,7 @@
 		</span>
 		<span class="tree-btn" v-show="CURRENTNODE ? CURRENTNODE.Name == DATA.Name : false">
 			<span class="control-btn add" @click.stop="nodeAdd(STORE, DATA, NODE)">
-				<i class="el-icon-plus"></i>添加
+				<i class="el-icon-plus"></i>添加子节点
 			</span>
 			<span class="control-btn delete" @click.stop="nodeDel(STORE, DATA, NODE)">
 				<i class="el-icon-delete"></i>删除
