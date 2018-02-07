@@ -143,12 +143,11 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.$store.dispatch('deleteMenu', d)
+				let params = {
+					Area_ID: d.Area_ID
+				}
+				this.deleteArea(params)
 				this.addRoot()
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -157,53 +156,47 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.title) {
-				this.$message.error('标题不能为空！')
+			if (!this.currentNode.Depth) {
+				this.$message.error('区域类型不能为空！')
 				return
 			}
-			if (!this.currentNode.name) {
-				this.$message.error('名字不能为空！')
+			if (!this.currentNode.Code) {
+				this.$message.error('区域编码不能为空！')
 				return
 			}
-			if (!this.currentNode.path) {
-				this.$message.error('路径不能为空！')
-				return
-			}
-			if (!this.currentNode.component) {
-				this.$message.error('组件不能为空！')
+			if (!this.currentNode.Name) {
+				this.$message.error('区域名称不能为空！')
 				return
 			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
-					path: this.currentNode.path,
-					name: this.currentNode.name,
-					component: this.currentNode.component,
-					title: this.currentNode.title,
-					SortNumber: this.currentNode.SortNumber,
-					Icon: this.currentNode.Icon,
-					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isMenuShow ? 'Y' : 'N',
+					Area_PID: this.currentNode.Area_PID,
+					Depth: this.currentNode.Depth,
+					Code: this.currentNode.Code,
+					Name: this.currentNode.Name,
+					Lng: this.currentNode.Lng,
+					Lat: this.currentNode.Lat,
+					HotspotStatus: this.isHot ? 'Y' : 'N',
+					SortNumber: this.currentNode.SortNumber
 				}
-				this.$store.dispatch('addMenu', params)
+				this.addArea(params)
 				this.addRoot()
-				this.$message.success('创建成功！')
 			// 编辑
 			} else {
 				let params = {
-					Menu_ID: this.currentNode.Menu_ID,
-					path: this.currentNode.path,
-					name: this.currentNode.name,
-					component: this.currentNode.component,
-					title: this.currentNode.title,
-					SortNumber: this.currentNode.SortNumber,
-					Icon: this.currentNode.Icon,
-					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isMenuShow ? 'Y' : 'N',
+					Area_ID: this.currentNode.Area_ID,
+					Area_PID: this.currentNode.Area_PID,
+					Depth: this.currentNode.Depth,
+					Code: this.currentNode.Code,
+					Name: this.currentNode.Name,
+					Lng: this.currentNode.Lng,
+					Lat: this.currentNode.Lat,
+					HotspotStatus: this.isHot ? 'Y' : 'N',
+					SortNumber: this.currentNode.SortNumber
 				}
-				this.$store.dispatch('editMenu', params)
+				this.updateArea(params)
 				this.addRoot()
-				this.$message.success('编辑成功！')
 			}
 		},
 		selectIcon(icon) {
@@ -262,7 +255,49 @@ export default {
 					Message.error(res.data.msg)
 				}
 			})
-		}
+		},
+		// 添加区域
+		addArea(data) {
+			request({
+				url: '/base_area/add',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 修改区域
+		updateArea(data) {
+			request({
+				url: '/base_area/update',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 删除区域
+		deleteArea(data) {
+			request({
+				url: '/base_area/delete',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
 	}
 }
 
