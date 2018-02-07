@@ -44,6 +44,7 @@
 	"/System/DataManage/ConstManage/AddConstant",
 	"/System/DataManage/ConstManage/EditConstant",
 	"/System/DataManage/ConstManage/ViewConstant",
+	"/System/DataManage/AreaManage",
 	"/User",
 	"/User/UserProfile"
 ]

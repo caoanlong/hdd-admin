@@ -8,7 +8,7 @@
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="类型">
 						<el-select placeholder="请选择" value>
-							<el-option label="app_user_type" value="app_user_type"></el-option>
+							<el-option v-for="dictType in dictTypes" :label="dictType.TYPE" :value="dictType.TYPE" :key="dictType.TYPE"></el-option>
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -56,6 +56,7 @@ export default {
 	data() {
 		return {
 			dicts:[],
+			dictTypes: [],
 			count:0,
 			refreshing: false,
 			pageIndex: 1,
@@ -65,6 +66,7 @@ export default {
 	},
 	created() {
 		this.getDict()
+		this.getDictType()
 	},
 	methods: {
 		pageChange(index) {
@@ -140,7 +142,6 @@ export default {
 				}
 			})
 		},
-
 		editDict(id) {
 			this.$router.push({ name: 'editdict', query: { Dict_ID: id} })
 		},
@@ -150,6 +151,18 @@ export default {
 		selectionChange(data) {
 			this.selectedDicts = data.map(item => item.Dict_ID)
 			console.log(this.selectedDicts)
+		},
+		getDictType() {
+			request({
+				url: '/sys_dict/type/list',
+				method: 'get'
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.dictTypes = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		},
 		refresh() {
 			this.refreshing = true
