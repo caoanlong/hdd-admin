@@ -24,20 +24,31 @@
 				<span>{{title}}</span>
 			</div>
 			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-form-item label="标题">
-					<el-input v-model="currentNode.title"></el-input>
+				<el-form-item label="区域类型">
+					<el-select style="width: 100%" v-model="currentNode.Depth" placeholder="请选择">
+						<el-option value="1" label="省份/直辖市">省份/直辖市</el-option>
+						<el-option value="2" label="地市/区县">地市/区县</el-option>
+						<el-option value="3" label="区县">区县</el-option>
+						<el-option value="0" label="国家">国家</el-option>
+					</el-select>
 				</el-form-item>
-				<el-form-item label="名字">
-					<el-input v-model="currentNode.name"></el-input>
+				<el-form-item label="区域编码">
+					<el-input v-model="currentNode.Code"></el-input>
 				</el-form-item>
-				<el-form-item label="路径">
-					<el-input v-model="currentNode.path"></el-input>
+				<el-form-item label="区域名称">
+					<el-input v-model="currentNode.Name"></el-input>
+				</el-form-item>
+				<el-form-item label="经度">
+					<el-input v-model="currentNode.Lng"></el-input>
+				</el-form-item>
+				<el-form-item label="纬度">
+					<el-input v-model="currentNode.Lat"></el-input>
+				</el-form-item>
+				<el-form-item label="是否热点">
+					<el-switch v-model="isHot"></el-switch>
 				</el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.SortNumber" :min="1" label="描述文字"></el-input-number>
-				</el-form-item>
-				<el-form-item label="是否菜单">
-					<el-switch v-model="isMenuShow"></el-switch>
+					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
@@ -60,12 +71,15 @@ export default {
 				label: 'Name'
 			},
 			currentNode: {
+				Depth: '',
+				Code: '',
 				Name: '',
-				title: '',
-				SortNumber: '',
-				path: '',
+				Lng: '',
+				Lat: '',
+				HotspotStatus: '',
+				SortNumber: ''
 			},
-			isMenuShow: false,
+			isHot: false,
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
@@ -74,7 +88,6 @@ export default {
 		}
 	},
 	created() {
-		this.getArea()
 	},
 	methods: {
 		addRoot() {
@@ -94,7 +107,7 @@ export default {
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			// this.getMenu(d.Menu_ID)
+			this.getArea(d.Area_ID)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this//指向vue
@@ -203,15 +216,22 @@ export default {
 			this.selectIcondialog = false
 		},
 		loadNode(node, resolve) {
+			console.log(node.level)
 			if (node.level === 0) {
-				return resolve([{ name: 'region' }])
+				this.getAreas('', areas => {
+					return resolve(areas)
+				})
+				return
 			}
-			if (node.level > 1) {
-				return resolve([])
+			if (node.level > 0) {
+				this.getAreas(node.data.Area_ID, areas => {
+					return resolve(areas)
+				})
+				return
 			}
 		},
 		// 获取区域列表
-		getArea(Area_PID) {
+		getAreas(Area_PID, callback) {
 			let params = {
 				Area_PID
 			}
@@ -221,7 +241,25 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.areaList = res.data.data
+					callback && callback(res.data.data)
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 获取区域详情
+		getArea(Area_ID) {
+			let params = {
+				Area_ID
+			}
+			request({
+				url: '/base_area/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.currentNode = res.data.data
+					this.isHot = res.data.data.HotspotStatus == 'Y' ? true : false
 				} else {
 					Message.error(res.data.msg)
 				}
