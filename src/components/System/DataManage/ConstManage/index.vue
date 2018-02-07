@@ -5,12 +5,12 @@
 				<span>基础常量列表</span>
 			</div>
 			<div class="search">
-				<el-form :inline="true" class="demo-form-inline" size="small">
-					<el-form-item label="常量类型">
-						<el-select placeholder="请选择" v-model="selectedConstantType">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="常量类型" >
+						<el-select placeholder="请选择" v-model="selectedConstantType" class="constantSelect">
 							<el-option v-for="item in ConstantTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
-								<span style="float: left">{{ item.VALUE }}</span>
-								<span style="float: right; color: #8492a6; font-size: 12px">{{ item.NAME }}</span>
+								<span>{{ item.VALUE }}</span>
+								<span>{{ item.NAME }}</span>
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -35,14 +35,14 @@
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="常量类型" prop="Type" sortable></el-table-column>
+					<el-table-column label="常量类型" prop="Type"></el-table-column>
 					<el-table-column label="代码" prop="Code"></el-table-column>
 					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="值" prop="Value" width="100"></el-table-column>
+					<el-table-column label="值" prop="Value"></el-table-column>
 					<el-table-column label="描述" prop="Description"></el-table-column>
 					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
 					<el-table-column label="更新人" prop="UpdateBy"width="100" align="center"></el-table-column>
-					<el-table-column label="更新日期" sortable align="center" width="140">
+					<el-table-column label="更新日期" align="center" width="140">
 						<template slot-scope="scope">
 							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
@@ -294,4 +294,13 @@ export default {
 	&:active
 		border-color #3a8ee6
 		color #3a8ee6
+.constantSelect
+	width 300px
+.el-select-dropdown__item
+	span
+		font-size 12px
+		float left
+		&:last-child
+			color #8492a6
+			float right
 </style>

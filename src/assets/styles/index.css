@@ -58,3 +58,4 @@ code a:hover{color:#20a0ff;}
 .table .el-button+.el-button {
     margin-left: 5px;
 }
+.table .el-table .cell{white-space: nowrap;}
