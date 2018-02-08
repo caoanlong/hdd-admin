@@ -113,7 +113,6 @@
 		},
 		created() {
 			this.getUseInfo()
-			
 		},
 		methods: {
 			editInfo() {

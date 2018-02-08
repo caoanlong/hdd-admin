@@ -10,7 +10,7 @@
 						<el-input placeholder="姓名" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item label="登录名">
-						<el-input placeholder="登录名" v-model="findUsername"></el-input>
+						<el-input placeholder="登录名" v-model="findLoginName"></el-input>
 					</el-form-item>
 					<el-form-item label="归属公司">
 						<el-select v-model="findCompany" placeholder="请选择">
@@ -28,7 +28,7 @@
 					</el-form-item>
 					
 					<el-form-item>
-						<el-button type="primary" @click.native="getUsers">查询</el-button>
+						<el-button type="primary" @click.native="getUsers(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -88,7 +88,7 @@ export default {
 			pageIndex: 1,
 			pageSize: 10,
 			findName: '',
-			findUsername: '',
+			findLoginName: '',
 			findCompany: '',
 			findDepartment: '',
 			count: 0,
@@ -156,7 +156,7 @@ export default {
 		// 重置搜索表单
 		reset() {
 			this.findName = ''
-			this.findUsername = ''
+			this.findLoginName = ''
 			this.findCompany = ''
 			this.findDepartment = ''
 		},
@@ -164,8 +164,8 @@ export default {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
 				pageSize: this.$route.query.pageSize || this.pageSize,
-				LoginName: this.findName,
-				username: this.findUsername,
+				LoginName: this.findLoginName,
+				Name: this.findName,
 				Company_ID: this.findCompany,
 				Organization_ID: this.findDepartment
 			}

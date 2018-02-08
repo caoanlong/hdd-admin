@@ -7,13 +7,13 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="代码">
-						<el-input placeholder="代码"></el-input>
+						<el-input placeholder="代码" v-model="findCode"></el-input>
 					</el-form-item>
 					<el-form-item label="名称">
-						<el-input placeholder="名称"></el-input>
+						<el-input placeholder="名称" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConfig">查询</el-button>
+						<el-button type="primary" @click.native="getConfig(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -63,7 +63,9 @@ export default {
 			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
-			selectedConfig: []
+			selectedConfig: [],
+			findCode: '',
+			findName: ''
 		}
 	},
 	created() {
@@ -75,13 +77,15 @@ export default {
 		},
 		// 重置搜索表单
 		reset() {
+			this.findCode = ''
 			this.findName = ''
-			this.findUsername = ''
 		},
 		getConfig(pageIndex) {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-				pageSize: this.$route.query.pageSize || this.pageSize
+				pageSize: this.$route.query.pageSize || this.pageSize,
+				Code: this.findCode,
+				Name: this.findName
 			}
 			request({
 				url: '/sys_settings/list',

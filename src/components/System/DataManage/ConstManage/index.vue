@@ -7,16 +7,16 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="常量类型" >
-						<el-select placeholder="请选择" v-model="selectedConstantType" class="constantSelect">
+						<el-select placeholder="请选择" v-model="findType" class="constantSelect">
 							<el-option v-for="item in ConstantTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="名称">
-						<el-input placeholder="名称"></el-input>
+						<el-input placeholder="名称" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConstants">查询</el-button>
+						<el-button type="primary" @click.native="getConstants(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -81,14 +81,11 @@ export default {
 			constants: [],
 			pageIndex: 1,
 			pageSize: 10,
-			findName: '',
-			findUsername: '',
-			findCompany: '',
-			findDepartment: '',
 			count: 0,
 			selectedConstants: [],
-			selectedConstantType:'',
-			ConstantTypeList:[]
+			ConstantTypeList:[],
+			findType:'',
+			findName: '',
 		}
 	},
 	created() {
@@ -142,7 +139,7 @@ export default {
 				if (res.data.code == 0) {
 					// console.log(res.data)
 					Message.success(res.data.msg)
-					this.getConstants()
+					this.getConstants(1)
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -153,9 +150,10 @@ export default {
 		},
 		// 重置搜索表单
 		reset() {
+			this.findType = ''
 			this.findName = ''
 		},
-		getConstantType(){
+		getConstantType() {
 			let params = {
 				TYPE:'base_constsand'
 			}
@@ -179,7 +177,8 @@ export default {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
 				pageSize: this.$route.query.pageSize || this.pageSize,
-				Type: this.selectedConstantType
+				Type: this.findType,
+				Name: this.findName
 			}
 			request({
 				url: '/base_conststand/list',

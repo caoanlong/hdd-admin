@@ -10,7 +10,7 @@
 						<el-input placeholder="角色名称" v-model="findRoleName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getRoles">查询</el-button>
+						<el-button type="primary" @click.native="getRoles(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -151,8 +151,8 @@
 			},
 			getRoles(pageIndex) {
 				let params = {
-					pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-					pageSize: this.$route.query.pageSize || this.pageSize,
+					pageIndex: pageIndex || 1,
+					pageSize: this.pageSize,
 					Name: this.findRoleName
 				}
 				request({

@@ -7,16 +7,16 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="类型">
-						<el-select placeholder="请选择" value>
+						<el-select placeholder="请选择" v-model="findDictType">
 							<el-option v-for="dictType in dictTypes" :label="dictType.TYPE" :value="dictType.TYPE" :key="dictType.TYPE"></el-option>
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="描述">
-						<el-input placeholder="描述"></el-input>
+						<el-input placeholder="描述" v-model="findDesc"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getDict">查询</el-button>
+						<el-button type="primary" @click.native="getDict(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -61,7 +61,9 @@ export default {
 			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
-			selectedDicts: []
+			selectedDicts: [],
+			findDictType: '',
+			findDesc: ''
 		}
 	},
 	created() {
@@ -74,13 +76,15 @@ export default {
 		},
 		// 重置搜索表单
 		reset() {
-			this.findName = ''
-			this.findUsername = ''
+			this.findDictType = ''
+			this.findDesc = ''
 		},
 		getDict(pageIndex) {
 			let params = {
 				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-				pageSize: this.$route.query.pageSize || this.pageSize
+				pageSize: this.$route.query.pageSize || this.pageSize,
+				TYPE: this.findDictType,
+				Description: this.findDesc
 			}
 			request({
 				url: '/sys_dict/list',

@@ -18,7 +18,12 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="归属区域">
-							<el-cascader style="width: 100%" :options="areas" @active-item-change="handleItemChange" :props="defaultProps">
+							<el-cascader 
+								v-model="selectedAreas"
+								style="width: 100%" 
+								:options="areas" 
+								@active-item-change="handleItemChange" 
+								:props="areaProps">
 							</el-cascader>
 						</el-form-item>
 						<el-form-item label="机构名称">
@@ -79,7 +84,6 @@
 						<el-form-item label="联系地址">
 							<el-input v-model="currentNode.Address"></el-input>
 						</el-form-item>
-
 					</el-col>
 				</el-row>
 				<el-form-item label="备注">
@@ -104,16 +108,30 @@ export default {
 				children: 'children',
 				label: 'Name'
 			},
+			areaProps: {
+				children: 'children',
+				label: 'Name',
+				value: 'Area_ID',
+			},
 			currentNode: {
-				Depth: '',
-				Code: '',
+				Area_ID: '',
 				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				Grade: '',
+				PrimaryPerson: '',
+				DeputyPerson: '',
+				Master: '',
+				Phone: '',
+				Useable: '',
+				Code: '',
+				Type: '',
+				ZipCode: '',
+				Fax: '',
+				Email: '',
+				Address: '',
+				Remark: ''
 			},
 			isUseable: true,
+			selectedAreas: [],
 			areas: [],
 			users: [],
 			title: '添加顶级节点',
@@ -132,13 +150,21 @@ export default {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Depth: '',
-				Code: '',
+				Area_ID: '',
 				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				Grade: '',
+				PrimaryPerson: '',
+				DeputyPerson: '',
+				Master: '',
+				Phone: '',
+				Useable: '',
+				Code: '',
+				Type: '',
+				ZipCode: '',
+				Fax: '',
+				Email: '',
+				Address: '',
+				Remark: ''
 			}
 		},
 		handleNodeClick(d) {
@@ -165,14 +191,22 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Area_PID: this.currentNode.Area_ID,
-				Depth: '',
-				Code: '',
+				Organization_PID: this.currentNode.Organization_ID,
+				Area_ID: '',
 				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				Grade: '',
+				PrimaryPerson: '',
+				DeputyPerson: '',
+				Master: '',
+				Phone: '',
+				Useable: '',
+				Code: '',
+				Type: '',
+				ZipCode: '',
+				Fax: '',
+				Email: '',
+				Address: '',
+				Remark: ''
 			}
 		},
 		handleDelete(s, d, n){//删除节点
@@ -209,29 +243,45 @@ export default {
 			// 创建
 			if (type == '立即创建') {
 				let params = {
-					Area_PID: this.currentNode.Area_PID,
-					Depth: this.currentNode.Depth,
-					Code: this.currentNode.Code,
+					Organization_PID: this.currentNode.Organization_PID,
+					Area_ID: this.currentNode.Area_ID,
 					Name: this.currentNode.Name,
-					Lng: this.currentNode.Lng,
-					Lat: this.currentNode.Lat,
-					HotspotStatus: this.isHot ? 'Y' : 'N',
-					SortNumber: this.currentNode.SortNumber
+					Grade: this.currentNode.Grade,
+					PrimaryPerson: this.currentNode.PrimaryPerson,
+					DeputyPerson: this.currentNode.DeputyPerson,
+					Master: this.Master,
+					Phone: this.currentNode.Phone,
+					Useable: this.isUseable ? 'Y' : 'N',
+					Code: this.currentNode.Code,
+					Type: this.currentNode.Type,
+					ZipCode: this.currentNode.ZipCode,
+					Fax: this.currentNode.Fax,
+					Email: this.currentNode.Email,
+					Address: this.currentNode.Address,
+					Remark: this.currentNode.Remark
 				}
 				this.addArea(params)
 				this.addRoot()
 			// 编辑
 			} else {
 				let params = {
+					Organization_ID: this.currentNode.Organization_ID,
+					Organization_PID: this.currentNode.Organization_PID,
 					Area_ID: this.currentNode.Area_ID,
-					Area_PID: this.currentNode.Area_PID,
-					Depth: this.currentNode.Depth,
-					Code: this.currentNode.Code,
 					Name: this.currentNode.Name,
-					Lng: this.currentNode.Lng,
-					Lat: this.currentNode.Lat,
-					HotspotStatus: this.isHot ? 'Y' : 'N',
-					SortNumber: this.currentNode.SortNumber
+					Grade: this.currentNode.Grade,
+					PrimaryPerson: this.currentNode.PrimaryPerson,
+					DeputyPerson: this.currentNode.DeputyPerson,
+					Master: this.Master,
+					Phone: this.currentNode.Phone,
+					Useable: this.isUseable ? 'Y' : 'N',
+					Code: this.currentNode.Code,
+					Type: this.currentNode.Type,
+					ZipCode: this.currentNode.ZipCode,
+					Fax: this.currentNode.Fax,
+					Email: this.currentNode.Email,
+					Address: this.currentNode.Address,
+					Remark: this.currentNode.Remark
 				}
 				this.updateArea(params)
 				this.addRoot()
@@ -287,6 +337,8 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
+					this.isUseable = res.data.data.Useable == 'Y' ? true : false
+					this.selectedAreas = [res.data.data.Area_ID]
 				} else {
 					Message.error(res.data.msg)
 				}
