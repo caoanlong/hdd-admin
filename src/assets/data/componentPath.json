@@ -23,6 +23,7 @@
 	"/System/SystemSetting",
 	"/System/SystemSetting/MenuManage",
 	"/System/SystemSetting/UserManage",
+	"/System/SystemSetting/UserManage/List",
 	"/System/SystemSetting/UserManage/AddUser",
 	"/System/SystemSetting/UserManage/EditUser",
 	"/System/SystemSetting/UserManage/ViewUser",
