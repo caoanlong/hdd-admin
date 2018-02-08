@@ -18,12 +18,11 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="归属区域">
-							<el-cascader 
+							<el-cascader
+								style="width: 100%"
+								:options="distData"
 								v-model="selectedAreas"
-								style="width: 100%" 
-								:options="areas" 
-								@active-item-change="handleItemChange" 
-								:props="areaProps">
+								@change="handleDistChange">
 							</el-cascader>
 						</el-form-item>
 						<el-form-item label="机构名称">
@@ -101,9 +100,11 @@
 import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender/Area'
 import request from '../../../../common/request'
+import { regionData } from 'element-china-area-data'
 export default {
 	data() {
 		return {
+			distData: regionData,
 			defaultProps: {
 				children: 'children',
 				label: 'Name'
@@ -132,7 +133,6 @@ export default {
 			},
 			isUseable: true,
 			selectedAreas: [],
-			areas: [],
 			users: [],
 			title: '添加顶级节点',
 			button: '立即创建',
@@ -142,7 +142,6 @@ export default {
 		}
 	},
 	created() {
-		this.getAreas()
 		this.getUsers()
 	},
 	methods: {
@@ -228,23 +227,23 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.Depth) {
-				this.$message.error('区域类型不能为空！')
-				return
-			}
-			if (!this.currentNode.Code) {
-				this.$message.error('区域编码不能为空！')
-				return
-			}
-			if (!this.currentNode.Name) {
-				this.$message.error('区域名称不能为空！')
-				return
-			}
+			// if (!this.currentNode.Depth) {
+			// 	this.$message.error('区域类型不能为空！')
+			// 	return
+			// }
+			// if (!this.currentNode.Code) {
+			// 	this.$message.error('区域编码不能为空！')
+			// 	return
+			// }
+			// if (!this.currentNode.Name) {
+			// 	this.$message.error('区域名称不能为空！')
+			// 	return
+			// }
 			// 创建
 			if (type == '立即创建') {
 				let params = {
 					Organization_PID: this.currentNode.Organization_PID,
-					Area_ID: this.currentNode.Area_ID,
+					Area_ID: this.selectedAreas[this.selectedAreas.length - 1],
 					Name: this.currentNode.Name,
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
@@ -260,14 +259,14 @@ export default {
 					Address: this.currentNode.Address,
 					Remark: this.currentNode.Remark
 				}
-				this.addArea(params)
+				this.addOrg(params)
 				this.addRoot()
 			// 编辑
 			} else {
 				let params = {
 					Organization_ID: this.currentNode.Organization_ID,
 					Organization_PID: this.currentNode.Organization_PID,
-					Area_ID: this.currentNode.Area_ID,
+					Area_ID: this.selectedAreas[this.selectedAreas.length - 1],
 					Name: this.currentNode.Name,
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
@@ -338,24 +337,24 @@ export default {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
 					this.isUseable = res.data.data.Useable == 'Y' ? true : false
-					this.selectedAreas = [res.data.data.Area_ID]
+					let path = res.data.data.base_area.Path
+					if (path) {
+						this.selectedAreas = path.split(',')
+					}
 				} else {
 					Message.error(res.data.msg)
 				}
 			})
 		},
-		// 获取区域列表
-		getAreas(Area_PID) {
-			let params = {
-				Area_PID
-			}
+		// 添加机构
+		addOrg(data) {
 			request({
-				url: '/base_area/list',
-				method: 'get',
-				params
+				url: '/sys_organization/add',
+				method: 'post',
+				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.areas = res.data.data
+					Message.success(res.data.msg)
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -364,6 +363,7 @@ export default {
 		// 获取用户列表
 		getUsers() {
 			let params = {
+				pageIndex: 1,
 				pageSize: 100
 			}
 			request({
@@ -373,12 +373,13 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.users = res.data.data.rows
+					console.log(this.users)
 				} else {
 					Message.error(res.data.msg)
 				}
 			})
 		},
-		handleItemChange(val) {
+		handleDistChange(val) {
 			console.log('active item:', val)
 		}
 	}
