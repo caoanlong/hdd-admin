@@ -7,16 +7,7 @@
 			<div class="tableControl">
 				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
 			</div>
-			<el-tree
-				class="expand-tree"
-				:load="loadNode"
-				:props="defaultProps"
-				node-key="Code"
-				lazy
-				highlight-current
-				:expand-on-click-node="false"
-				:render-content="renderContent"
-				@node-click="handleNodeClick">
+			<el-tree class="expand-tree" :load="loadNode" :props="defaultProps" node-key="Code" lazy highlight-current :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick">
 			</el-tree>
 		</el-card>
 		<el-card class="box-card menu-info">
@@ -24,77 +15,73 @@
 				<span>{{title}}</span>
 			</div>
 			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-form-item label="归属区域">
-					<el-cascader
-						style="width: 100%" 
-						:options="areas"
-						@active-item-change="handleItemChange"
-						:props="defaultProps">
-					</el-cascader>
-				</el-form-item>
-				<el-form-item label="机构名称">
-					<el-input v-model="currentNode.Name"></el-input>
-				</el-form-item>
-				<el-form-item label="机构编码">
-					<el-input v-model="currentNode.Code"></el-input>
-				</el-form-item>
-				<el-form-item label="机构类型">
-					<el-select style="width: 100%" v-model="currentNode.Type" placeholder="请选择">
-						<el-option value="1" label="公司"></el-option>
-						<el-option value="2" label="部门"></el-option>
-						<el-option value="3" label="小组"></el-option>
-						<el-option value="0" label="其他"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="机构级别">
-					<el-select style="width: 100%" v-model="currentNode.Grade" placeholder="请选择">
-						<el-option value="1" label="一级"></el-option>
-						<el-option value="2" label="二级"></el-option>
-						<el-option value="3" label="三级"></el-option>
-						<el-option value="4" label="四级"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="是否可用">
-					<el-switch v-model="isUseable"></el-switch>
-				</el-form-item>
-				<el-form-item label="主负责人">
-					<el-select style="width: 100%" v-model="currentNode.PrimaryPerson" filterable placeholder="请选择">
-						<el-option
-							v-for="user in users"
-							:key="user.User_ID"
-							:label="user.Name"
-							:value="user.User_ID">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="副负责人">
-					<el-select style="width: 100%" v-model="currentNode.DeputyPerson" filterable placeholder="请选择">
-						<el-option
-							v-for="user in users"
-							:key="user.User_ID"
-							:label="user.Name"
-							:value="user.User_ID">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="联系地址">
-					<el-input v-model="currentNode.Address"></el-input>
-				</el-form-item>
-				<el-form-item label="邮政编码">
-					<el-input v-model="currentNode.ZipCode"></el-input>
-				</el-form-item>
-				<el-form-item label="负责人">
-					<el-input v-model="currentNode.Master"></el-input>
-				</el-form-item>
-				<el-form-item label="电话">
-					<el-input v-model="currentNode.Phone"></el-input>
-				</el-form-item>
-				<el-form-item label="传真">
-					<el-input v-model="currentNode.Fax"></el-input>
-				</el-form-item>
-				<el-form-item label="邮箱">
-					<el-input v-model="currentNode.Email"></el-input>
-				</el-form-item>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<el-form-item label="归属区域">
+							<el-cascader style="width: 100%" :options="areas" @active-item-change="handleItemChange" :props="defaultProps">
+							</el-cascader>
+						</el-form-item>
+						<el-form-item label="机构名称">
+							<el-input v-model="currentNode.Name"></el-input>
+						</el-form-item>
+						<el-form-item label="机构级别">
+							<el-select style="width: 100%" v-model="currentNode.Grade" placeholder="请选择">
+								<el-option value="1" label="一级"></el-option>
+								<el-option value="2" label="二级"></el-option>
+								<el-option value="3" label="三级"></el-option>
+								<el-option value="4" label="四级"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="主负责人">
+							<el-select style="width: 100%" v-model="currentNode.PrimaryPerson" filterable placeholder="请选择">
+								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="副负责人">
+							<el-select style="width: 100%" v-model="currentNode.DeputyPerson" filterable placeholder="请选择">
+								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="负责人">
+							<el-input v-model="currentNode.Master"></el-input>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input v-model="currentNode.Phone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="是否可用">
+							<el-switch v-model="isUseable"></el-switch>
+						</el-form-item>
+						<el-form-item label="机构编码">
+							<el-input v-model="currentNode.Code"></el-input>
+						</el-form-item>
+						
+						<el-form-item label="机构类型">
+							<el-select style="width: 100%" v-model="currentNode.Type" placeholder="请选择">
+								<el-option value="1" label="公司"></el-option>
+								<el-option value="2" label="部门"></el-option>
+								<el-option value="3" label="小组"></el-option>
+								<el-option value="0" label="其他"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="邮政编码">
+							<el-input v-model="currentNode.ZipCode"></el-input>
+						</el-form-item>
+						<el-form-item label="传真">
+							<el-input v-model="currentNode.Fax"></el-input>
+						</el-form-item>
+						<el-form-item label="邮箱">
+							<el-input v-model="currentNode.Email"></el-input>
+						</el-form-item>
+						<el-form-item label="联系地址">
+							<el-input v-model="currentNode.Address"></el-input>
+						</el-form-item>
+
+					</el-col>
+				</el-row>
 				<el-form-item label="备注">
 					<el-input type="textarea" resize="none" v-model="currentNode.Remark"></el-input>
 				</el-form-item>

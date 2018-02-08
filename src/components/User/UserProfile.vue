@@ -3,7 +3,9 @@
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
 				<span>{{isEdit ? '编辑个人资料' : '查看个人资料'}}</span>
-				<el-button style="float: right; padding: 3px 0" type="text" @click="editInfo">{{isEdit ? '取消编辑' : '编辑'}}</el-button>
+				<el-button style="float: right; padding: 3px 0;margin-left:10px" type="text" @click="editInfo">{{isEdit ? '取消编辑' : '编辑资料'}}</el-button>
+				<el-button style="float: right; padding: 3px 0;" type="text" @click="dialogVisible = true">修改密码</el-button>
+				
 			</div>
 			<el-form label-width="160px">
 				<el-row :gutter="20">
@@ -67,6 +69,23 @@
 				</el-row>
 			</el-form>
 		</el-card>
+		<el-dialog title="修改密码" :visible.sync="dialogVisible" width="400px">
+			<el-form label-width="80px">
+				<el-form-item label="原密码">
+					<el-input auto-complete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="新密码">
+					<el-input auto-complete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="确认密码">
+					<el-input auto-complete="off"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="modifyPWD">确 定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <script type="text/javascript">
@@ -86,12 +105,15 @@
 					Email: '',
 					Remark: '',
 					Photo: '',
-					sys_roles: [],
-				}
+					Password:'',
+					sys_roles: []
+				},
+				dialogVisible: false
 			}
 		},
 		created() {
 			this.getUseInfo()
+			
 		},
 		methods: {
 			editInfo() {
@@ -132,6 +154,24 @@
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			modifyPWD() {
+				let data  ={
+					Password: this.user.Password
+				}
+				request({
+					url: '/user/update',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						Message.success(res.data.msg)
+						this.dialogVisible = false
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+				console.log(this.dialogVisible)
 			},
 			handleAvatarSuccess(res, file) {
 				this.user.Photo = 'http://39.108.245.177:4000' + res.data
