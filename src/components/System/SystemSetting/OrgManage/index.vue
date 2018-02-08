@@ -54,11 +54,49 @@
 						<el-option value="4" label="四级"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="是否热点">
-					<el-switch v-model="isHot"></el-switch>
+				<el-form-item label="是否可用">
+					<el-switch v-model="isUseable"></el-switch>
 				</el-form-item>
-				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
+				<el-form-item label="主负责人">
+					<el-select style="width: 100%" v-model="currentNode.PrimaryPerson" filterable placeholder="请选择">
+						<el-option
+							v-for="user in users"
+							:key="user.User_ID"
+							:label="user.Name"
+							:value="user.User_ID">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="副负责人">
+					<el-select style="width: 100%" v-model="currentNode.DeputyPerson" filterable placeholder="请选择">
+						<el-option
+							v-for="user in users"
+							:key="user.User_ID"
+							:label="user.Name"
+							:value="user.User_ID">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="联系地址">
+					<el-input v-model="currentNode.Address"></el-input>
+				</el-form-item>
+				<el-form-item label="邮政编码">
+					<el-input v-model="currentNode.ZipCode"></el-input>
+				</el-form-item>
+				<el-form-item label="负责人">
+					<el-input v-model="currentNode.Master"></el-input>
+				</el-form-item>
+				<el-form-item label="电话">
+					<el-input v-model="currentNode.Phone"></el-input>
+				</el-form-item>
+				<el-form-item label="传真">
+					<el-input v-model="currentNode.Fax"></el-input>
+				</el-form-item>
+				<el-form-item label="邮箱">
+					<el-input v-model="currentNode.Email"></el-input>
+				</el-form-item>
+				<el-form-item label="备注">
+					<el-input type="textarea" resize="none" v-model="currentNode.Remark"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
@@ -88,7 +126,9 @@ export default {
 				HotspotStatus: '',
 				SortNumber: ''
 			},
+			isUseable: true,
 			areas: [],
+			users: [],
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
@@ -98,6 +138,7 @@ export default {
 	},
 	created() {
 		this.getAreas()
+		this.getUsers()
 	},
 	methods: {
 		addRoot() {
@@ -276,6 +317,23 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.areas = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 获取用户列表
+		getUsers() {
+			let params = {
+				pageSize: 100
+			}
+			request({
+				url: '/sys_user/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.users = res.data.data.rows
 				} else {
 					Message.error(res.data.msg)
 				}
