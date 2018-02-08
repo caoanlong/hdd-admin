@@ -181,7 +181,6 @@ export default {
 				pageSize: this.$route.query.pageSize || this.pageSize,
 				Type: this.selectedConstantType
 			}
-			console.log(this.selectedConstantType)
 			request({
 				url: '/base_conststand/list',
 				method: 'get',

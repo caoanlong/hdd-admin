@@ -35,7 +35,7 @@ let routerMap = [
 	},
 	{
 		path: '*',
-		redirect: '/404',
+		redirect: '/login',
 	},
 	{
 		path: '/login',

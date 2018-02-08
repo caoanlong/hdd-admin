@@ -43,8 +43,11 @@
 				<el-form-item label="排序">
 					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
+				<el-form-item label="是否显示">
+					<el-switch v-model="isShow"></el-switch>
+				</el-form-item>
 				<el-form-item label="是否菜单">
-					<el-switch v-model="isMenuShow"></el-switch>
+					<el-switch v-model="currentNode.IsMenu"></el-switch>
 				</el-form-item>
 				<el-form-item label="角色权限">
 					<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
@@ -96,9 +99,10 @@ export default {
 				component: '',
 				Icon: '',
 				IsShow: '',
+				IsMenu: '',
 				sys_roles: []
 			},
-			isMenuShow: false,
+			isShow: false,
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
@@ -212,7 +216,8 @@ export default {
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isMenuShow ? 'Y' : 'N',
+					IsMenu: this.currentNode.IsMenu,
+					IsShow: this.isShow ? 'Y' : 'N',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('addMenu', params)
@@ -229,7 +234,8 @@ export default {
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isMenuShow ? 'Y' : 'N',
+					IsMenu: this.currentNode.IsMenu,
+					IsShow: this.isShow ? 'Y' : 'N',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('editMenu', params)
@@ -256,7 +262,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
-					this.isMenuShow = res.data.data.IsShow == 'Y' ? true : false
+					this.isShow = res.data.data.IsShow == 'Y' ? true : false
 					this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
 				} else {
 					Message.error(res.data.msg)

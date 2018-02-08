@@ -65,7 +65,6 @@ import request from '../../../../common/request'
 export default {
 	data() {
 		return {
-			areaList: [],
 			defaultProps: {
 				children: 'children',
 				label: 'Name'
@@ -207,7 +206,6 @@ export default {
 			this.selectIcondialog = false
 		},
 		loadNode(node, resolve) {
-			console.log(node.level)
 			if (node.level === 0) {
 				this.getAreas('', areas => {
 					return resolve(areas)

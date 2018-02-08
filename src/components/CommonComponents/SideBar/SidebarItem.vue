@@ -1,7 +1,10 @@
 <template>
 	<div class="menu-wrapper">
 		<template v-for="item in routes" v-if="item.IsShow == 'Y'">
-			<el-menu-item v-if="!item.children || item.children.length == 0" :index="item.name" :class="{'submenu-title-noDropdown':!isNest}">
+			<el-menu-item 
+				v-if="!item.children || item.children.length == 0 || item.IsMenu"
+				:index="item.name" 
+				:class="{'submenu-title-noDropdown':!isNest}">
 				<svg-icon v-if="item.Icon" :icon-class="item.Icon"></svg-icon>
 				<span slot="title">{{item.title}}</span>
 			</el-menu-item>
@@ -11,11 +14,11 @@
 					<span slot="title">{{item.title}}</span>
 				</template>
 				<template v-for="child in item.children" v-if="child.IsShow == 'Y'">
-					<sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length > 0" :routes="[child]" :key="child.name"></sidebar-item>
-					<el-menu-item v-else :index="child.name">
+					<el-menu-item :index="child.name" v-if="!child.children || child.children.length == 0 || child.IsMenu">
 						<svg-icon v-if="child.Icon" :icon-class="child.Icon"></svg-icon>
 						<span>{{child.title}}</span>
 					</el-menu-item>
+					<sidebar-item v-else :is-nest="true" class="nest-menu" :routes="[child]" :key="child.name"></sidebar-item>
 				</template>
 			</el-submenu>
 		</template>
