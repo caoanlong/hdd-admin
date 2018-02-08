@@ -80,11 +80,15 @@
 						<el-form-item label="邮箱">
 							<el-input v-model="currentNode.Email"></el-input>
 						</el-form-item>
-						<el-form-item label="联系地址">
-							<el-input v-model="currentNode.Address"></el-input>
+						<el-form-item label="排序">
+							<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
+						
 					</el-col>
 				</el-row>
+				<el-form-item label="联系地址">
+							<el-input v-model="currentNode.Address"></el-input>
+						</el-form-item>
 				<el-form-item label="备注">
 					<el-input type="textarea" resize="none" v-model="currentNode.Remark"></el-input>
 				</el-form-item>
@@ -129,7 +133,8 @@ export default {
 				Fax: '',
 				Email: '',
 				Address: '',
-				Remark: ''
+				Remark: '',
+				SortNumber:''
 			},
 			isUseable: true,
 			selectedAreas: [],
@@ -163,7 +168,8 @@ export default {
 				Fax: '',
 				Email: '',
 				Address: '',
-				Remark: ''
+				Remark: '',
+				SortNumber:''
 			}
 		},
 		handleNodeClick(d) {
@@ -205,7 +211,8 @@ export default {
 				Fax: '',
 				Email: '',
 				Address: '',
-				Remark: ''
+				Remark: '',
+				SortNumber:''
 			}
 		},
 		handleDelete(s, d, n){//删除节点
@@ -248,7 +255,7 @@ export default {
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
 					DeputyPerson: this.currentNode.DeputyPerson,
-					Master: this.Master,
+					Master: this.currentNode.Master,
 					Phone: this.currentNode.Phone,
 					Useable: this.isUseable ? 'Y' : 'N',
 					Code: this.currentNode.Code,
@@ -257,7 +264,8 @@ export default {
 					Fax: this.currentNode.Fax,
 					Email: this.currentNode.Email,
 					Address: this.currentNode.Address,
-					Remark: this.currentNode.Remark
+					Remark: this.currentNode.Remark,
+					SortNumber: this.currentNode.SortNumber
 				}
 				this.addOrg(params)
 				this.addRoot()
@@ -271,7 +279,7 @@ export default {
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
 					DeputyPerson: this.currentNode.DeputyPerson,
-					Master: this.Master,
+					Master: this.currentNode.Master,
 					Phone: this.currentNode.Phone,
 					Useable: this.isUseable ? 'Y' : 'N',
 					Code: this.currentNode.Code,
@@ -280,7 +288,8 @@ export default {
 					Fax: this.currentNode.Fax,
 					Email: this.currentNode.Email,
 					Address: this.currentNode.Address,
-					Remark: this.currentNode.Remark
+					Remark: this.currentNode.Remark,
+					SortNumber: this.currentNode.SortNumber
 				}
 				this.updateArea(params)
 				this.addRoot()
@@ -336,6 +345,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
+					console.log(res.data.data)
 					this.isUseable = res.data.data.Useable == 'Y' ? true : false
 					let path = res.data.data.base_area.Path
 					if (path) {
