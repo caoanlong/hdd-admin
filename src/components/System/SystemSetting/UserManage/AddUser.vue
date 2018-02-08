@@ -190,7 +190,7 @@
 				this.user.Photo = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
-				this.$router.go(-1)
+				this.$router.push({name: 'usermanage'})
 			}
 		}
 	}
