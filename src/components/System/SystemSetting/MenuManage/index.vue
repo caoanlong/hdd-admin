@@ -40,6 +40,9 @@
 						<el-option :label="item" :value="item" v-for="item in components" :key="item"></el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="重定向">
+					<el-input v-model="currentNode.redirect"></el-input>
+				</el-form-item>
 				<el-form-item label="排序">
 					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
@@ -97,6 +100,7 @@ export default {
 				SortNumber: '',
 				path: '',
 				component: '',
+				redirect: '',
 				Icon: '',
 				IsShow: '',
 				IsMenu: '',
@@ -212,6 +216,7 @@ export default {
 					path: this.currentNode.path,
 					name: this.currentNode.name,
 					component: this.currentNode.component,
+					redirect: this.currentNode.redirect,
 					title: this.currentNode.title,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
@@ -230,6 +235,7 @@ export default {
 					path: this.currentNode.path,
 					name: this.currentNode.name,
 					component: this.currentNode.component,
+					redirect: this.currentNode.redirect,
 					title: this.currentNode.title,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
