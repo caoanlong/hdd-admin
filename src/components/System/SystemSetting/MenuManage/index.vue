@@ -87,7 +87,6 @@ import request from '../../../../common/request'
 export default {
 	data() {
 		return {
-			menuData: [],
 			roles: [],
 			selectedRoles: [],
 			defaultProps: {
@@ -145,7 +144,7 @@ export default {
 			this.getMenu(d.Menu_ID)
 		},
 		renderContent(h, {node, data, store}) {
-			let that = this//指向vue
+			let that = this //指向vue
 			return h(TreeRender, {
 				props: {
 					DATA: data, //节点数据
