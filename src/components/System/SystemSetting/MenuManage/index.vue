@@ -120,6 +120,7 @@ export default {
 				IsShow: '',
 				sys_roles: []
 			}
+			this.iconTxt='添加图标'
 		},
 		handleNodeClick(d) {
 			this.title = '编辑'
@@ -154,6 +155,7 @@ export default {
 				IsShow: '',
 				sys_roles: []
 			}
+			this.iconTxt='添加图标'
 		},
 		handleDelete(s, d, n){//删除节点
 			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
