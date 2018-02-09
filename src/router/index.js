@@ -43,6 +43,49 @@ let routerMap = [
 				component: () => import('../components/CarFreeCarrier')
 			},
 			{
+				path: '/customSevice',
+				name: 'customSevice',
+				meta: {
+					title: '客服管理'
+				},
+				component: () => import('../components/CustomSevice'),
+				redirect: '/memberCertify',
+				children: [
+					{
+						path: '/memberCertify',
+						name: 'memberCertify',
+						meta: {
+							title: '会员认证'
+						},
+						component: () => import('../components/CustomSevice/MemberCertify')
+					},
+					{
+						path: '/certification',
+						name: 'certification',
+						meta: {
+							title: '实名认证'
+						},
+						component: () => import('../components/CustomSevice/Certification')
+					},
+					{
+						path: '/withdraw',
+						name: 'withdraw',
+						meta: {
+							title: '提现管理'
+						},
+						component: () => import('../components/CustomSevice/Withdraw')
+					},
+					{
+						path: '/smslog',
+						name: 'smslog',
+						meta: {
+							title: '短信日志'
+						},
+						component: () => import('../components/CustomSevice/SmsLog')
+					}
+				]
+			},
+			{
 				path: '/system',
 				name: 'system',
 				meta: {
@@ -203,7 +246,15 @@ let routerMap = [
 									title: '查看系统配置'
 								},
 								component: () => import('../components/System/SystemSetting/SysConfigManage/ViewSysConfig')
-							}
+							},
+							{
+								path: '/apilog',
+								name: 'apilog',
+								meta: {
+									title: 'API请求日志'
+								},
+								component: () => import('../components/System/SystemSetting/ApiLog')
+							},
 						]
 					},
 					{
@@ -257,6 +308,49 @@ let routerMap = [
 							}
 						]
 					},
+					{
+						path: '/transaction',
+						name: 'transaction',
+						meta: {
+							title: '交易管理'
+						},
+						component: () => import('../components/Transaction'),
+						redirect: '/transactionlog',
+						children: [
+							{
+								path: '/transactionlog',
+								name: 'transactionlog',
+								meta: {
+									title: '会员交易流水'
+								},
+								component: () => import('../components/Transaction/TransactionLog')
+							},
+							{
+								path: '/transactionsms',
+								name: 'transactionsms',
+								meta: {
+									title: '交易短信日志'
+								},
+								component: () => import('../components/Transaction/TransactionSms')
+							},
+							{
+								path: '/paymentslog',
+								name: 'paymentslog',
+								meta: {
+									title: '支付接口日志'
+								},
+								component: () => import('../components/Transaction/PaymentsLog')
+							},
+							{
+								path: '/platformtransactionlog',
+								name: 'platformtransactionlog',
+								meta: {
+									title: '平台交易流水'
+								},
+								component: () => import('../components/Transaction/PlatformTransactionLog')
+							}
+						]
+					}
 				]
 			},
 			{

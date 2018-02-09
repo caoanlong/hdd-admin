@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>查看基础常量</span>
+				<span>查看标准常量</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">

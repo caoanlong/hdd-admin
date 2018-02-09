@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>基础常量列表</span>
+				<span>标准常量列表</span>
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
