@@ -2,7 +2,7 @@
 	<div class="menu-wrapper">
 		<template v-for="item in routes" v-if="item.IsShow == 'Y'">
 			<el-menu-item 
-				v-if="!item.children || item.children.length == 0 || item.IsMenu"
+				v-if="!item.children || item.children.length == 0"
 				:index="item.name" 
 				:class="{'submenu-title-noDropdown':!isNest}">
 				<svg-icon v-if="item.Icon" :icon-class="item.Icon"></svg-icon>
@@ -14,7 +14,7 @@
 					<span slot="title">{{item.title}}</span>
 				</template>
 				<template v-for="child in item.children" v-if="child.IsShow == 'Y'">
-					<el-menu-item :index="child.name" v-if="!child.children || child.children.length == 0 || child.IsMenu">
+					<el-menu-item :index="child.name" v-if="!child.children || child.children.length == 0">
 						<svg-icon v-if="child.Icon" :icon-class="child.Icon"></svg-icon>
 						<span>{{child.title}}</span>
 					</el-menu-item>
