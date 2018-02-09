@@ -188,10 +188,6 @@ export default {
 				this.$message.error('路径不能为空！')
 				return
 			}
-			if (!this.currentNode.component) {
-				this.$message.error('组件不能为空！')
-				return
-			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
