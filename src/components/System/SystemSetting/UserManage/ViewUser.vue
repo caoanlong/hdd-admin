@@ -15,10 +15,10 @@
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="归属公司">
-							<p>{{user.Company_ID}}</p>
+							<p>{{user.company && user.company.Name}}</p>
 						</el-form-item>
 						<el-form-item label="归属部门">
-							<p>{{user.Organization_ID}}</p>
+							<p>{{user.department && user.department.Name}}</p>
 						</el-form-item>
 						<el-form-item label="工号">
 							<p>{{user.JobNo}}</p>

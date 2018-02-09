@@ -18,18 +18,13 @@
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="归属公司">
-							<el-select style="width: 100%" placeholder="请选择" v-model="user.Company_ID">
-								<el-option label="总公司" value="总公司"></el-option>
-								<el-option label="市场部" value="市场部"></el-option>
-								<el-option label="行政部" value="行政部"></el-option>
-								<el-option label="研发部" value="研发部"></el-option>
+							<el-select style="width: 100%" placeholder="请选择" v-model="user.Company_ID" @change="changeCompany">
+								<el-option :label="company.Name" :value="company.Organization_ID" v-for="company in companys" :key="company.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="归属部门">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Organization_ID">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option :label="department.Name" :value="department.Organization_ID" v-for="department in departments" :key="department.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="工号">
@@ -106,12 +101,15 @@
 					sys_roles:[]
 				},
 				roles: [],
-				isAllowLogin: true
+				isAllowLogin: true,
+				companys: [],
+				departments: []
 			}
 		},
 		created() {
 			this.getUser()
 			this.getRoles()
+			this.getOrgs()
 		},
 		methods: {
 			getUser() {
@@ -127,6 +125,9 @@
 						this.user = res.data.data
 						this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
 						this.user.sys_roles = res.data.data.sys_roles.map(item => item.Role_ID)
+						if (this.user.Company_ID) {
+							this.getOrgs(this.user.Company_ID)
+						}
 						console.log(this.user)
 					} else {
 						Message.error(res.data.msg)
@@ -184,6 +185,29 @@
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			getOrgs(Organization_PID) {
+				let params = {
+					Organization_PID: Organization_PID || ''
+				}
+				request({
+					url: '/sys_organization/list',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						if (Organization_PID) {
+							this.departments = res.data.data
+						} else {
+							this.companys = res.data.data
+						}
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			changeCompany(id) {
+				this.getOrgs(id)
 			},
 			back() {
 				this.$router.go(-1)

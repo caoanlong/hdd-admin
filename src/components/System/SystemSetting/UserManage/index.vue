@@ -13,20 +13,15 @@
 						<el-input placeholder="登录名" v-model="findLoginName"></el-input>
 					</el-form-item>
 					<el-form-item label="归属公司">
-						<el-select v-model="findCompany" placeholder="请选择">
-							<el-option label="总公司" value="总公司"></el-option>
-							</el-option>
+						<el-select v-model="findCompany" placeholder="请选择" @change="changeCompany">
+							<el-option :label="company.Name" :value="company.Organization_ID" v-for="company in companys" :key="company.Organization_ID"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="归属部门">
 						<el-select v-model="findDepartment" placeholder="请选择">
-							<el-option label="市场部" value="市场部"></el-option>
-							<el-option label="行政部" value="行政部"></el-option>
-							<el-option label="财务部" value="财务部"></el-option>
-							<el-option label="技术部" value="技术部"></el-option>
+							<el-option :label="department.Name" :value="department.Organization_ID" v-for="department in departments" :key="department.Organization_ID"></el-option>
 						</el-select>
 					</el-form-item>
-					
 					<el-form-item>
 						<el-button type="primary" @click.native="getUsers(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
@@ -49,8 +44,8 @@
 					<el-table-column label="姓名" prop="Name"></el-table-column>
 					<el-table-column label="电话" prop="Phone" align="center" width="120"></el-table-column>
 					<el-table-column label="手机" prop="Mobile" align="center" width="100"></el-table-column>
-					<el-table-column label="归属公司" prop="company"></el-table-column>
-					<el-table-column label="归属部门" prop="department"></el-table-column>
+					<el-table-column label="归属公司" prop="company.Name"></el-table-column>
+					<el-table-column label="归属部门" prop="department.Name"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row.User_ID)">查看</el-button>
@@ -75,8 +70,8 @@ const userMap = {
 	'姓名': 'Name',
 	'电话': 'Phone',
 	'手机': 'Mobile',
-	'归属公司': 'company',
-	'归属部门': 'department'
+	'归属公司': 'company.Name',
+	'归属部门': 'department.Name'
 }
 export default {
 	data() {
@@ -92,11 +87,14 @@ export default {
 			findCompany: '',
 			findDepartment: '',
 			count: 0,
-			selectedUsers: []
+			selectedUsers: [],
+			companys: [],
+			departments: []
 		}
 	},
 	created() {
 		this.getUsers()
+		this.getOrgs()
 	},
 	methods: {
 		exportExcel() {
@@ -169,6 +167,7 @@ export default {
 				Company_ID: this.findCompany,
 				Organization_ID: this.findDepartment
 			}
+			console.log(params)
 			request({
 				url: '/sys_user/list',
 				method: 'get',
@@ -229,16 +228,38 @@ export default {
 				}
 			})
 		},
-
 		editUser(id) {
 			this.$router.push({ name: 'edituser', query: { User_ID: id} })
 		},
 		viewUser(id) {
 			this.$router.push({ name: 'viewuser', query: { User_ID: id} })
 		},
+		getOrgs(Organization_PID) {
+			let params = {
+				Organization_PID: Organization_PID || ''
+			}
+			request({
+				url: '/sys_organization/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					if (Organization_PID) {
+						this.departments = res.data.data
+					} else {
+						this.companys = res.data.data
+					}
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		changeCompany(id) {
+			this.findDepartment = ''
+			this.getOrgs(id)
+		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item.User_ID)
-			console.log(this.selectedUsers)
 		},
 		refresh() {
 			this.refreshing = true
