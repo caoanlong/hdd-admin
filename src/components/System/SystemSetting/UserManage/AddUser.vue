@@ -65,16 +65,11 @@
 						</el-form-item>
 						<el-form-item label="用户类型">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Type">
-								<el-option label="系统管理" value="系统管理"></el-option>
-								<el-option label="部门经理" value="部门经理"></el-option>
-								<el-option label="普通用户" value="普通用户"></el-option>
+								<el-option label="系统管理" :value="0"></el-option>
+								<el-option label="部门经理" :value="1"></el-option>
+								<el-option label="普通用户" :value="2"></el-option>
 							</el-select>
 						</el-form-item>
-						<!-- <el-form-item label="用户角色">
-							<el-checkbox-group v-model="user.role">
-								<el-checkbox :label="role.enName" v-for="role in roles" :key="role._id"></el-checkbox>
-							</el-checkbox-group>
-						</el-form-item>	 -->
 						<el-form-item label="角色权限">
 							<el-select style="width: 100%" v-model="user.sys_roles" multiple placeholder="请选择">
 								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">

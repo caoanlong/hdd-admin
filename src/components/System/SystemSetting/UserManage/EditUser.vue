@@ -53,9 +53,9 @@
 						</el-form-item>
 						<el-form-item label="用户类型">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Type">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option label="系统管理" :value="0"></el-option>
+								<el-option label="部门经理" :value="1"></el-option>
+								<el-option label="普通用户" :value="2"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="角色权限">
@@ -93,7 +93,7 @@
 					Email:'',
 					Phone:'',
 					Mobile:'',
-					Type:'',
+					Type:0,
 					Photo:'',
 					PCID:'',
 					LoginFlag:'',
@@ -149,7 +149,7 @@
 					Email:this.user.Email,
 					Phone:this.user.Phone,
 					Mobile:this.user.Mobile,
-					Type:0,
+					Type: this.user.Type,
 					Photo:this.user.Photo,
 					PCID:this.user.PCID,
 					LoginFlag:this.user.LoginFlag,

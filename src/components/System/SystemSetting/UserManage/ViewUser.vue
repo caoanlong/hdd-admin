@@ -42,7 +42,9 @@
 							<p>{{isAllowLogin?'是':'否'}}</p>
 						</el-form-item>
 						<el-form-item label="用户类型">
-							<p>{{user.Type}}</p>
+							<p v-if="user.Type == 0">系统管理</p>
+							<p v-else-if="user.Type == 1">部门经理</p>
+							<p v-else>普通用户</p>
 						</el-form-item>
 						<el-form-item label="用户角色">
 							<p>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
