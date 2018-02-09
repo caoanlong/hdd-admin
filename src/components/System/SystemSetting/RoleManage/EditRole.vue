@@ -15,10 +15,7 @@
 						</el-form-item>
 						<el-form-item label="组织机构">
 							<el-select style="width: 100%" placeholder="请选择" v-model="role.Organization_ID">
-								<el-option label="总公司" value="总公司"></el-option>
-								<el-option label="市场部" value="市场部"></el-option>
-								<el-option label="行政部" value="行政部"></el-option>
-								<el-option label="研发部" value="研发部"></el-option>
+								<el-option :label="organization.Name" :value="organization.Organization_ID" v-for="organization in organizations" :key="organization.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="角色类型">
@@ -79,11 +76,13 @@
 					Issys: 'Y',
 					Useable: 'Y',
 					Remark: ''
-				}
+				},
+				organizations: []
 			}
 		},
 		created() {
 			this.getRole()
+			this.getOrgs()
 		},
 		methods: {
 			getRole() {
@@ -124,6 +123,22 @@
 						console.log(res.data)
 						Message.success(res.data.msg)
 						this.$router.push({name: 'rolemanage'})
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			getOrgs(Organization_PID) {
+				let params = {
+					Organization_PID: Organization_PID || ''
+				}
+				request({
+					url: '/sys_organization/list',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.organizations = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
