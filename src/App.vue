@@ -6,10 +6,7 @@
 
 <script>
 export default {
-	name: 'App',
-	// created () {
-	// 	reloadVueObj()
-	// }
+	name: 'App'
 }
 </script>
 <style lang="stylus" scoped>

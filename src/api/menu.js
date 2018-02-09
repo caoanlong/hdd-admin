@@ -2,12 +2,9 @@ import request from '../common/request'
 
 // 获取菜单
 export function getMenus () {
-	return new Promise((resolve, reject) => { request({
-			url: '/sys_menu/list',
-			method: 'get'
-		}).then(res => {
-			resolve(res.data.data)
-		})
+	return request({
+		url: '/sys_menu/list',
+		method: 'get'
 	})
 }
 

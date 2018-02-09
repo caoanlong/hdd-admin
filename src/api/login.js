@@ -13,10 +13,6 @@ export function login(LoginName, Password) {
 }
 
 export function logout() {
-	// return request({
-	// 	url: '/login/logout',
-	// 	method: 'post'
-	// })
 	return new Promise((resolve, reject) => {
 		resolve({code: 0})
 	})

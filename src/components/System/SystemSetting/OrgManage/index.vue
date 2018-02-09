@@ -222,9 +222,9 @@ export default {
 				type: 'warning'
 			}).then(() => {
 				let params = {
-					Area_ID: d.Area_ID
+					Organization_ID: d.Organization_ID
 				}
-				this.deleteArea(params)
+				this.deleteOrg(params)
 				this.addRoot()
 			}).catch(() => {
 				this.$message({
@@ -234,18 +234,22 @@ export default {
 			})
 		},
 		submitForm(type) {
-			// if (!this.currentNode.Depth) {
-			// 	this.$message.error('区域类型不能为空！')
-			// 	return
-			// }
-			// if (!this.currentNode.Code) {
-			// 	this.$message.error('区域编码不能为空！')
-			// 	return
-			// }
-			// if (!this.currentNode.Name) {
-			// 	this.$message.error('区域名称不能为空！')
-			// 	return
-			// }
+			if (!this.currentNode.Name) {
+				this.$message.error('机构名称不能为空！')
+				return
+			}
+			if (!this.currentNode.Code) {
+				this.$message.error('机构编码不能为空！')
+				return
+			}
+			if (!this.currentNode.Grade) {
+				this.$message.error('机构级别不能为空！')
+				return
+			}
+			if (!this.currentNode.Type) {
+				this.$message.error('机构类型不能为空！')
+				return
+			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
@@ -271,6 +275,7 @@ export default {
 				this.addRoot()
 			// 编辑
 			} else {
+				console.log(this.selectedAreas)
 				let params = {
 					Organization_ID: this.currentNode.Organization_ID,
 					Organization_PID: this.currentNode.Organization_PID,
@@ -291,7 +296,8 @@ export default {
 					Remark: this.currentNode.Remark,
 					SortNumber: this.currentNode.SortNumber
 				}
-				this.updateArea(params)
+				console.log(params)
+				this.updateOrg(params)
 				this.addRoot()
 			}
 		},
@@ -349,7 +355,7 @@ export default {
 					this.isUseable = res.data.data.Useable == 'Y' ? true : false
 					let path = res.data.data.base_area.Path
 					if (path) {
-						this.selectedAreas = path.split(',')
+						this.selectedAreas = path.split(',').filter(item => item)
 					}
 				} else {
 					Message.error(res.data.msg)
@@ -360,6 +366,36 @@ export default {
 		addOrg(data) {
 			request({
 				url: '/sys_organization/add',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					Message.success(res.data.msg)
+					this.getOrgs()
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 编辑机构
+		updateOrg(data) {
+			request({
+				url: '/sys_organization/update',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					Message.success(res.data.msg)
+					this.getOrgs()
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		// 删除机构
+		deleteOrg(data) {
+			request({
+				url: '/sys_organization/delete',
 				method: 'post',
 				data
 			}).then(res => {
@@ -383,7 +419,6 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.users = res.data.data.rows
-					console.log(this.users)
 				} else {
 					Message.error(res.data.msg)
 				}

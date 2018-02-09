@@ -24,7 +24,6 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import reloadVueObj from '../main'
 	import { Message } from 'element-ui'
 	import {isvalidUsername} from '../common/validator'
 	export default {
@@ -69,12 +68,11 @@
 					if (valid) {
 						this.loading = true
 						this.$store.dispatch('Login', this.loginForm).then((res) => {
+							this.$store.dispatch('getMenu')
 							this.loading = false
 							Message.success('登录成功')
 							this.$router.push({ path: '/' })
-							reloadVueObj()
 						}).catch((err) => {
-							console.log(err)
 							Message.error(err)
 							this.loading = false
 						})

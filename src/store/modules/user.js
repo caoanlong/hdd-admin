@@ -1,11 +1,10 @@
 import { login, logout, getUserInfo } from '../../api/login'
-import { getToken, setToken, removeToken } from '../../common/auth'
+
 const user = {
 	state: {
 		Name: localStorage.getItem('Name'),
 		LoginName: localStorage.getItem('LoginName'),
-		token: getToken(),
-		// role: localStorage.getItem('role'),
+		token: localStorage.getItem('token'),
 		Photo: localStorage.getItem('Photo')
 	},
 	mutations: {
@@ -18,10 +17,7 @@ const user = {
 		SET_TOKEN: (state, token) => {
 			state.token = token
 		},
-		SET_ROLE: (state, role) => {
-			state.role = role
-		},
-		SET_AVATAR: (state, Photo) => {
+		SET_PHOTO: (state, Photo) => {
 			state.Photo = Photo
 		}
 	},
@@ -34,10 +30,13 @@ const user = {
 					let data = response.data
 					if (data.code == 0) {
 						console.log(data)
-						setToken(response.headers['x-access-token'])
-						localStorage.setItem('Name', data.data.Name)
+						commit('SET_TOKEN', response.headers['x-access-token'])
+						commit('SET_LOGIN_NAME', data.data.LoginName)
+						commit('SET_NAME', data.data.Name)
+						commit('SET_PHOTO', data.data.Photo)
+						localStorage.setItem('token', response.headers['x-access-token'])
 						localStorage.setItem('LoginName', data.data.LoginName)
-						// localStorage.setItem('role', data.data.role)
+						localStorage.setItem('Name', data.data.Name)
 						localStorage.setItem('Photo', data.data.Photo)
 						resolve(data.data)
 					} else {
@@ -53,10 +52,8 @@ const user = {
 				logout(state.token).then(() => {
 					commit('SET_LOGIN_NAME', '')
 					commit('SET_NAME', '')
-					// commit('SET_ROLE', '')
-					commit('SET_AVATAR', '')
+					commit('SET_PHOTO', '')
 					commit('SET_TOKEN', '')
-					removeToken()
 					localStorage.clear()
 					sessionStorage.clear()
 					resolve()
@@ -71,23 +68,11 @@ const user = {
 					const data = response.data
 					commit('SET_LOGIN_NAME', data.LoginName)
 					commit('SET_NAME', data.Name)
-					// commit('SET_ROLE', data.role)
-					commit('SET_AVATAR', data.Photo)
+					commit('SET_PHOTO', data.Photo)
 					resolve(data)
 				}).catch(error => {
 					reject(error)
 				})
-			})
-		},
-		FedLogOut({ commit }) {
-			return new Promise((resolve, reject) => {
-				commit('SET_NAME', '')
-				// commit('SET_ROLE', [])
-				commit('SET_AVATAR', '')
-				commit('SET_TOKEN', '')
-				removeToken()
-				localStorage.clear()
-				resolve()
 			})
 		}
 	}

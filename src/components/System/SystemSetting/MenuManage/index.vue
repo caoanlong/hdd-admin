@@ -35,26 +35,15 @@
 				<el-form-item label="图标">
 					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> {{currentNode.Icon ? currentNode.Icon : iconTxt}}</el-button>
 				</el-form-item>
-				<el-form-item label="组件">
-					<el-select style="width: 100%" v-model="currentNode.component" placeholder="请选择组件">
-						<el-option :label="item" :value="item" v-for="item in components" :key="item"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="重定向">
-					<el-input v-model="currentNode.redirect"></el-input>
-				</el-form-item>
 				<el-form-item label="排序">
 					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item label="是否显示">
 					<el-switch v-model="isShow"></el-switch>
 				</el-form-item>
-				<el-form-item label="是否菜单">
-					<el-switch v-model="currentNode.IsMenu"></el-switch>
-				</el-form-item>
 				<el-form-item label="角色权限">
 					<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
-						<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
+						<el-option v-for="role in roles" :key="role.Role_ID" :label="role.Name" :value="role.Role_ID">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -81,7 +70,6 @@
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender'
-import components from '../../../../assets/data/componentPath.json'
 import { requireAllName, req } from '../../../../assets/icons'
 import request from '../../../../common/request'
 export default {
@@ -98,11 +86,8 @@ export default {
 				title: '',
 				SortNumber: '',
 				path: '',
-				component: '',
-				redirect: '',
 				Icon: '',
 				IsShow: '',
-				IsMenu: '',
 				sys_roles: []
 			},
 			isShow: false,
@@ -117,8 +102,7 @@ export default {
 		...mapGetters([
 			'menus'
 		]),
-		svgicons: () => requireAllName(req),
-		components: () => components
+		svgicons: () => requireAllName(req)
 	},
 	created() {
 		this.getRoles()
@@ -132,7 +116,6 @@ export default {
 				title: '',
 				SortNumber: '',
 				path: '',
-				component: '',
 				Icon: '',
 				IsShow: '',
 				sys_roles: []
@@ -167,7 +150,6 @@ export default {
 				title: '',
 				SortNumber: '',
 				path: '',
-				component: '',
 				Icon: '',
 				IsShow: '',
 				sys_roles: []
@@ -180,6 +162,7 @@ export default {
 				type: 'warning'
 			}).then(() => {
 				this.$store.dispatch('deleteMenu', d)
+				this.$store.dispatch('getMenu')
 				this.addRoot()
 				this.$message({
 					type: 'success',
@@ -214,17 +197,15 @@ export default {
 				let params = {
 					path: this.currentNode.path,
 					name: this.currentNode.name,
-					component: this.currentNode.component,
-					redirect: this.currentNode.redirect,
 					title: this.currentNode.title,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsMenu: this.currentNode.IsMenu,
 					IsShow: this.isShow ? 'Y' : 'N',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('addMenu', params)
+				this.$store.dispatch('getMenu')
 				this.addRoot()
 				this.$message.success('创建成功！')
 			// 编辑
@@ -233,17 +214,15 @@ export default {
 					Menu_ID: this.currentNode.Menu_ID,
 					path: this.currentNode.path,
 					name: this.currentNode.name,
-					component: this.currentNode.component,
-					redirect: this.currentNode.redirect,
 					title: this.currentNode.title,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsMenu: this.currentNode.IsMenu,
 					IsShow: this.isShow ? 'Y' : 'N',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('editMenu', params)
+				this.$store.dispatch('getMenu')
 				this.addRoot()
 				this.$message.success('编辑成功！')
 			}
@@ -292,6 +271,7 @@ export default {
 							Name: item.Name
 						}
 					})
+					console.log(this.roles)
 				} else {
 					Message.error(res.data.msg)
 				}
