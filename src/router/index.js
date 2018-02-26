@@ -86,6 +86,100 @@ let routerMap = [
 				]
 			},
 			{
+				path: '/businessconfig',
+				name: 'businessconfig',
+				meta: {
+					title: '业务配置'
+				},
+				component: () => import('../components/BusinessConfig'),
+				redirect: '/contentmanage',
+				children: [
+					{
+						path: '/contentmanage',
+						name: 'contentmanage',
+						meta: {
+							title: '内容管理'
+						},
+						component: () => import('../components/BusinessConfig/ContentManage'),
+						redirect: '/setcolumn',
+						children: [
+							{
+								path: '/setcolumn',
+								name: 'setcolumn',
+								meta: {
+									title: '设置栏目'
+								},
+								component: () => import('../components/BusinessConfig/ContentManage/SetColumn')
+							},
+							{
+								path: '/setcontent',
+								name: 'setcontent',
+								meta: {
+									title: '设置内容'
+								},
+								component: () => import('../components/BusinessConfig/ContentManage/SetContent')
+							}
+						]
+					},
+					{
+						path: '/messagemanage',
+						name: 'messagemanage',
+						meta: {
+							title: '消息管理'
+						},
+						component: () => import('../components/BusinessConfig/MessageManage/')
+					},
+					{
+						path: '/queuemanage',
+						name: 'queuemanage',
+						meta: {
+							title: '队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage')
+					},
+					{
+						path: '/apppage',
+						name: 'apppage',
+						meta: {
+							title: 'APP页面'
+						},
+						component: () => import('../components/BusinessConfig/AppPage')
+					},
+					{
+						path: '/banklist',
+						name: 'banklist',
+						meta: {
+							title: '支持银行列表'
+						},
+						component: () => import('../components/BusinessConfig/BankList')
+					},
+					{
+						path: '/smstemp',
+						name: 'smstemp',
+						meta: {
+							title: '短信模板'
+						},
+						component: () => import('../components/BusinessConfig/SmsTemp')
+					},
+					{
+						path: '/taskmanage',
+						name: 'taskmanage',
+						meta: {
+							title: '定时任务管理'
+						},
+						component: () => import('../components/BusinessConfig/TaskManage')
+					},
+					{
+						path: '/versionmanage',
+						name: 'versionmanage',
+						meta: {
+							title: '版本管理'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage')
+					}
+				]
+			},
+			{
 				path: '/system',
 				name: 'system',
 				meta: {
