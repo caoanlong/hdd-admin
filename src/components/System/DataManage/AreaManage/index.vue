@@ -8,14 +8,15 @@
 				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
 			</div>
 			<el-tree
-				class="expand-tree"
-				:load="loadNode"
-				:props="defaultProps"
-				node-key="Code"
-				lazy
+				class="expand-tree" 
+				:load="loadNode" 
+				:props="defaultProps" 
+				node-key="Code" 
+				lazy 
+				accordion 
 				highlight-current
-				:expand-on-click-node="false"
-				:render-content="renderContent"
+				:expand-on-click-node="false" 
+				:render-content="renderContent" 
 				@node-click="handleNodeClick">
 			</el-tree>
 		</el-card>
