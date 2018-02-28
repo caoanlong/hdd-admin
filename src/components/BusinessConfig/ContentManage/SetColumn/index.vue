@@ -1,126 +1,255 @@
 <template>
 	<div class="main-content">
-		<el-card class="box-card">
+		<el-card class="box-card menu-list">
 			<div slot="header" class="clearfix">
 				<span>栏目列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addColumn">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete"  @click.native="deleteConfirm">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh" @click.native="refresh">刷新</el-button>
+				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
 			</div>
-			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center">
-					</el-table-column>
-					<el-table-column label="栏目名称" prop="name">
-					</el-table-column>
-					<el-table-column label="代码" prop="code">
-					</el-table-column>
-					<el-table-column label="类型" prop="sortType">
-					</el-table-column>
-					<el-table-column label="是否启用" width="120" align="center" prop="Enabled">
-					</el-table-column>
-					<el-table-column label="操作" width="160" align="center">
-						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-edit" @click.native="editColumn(scope.row._id)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row._id)">删除</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-				</div>
+			<el-tree
+				class="expand-tree"
+				:data="setContenttopics"
+				:props="defaultProps"
+				node-key="name"
+				highlight-current
+				:expand-on-click-node="false"
+				:render-content="renderContent"
+				@node-click="handleNodeClick">
+			</el-tree>
+		</el-card>
+		<el-card class="box-card menu-info">
+			<div slot="header" class="clearfix">
+				<span>{{title}}</span>
 			</div>
+			<el-form ref="form" :model="currentNode" label-width="80px">
+				<el-form-item label="栏目名称">
+					<el-input v-model="currentNode.Name"></el-input>
+				</el-form-item>
+				<el-form-item label="代码">
+					<el-input v-model="currentNode.Code"></el-input>
+				</el-form-item>
+				<el-form-item label="类型">
+					<el-input v-model="currentNode.Type"></el-input>
+				</el-form-item>
+				<el-form-item label="是否启用">
+					<el-switch v-model="currentNode.isEnable"></el-switch>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
+					<el-button>取消</el-button>
+				</el-form-item>
+			</el-form>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../../common/request'
+import TreeRender from '../../../CommonComponents/TreeRender/Column'
+import { Message } from 'element-ui'
 export default {
 	data() {
       	return {
-	        tableData: [
-				{
-					name: '协议',
-					code:'Agreement',
-					sortType: '',
-					Enabled:'是'
-				},
-				{
-					name: '常见问题',
-					code:'CommonProblem',
-					sortType: '',
-					Enabled:'是'
-				},
-				{
-					name: '版本',
-					code:'Version',
-					sortType: '',
-					Enabled:'是'
-				}	
-	        ],
+			defaultProps: {
+				children: 'children',
+				label: 'Name'
+			},
+			setContenttopics: [],
+			currentNode: {
+				Name: '',
+				Code: '',
+				Type: 'Public',
+				isEnable: true
+			},
+			title: '添加顶级节点',
+			button: '立即创建',
 	        selectedColumns: []
 		}
     },
+	created() {
+		this.getColumns()
+	},
     methods: {
-		addColumn() {
-			this.$router.push({name: 'addcolumn'})
-		},
-		editColumn(id) {
-			this.$router.push({name: 'editcolumn', query: {id: id}})
-		},
-		deleteConfirm(id) {
-				let ids = []
-				if (id && typeof id == 'string') {
-					ids = [].concat(id)
-				} else {
-					if(this.selectedColumns.length == 0){
-						this.$message({
-							message:'请选择要删除的栏目',
-							type:'warning'
-						})
-						
-						console.log(this.selectedColumns.length)
-						return
-					}
-					ids = this.selectedColumns
-				}
-				this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.delColumn(ids)
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
-				})
-			},
-			delColumn(ids) {
-				let data = {
-					ids: ids
-				}
-				request({
-					url: '/column/delete',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.getColumns()
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
+		addRoot() {
+			this.title = '添加顶级节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				Name: '',
+				Code: '',
+				Type: 'Public',
+				isEnable: true
 			}
+		},
+		handleNodeClick(d) {
+			this.title = '编辑'
+			this.button = '确认修改'
+			this.getColumn(d.ContentTopic_ID)
+		},
+		renderContent(h, {node, data, store}) {
+			let that = this //指向vue
+			return h(TreeRender, {
+				props: {
+					DATA: data, //节点数据
+					NODE: node, //节点内容
+					STORE: store, //完整树形内容
+					CURRENTNODE: this.currentNode // 当前选择的节点
+				},
+				on: {//绑定方法
+					nodeAdd: ((s, d, n) => that.handleAdd(s, d, n)),
+					nodeDel: ((s, d, n) => that.handleDelete(s, d, n))
+				}
+			})
+		},
+		handleAdd(s, d, n){//增加节点
+			this.title = '添加子节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				ContentTopic_PID: this.currentNode.ContentTopic_ID,
+				Name: '',
+				Code: '',
+				Type: 'Public',
+				isEnable: true
+			}
+			this.iconTxt='添加图标'
+		},
+		handleDelete(s, d, n){//删除节点
+			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delColumn(d.ContentTopic_ID)
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})         
+			})
+		},
+		submitForm(type) {
+			if (!this.currentNode.Name) {
+				this.$message.error('栏目名称不能为空！')
+				return
+			}
+			if (!this.currentNode.Code) {
+				this.$message.error('代码不能为空！')
+				return
+			}
+			// 创建
+			if (type == '立即创建') {
+				let params = {
+					Name: this.currentNode.Name,
+					Code: this.currentNode.Code,
+					Type: this.currentNode.Type,
+					ContentTopic_PID: this.currentNode.ContentTopic_PID,
+					isEnable: this.isShow ? 'Y' : 'N'
+				}
+				this.addColumn(params)
+			// 编辑
+			} else {
+				let params = {
+					ContentTopic_ID: this.currentNode.ContentTopic_ID,
+					Name: this.currentNode.Name,
+					Code: this.currentNode.Code,
+					Type: this.currentNode.Type,
+					ContentTopic_PID: this.currentNode.ContentTopic_PID,
+					isEnable: this.isShow ? 'Y' : 'N'
+				}
+				this.updatetColumn(params)
+			}
+		},
+		getColumns() {
+			request({
+				url: '/set_contenttopic/list',
+				method: 'get'
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.setContenttopics = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		getColumn(ContentTopic_ID) {
+			let params = {
+				ContentTopic_ID
+			}
+			request({
+				url: '/set_contenttopic/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.currentNode = res.data.data
+					this.currentNode.isEnable = res.data.data.isEnable == 'Y' ? true : false
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		addColumn(data) {
+			request({
+				url: '/set_contenttopic/add',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.getColumns()
+					this.addRoot()
+					this.$message.success('创建成功！')
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		updatetColumn(data) {
+			request({
+				url: '/set_contenttopic/update',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.getColumns()
+					this.addRoot()
+					this.$message.success('编辑成功！')
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		delColumn(ContentTopic_ID) {
+			let data = {
+				ContentTopic_ID
+			}
+			request({
+				url: '/set_contenttopic/delete',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.getColumns()
+					this.addRoot()
+					this.$message.success('删除成功！')
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		}
 	}
 }
 </script>
-<style lang="stylus">
-	
+<style lang="stylus" scoped>
+	.main-content
+		display flex
+		.box-card
+			&.menu-list
+				flex 0 0 360px
+				margin-right 20px
+				.expand-tree
+					height 600px
+					overflow-y auto
+			&.menu-info
+				flex 1
+			.expand-tree
+				font-size 14px
 </style>

@@ -5,8 +5,12 @@
 </template>
 
 <script>
+import { getMenus } from '../src/api/menu'
 export default {
-	name: 'App'
+	name: 'App',
+	created() {
+		this.$store.dispatch('getMenu')
+	}
 }
 </script>
 <style lang="stylus" scoped>

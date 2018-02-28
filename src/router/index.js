@@ -76,12 +76,28 @@ let routerMap = [
 						component: () => import('../components/CustomSevice/Withdraw')
 					},
 					{
-						path: '/smslog',
-						name: 'smslog',
+						path: '/apilog',
+						name: 'apilog',
+						meta: {
+							title: 'API请求日志'
+						},
+						component: () => import('../components/CustomSevice/ApiLog')
+					},
+					{
+						path: '/viewapilog',
+						name: 'viewapilog',
+						meta: {
+							title: '查看API请求日志'
+						},
+						component: () => import('../components/CustomSevice/ApiLog/ViewApiLog')
+					},
+					{
+						path: '/smslogs',
+						name: 'smslogs',
 						meta: {
 							title: '短信日志'
 						},
-						component: () => import('../components/CustomSevice/SmsLog')
+						component: () => import('../components/CustomSevice/SmsLogs')
 					}
 				]
 			},
@@ -118,6 +134,22 @@ let routerMap = [
 									title: '设置内容'
 								},
 								component: () => import('../components/BusinessConfig/ContentManage/SetContent')
+							},
+							{
+								path: '/addcontent',
+								name: 'addcontent',
+								meta: {
+									title: '添加内容'
+								},
+								component: () => import('../components/BusinessConfig/ContentManage/SetContent/AddContent')
+							},
+							{
+								path: '/editcontent',
+								name: 'editcontent',
+								meta: {
+									title: '编辑内容'
+								},
+								component: () => import('../components/BusinessConfig/ContentManage/SetContent/EditContent')
 							}
 						]
 					},
@@ -127,7 +159,26 @@ let routerMap = [
 						meta: {
 							title: '消息管理'
 						},
-						component: () => import('../components/BusinessConfig/MessageManage/')
+						component: () => import('../components/BusinessConfig/MessageManage'),
+						redirect: '/message',
+						children: [
+							{
+								path: '/message',
+								name: 'message',
+								meta: {
+									title: '消息'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/Message')
+							},
+							{
+								path: '/messagetemp',
+								name: 'messagetemp',
+								meta: {
+									title: '消息模板'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/MessageTemp')
+							},
+						]
 					},
 					{
 						path: '/queuemanage',
@@ -340,15 +391,7 @@ let routerMap = [
 									title: '查看系统配置'
 								},
 								component: () => import('../components/System/SystemSetting/SysConfigManage/ViewSysConfig')
-							},
-							{
-								path: '/apilog',
-								name: 'apilog',
-								meta: {
-									title: 'API请求日志'
-								},
-								component: () => import('../components/System/SystemSetting/ApiLog')
-							},
+							}
 						]
 					},
 					{
@@ -399,6 +442,33 @@ let routerMap = [
 									title: '查看标准常量'
 								},
 								component: () => import('../components/System/DataManage/ConstManage/ViewConstant')
+							},
+							{
+								path: '/truckbrand',
+								name: 'truckbrand',
+								meta: {
+									title: '车辆品牌'
+								},
+								component: () => import('../components/System/DataManage/TruckBrand')
+							}
+						]
+					},
+					{
+						path: '/systemmonitor',
+						name: 'systemmonitor',
+						meta: {
+							title: '系统监控'
+						},
+						component: () => import('../components/System/SystemMonitor'),
+						redirect: '/systemLog',
+						children: [
+							{
+								path: '/systemLog',
+								name: 'systemLog',
+								meta: {
+									title: '系统日志'
+								},
+								component: () => import('../components/System/SystemMonitor/SystemLog')
 							}
 						]
 					},

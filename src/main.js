@@ -18,6 +18,11 @@ import './assets/icons'
  // permission control 判断是否登录
 import { permissions } from './permission'
 
+import '../static/plugins/UE/ueditor.config'
+import '../static/plugins/UE/ueditor.all.min'
+import '../static/plugins/UE/lang/zh-cn/zh-cn'
+import '../static/plugins/UE/ueditor.parse.min'
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
 	Vue.filter(key, filters[key])

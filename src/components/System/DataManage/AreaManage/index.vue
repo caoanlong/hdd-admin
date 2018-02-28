@@ -14,7 +14,7 @@
 				node-key="Code" 
 				lazy 
 				accordion 
-				highlight-current
+				highlight-current 
 				:expand-on-click-node="false" 
 				:render-content="renderContent" 
 				@node-click="handleNodeClick">
@@ -200,7 +200,7 @@ export default {
 			}
 		},
 		selectIcon(icon) {
-			this.selectedIcon= icon
+			this.selectedIcon = icon
 		},
 		submitSelect() {
 			this.iconTxt = this.currentNode.Icon = this.selectedIcon
