@@ -75,7 +75,7 @@
 			getInfo() {
 				let params = {
 					realNameApplyID: this.$route.query.realNameApplyID,
-					memID:this.$route.query.memID
+					memID: this.$route.query.memID
 				}
 				requestJava({
 					url: '/customerservice/payRealNameApply/info',
@@ -93,10 +93,10 @@
 			back() {
 				this.$router.go(-1)
 			},
-			approve(flag) {
-				let data= {
-					flag:flag,
-					realNameApplyID: this.$route.query.realNameApplyID
+			approve(realNameApplyID) {
+				let data = {
+					realNameApplyID: this.$route.query.realNameApplyID,
+					flag: 'Rejected'
 				}
 				requestJava({
 					url: '/customerservice/payRealNameApply/approve',

@@ -56,8 +56,8 @@
 					</el-table-column>
 					<el-table-column label="操作" width="160" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID,scope.row.memID)">查看</el-button>
-							<el-button type="default" size="mini" @click="editCertification(scope.row.realNameApplyID,scope.row.memID)">
+							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID, scope.row.memID)">查看</el-button>
+							<el-button type="default" size="mini" @click="approve(scope.row.realNameApplyID)">
 								<svg-icon icon-class="approve-icon"></svg-icon> 审批
 							</el-button>
 						</template>
@@ -106,7 +106,6 @@ export default {
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list
-					console.log(res.data)
 				} else {
 					Message.error(res.data.message)
 				}
@@ -117,9 +116,26 @@ export default {
 			this.findAuditStatus = '',
 			this.getList()
 		},
-		viewCertification(realNameApplyID,memID) {
-			this.$router.push({ name: 'viewcertification', query: { realNameApplyID,memID} })
+		viewCertification(realNameApplyID, memID) {
+			this.$router.push({ name: 'viewcertification', query: { realNameApplyID, memID} })
 		},
+		approve(realNameApplyID) {
+			let data = {
+				realNameApplyID: realNameApplyID,
+				flag: 'Rejected'
+			}
+			requestJava({
+				url: '/customerservice/payRealNameApply/approve',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		}
 	}
 }
 
