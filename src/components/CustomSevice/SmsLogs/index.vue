@@ -38,7 +38,11 @@
 					<el-table-column label="手机号" prop="Phones" width="120"></el-table-column>
 					<el-table-column label="发送内容" prop="TemplateContent"></el-table-column>
 					<el-table-column label="返回结果" prop="ResultMsg"></el-table-column>
-					<el-table-column label="状态" prop="Status" width="100"></el-table-column>
+					<el-table-column label="状态" prop="Status" width="100">
+						<template slot-scope="scope">
+							<span>{{scope.row.Status == 'Success' ? '成功' : '失败'}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="业务类型" prop="SendData"></el-table-column>
 					<el-table-column label="发送时间" width="140">
 						<template slot-scope="scope">
