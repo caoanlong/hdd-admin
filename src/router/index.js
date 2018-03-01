@@ -186,6 +186,30 @@ let routerMap = [
 								},
 								component: () => import('../components/BusinessConfig/MessageManage/MessageTemp')
 							},
+							{
+								path: '/viewmessagetemp',
+								name: 'viewmessagetemp',
+								meta: {
+									title: '查看消息模板'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/MessageTemp/ViewMessageTemp')
+							},
+							{
+								path: '/editmessagetemp',
+								name: 'editmessagetemp',
+								meta: {
+									title: '编辑消息模板'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/MessageTemp/EditMessageTemp')
+							},
+							{
+								path: '/addmessagetemp',
+								name: 'addmessagetemp',
+								meta: {
+									title: '添加消息模板'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/MessageTemp/AddMessageTemp')
+							},
 						]
 					},
 					{

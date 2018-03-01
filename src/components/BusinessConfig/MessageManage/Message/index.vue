@@ -4,105 +4,115 @@
 		    <div slot="header" class="clearfix">
 		        <span>消息列表</span>
 		    </div>
+            <div class="search">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="推送状态" >
+						<el-select placeholder="请选择" v-model="findPushStatus">
+							<el-option label="成功" value="Success"></el-option>
+							<el-option label="失败" value="Failed"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="getMessages(1)">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
 		    <div class="tableControl">
                 <el-form :inline="true"  class="form-inline">
-                    <el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-                    <el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-                    <el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-                    <el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
                     <el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
                 </el-form>
 		    </div>
 		    <div class="table">
-                <el-table :data="tableData5" border style="width: 100%" size="mini">
-                    <el-table-column type="selection" align="center" ></el-table-column>
-                    <el-table-column type="expand">
-                        <template slot-scope="props">
-                            <el-form label-position="left" inline class="table-expand">
-                                <el-form-item label="跳转URL">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="代码">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="极光类型">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="图标">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="格式">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="JSON跳转样例">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="JSON样例">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                            </el-form>
+                <el-table :data="messages" border style="width: 100%" size="mini">
+                    <el-table-column label="推送页面" prop="msgTemplate.AppPage.Name"></el-table-column>
+                    <el-table-column label="接收人" prop="mem_rec.RealName" width="90" align="center"></el-table-column>
+                    <el-table-column label="发送人"  prop="mem_send.RealName" width="90" align="center"></el-table-column>
+                    <el-table-column label="内容" prop="Content"></el-table-column>
+                    <el-table-column label="业务ID" prop="OpID"></el-table-column>
+                    <el-table-column label="推送状态" align="center" width="60">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.PushStatus == 'Success' ? '成功' : '失败'}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="APP页面">
-                    </el-table-column>
-                    <el-table-column label="名称">
-                    </el-table-column>
-                    <el-table-column label="标题" >
-                    </el-table-column>
-                    <el-table-column label="是否有效" sortable>
-                    </el-table-column>
-                    <el-table-column label="创建时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="创建人">
-                    </el-table-column>
-                    <el-table-column label="更新时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="修改人">
-                    </el-table-column>
-                    <el-table-column label="是否删除" sortable>
-                    </el-table-column>
-                    <el-table-column label="删除时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="删除人">
-                    </el-table-column>
-                    <el-table-column label="操作" width="230" align="center">
+                    <el-table-column label="推送时间">
                         <template slot-scope="scope">
-                            <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
-                            <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+                            <span v-if="scope.row.PushTime">{{new Date(scope.row.PushTime).getTime() | getdatefromtimestamp()}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="推送结果" prop="PushResult"></el-table-column>
+                    <el-table-column label="极光类型" prop="PushType" width="60"></el-table-column>
+                    <el-table-column label="极光ID" prop="PushID"></el-table-column>
+                    <!-- <el-table-column label="更新时间">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.UpdateTime">{{new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp()}}</span>
+                        </template>
+                    </el-table-column> -->
+                    <el-table-column label="是否查看" width="80" align="center">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.IsView == 'N' ? '否' : '是'}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="App类型" prop="AppType"></el-table-column>
+                    <el-table-column label="手机类型" prop="PhoneType"></el-table-column>
+                    <el-table-column label="推送消息标题" prop="Title"></el-table-column>
+                    <el-table-column label="操作" width="100" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="default" size="mini" icon="el-icon-view">再次发送</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div class="pagination">
-                    <el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
+                    <el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
                 </div>
 		    </div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+    import request from '../../../../common/request'
+    import { Message } from 'element-ui'
 	export default {
 	    data() {
-	      return {
-	        tableData5: [{
-	          id: '12987122',
-	          name: '好滋好味鸡蛋仔',
-	          category: '江浙小吃、小吃零食',
-	          desc: '荷兰优质淡奶，奶香浓而不腻',
-	          address: '上海市普陀区真北路',
-	          shop: '王小虎夫妻店',
-	          shopId: '10333'
-	        }]
-	      }
-	  	},
+	        return {
+                refreshing: false,
+                pageIndex: 1,
+                pageSize: 10,
+                count: 0,
+                findPushStatus: '',
+                messages: []
+	        }
+          },
+          created() {
+              this.getMessages()
+          },
 		methods: {
-			handleEdit(index, row) {
-		        console.log(index, row);
-			},
-			handleDelete(index, row) {
-				console.log(index, row);
-			}
-		
+            pageChange(index) {
+                this.getMessages(index)
+            },
+            // 重置搜索表单
+            reset() {
+                this.findPushStatus = ''
+            },
+            getMessages(pageIndex) {
+                let params = {
+                    pageIndex: pageIndex || 1,
+                    pageSize: this.pageSize,
+                    PushStatus: this.findPushStatus,
+                }
+                request({
+                    url: '/set_message/list',
+                    method: 'get',
+                    params
+                }).then(res => {
+                    if (res.data.code == 0) {
+                        this.count = res.data.data.count
+                        this.messages = res.data.data.rows
+                    } else {
+                        Message.error(res.data.msg)
+                    }
+                })
+            },
 		}
 	}
 </script>
