@@ -14,88 +14,86 @@
                 </el-form>
 		    </div>
 		    <div class="table">
-                <el-table :data="tableData5" border style="width: 100%" size="mini">
-                    <el-table-column type="selection" align="center" ></el-table-column>
-                    <el-table-column type="expand">
-                        <template slot-scope="props">
-                            <el-form label-position="left" inline class="table-expand">
-                                <el-form-item label="跳转URL">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="代码">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="极光类型">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="图标">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="格式">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="JSON跳转样例">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                                <el-form-item label="JSON样例">
-                                    <span>{{ props.row.name }}</span>
-                                </el-form-item>
-                            </el-form>
+                <el-table :data="messagetemplates" border style="width: 100%" size="mini">
+                    <el-table-column type="selection" align="center"></el-table-column>
+                    <el-table-column label="APP页面" prop="AppPage_ID"></el-table-column>
+                    <el-table-column label="跳转URL" prop="ForwardURL" width="70"></el-table-column>
+                    <el-table-column label="代码" prop="Code"></el-table-column>
+                    <el-table-column label="名称" prop="Name"></el-table-column>
+                    <el-table-column label="标题" prop="Title" align="center" width="90"></el-table-column>
+                    <el-table-column label="格式" prop="Content"></el-table-column>
+                    <el-table-column label="是否有效" align="center" width="70">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.IsEnable == 'Y' ? '是' : '否'}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="APP页面">
+                    <el-table-column label="极光类型" prop="PushType" align="center" width="70"></el-table-column>
+                    <el-table-column label="创建时间" prop="CreateTime">
+                        <template slot-scope="scope">
+                            <span>{{new Date(scope.row.CreateTime).getTime() | getdatefromtimestamp()}}</span>
+                        </template>
                     </el-table-column>
-                    <el-table-column label="名称">
-                    </el-table-column>
-                    <el-table-column label="标题" >
-                    </el-table-column>
-                    <el-table-column label="是否有效" sortable>
-                    </el-table-column>
-                    <el-table-column label="创建时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="创建人">
-                    </el-table-column>
-                    <el-table-column label="更新时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="修改人">
-                    </el-table-column>
-                    <el-table-column label="是否删除" sortable>
-                    </el-table-column>
-                    <el-table-column label="删除时间" sortable>
-                    </el-table-column>
-                    <el-table-column label="删除人">
-                    </el-table-column>
+                    <el-table-column label="创建人" prop="createBy.Name" width="80"></el-table-column>
                     <el-table-column label="操作" width="230" align="center">
                         <template slot-scope="scope">
-                            <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
+                            <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
                             <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div class="pagination">
-                    <el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
+                    <el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
                 </div>
 		    </div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+    import request from '../../../../common/request'
+    import { Message } from 'element-ui'
 	export default {
 	    data() {
-	      return {
-	        tableData5: [{
-	          id: '12987122',
-	          name: '好滋好味鸡蛋仔',
-	          category: '江浙小吃、小吃零食',
-	          desc: '荷兰优质淡奶，奶香浓而不腻',
-	          address: '上海市普陀区真北路',
-	          shop: '王小虎夫妻店',
-	          shopId: '10333'
-	        }]
-	      }
+	        return {
+                refreshing: false,
+                pageIndex: 1,
+                pageSize: 10,
+                count: 0,
+                messagetemplates: []
+	        }
 	  	},
+        created() {
+            this.getMessagetemplates()
+        },
 		methods: {
+            getMessagetemplates(pageIndex) {
+                let params = {
+                    pageIndex: pageIndex || 1,
+                    pageSize: this.pageSize
+                }
+                request({
+                    url: '/set_messagetemplate/list',
+                    method: 'get',
+                    params
+                }).then(res => {
+                    if (res.data.code == 0) {
+                        this.count = res.data.data.count
+                        this.messagetemplates = res.data.data.rows
+                    } else {
+                        Message.error(res.data.msg)
+                    }
+                })
+            },
+            pageChange(index) {
+                this.getMessagetemplates(index)
+            },
+            refresh() {
+                this.refreshing = true
+                this.getMessagetemplates()
+                setTimeout(() => {
+                    this.refreshing = false
+                }, 500)
+            },
 			handleEdit(index, row) {
 		        console.log(index, row);
 			},
