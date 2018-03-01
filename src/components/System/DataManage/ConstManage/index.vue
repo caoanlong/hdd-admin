@@ -28,7 +28,6 @@
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<a href="../../../../../static/constant_template.xlsx" download="constant_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
-				
 			</div>
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -39,7 +38,7 @@
 					<el-table-column label="值" prop="Value"></el-table-column>
 					<el-table-column label="描述" prop="Description"></el-table-column>
 					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
-					<el-table-column label="更新人" prop="UpdateBy"width="100" align="center"></el-table-column>
+					<el-table-column label="更新人" prop="UpdateBy" width="100" align="center"></el-table-column>
 					<el-table-column label="更新日期" align="center" width="140">
 						<template slot-scope="scope">
 							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
