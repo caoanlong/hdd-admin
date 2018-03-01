@@ -7,10 +7,10 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="手机号：">
-						<el-input placeholder="会员类型" v-model="findMobile"></el-input>
+						<el-input placeholder="请输入手机号" v-model="findMobile"></el-input>
 					</el-form-item>
 					<el-form-item label="状态：">
-						<el-select placeholder="请选择" style="width:100px" value=''>
+						<el-select placeholder="请选择" style="width:120px" v-model="findStatus">
 							<el-option label="草稿" value="Draft"></el-option>
 							<el-option label="待审核" value="ForAudit"></el-option>
 							<el-option label="已拒绝" value="Rejected"></el-option>
@@ -19,6 +19,16 @@
 							<el-option label="成功" value="Success"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="提现日期：">
+						<el-date-picker
+							v-model="findDataRange"
+							type="daterange"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>			
 					<el-form-item>
 						<el-button type="primary" @click.native="getList(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
@@ -63,8 +73,8 @@
 					</el-table-column>
 					<el-table-column label="操作" width="150" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewUser(scope.row.User_ID)">查看</el-button>
-							<el-button type="default" size="mini">
+							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.mobile,scope.row.cashID)">查看</el-button>
+							<el-button size="mini" @click="EditWithDraw(scope.row.mobile,scope.row.cashID)" v-if="scope.row.status=='ForAudit'">
 								<svg-icon icon-class="approve-icon"></svg-icon> 审核
 							</el-button>
 						</template>
@@ -87,25 +97,38 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			findMobile:''
+			findMobile:'',
+			findStatus:'',
+			findDataRange: '',
+			startDate: 0,
+			endDate: 0
 		}
 	},
 	created() {
 		this.getList()
 	},
 	methods: {
+		selectDateRange(date) {
+			this.startDate = date[0]
+			this.endDate = date[1]
+		},
 		pageChange(index) {
 			this.getList(index)
 		},
 		reset() {
-			this.findMobile = '',
-			this.findAuditStatus = '',
+			this.findMobile = ''
+			this.findStatus = ''
+			this.findDataRange = ''
 			this.getList()
 		},
 		getList(pageNum) {
 			let params = {
 				pageNum: pageNum || 1,
-				pageSize: this.pageSize
+				pageSize: this.pageSize,
+				mobile:this.findMobile,
+				status:this.findStatus,
+				startDate: this.startDate,
+				endDate: this.endDate
 			}
 			requestJava({
 				url: '/payCash/list',
@@ -120,6 +143,12 @@ export default {
 					Message.error(res.data.message)
 				}
 			})
+		},
+		viewWithDraw(mobile,cashID) {
+			this.$router.push({ name: 'viewwithdraw', query: { mobile,cashID} })
+		},
+		EditWithDraw(mobile,cashID) {
+			this.$router.push({ name: 'editwithdraw', query: { mobile,cashID} })
 		}
 	}
 }
