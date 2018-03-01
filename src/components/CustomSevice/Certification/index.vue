@@ -57,6 +57,7 @@
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
 export default {
 	data() {
 		return {
@@ -73,6 +74,34 @@ export default {
 				certificateStatus: '',
 				address: '上海市普陀区金沙江路 1518 弄'
 			}]
+		}
+	},
+	created() {
+		this.getRequestList()
+	},
+	methods: {
+		getRequestList(pageIndex) {
+			console.log(1)
+			let params = {
+				pageIndex: pageIndex || 1,
+				pageSize: this.pageSize
+			}
+			requestJava({
+				url: '/customerservice/payRealNameApply/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.roles = res.data.data.rows
+					this.setRouteQuery({
+						pageIndex: res.data.data.pageIndex,
+						pageSize: res.data.data.pageSize,
+					})
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
 		}
 	}
 }
