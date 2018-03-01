@@ -68,6 +68,14 @@ let routerMap = [
 						component: () => import('../components/CustomSevice/Certification')
 					},
 					{
+						path: '/viewcertification',
+						name: 'viewcertification',
+						meta: {
+							title: '实名认证详情'
+						},
+						component: () => import('../components/CustomSevice/Certification/ViewCertification')
+					},
+					{
 						path: '/withdraw',
 						name: 'withdraw',
 						meta: {

@@ -20,32 +20,44 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary" @click.native="getList(1)">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="提现单号" prop="memberType" width="100">
+					<el-table-column label="提现单号" prop="cashID" align="center" width="150">
 					</el-table-column>
-					<el-table-column label="提现时间" prop="name" width="100">
+					<el-table-column label="提现时间" align="center" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.cashTime | getdatefromtimestamp()}}</span>
+						</template>
 					</el-table-column>
-					<el-table-column label="手机号" align="center" prop="mobilePhone" width="100">
+					<el-table-column label="手机号" align="center" prop="mobile" width="100">
 					</el-table-column>
-					<el-table-column label="姓名" prop="accountTitle">
+					<el-table-column label="姓名" prop="name">
 					</el-table-column>
-					<el-table-column label="提现金额" align="center" prop="regDate" width="140">
+					<el-table-column label="提现金额" align="center" prop="money" width="140">
 					</el-table-column>
-					<el-table-column label="手续费" align="center" prop="lastvisitDate" width="140">
+					<el-table-column label="手续费" align="center" prop="fee" width="140">
 					</el-table-column>
-					<el-table-column label="卡号" align="center" prop="status" width="80">
+					<el-table-column label="卡号" align="center" prop="bankCardNum" width="180">
 					</el-table-column>
-					<el-table-column label="状态" align="center" prop="creatDate" width="140">
+					<el-table-column label="状态" align="center" width="140">
+						<template slot-scope="scope">
+							<span v-if="scope.row.status=='Draft'" style="#909399">草稿</span>
+							<span v-else-if="scope.row.status=='Rejected'" style="color:#F56C6C">已拒绝</span>
+							<span v-else-if="scope.row.status=='Success'" style="color:#67C23A">成功</span>
+							<span v-else style="color:#E6A23C">失败</span>
+						</template>
 					</el-table-column>
-					<el-table-column label="审批时间" align="center" prop="handler" width="100">
+					<el-table-column label="审批时间" align="center" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
+						</template>
 					</el-table-column>
-					<el-table-column label="审批人">
+					<el-table-column label="审批人" prop="auditBy">
 					</el-table-column>
 					<el-table-column label="操作" width="150" align="center">
 						<template slot-scope="scope">
@@ -57,29 +69,49 @@
 					</el-table-column>
 				</el-table>
 				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+					<el-pagination background layout="prev, pager, next" :total="count"></el-pagination>
 				</div>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			tableData: [{
-				memberType: '物流企业',
-				name: '曹阿龙',
-				accountTitle: '深圳市曹阿龙老司机有限公司',
-				mobilePhone: '13049497395',
-				regDate: '2017-10-10 21:05:07',
-				lastvisitDate: '2018-01-23 11:23:15',
-				creatDate: '2017-10-11 09:15:27',
-				handler: 'admin',
-				status: '启用',
-				certificateStatus: '',
-				address: '上海市普陀区金沙江路 1518 弄'
-			}]
+			pageNum: 1,
+			pageSize: 10,
+			count: 0,
+			tableData: []
+		}
+	},
+	created() {
+		this.getList()
+	},
+	methods: {
+		pageChange(index) {
+			this.getList(index)
+		},
+		getList(pageNum) {
+			let params = {
+				pageNum: pageNum || 1,
+				pageSize: this.pageSize
+			}
+			requestJava({
+				url: '/payCash/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+					console.log(res.data)
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		}
 	}
 }
