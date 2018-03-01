@@ -89,6 +89,7 @@
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
 export default {
 	data() {
 		return {

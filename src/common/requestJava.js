@@ -1,10 +1,9 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
-
 // create an axios instance
 const service = axios.create({
-	baseURL: process.env.JAVA_API, // api的base_url
+	baseURL: "http://192.168.1.29:8080", // api的base_url
 	timeout: 5000 // request timeout
 })
 
