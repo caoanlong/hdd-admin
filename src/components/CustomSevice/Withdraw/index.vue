@@ -7,16 +7,16 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="手机号：">
-						<el-input placeholder="会员类型"></el-input>
+						<el-input placeholder="会员类型" v-model="findMobile"></el-input>
 					</el-form-item>
-					<el-form-item label="认证状态：">
+					<el-form-item label="状态：">
 						<el-select placeholder="请选择" style="width:100px" value=''>
-							<el-option label="草稿" value="草稿"></el-option>
-							<el-option label="待审核" value="待审核"></el-option>
-							<el-option label="拒绝" value="拒绝"></el-option>
-							<el-option label="处理中" value="处理中"></el-option>
-							<el-option label="成功" value="成功"></el-option>
-							<el-option label="失败" value="失败"></el-option>
+							<el-option label="草稿" value="Draft"></el-option>
+							<el-option label="待审核" value="ForAudit"></el-option>
+							<el-option label="已拒绝" value="Rejected"></el-option>
+							<el-option label="处理中" value="Paying"></el-option>
+							<el-option label="失败" value="Failed"></el-option>
+							<el-option label="成功" value="Success"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -38,16 +38,18 @@
 					</el-table-column>
 					<el-table-column label="姓名" prop="name">
 					</el-table-column>
-					<el-table-column label="提现金额" align="center" prop="money" width="140">
+					<el-table-column label="提现金额" align="center" prop="money">
 					</el-table-column>
 					<el-table-column label="手续费" align="center" prop="fee" width="140">
 					</el-table-column>
-					<el-table-column label="卡号" align="center" prop="bankCardNum" width="180">
+					<el-table-column label="卡号" prop="bankCardNum" width="180">
 					</el-table-column>
 					<el-table-column label="状态" align="center" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status=='Draft'" style="#909399">草稿</span>
+							<span v-else-if="scope.row.status=='ForAudit'" style="#909399">待审核</span>
 							<span v-else-if="scope.row.status=='Rejected'" style="color:#F56C6C">已拒绝</span>
+							<span v-else-if="scope.row.status=='Paying'" style="color:#409EFF">处理中</span>
 							<span v-else-if="scope.row.status=='Success'" style="color:#67C23A">成功</span>
 							<span v-else style="color:#E6A23C">失败</span>
 						</template>
@@ -57,7 +59,7 @@
 							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="审批人" prop="auditBy">
+					<el-table-column label="审批人" align="center" prop="auditBy" width="100">
 					</el-table-column>
 					<el-table-column label="操作" width="150" align="center">
 						<template slot-scope="scope">
@@ -69,7 +71,7 @@
 					</el-table-column>
 				</el-table>
 				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="count"></el-pagination>
+					<el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
 				</div>
 			</div>
 		</el-card>
@@ -84,7 +86,8 @@ export default {
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,
-			tableData: []
+			tableData: [],
+			findMobile:''
 		}
 	},
 	created() {
@@ -93,6 +96,11 @@ export default {
 	methods: {
 		pageChange(index) {
 			this.getList(index)
+		},
+		reset() {
+			this.findMobile = '',
+			this.findAuditStatus = '',
+			this.getList()
 		},
 		getList(pageNum) {
 			let params = {
