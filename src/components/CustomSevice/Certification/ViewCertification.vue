@@ -65,6 +65,7 @@
 			return {
 				payRealNameApply:[],
 				memMember:[],
+				findAuditStatus:'',
 				flag:''
 			}
 		},
