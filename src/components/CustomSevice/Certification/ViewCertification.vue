@@ -8,7 +8,14 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
-							<img v-if="memMember.headPicture" :src="memMember.headPicture" class="avatar">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</el-form-item>
 						<el-form-item label="姓名">
 							<p v-text="payRealNameApply.realName"></p>
@@ -26,10 +33,25 @@
 							<p v-text="payRealNameApply.idcardNum"></p>
 						</el-form-item>
 						<el-form-item label="身份证正面">
-							<img v-if="payRealNameApply.idcardFrontPic" :src="payRealNameApply.idcardFrontPic" class="idcard">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<img v-if="payRealNameApply.idcardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardFrontPic" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</el-form-item>
 						<el-form-item label="身份证背面">
-							<img v-if="payRealNameApply.idcardBackPic" :src="payRealNameApply.idcardBackPic" class="idcard">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
+								class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</el-form-item>
 						<el-form-item label="审批人">
 							<p v-text="memMember.auditBy"></p>
@@ -38,7 +60,7 @@
 							<p v-text="payRealNameApply.auditFailedReason"></p>
 						</el-form-item>
 						<el-form-item label="驳回原因" v-else>
-							<el-select placeholder="请选择驳回原因" v-model="findAuditStatus" >
+							<el-select style="width: 100%" placeholder="如驳回，请选择驳回原因" v-model="payRealNameApply.auditFailedReason" >
 								<el-option label="草稿" value="Draft"></el-option>
 								<el-option label="已提交" value="Commited"></el-option>
 								<el-option label="成功" value="Success"></el-option>
@@ -76,7 +98,7 @@
 			getInfo() {
 				let params = {
 					realNameApplyID: this.$route.query.realNameApplyID,
-					memID:this.$route.query.memID
+					memID: this.$route.query.memID
 				}
 				requestJava({
 					url: '/customerservice/payRealNameApply/info',
@@ -95,9 +117,9 @@
 				this.$router.go(-1)
 			},
 			approve(flag) {
-				let data= {
-					flag:flag,
-					realNameApplyID: this.$route.query.realNameApplyID
+				let data = {
+					realNameApplyID: this.$route.query.realNameApplyID,
+					flag
 				}
 				requestJava({
 					url: '/customerservice/payRealNameApply/approve',
@@ -115,6 +137,30 @@
 		}
 	}
 </script>
+<style lang="stylus">
+.avatar-uploader 
+	.el-upload 
+		border 1px dashed #d9d9d9
+		border-radius 6px
+		cursor pointer
+		position relative
+		overflow hidden
+		vertical-align top
+		&:hover 
+			border-color #409eff
+.avatar-uploader-icon 
+	font-size 28px
+	color #8c939d
+	width 98px
+	height 98px
+	line-height 98px
+	text-align center
+.avatar 
+	width 98px
+	height 98px
+	display block
+</style>
+
 <style lang="stylus" scoped>
 .el-form-item__content
 	p

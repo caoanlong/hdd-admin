@@ -1,10 +1,22 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
+
 // create an axios instance
 const service = axios.create({
 	baseURL: "http://192.168.1.29:8080", // api的base_url
-	timeout: 5000 // request timeout
+	timeout: 5000, // request timeout
+	transformRequest: [function (data) {
+		// Do whatever you want to transform the data
+		let ret = ''
+		for (let it in data) {
+		  ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+		}
+		return ret
+	}],
+	headers: {
+		'Content-Type': 'application/x-www-form-urlencoded'
+	}
 })
 
 // request interceptor

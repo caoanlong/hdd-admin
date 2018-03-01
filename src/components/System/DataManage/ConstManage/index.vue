@@ -16,8 +16,8 @@
 						<el-input placeholder="名称" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConstants(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getConstants(1)">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>

@@ -10,7 +10,7 @@
 						<el-input placeholder="关键字" v-model="findKeyWords"></el-input>
 					</el-form-item>
 					<el-form-item label="状态：">
-						<el-select placeholder="请选择" style="width:120px" v-model="findAuditStatus">
+						<el-select placeholder="请选择" v-model="findAuditStatus">
 							<el-option label="草稿" value="Draft"></el-option>
 							<el-option label="已提交" value="Commited"></el-option>
 							<el-option label="成功" value="Success"></el-option>
@@ -28,7 +28,7 @@
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="账号" prop="accountCode" width="120">
 					</el-table-column>
-					<el-table-column label="姓名" prop="realName">
+					<el-table-column label="姓名" prop="realName" width="120">
 					</el-table-column>
 					<el-table-column label="身份证号" align="center" prop="IDCardNum" width="150">
 					</el-table-column>
@@ -54,11 +54,14 @@
 							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="160" align="center">
+					<el-table-column label="操作" width="260">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID,scope.row.memID)">查看</el-button>
-							<el-button type="default" size="mini" @click="editCertification(scope.row.realNameApplyID,scope.row.memID)">
-								<svg-icon icon-class="approve-icon"></svg-icon> 审批
+							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID, scope.row.memID)">查看</el-button>
+							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, '')">
+								<svg-icon icon-class="approve-icon"></svg-icon> 审核通过
+							</el-button>
+							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, 'Rejected')">
+								<svg-icon icon-class="approve-icon"></svg-icon> 驳回
 							</el-button>
 						</template>
 					</el-table-column>
@@ -106,7 +109,6 @@ export default {
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list
-					console.log(res.data)
 				} else {
 					Message.error(res.data.message)
 				}
@@ -117,9 +119,26 @@ export default {
 			this.findAuditStatus = '',
 			this.getList()
 		},
-		viewCertification(realNameApplyID,memID) {
-			this.$router.push({ name: 'viewcertification', query: { realNameApplyID,memID} })
+		viewCertification(realNameApplyID, memID) {
+			this.$router.push({ name: 'viewcertification', query: { realNameApplyID, memID} })
 		},
+		approve(realNameApplyID, flag) {
+			let data = {
+				realNameApplyID,
+				flag
+			}
+			requestJava({
+				url: '/customerservice/payRealNameApply/approve',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.msg)
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		}
 	}
 }
 
