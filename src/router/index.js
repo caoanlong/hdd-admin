@@ -253,6 +253,14 @@ let routerMap = [
 						component: () => import('../components/BusinessConfig/QueueManage')
 					},
 					{
+						path: '/addqueue',
+						name: 'addqueue',
+						meta: {
+							title: '添加队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage/AddQueue')
+					},
+					{
 						path: '/apppage',
 						name: 'apppage',
 						meta: {
