@@ -6,10 +6,10 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="关键字：">
+					<el-form-item label="关键字">
 						<el-input placeholder="关键字" v-model="findKeyWords"></el-input>
 					</el-form-item>
-					<el-form-item label="状态：">
+					<el-form-item label="状态">
 						<el-select placeholder="请选择" v-model="findAuditStatus">
 							<el-option label="草稿" value="Draft"></el-option>
 							<el-option label="已提交" value="Commited"></el-option>
