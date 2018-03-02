@@ -102,6 +102,7 @@
 			selectDateRange(date) {
 				this.startDate = date[0]
 				this.endDate = date[1]
+				console.log(date)
 			},
 			getLogs(pageIndex) {
 				let params = {

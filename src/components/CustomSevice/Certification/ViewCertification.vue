@@ -5,7 +5,7 @@
 				<span>查看实名认证详情</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
+				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
 							<el-upload 
@@ -16,18 +16,6 @@
 								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
-						</el-form-item>
-						<el-form-item label="姓名">
-							<p v-text="payRealNameApply.realName"></p>
-						</el-form-item>
-						<el-form-item label="单位">
-							<p v-text="memMember.plateNoOrCompanyName"></p>
-						</el-form-item>
-						<el-form-item label="账号">
-							<p v-text="memMember.accountCode"></p>
-						</el-form-item>
-						<el-form-item label="手机号码">
-							<p v-text="memMember.mobile"></p>
 						</el-form-item>
 						<el-form-item label="身份证编号">
 							<p v-text="payRealNameApply.idcardNum"></p>
@@ -42,6 +30,19 @@
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="姓名">
+							<p v-text="payRealNameApply.realName"></p>
+						</el-form-item>
+						<el-form-item label="单位">
+							<p v-text="memMember.plateNoOrCompanyName"></p>
+						</el-form-item>
+						<el-form-item label="申请时间">
+							<p v-text="payRealNameApply.createTime"></p>
+						</el-form-item>
 						<el-form-item label="身份证背面">
 							<el-upload 
 								action="" 
@@ -53,6 +54,23 @@
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="账号">
+							<p v-text="memMember.accountCode"></p>
+						</el-form-item>
+						<el-form-item label="手机号码">
+							<p v-text="memMember.mobile"></p>
+						</el-form-item>
+						
+						
+						
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="审批人">
 							<p v-text="memMember.auditBy"></p>
 						</el-form-item>
