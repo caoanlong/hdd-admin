@@ -269,6 +269,14 @@ let routerMap = [
 						component: () => import('../components/BusinessConfig/BankList')
 					},
 					{
+						path: '/addbank',
+						name: 'addbank',
+						meta: {
+							title: '添加银行'
+						},
+						component: () => import('../components/BusinessConfig/BankList/AddBank')
+					},
+					{
 						path: '/smstemp',
 						name: 'smstemp',
 						meta: {

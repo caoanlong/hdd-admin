@@ -23,7 +23,11 @@
 					<el-table-column label="业务类型" prop="BusinessType"></el-table-column>
 					<el-table-column label="短信模板ID" prop="SmsTemplateId"></el-table-column>
 					<el-table-column label="手机号" prop="Phones" width="100"></el-table-column>
-					<el-table-column label="发送状态" prop="Status" width="80"></el-table-column>
+					<el-table-column label="发送状态" width="80">
+						<template slot-scope="scope">
+							<span>{{scope.row.Status == 'Success' ? '成功' : '失败'}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="发送内容" prop="SendData"></el-table-column>
 					<el-table-column label="成功数量" prop="SuccessCounts" width="100"></el-table-column>
 					<el-table-column label="响应消息ID" prop="ResultId"></el-table-column>
