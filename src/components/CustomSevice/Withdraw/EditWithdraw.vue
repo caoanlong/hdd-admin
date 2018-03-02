@@ -8,7 +8,14 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
-							<img v-if="memMember.headPicture" :src="memMember.headPicture" class="avatar">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -85,37 +92,50 @@
 							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="款项名称" align="center" prop="mobile" width="100">
+					<el-table-column label="款项名称" align="center" prop="billType" width="100">
 					</el-table-column>
-					<el-table-column label="收支类型" prop="name">
+					<el-table-column label="收支类型" prop="type">
 					</el-table-column>
-					<el-table-column label="对方账号" align="center" prop="money">
+					<el-table-column label="对方账号" align="center" prop="oppositeMobile">
 					</el-table-column>
-					<el-table-column label="对方姓名" align="center" prop="fee" width="140">
+					<el-table-column label="对方姓名" align="center" prop="oppositeName" width="140">
 					</el-table-column>
 					<el-table-column label="金额" prop="amount" width="180">
 					</el-table-column>
 				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-				</div>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="auditPage()">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
 			</div>
 		</el-card>
 		<el-card class="box-card" style="margin-top:20px">
 			<div slot="header" class="clearfix">
 				<span>审核操作</span>
 			</div>
-			<el-col :span="12">
+			<el-col :span="24">
 				<el-form label-width="120px">
-					<el-form-item label="审批人">
-						<p v-text="payCash.auditBy"></p>
-					</el-form-item>
 					<el-form-item label="驳回原因">
-						<el-input type="textarea" v-model="payCash.auditFailedReason" :autosize="true" resize="none"></el-input>
+						<el-input type="textarea" placeholder="如果驳回，请填写驳回原因" v-model="payCash.auditFailedReason" resize="none"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">同意</el-button>
-						<el-button type="danger">驳回</el-button>
+						<el-button type="primary"  @click="audit($route.query.cashID, '0')">同意</el-button>
+						<el-button type="danger"  @click="audit($route.query.cashID, '1')">驳回</el-button>
 						<el-button type="default" @click.native="back">返回</el-button>
 					</el-form-item>
 				</el-form>
@@ -181,6 +201,7 @@
 						this.auditPagePayWalletBill = res.data.data.payWalletBill
 						this.auditPageMemMember = res.data.data.memMember
 						this.auditPageList = res.data.data.page.list
+						this.count = res.data.data.page.total
 						console.log(res.data.data)
 					} else {
 						Message.error(res.data.msg)
@@ -192,11 +213,49 @@
 			},
 			back() {
 				this.$router.go(-1)
+			},
+			audit(cashID, flag) {
+				let data = {
+					cashID,
+					flag
+				}
+				requestJava({
+					url: '/payCash/audit',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.msg)
+					} else {
+						Message.error(res.data.message)
+					}
+				})
 			}
 		}
 	}
 </script>
 <style lang="stylus" scoped>
+.avatar-uploader 
+	.el-upload 
+		border 1px dashed #d9d9d9
+		border-radius 6px
+		cursor pointer
+		position relative
+		overflow hidden
+		vertical-align top
+		&:hover 
+			border-color #409eff
+.avatar-uploader-icon 
+	font-size 28px
+	color #8c939d
+	width 98px
+	height 98px
+	line-height 98px
+	text-align center
+.avatar 
+	width 98px
+	height 98px
+	display block
 .el-form-item__content
 	p
 		margin 0

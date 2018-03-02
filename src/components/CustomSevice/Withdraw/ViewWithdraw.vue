@@ -5,7 +5,7 @@
 				<span>查看提现详情</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
+				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
 							<el-upload 
@@ -17,29 +17,27 @@
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
+						<el-form-item label="提现金额">
+							<p v-text="payCash.money"></p>
+						</el-form-item>
+						<el-form-item label="提现卡号">
+							<p v-text="payCash.bankCardNum"></p>
+						</el-form-item>
+						<el-form-item label="审批人">
+							<p v-text="payCash.auditBy"></p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
 						<el-form-item label="姓名">
 							<p v-text="memMember.realName"></p>
 						</el-form-item>
 						<el-form-item label="单位">
 							<p v-text="memMember.plateNoOrCompanyName"></p>
 						</el-form-item>
-						<el-form-item label="账号">
-							<p v-text="memMember.accountCode"></p>
-						</el-form-item>
-						<el-form-item label="手机号码">
-							<p v-text="memMember.mobile"></p>
-						</el-form-item>
-						<el-form-item label="提现金额">
-							<p v-text="payCash.money"></p>
-						</el-form-item>
 						<el-form-item label="手续费">
 							<p v-text="payCash.fee"></p>
-						</el-form-item>
-						<el-form-item label="到账金额">
-							<p v-text="payCash.money - payCash.fee"></p>
-						</el-form-item>
-						<el-form-item label="提现卡号">
-							<p v-text="payCash.bankCardNum"></p>
 						</el-form-item>
 						<el-form-item label="状态">
 							<template slot-scope="scope">
@@ -51,19 +49,34 @@
 								<p v-else>失败</p>
 							</template>
 						</el-form-item>
-						<el-form-item label="申请日期">
-							<template slot-scope="scope">
-								<p>{{payCash.cashTime | getdatefromtimestamp()}}</p>
-							</template>
-						</el-form-item>
-						<el-form-item label="审批人">
-							<p v-text="payCash.auditBy"></p>
-						</el-form-item>
 						<el-form-item label="审批日期">
 							<template slot-scope="scope">
 								<p>{{payCash.auditTime | getdatefromtimestamp()}}</p>
 							</template>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="账号">
+							<p v-text="memMember.accountCode"></p>
+						</el-form-item>
+						<el-form-item label="手机号码">
+							<p v-text="memMember.mobile"></p>
+						</el-form-item>
+						<el-form-item label="到账金额">
+							<p v-text="payCash.money - payCash.fee"></p>
+						</el-form-item>
+						<el-form-item label="申请日期">
+							<template slot-scope="scope">
+								<p>{{payCash.cashTime | getdatefromtimestamp()}}</p>
+							</template>
+						</el-form-item>
+						
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="驳回原因" v-if="payCash.status=='Rejected'">
 							<p v-text="payCash.auditFailedReason"></p>
 						</el-form-item>
