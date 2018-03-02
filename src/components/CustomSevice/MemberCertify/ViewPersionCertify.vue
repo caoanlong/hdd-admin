@@ -5,13 +5,13 @@
 				<span>个人认证</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
+				<el-col :span="12">
 					<el-form label-width="120px">
                         <el-form-item label="姓名">
-							<p>龚键</p>
+							<p>曹阿龙</p>
 						</el-form-item>
-                        <el-form-item label="联系电话">
-							<p>13049497395</p>
+						<el-form-item label="身份证编号">
+							<p>429002654156798</p>
 						</el-form-item>
 						<el-form-item label="个人头像">
 							<el-upload 
@@ -23,16 +23,37 @@
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
-                        <el-form-item label="身份证编号">
-							<p>429002654156798</p>
-						</el-form-item>
-                        <el-form-item label="身份证正面">
+						<el-form-item label="身份证正面">
 							<el-upload 
 								action="" 
 								class="avatar-uploader" 
 								:show-file-list="false" 
 								:disabled="true">
 								<!-- <img v-if="payRealNameApply.idcardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardFrontPic" class="avatar"> -->
+								<i class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="钱包状态">
+							<p>已激活</p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="12">
+					<el-form label-width="120px">
+                        <el-form-item label="联系电话">
+							<p>13049497395</p>
+						</el-form-item>
+						<el-form-item label="账户编号">
+							<p>68435131313464</p>
+						</el-form-item>
+						<el-form-item label="手持身份证照片">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<!-- <img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
+								class="avatar"> -->
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -47,26 +68,13 @@
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
-                        <el-form-item label="手持身份证照片">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<!-- <img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
-								class="avatar"> -->
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
-						</el-form-item>
-						<el-form-item label="账户编号">
-							<p>68435131313464</p>
-						</el-form-item>
-						<el-form-item label="钱包状态">
-							<p>已激活</p>
-						</el-form-item>
 						<el-form-item label="实名状态">
 							<p>草稿</p>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
                         <el-form-item label="审核说明">
 							<p>哈哈哈哈哈哈哈</p>
 						</el-form-item>

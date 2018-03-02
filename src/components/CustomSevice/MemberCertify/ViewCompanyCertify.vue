@@ -5,60 +5,68 @@
 				<span>企业认证</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="门面照片">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
-						</el-form-item>
+				<el-col :span="16">
+					<el-form label-width="160px">
 						<el-form-item label="公司名称">
 							<p>旅途</p>
-						</el-form-item>
-						<el-form-item label="所在区域">
-							<p>湖南衡阳雁峰</p>
 						</el-form-item>
 						<el-form-item label="详细地址">
 							<p>天马山南路49号 衡阳体育宾馆</p>
 						</el-form-item>
-                        <el-form-item label="营业执照图片">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="所在区域">
+							<p>湖南衡阳雁峰</p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证编号">
 							<p>44797789</p>
 						</el-form-item>
-                        <el-form-item label="道路运输许可证照片">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="社会信用代码">
+							<p>2575</p>
+						</el-form-item>
+						<el-form-item label="门面照片">
+							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
 								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
-						<el-form-item label="社会信用代码">
-							<p>2575</p>
-						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="无车承运平台接入码">
 							<p>55786</p>
 						</el-form-item>
+						<el-form-item label="营业执照图片">
+							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
+								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<i class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="无车承运平台AppKey">
 							<p>44888</p>
 						</el-form-item>
-                        <el-form-item label="审核说明">
+						<el-form-item label="道路运输许可证照片">
+							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
+								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<i class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
+						<el-form-item label="审核说明">
 							<p>哈哈来看的价格里面的规划</p>
 						</el-form-item>
 						<el-form-item>
@@ -67,6 +75,7 @@
 						</el-form-item>
 					</el-form>
 				</el-col>
+
 			</el-row>
 		</el-card>
 	</div>
