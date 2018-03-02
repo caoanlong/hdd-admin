@@ -4,7 +4,8 @@ import store from '../store'
 
 // create an axios instance
 const service = axios.create({
-	baseURL: "http://192.168.1.29:8080", // api的base_url
+	baseURL: "http://192.168.1.29:8080", // api的base_url  张颜
+	// baseURL: "http://192.168.1.48:8080", // api的base_url  测试
 	timeout: 5000, // request timeout
 	transformRequest: [function (data) {
 		// Do whatever you want to transform the data

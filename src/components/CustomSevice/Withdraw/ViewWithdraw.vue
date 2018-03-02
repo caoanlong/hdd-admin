@@ -8,7 +8,14 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
-							<img v-if="memMember.headPicture" :src="memMember.headPicture" class="avatar">
+							<el-upload 
+								action="" 
+								class="avatar-uploader" 
+								:show-file-list="false" 
+								:disabled="true">
+								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</el-form-item>
 						<el-form-item label="姓名">
 							<p v-text="memMember.realName"></p>
@@ -111,6 +118,29 @@
 		}
 	}
 </script>
+<style lang="stylus">
+.avatar-uploader 
+	.el-upload 
+		border 1px dashed #d9d9d9
+		border-radius 6px
+		cursor pointer
+		position relative
+		overflow hidden
+		vertical-align top
+		&:hover 
+			border-color #409eff
+.avatar-uploader-icon 
+	font-size 28px
+	color #8c939d
+	width 98px
+	height 98px
+	line-height 98px
+	text-align center
+.avatar 
+	width 98px
+	height 98px
+	display block
+</style>
 <style lang="stylus" scoped>
 .el-form-item__content
 	p

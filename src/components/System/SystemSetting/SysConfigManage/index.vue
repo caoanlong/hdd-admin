@@ -45,9 +45,25 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-				</div>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getConfig()">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
 			</div>
 		</el-card>
 	</div>
@@ -82,8 +98,8 @@ export default {
 		},
 		getConfig(pageIndex) {
 			let params = {
-				pageIndex: pageIndex || this.$route.query.pageIndex || 1,
-				pageSize: this.$route.query.pageSize || this.pageSize,
+				pageIndex: pageIndex || 1,
+				pageSize: this.pageSize,
 				Code: this.findCode,
 				Name: this.findName
 			}
@@ -95,10 +111,6 @@ export default {
 				if (res.data.code == 0) {
 					this.count = res.data.data.count
 					this.config = res.data.data.rows
-					this.setRouteQuery({
-						pageIndex: res.data.data.pageIndex,
-						pageSize: res.data.data.pageSize,
-					})
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -164,11 +176,6 @@ export default {
 			setTimeout(() => {
 				this.refreshing = false
 			}, 500)
-		},
-		setRouteQuery(json) {
-			for (let attr in json) {
-				this.$route.query[attr] = json[attr]
-			}
 		}
 	},
 	components: {
