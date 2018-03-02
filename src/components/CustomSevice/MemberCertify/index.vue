@@ -6,32 +6,23 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="会员类型：">
-						<el-select placeholder="请选择" value='' style="width:120px">
-							<el-option label="无车承运人" value="无车承运人"></el-option>
-							<el-option label="物流企业" value="物流企业"></el-option>
-							<el-option label="物流信息部" value="物流信息部"></el-option>
-							<el-option label="个人货主" value="个人货主"></el-option>
-							<el-option label="司机" value="司机"></el-option>
-							<el-option label="游客" value="游客"></el-option>
-							<el-option label="员工" value="员工"></el-option>
+					<el-form-item label="会员类型">
+						<el-select placeholder="请选择" v-model="findMemberType">
+							<el-option v-for="memberType in memberTypes" :key="memberType.Dict_ID" :label="memberType.NAME" :value="memberType.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="关键字：">
-						<el-input placeholder="关键字"></el-input>
+					<el-form-item label="关键字">
+						<el-input placeholder="请输入..." v-model="findKeywords"></el-input>
 					</el-form-item>
-					<el-form-item label="状态：">
-						<el-select placeholder="请选择" value='' style="width:120px">
-							<el-option label="启用" value="启用"></el-option>
-							<el-option label="封停" value="封停"></el-option>
+					<el-form-item label="状态">
+						<el-select placeholder="请选择" v-model="findMemberStatus">
+							<el-option label="启用" value="N"></el-option>
+							<el-option label="封停" value="Y"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="认证状态：">
-						<el-select placeholder="请选择" value='' style="width:120px">
-							<el-option label="草稿" value="草稿"></el-option>
-							<el-option label="已提交" value="已提交"></el-option>
-							<el-option label="成功" value="成功"></el-option>
-							<el-option label="失败" value="失败"></el-option>
+					<el-form-item label="认证状态">
+						<el-select placeholder="请选择" value=''>
+							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -42,34 +33,23 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="会员类型" prop="memberType" width="100">
-					</el-table-column>
-					<el-table-column label="姓名" prop="name" width="100">
-					</el-table-column>
-					<el-table-column label="手机号" align="center" prop="mobilePhone" width="100">
-					</el-table-column>
-					<el-table-column label="车牌/企业名" prop="accountTitle">
-					</el-table-column>
-					<el-table-column label="注册时间" align="center" prop="regDate" width="140">
-					</el-table-column>
-					<el-table-column label="状态" align="center" prop="status" width="80">
-					</el-table-column>
-					<el-table-column label="认证人" align="center" prop="handler" width="100">
-					</el-table-column>
-					<el-table-column label="认证状态" width="80">
-					</el-table-column>
-					<el-table-column label="钱包状态" align="center" prop="status" width="80">
-					</el-table-column>
-					<el-table-column label="实名状态" align="center" prop="status" width="80">
-					</el-table-column>
-					<el-table-column label="账号类型" align="center" prop="status" width="80">
-					</el-table-column>
+					<el-table-column label="会员类型" prop="memberType" width="100"></el-table-column>
+					<el-table-column label="姓名" prop="name" width="90"></el-table-column>
+					<el-table-column label="手机号" align="center" prop="mobilePhone" width="100"></el-table-column>
+					<el-table-column label="车牌/企业名" prop="accountTitle"></el-table-column>
+					<el-table-column label="注册时间" align="center" prop="regDate" width="140"></el-table-column>
+					<el-table-column label="状态" align="center" prop="status" width="80"></el-table-column>
+					<el-table-column label="认证人" align="center" prop="handler" width="100"></el-table-column>
+					<el-table-column label="认证状态" width="80"></el-table-column>
+					<el-table-column label="钱包状态" align="center" prop="status" width="80"></el-table-column>
+					<el-table-column label="实名状态" align="center" prop="status" width="80"></el-table-column>
+					<el-table-column label="账号类型" align="center" prop="status" width="80"></el-table-column>
 					<el-table-column label="操作" width="220" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini">
+							<el-button type="default" size="mini" @click="viewPersionCertify">
 								<svg-icon icon-class="file-icon"></svg-icon> 个人
 							</el-button>
-							<el-button type="default" size="mini">
+							<el-button type="default" size="mini" @click="viewCompanyCertify">
 								<svg-icon icon-class="file-icon"></svg-icon> 企业
 							</el-button>
 							<el-button type="default" size="mini" v-if="scope.row.status=='启用'">
@@ -89,10 +69,15 @@
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../common/request'
 import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			findMemberType: '',
+			findKeywords: '',
+			findMemberStatus: '',
 			tableData: [{
 				memberType: '物流企业',
 				name: '曹阿龙',
@@ -105,13 +90,58 @@ export default {
 				status: '启用',
 				certificateStatus: '',
 				address: '上海市普陀区金沙江路 1518 弄'
-			}]
+			}],
+			memberTypes: [],
+			certifyStatus: []
 		}
+	},
+	created() {
+		this.getMemberTypes()
+		this.getCertifyStatus()
+	},
+	methods: {
+		getMemberTypes() {
+			let params = {
+				TYPE: 'memberType',
+			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.memberTypes = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		getCertifyStatus() {
+			let params = {
+				TYPE: 'CertifyStatus',
+			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.certifyStatus = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		viewPersionCertify() {
+			this.$router.push({name: 'viewpersioncertify'})
+		},
+		viewCompanyCertify() {
+			this.$router.push({name: 'viewcompanycertify'})
+		},
 	}
 }
-
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .table
 	p
 		margin 0

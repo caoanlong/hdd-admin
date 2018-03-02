@@ -60,6 +60,22 @@ let routerMap = [
 						component: () => import('../components/CustomSevice/MemberCertify')
 					},
 					{
+						path: '/viewpersioncertify',
+						name: 'viewpersioncertify',
+						meta: {
+							title: '个人认证'
+						},
+						component: () => import('../components/CustomSevice/MemberCertify/ViewPersionCertify')
+					},
+					{
+						path: '/viewcompanycertify',
+						name: 'viewcompanycertify',
+						meta: {
+							title: '企业认证'
+						},
+						component: () => import('../components/CustomSevice/MemberCertify/ViewCompanyCertify')
+					},
+					{
 						path: '/certification',
 						name: 'certification',
 						meta: {
