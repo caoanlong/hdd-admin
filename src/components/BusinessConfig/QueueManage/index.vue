@@ -7,18 +7,18 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="业务类型">
-						<el-input placeholder="请输入业务类型"></el-input>
+						<el-input placeholder="请输入业务类型" v-model="findOpType"></el-input>
 					</el-form-item>
 					<el-form-item label="是否推送">
-						<el-select placeholder="请选择">
-							<el-option label="是" value="Success"></el-option>
-							<el-option label="否" value="Failed"></el-option>
+						<el-select placeholder="请选择" v-model="findIsPush">
+							<el-option label="是" value="Y"></el-option>
+							<el-option label="否" value="N"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="是否处理">
-						<el-select placeholder="请选择">
-							<el-option label="是" value="Success"></el-option>
-							<el-option label="否" value="Failed"></el-option>
+						<el-select placeholder="请选择" v-model="findIsFinish">
+							<el-option label="是" value="Y"></el-option>
+							<el-option label="否" value="N"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -28,24 +28,12 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addQueue">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
-<!-- 					<el-table-column type="expand">
-						<template slot-scope="props">
-							<el-form label-position="left" inline class="table-expand">
-								<el-form-item label="装货地点">
-									<span>{{ props.row.address }}</span>
-								</el-form-item>
-								<el-form-item label="错误描述">
-									<span>{{ props.row.desc }}</span>
-								</el-form-item>
-							</el-form>
-						</template>
-					</el-table-column> -->
 					<el-table-column label="业务类型" prop="opType">
 					</el-table-column>
 					<el-table-column label="业务ID" prop="opID">
@@ -65,7 +53,7 @@
 							<span v-else>否</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="推送状态" prop="isPush" align="center" width="80">
+					<el-table-column label="是否推送" prop="isPush" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.isPush =='Y'">是</span>
 							<span v-else>否</span>
@@ -129,24 +117,34 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
+			findOpType:'',
+			findIsPush:'',
+			findIsFinish:''
 		}
 	},
 	created() {
 		this.getQueueList()
 	},
 	methods: {
+		addQueue() {
+			this.$router.push({ name: 'addqueue' })
+		},
 		pageChange(index) {
 			this.getQueueList(index)
 		},
 		reset() {
-			this.findKeyWords = '',
-			this.findAuditStatus = '',
+			this.findOpType = '',
+			this.findIsPush = '',
+			this.findIsFinish = ''
 			this.getQueueList()
 		},
 		getQueueList(pageNum) {
 			let params = {
 				pageNum: pageNum || 1,
-				pageSize: this.pageSize
+				pageSize: this.pageSize,
+				opType: this.findOpType,
+				isPush: this.findIsPush,
+				isFinish: this.findIsFinish
 			}
 			requestJava({
 				url: '/setQueue/configuration/list',
