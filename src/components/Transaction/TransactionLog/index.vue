@@ -1,113 +1,122 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-		  <div slot="header" class="clearfix">
-			<span>会员交易流水</span>
-		  </div>
-		  <div class="search">
-			<el-form :inline="true"  class="form-inline"  size="small">
-			  <el-form-item label="会员类型：">
-				<el-input  placeholder="会员类型"></el-input>
-			  </el-form-item>
-			  <el-form-item label="关键字：">
-				<el-input  placeholder="关键字"></el-input>
-			  </el-form-item>
-			  <el-form-item label="状态：">
-				<el-select placeholder="请选择" style="width:100px" value=''>
-				  <el-option label="启用" value="启用"></el-option>
-				  <el-option label="封停" value="封停"></el-option>
-				</el-select>
-			  </el-form-item>
-			  <el-form-item label="认证状态：">
-				<el-select placeholder="请选择" style="width:100px" value=''>
-				  <el-option label="草稿" value="草稿"></el-option>
-				  <el-option label="已提交" value="已提交"></el-option>
-				  <el-option label="成功" value="成功"></el-option>
-				  <el-option label="失败" value="失败"></el-option>
-				</el-select>
-			  </el-form-item>
-			  <el-form-item>
-				<el-button type="primary">查询</el-button>
-				<el-button type="default">重置</el-button>
-			  </el-form-item>
-			</el-form>
-		  </div>
-		  <div class="tableControl">
-			<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
-		  </div>
-		  <div class="table">
-			<el-table :data="tableData" border style="width: 100%" size="mini">
-				<el-table-column label="会员类型" prop="memberType" width="100">
-				</el-table-column>
-				<el-table-column label="姓名" prop="name" width="100">
-				</el-table-column>
-				<el-table-column label="手机号" align="center" prop="mobilePhone" width="100">
-				</el-table-column>
-				<el-table-column label="车牌/企业名" prop="accountTitle">
-				</el-table-column>
-				<el-table-column label="注册时间" sortable align="center" prop="regDate" width="140">
-				</el-table-column>
-				<el-table-column label="最后登录" align="center" prop="lastvisitDate" width="140">
-				</el-table-column>
-				<el-table-column label="状态" sortable align="center" prop="status" width="80">
-				</el-table-column>
-				<el-table-column label="申请时间" align="center" prop="creatDate" width="140">
-				</el-table-column>
-				<el-table-column label="认证人" align="center" prop="handler" width="100">
-				</el-table-column>
-				<el-table-column label="认证时间" align="center" width="140">
-					<template slot-scope="scope">
-						<p>
-						<span>{{ scope.row.creatDate }}</span></p>
-						<p>
-						<span>{{ scope.row.creatDate }}</span></p>
-					</template>
-				</el-table-column>
-				<el-table-column label="认证状态" width="80">
-				</el-table-column>
-				<el-table-column label="操作" width="230" align="center">
-					<template slot-scope="scope">
-						  <el-button type="default" size="mini">
-							<svg-icon icon-class="file-icon"></svg-icon> 个人
-						  </el-button>
-						  <el-button type="default" size="mini">
-							<svg-icon icon-class="file-icon"></svg-icon> 企业
-						  </el-button>
-						  <el-button type="default" size="mini" v-if="scope.row.status=='启用'">
-							<svg-icon icon-class="stop-icon"></svg-icon> 封停
-						  </el-button>
-						  <el-button type="default" size="mini" v-else>
-							<svg-icon icon-class="start-icon"></svg-icon> 启用
-						  </el-button>
-					</template>
-				</el-table-column>
-			  </el-table>
-			  <div class="pagination">
-				<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-			  </div>
-		  </div>
+			<div slot="header" class="clearfix">
+				<span>会员交易流水</span>
+			</div>
+			<div class="search">
+				<el-form :inline="true"  class="form-inline"  size="small">
+					<el-form-item label="收支类型">
+						<el-select placeholder="请选择" v-model="findType">
+							<el-option label="Receive" value="Receive"></el-option>
+							<el-option label="Pay" value="Pay"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="getList(1)">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="tableControl">
+				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+			</div>
+			<div class="table">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
+					<el-table-column label="钱包ID" prop="walletID"></el-table-column>
+					<el-table-column label="收支类型" prop="type" width="100"></el-table-column>
+					<el-table-column label="交易前余额" align="center" prop="beforeBalance" width="100"></el-table-column>
+					<el-table-column label="金额" align="center" prop="amount" width="100"></el-table-column>
+					<el-table-column label="余额" align="center" prop="afterBalance" width="100"></el-table-column>
+					<el-table-column label="付款人ID" prop="payerID"></el-table-column>
+					<el-table-column label="付款人是否平台" align="center" width="110">
+						<template slot-scope="scope">
+							<span>{{scope.row.payerIsSys == 'Y' ? '是' : '否'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="收款人ID" prop="payeeID"></el-table-column>
+					<el-table-column label="收款人是否平台" align="center" width="110">
+						<template slot-scope="scope">
+							<span>{{scope.row.payeeIsSys == 'Y' ? '是' : '否'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="创建时间" align="center" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="费用流水类型" prop="billType" width="110"></el-table-column>
+					<el-table-column label="订单ID" prop="orderID"></el-table-column>
+					<el-table-column label="流水描述" prop="remark"></el-table-column>
+					<el-table-column label="对方姓名" prop="oppositeName" width="100" align="center"></el-table-column>
+				</el-table>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
 		</el-card>
-
 	</div>
 </template>
 <script type="text/javascript">
+	import requestJava from '../../../common/requestJava'
+	import { Message } from 'element-ui'
 	export default {
 		data() {
-		  return {
-			tableData: [{
-				memberType: '物流企业',
-				name: '曹阿龙',
-				accountTitle:'深圳市曹阿龙老司机有限公司',
-				mobilePhone: '13049497395',
-				regDate:'2017-10-10 21:05:07',
-				lastvisitDate:'2018-01-23 11:23:15',
-				creatDate:'2017-10-11 09:15:27',
-				handler: 'admin',
-				status:'启用',
-				certificateStatus: '',
-				address: '上海市普陀区金沙江路 1518 弄'
-			}]
-		  }
+			return {
+				findType: '',
+				pageNum: 1,
+				pageSize: 10,
+				count: 0,
+				tableData: []
+			}
+		},
+		created() {
+			this.getList()
+		},
+		methods: {
+			pageChange(index) {
+				this.getList(index)
+			},
+			reset() {
+				this.findType = '',
+				this.getList()
+			},
+			getList(pageNum) {
+				let params = {
+					pageNum: pageNum || 1,
+					pageSize: this.pageSize,
+					type: this.findType
+				}
+				requestJava({
+					url: '/walletBill/list',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.count = res.data.data.total
+						this.tableData = res.data.data.list
+						console.log(res.data.data.list)
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
 		}
 	}
 </script>
