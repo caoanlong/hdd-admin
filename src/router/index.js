@@ -261,6 +261,22 @@ let routerMap = [
 						component: () => import('../components/BusinessConfig/QueueManage/AddQueue')
 					},
 					{
+						path: '/viewqueue',
+						name: 'viewqueue',
+						meta: {
+							title: '查看队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage/ViewQueue')
+					},
+					{
+						path: '/editqueue',
+						name: 'editqueue',
+						meta: {
+							title: '编辑队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage/EditQueue')
+					},
+					{
 						path: '/apppage',
 						name: 'apppage',
 						meta: {
