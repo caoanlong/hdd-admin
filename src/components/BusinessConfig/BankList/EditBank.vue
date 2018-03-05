@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>添加银行</span>
+				<span>修改银行</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
@@ -21,7 +21,7 @@
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg"  
 								:show-file-list="false" 
-								:on-success="handleLogoUrlSuccess">
+								:on-success="handleAvatarSuccess">
 								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -34,7 +34,7 @@
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg"  
 								:show-file-list="false" 
-								:on-success="handleBgUrlSuccess">
+								:on-success="handleAvatarSuccess">
 								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -58,47 +58,58 @@
 	export default {
 		data() {
 			return {
-				bankInfo: {
-					supportBankCode: '',
-					bankName: '',
-					perLimit: '',
-					logoUrl: '',
-					logoName: '',
-					bgUrl: '',
-					bgName: ''
-				}
+				bankInfo: {}
 			}
-		},
+        },
+        created() {
+            this.getBank()
+        },
 		methods: {
-			addBank() {
-				let data= {
-					supportBankCode: this.bankInfo.supportBankCode,
-					bankName: this.bankInfo.bankName,
-					perLimit: this.bankInfo.perLimit,
-					logoUrl: this.bankInfo.logoUrl,
-					logoName: this.bankInfo.logoName,
-					bgUrl: this.bankInfo.bgUrl,
-					bgName: this.bankInfo.bgName
+            getBank() {
+                let params= {
+					supportBankCode: this.$route.query.supportBankCode,
 				}
 				requestJava({
-					url: '/paySupportBank/save ',
-					method: 'post',
-					data
+					url: '/paySupportBank/info',
+					method: 'get',
+					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.message)
-						this.$router.push({name: 'banklist'})
+                        this.bankInfo = res.data.data
+                        console.log(res.data.data)
 					} else {
-						Message.error(res.data.message)
+						Message.error(res.data.msg)
 					}
 				})
             },
-            handleLogoUrlSuccess(res, file) {
-				this.bankInfo.logoUrl = 'http://39.108.245.177:4000' + res.data
-				console.log(this.bankInfo)
-			},
-			handleBgUrlSuccess(res, file) {
-				this.bankInfo.bgUrl = 'http://39.108.245.177:4000' + res.data
+			addBank() {
+				let data= {
+					AppPage_ID: this.bankInfo.AppPage_ID,
+					ForwardURL: this.bankInfo.ForwardURL,
+					JSONForward: this.bankInfo.JSONForward,
+					Name: this.bankInfo.Name,
+					Code: this.bankInfo.Code,
+					Title: this.bankInfo.Title,
+					IconURL: this.bankInfo.IconURL,
+					Content: this.bankInfo.Content,
+					JSONSample: this.bankInfo.JSONSample,
+					PushType: this.bankInfo.PushType
+				}
+				requestJava({
+					url: '/set_messagetemplate/add',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'banklist'})
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+            },
+            handleAvatarSuccess(res, file) {
+				this.bankInfo.Name = 'http://39.108.245.177:4000' + res.data
 			},
 			back() {
 				this.$router.go(-1)

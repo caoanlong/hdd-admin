@@ -179,10 +179,6 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.ConstantTypeList = res.data.data
-					this.setRouteQuery({
-						pageIndex: res.data.data.pageIndex,
-						pageSize: res.data.data.pageSize,
-					})
 				} else {
 					Message.error(res.data.msg)
 				}
