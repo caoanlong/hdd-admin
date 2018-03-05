@@ -301,6 +301,22 @@ let routerMap = [
 						component: () => import('../components/BusinessConfig/BankList/AddBank')
 					},
 					{
+						path: '/viewbank',
+						name: 'viewbank',
+						meta: {
+							title: '查看银行'
+						},
+						component: () => import('../components/BusinessConfig/BankList/ViewBank')
+					},
+					{
+						path: '/editbank',
+						name: 'editbank',
+						meta: {
+							title: '编辑银行'
+						},
+						component: () => import('../components/BusinessConfig/BankList/EditBank')
+					},
+					{
 						path: '/smstemp',
 						name: 'smstemp',
 						meta: {
@@ -315,6 +331,22 @@ let routerMap = [
 							title: '定时任务管理'
 						},
 						component: () => import('../components/BusinessConfig/TaskManage')
+					},
+					{
+						path: '/addtask',
+						name: 'addtask',
+						meta: {
+							title: '添加定时任务'
+						},
+						component: () => import('../components/BusinessConfig/TaskManage/AddTask')
+					},
+					{
+						path: '/edittask',
+						name: 'edittask',
+						meta: {
+							title: '编辑定时任务'
+						},
+						component: () => import('../components/BusinessConfig/TaskManage/EditTask')
 					},
 					{
 						path: '/versionmanage',

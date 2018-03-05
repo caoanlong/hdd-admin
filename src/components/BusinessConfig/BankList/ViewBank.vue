@@ -2,49 +2,48 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>添加银行</span>
+				<span>查看银行</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="银行代码">
-							<el-input v-model="bankInfo.supportBankCode"></el-input>
+							<p>{{bankInfo.supportBankCode}}</p>
 						</el-form-item>
 						<el-form-item label="银行名称">
-							<el-input v-model="bankInfo.bankName"></el-input>
+							<p>{{bankInfo.bankName}}</p>
 						</el-form-item>
 						<el-form-item label="单笔限额">
-							<el-input v-model="bankInfo.perLimit"></el-input>
+							<p>{{bankInfo.perLimit}}</p>
 						</el-form-item>
 						<el-form-item label="logo">
                             <el-upload 
 								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg"  
-								:show-file-list="false" 
-								:on-success="handleLogoUrlSuccess">
+								action="http://39.108.245.177:3001/uploadImg" 
+								:disabled="true" 
+								:show-file-list="false">
 								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="logo名称">
-							<el-input v-model="bankInfo.logoName"></el-input>
+							<p>{{bankInfo.logoName}}</p>
 						</el-form-item>
 						<el-form-item label="背景图片">
                             <el-upload 
 								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg"  
-								:show-file-list="false" 
-								:on-success="handleBgUrlSuccess">
+								action="http://39.108.245.177:3001/uploadImg" 
+								:disabled="true"  
+								:show-file-list="false">
 								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="背景名称">
-							<el-input v-model="bankInfo.bgName"></el-input>
+							<p>{{bankInfo.bgName}}</p>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="addBank">立即保存</el-button>
-							<el-button @click="back">取消</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -58,48 +57,30 @@
 	export default {
 		data() {
 			return {
-				bankInfo: {
-					supportBankCode: '',
-					bankName: '',
-					perLimit: '',
-					logoUrl: '',
-					logoName: '',
-					bgUrl: '',
-					bgName: ''
-				}
+				bankInfo: {}
 			}
-		},
+        },
+        created() {
+            this.getBank()
+        },
 		methods: {
-			addBank() {
-				let data= {
-					supportBankCode: this.bankInfo.supportBankCode,
-					bankName: this.bankInfo.bankName,
-					perLimit: this.bankInfo.perLimit,
-					logoUrl: this.bankInfo.logoUrl,
-					logoName: this.bankInfo.logoName,
-					bgUrl: this.bankInfo.bgUrl,
-					bgName: this.bankInfo.bgName
+            getBank() {
+                let params= {
+					supportBankCode: this.$route.query.supportBankCode,
 				}
 				requestJava({
-					url: '/paySupportBank/save ',
-					method: 'post',
-					data
+					url: '/paySupportBank/info',
+					method: 'get',
+					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.message)
-						this.$router.push({name: 'banklist'})
+                        this.bankInfo = res.data.data
+                        console.log(res.data.data)
 					} else {
-						Message.error(res.data.message)
+						Message.error(res.data.msg)
 					}
 				})
             },
-            handleLogoUrlSuccess(res, file) {
-				this.bankInfo.logoUrl = 'http://39.108.245.177:4000' + res.data
-				console.log(this.bankInfo)
-			},
-			handleBgUrlSuccess(res, file) {
-				this.bankInfo.bgUrl = 'http://39.108.245.177:4000' + res.data
-			},
 			back() {
 				this.$router.go(-1)
 			}
@@ -127,5 +108,17 @@
 		width 98px
 		height 98px
 		display block
+		vertical-align top
+.el-form-item__content
+	p
+		margin 0
+		border 1px solid #fff
+		border-bottom-color #dcdfe6
+		padding 0 15px
+		height 40px
+		font-family 'sans-serif'
+		line-height 40px
+		color #999
+	.el-input__inner
 		vertical-align top
 </style>

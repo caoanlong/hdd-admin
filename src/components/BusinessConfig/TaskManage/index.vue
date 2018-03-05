@@ -1,85 +1,193 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-		  <div slot="header" class="clearfix">
-		    <span>APP页面</span>
-		  </div>
-		  <div class="tableControl">
-		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
-		  </div>
-		  <div class="table">
-		  	<el-table :data="tableData5" border style="width: 100%" size="mini">
-		  		<el-table-column type="expand">
-		  			<template slot-scope="props">
-				        <el-form label-position="left" inline class="table-expand">
-					        <el-form-item label="装货地点">
-					          	<span>{{ props.row.address }}</span>
-							</el-form-item>
-							<el-form-item label="错误描述">
-					          	<span>{{ props.row.desc }}</span>
-							</el-form-item>
-				        </el-form>
-				    </template>
-		  		</el-table-column>
-			    <el-table-column sortable label="托运单号">
-			    </el-table-column>
-			    <el-table-column sortable label="承运人">
-			    </el-table-column>
-			    <el-table-column sortable label="托运时间">
-			    </el-table-column>
-			    <el-table-column sortable label="实际发运时间" width="140">
-			    </el-table-column>
-			    <el-table-column sortable label="收货时间">
-			    </el-table-column>
-			    <el-table-column sortable label="发货人">
-			    </el-table-column>
-			    <el-table-column sortable label="收货人">
-			    </el-table-column>
-			    <el-table-column sortable label="状态">
-			    </el-table-column>
-			    <el-table-column sortable label="创建时间">
-			    </el-table-column>
-			    <el-table-column label="操作" width="230" align="center">
-			    	<template slot-scope="scope">
-						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
-						  <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
-						  <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
-				    </template>
-			    </el-table-column>
-			  </el-table>
-			  <div class="pagination">
-			  	<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-			  </div>
-		  </div>
+			<div slot="header" class="clearfix">
+		    	<span>定时任务管理</span>
+			</div>
+			<div class="tableControl">
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addSchedule">添加</el-button>
+			</div>
+			<div class="table">
+				<el-table :data="scheduleJobList" border style="width: 100%" size="mini">
+					<el-table-column label="任务名称" prop="jobName"></el-table-column>
+					<el-table-column label="BeanId" prop="springBeanId"></el-table-column>
+					<el-table-column label="类名" prop="beanClass"></el-table-column>
+					<el-table-column label="方法名" prop="methodName"></el-table-column>
+					<el-table-column label="任务别名" prop="aliasName"></el-table-column>
+					<el-table-column label="任务分组" prop="jobGroup"></el-table-column>
+					<el-table-column label="触发器" prop="jobTrigger"></el-table-column>
+					<el-table-column label="任务状态" prop="status"></el-table-column>
+					<el-table-column label="时间表达式" prop="cronExpression"></el-table-column>
+					<el-table-column label="是否异步">
+						<template slot-scope="scope">
+							<span>{{scope.isSync == 'Y' ? '异步' : '同步'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="任务执行url" prop="url"></el-table-column>
+					<el-table-column label="任务描述" prop="description"></el-table-column>
+					<el-table-column label="操作" width="360" align="center">
+						<template slot-scope="scope">
+							<el-button type="default" size="mini" @click="pause(scope.row.jobIdStr)">暂停</el-button>
+							<el-button type="default" size="mini" @click="recovery(scope.row.jobIdStr)">恢复</el-button>
+							<el-button type="default" size="mini" @click="runOnce(scope.row.jobIdStr)">运行一次</el-button>
+							<el-button type="default" size="mini" @click="editSchedule(scope.row.jobIdStr)" icon="el-icon-edit">编辑</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.jobIdStr)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
 		</el-card>
-
+		<el-card class="box-card" style="margin-top: 20px">
+			<div slot="header" class="clearfix">
+		    	<span>运行中的任务</span>
+			</div>
+			<div class="table">
+				<el-table :data="executingJobList" border style="width: 100%" size="mini">
+					<el-table-column label="任务名称" prop="jobName"></el-table-column>
+					<el-table-column label="BeanId" prop="springBeanId"></el-table-column>
+					<el-table-column label="类名" prop="beanClass"></el-table-column>
+					<el-table-column label="方法名" prop="methodName"></el-table-column>
+					<el-table-column label="任务别名" prop="aliasName"></el-table-column>
+					<el-table-column label="任务分组" prop="jobGroup"></el-table-column>
+					<el-table-column label="触发器" prop="jobTrigger"></el-table-column>
+					<el-table-column label="任务状态" prop="status"></el-table-column>
+					<el-table-column label="时间表达式" prop="cronExpression"></el-table-column>
+					<el-table-column label="是否异步">
+						<template slot-scope="scope">
+							<span>{{scope.isSync == 'Y' ? '异步' : '同步'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="任务执行url" prop="url"></el-table-column>
+					<el-table-column label="任务描述" prop="description"></el-table-column>
+				</el-table>
+			</div>
+		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+	import requestJava from '../../../common/requestJava'
+	import { Message } from 'element-ui'
 	export default {
 	    data() {
-	      return {
-	        tableData5: [{
-	          id: '12987122',
-	          name: '好滋好味鸡蛋仔',
-	          category: '江浙小吃、小吃零食',
-	          desc: '荷兰优质淡奶，奶香浓而不腻',
-	          address: '上海市普陀区真北路',
-	          shop: '王小虎夫妻店',
-	          shopId: '10333'
-	        }]
-	      }
-	  	},
-		methods: {
-			handleEdit(index, row) {
-		        console.log(index, row);
-			},
-			handleDelete(index, row) {
-				console.log(index, row);
+			return {
+				scheduleJobList: [],
+				executingJobList: []
 			}
-		
+		  },
+		created() {
+			this.getSchedules()
+		},
+		methods: {
+			getSchedules() {
+				requestJava({
+					url: '/scheduler/listScheduleJob',
+					method: 'get'
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.scheduleJobList = res.data.data.scheduleJobList
+						this.executingJobList = res.data.data.executingJobList
+						console.log(res.data.data)
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			// 删除
+			deleteConfirm(id) {
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.delSchedule(id)
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    })
+                })
+            },
+			delSchedule(jobId) {
+                let data = {
+                    jobId
+                }
+                requestJava({
+                    url: '/scheduler/deleteScheduleJob',
+                    method: 'post',
+                    data
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        Message.success(res.data.message)
+                        this.getSchedules()
+                    } else {
+                        Message.error(res.data.message)
+                    }
+                })
+            },
+			// 暂停
+			pause(jobId) {
+				let data = {
+					jobId
+				}
+				requestJava({
+					url: '/scheduler/pauseScheduleJob',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.message)
+						this.getSchedules()
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			// 恢复
+			recovery(jobId) {
+				let data = {
+					jobId
+				}
+				requestJava({
+					url: '/scheduler/resumeScheduleJob',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.message)
+						this.getSchedules()
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			// 运行一次
+			runOnce(jobId) {
+				let data = {
+					jobId
+				}
+				requestJava({
+					url: '/scheduler/runOnceScheduleJob',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.message)
+						this.getSchedules()
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			addSchedule() {
+				this.$router.push({name: 'addtask'})
+			},
+			editSchedule(jobId) {
+				this.$router.push({name: 'edittask', query: {jobId}})
+			},
 		}
 	}
 </script>

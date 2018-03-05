@@ -7,27 +7,34 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="addBank">添加</el-button>
                 <el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
-					<el-table-column label="银行名称" prop="walletID"></el-table-column>
-					<el-table-column label="单笔限额" prop="type" width="100"></el-table-column>
-					<el-table-column label="单日限额" align="center" prop="beforeBalance" width="100"></el-table-column>
-					<el-table-column label="logo" align="center" prop="amount" width="100"></el-table-column>
-					<el-table-column label="logo图标名称" align="center" prop="afterBalance" width="100"></el-table-column>
-					<el-table-column label="背景图片" prop="payerID"></el-table-column>
-					<el-table-column label="背景名称" prop="payerID"></el-table-column>
-					<el-table-column label="创建时间" align="center" width="140">
+					<el-table-column label="银行名称" prop="bankName"></el-table-column>
+					<el-table-column label="单笔限额" prop="perLimit"></el-table-column>
+					<el-table-column label="单日限额" prop="dailyLimit"></el-table-column>
+					<el-table-column label="logo" align="center">
 						<template slot-scope="scope">
+							<img :src="scope.row.logoUrl">
+						</template>
+					</el-table-column>
+					<el-table-column label="logo图标名称" align="center" prop="logoName" width="100"></el-table-column>
+					<el-table-column label="背景图片">
+						<template slot-scope="scope">
+							<img :src="scope.row.bgUrl">
+						</template>
+					</el-table-column>
+					<el-table-column label="背景名称" prop="bgName"></el-table-column>
+					<el-table-column label="创建时间" align="center" width="140">
+						<template slot-scope="scope" v-if="scope.row.createTime">
 							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
                         <template slot-scope="scope">
-                            <el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-edit">编辑</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-view" @click="viewBank(scope.row.supportBankCode)">查看</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-edit" @click="editBank(scope.row.supportBankCode)">编辑</el-button>
                             <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
                         </template>
                     </el-table-column>
@@ -61,7 +68,6 @@
 	export default {
 		data() {
 			return {
-				findType: '',
 				pageNum: 1,
 				pageSize: 10,
 				count: 0,
@@ -69,7 +75,7 @@
 			}
 		},
 		created() {
-			// this.getList()
+			this.getList()
 		},
 		methods: {
 			pageChange(index) {
@@ -85,18 +91,17 @@
 			getList(pageNum) {
 				let params = {
 					pageNum: pageNum || 1,
-					pageSize: this.pageSize,
-					type: this.findType
+					pageSize: this.pageSize
 				}
 				requestJava({
-					url: '/walletBill/list',
+					url: '/paySupportBank/list',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
-						this.tableData = res.data.data.list
-						console.log(res.data.data.list)
+						this.tableData = res.data.data.records
+						console.log(res.data.data)
 					} else {
 						Message.error(res.data.message)
 					}
@@ -104,7 +109,13 @@
 			},
 			addBank() {
                 this.$router.push({name: 'addbank'})
-            },
+			},
+			viewBank(supportBankCode) {
+				this.$router.push({name: 'viewbank', query: {supportBankCode}})
+			},
+			editBank(supportBankCode) {
+				this.$router.push({name: 'editbank', query: {supportBankCode}})
+			},
 		}
 	}
 </script>
