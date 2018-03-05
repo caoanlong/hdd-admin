@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>添加队列配置</span>
+				<span>查看队列配置</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
