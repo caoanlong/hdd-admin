@@ -167,13 +167,12 @@ export default {
 			let data = {
 				ids: ids
 			}
-			request({
+			requestJava({
 				url: '/setAppVersion/del',
 				method: 'post',
 				data
 			}).then(res => {
 				if (res.data.code == 200) {
-					alert(1)
 					this.getVersionList()
 				} else {
 					Message.error(res.data.message)
