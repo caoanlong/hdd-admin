@@ -32,7 +32,7 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
 					<el-table-column label="业务类型" prop="opType">
 					</el-table-column>
@@ -160,18 +160,21 @@ export default {
 				}
 			})
 		},
-		editQueue(id) {
-			this.$router.push({ name: 'editqueue', query: { queueID: id} })
+		editQueue(queueID) {
+			this.$router.push({ name: 'editqueue', query: { queueID} })
 		},
-		viewQueue(id) {
-			this.$router.push({ name: 'viewqueue', query: { queueID: id} })
+		viewQueue(queueID) {
+			this.$router.push({ name: 'viewqueue', query: { queueID} })
+		},
+		selectionChange(data) {
+			this.selectedQueues = data.map(item => item.queueID)
 		},
 		deleteConfirm(id) {
-			let ids = []
+			let ids = ''
 			if (id && typeof id == 'string') {
-				ids = [].concat(id)
+				ids = id
 			} else {
-				ids = this.selectedQueues
+				ids = this.selectedQueues.join(',')
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -190,17 +193,16 @@ export default {
 				})
 			})
 		},
-		delQueue(ids) {
+		delQueue(queueIDs) {
 			let data = {
-				ids: ids
+				queueIDs
 			}
-			request({
+			requestJava({
 				url: '/setQueue/configuration/del',
 				method: 'post',
 				data
 			}).then(res => {
 				if (res.data.code == 200) {
-					alert(1)
 					this.getQueueList()
 				} else {
 					Message.error(res.data.message)

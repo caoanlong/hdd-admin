@@ -118,9 +118,9 @@
 					opArgs:this.queue.opArgs,
 					opInterface:this.queue.opInterface,
 					opTimeTs: new Date(this.queue.opTime).getTime(),
-					isPausePush:this.queue.isPausePush =='true'?'Y':'N',
-					isPush:this.queue.isPush =='true'?'Y':'N',
-					isFinish:this.queue.isFinish =='true'?'Y':'N'
+					isPausePush:this.queue.isPausePush?'Y':'N',
+					isPush:this.queue.isPush?'Y':'N',
+					isFinish:this.queue.isFinish?'Y':'N'
 				}
 				console.log(data)
 				requestJava({

@@ -39,7 +39,8 @@
 							<p>{{queue.isFinish=='Y'?'是':'否'}}</p>
 						</el-form-item>
 						<el-form-item label="修改时间">
-							<p>{{queue.updateTime ? (queue.updateTime | getdatefromtimestamp()) : ''}}</p>
+							<p v-if="queue.updateTime">{{queue.updateTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 					</el-form>
 				</el-col>
