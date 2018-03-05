@@ -5,9 +5,9 @@
 				<span>APP版本列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addVersion">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -53,10 +53,10 @@
 					</el-table-column>
 					<el-table-column label="操作" width="300" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-view">查看</el-button>
-							<el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
+							<el-button type="default" size="mini" @click="viewVersion(scope.row.appVersionID)" icon="el-icon-view">查看</el-button>
+							<el-button type="default" size="mini" @click="editVersion(scope.row.appVersionID)" icon="el-icon-edit" title>编辑</el-button>
 							<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
-							<el-button type="default" size="mini" v-if="scope.row.status=='启用'" icon="el-icon-upload2">下架</el-button>
+							<el-button type="default" size="mini" v-if="scope.row.releaseStatus=='Y'" icon="el-icon-upload2">下架</el-button>
 							<el-button type="default" size="mini" icon="el-icon-download" v-else>上架</el-button>
 						</template>
 					</el-table-column>
@@ -93,7 +93,9 @@ export default {
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,
-			tableData: []
+			refreshing: false,
+			tableData: [],
+			selectedVersion:[]
 		}
 	},
 	created() {
@@ -121,6 +123,63 @@ export default {
 				}
 			})
 		},
+		addVersion() {
+			this.$router.push({ name: 'addversion'})
+		},
+		editVersion(id) {
+			this.$router.push({ name: 'editversion', query: { appVersionID: id} })
+		},
+		viewVersion(id) {
+			this.$router.push({ name: 'viewversion', query: { appVersionID: id} })
+		},
+		refresh() {
+			this.refreshing = true
+			this.getVersionList()
+			setTimeout(() => {
+				this.refreshing = false
+			}, 500)
+		},
+		deleteConfirm(id) {
+			let ids = []
+			if (id && typeof id == 'string') {
+				ids = [].concat(id)
+			} else {
+				ids = this.selectedVersion
+			}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delVersion(ids)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})
+			})
+		},
+		delVersion(ids) {
+			let data = {
+				ids: ids
+			}
+			request({
+				url: '/setAppVersion/del',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					alert(1)
+					this.getVersionList()
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		}
 	}
 }
 

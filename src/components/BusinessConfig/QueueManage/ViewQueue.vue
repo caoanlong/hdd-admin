@@ -113,27 +113,6 @@
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader
-	line-height 1
-	width 100px
-	height 100px
-	overflow hidden
-	border 1px dashed #d9d9d9
-	border-radius 6px
-	&:hover 
-		border-color #409eff
-	.avatar-uploader-icon
-		font-size 28px
-		color #8c939d
-		width 98px
-		height 98px
-		line-height 98px
-		text-align center
-	.avatar
-		width 98px
-		height 98px
-		display block
-		vertical-align top
 .el-form-item__content
 	p
 		margin 0

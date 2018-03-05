@@ -323,6 +323,30 @@ let routerMap = [
 							title: '版本管理'
 						},
 						component: () => import('../components/BusinessConfig/VersionManage')
+					},
+					{
+						path: '/viewversion',
+						name: 'viewversion',
+						meta: {
+							title: '查看App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/ViewVersion')
+					},
+					{
+						path: '/addversion',
+						name: 'addversion',
+						meta: {
+							title: '添加App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/AddVersion')
+					},
+					{
+						path: '/editversion',
+						name: 'editversion',
+						meta: {
+							title: '编辑App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/EditVersion')
 					}
 				]
 			},
