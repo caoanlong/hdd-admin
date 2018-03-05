@@ -44,10 +44,10 @@
 				<el-col :span="24">
 					<el-form label-width="120px">
 						<el-form-item label="下载URL">
-							<el-input v-model="Version.opID"></el-input>
+							<el-input v-model="Version.downloadURL"></el-input>
 						</el-form-item>
 						<el-form-item label="版本说明">
-							<el-input type="textarea" resize="none" v-model="Version.opInterface"></el-input>
+							<el-input type="textarea" resize="none" v-model="Version.content"></el-input>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -70,12 +70,12 @@ export default {
 	data() {
 		return {
 			Version: {
-				deviceType:'',
+				deviceType: '',
 				type:'',
 				versionSize:'',
 				version:'',
 				versionMin:'',
-				isLatest:'',
+				isLatest: true,
 				downloadURL:'',
 				content:''
 			}
@@ -95,8 +95,9 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 200) {
-					// Message.success(res.data.message)
+					console.log(res.data)
 					this.Version = res.data.data
+					this.Version.isLatest = res.data.data.isLatest == 'Y' ? true : false
 				} else {
 					Message.error(res.data.message)
 				}
@@ -104,15 +105,15 @@ export default {
 		},
 		saveVersion() {
 			let data= {
-				appVersionID:this.$route.query.appVersionID,
-				deviceType:this.Version.deviceType,
-				type:this.Version.type,
-				versionSize:this.Version.versionSize,
-				version:this.Version.version,
-				versionMin:this.Version.versionMin,
-				isLatest:this.Version.isLatest,
-				downloadURL:this.Version.downloadURL,
-				content:this.Version.content
+				appVersionID: this.$route.query.appVersionID,
+				deviceType: this.Version.deviceType,
+				type: this.Version.type,
+				versionSize: this.Version.versionSize,
+				version: this.Version.version,
+				versionMin: this.Version.versionMin,
+				isLatest: this.Version.isLatest ? 'Y' : 'N',
+				downloadURL: this.Version.downloadURL,
+				content: this.Version.content
 			}
 			console.log(data)
 			requestJava({
@@ -120,8 +121,8 @@ export default {
 				method: 'post',
 				data
 			}).then(res => {
-				if (res.data.code == 0) {
-					// Message.success(res.data.message)
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
 					this.$router.push({name: 'versionmanage'})
 				} else {
 					Message.error(res.data.message)

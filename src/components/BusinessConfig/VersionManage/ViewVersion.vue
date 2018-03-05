@@ -65,7 +65,7 @@
 	export default {
 		data() {
 			return {
-				Version: []
+				Version: {}
 			}
 		},
 		created() {
@@ -82,7 +82,6 @@
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.message)
 						this.Version = res.data.data
 					} else {
 						Message.error(res.data.message)

@@ -1,102 +1,280 @@
 <template>
 	<div class="main-content">
-		<el-card class="box-card">
-		  <div slot="header" class="clearfix">
-		    <span>APP页面</span>
-		  </div>
-		  <div class="tableControl">
-		  	<el-button type="default" size="mini" icon="el-icon-plus">添加</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
-		  	<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
-		  </div>
-		  <div class="table">
-		  	<el-table :data="tableData5" border style="width: 100%" size="mini">
-		  		<el-table-column type="expand">
-		  			<template slot-scope="props">
-				        <el-form label-position="left" inline class="table-expand">
-					        <el-form-item label="装货地点">
-					          	<span>{{ props.row.address }}</span>
-							</el-form-item>
-							<el-form-item label="错误描述">
-					          	<span>{{ props.row.desc }}</span>
-							</el-form-item>
-				        </el-form>
-				    </template>
-		  		</el-table-column>
-			    <el-table-column sortable label="托运单号">
-			    </el-table-column>
-			    <el-table-column sortable label="承运人">
-			    </el-table-column>
-			    <el-table-column sortable label="托运时间">
-			    </el-table-column>
-			    <el-table-column sortable label="实际发运时间" width="140">
-			    </el-table-column>
-			    <el-table-column sortable label="收货时间">
-			    </el-table-column>
-			    <el-table-column sortable label="发货人">
-			    </el-table-column>
-			    <el-table-column sortable label="收货人">
-			    </el-table-column>
-			    <el-table-column sortable label="状态">
-			    </el-table-column>
-			    <el-table-column sortable label="创建时间">
-			    </el-table-column>
-			    <el-table-column label="操作" width="230" align="center">
-			    	<template slot-scope="scope">
-						  <el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)"icon="el-icon-view">查看</el-button>
-						  <el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title>编辑</el-button>
-						  <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
-				    </template>
-			    </el-table-column>
-			  </el-table>
-			  <div class="pagination">
-			  	<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-			  </div>
-		  </div>
+		<el-card class="box-card menu-list">
+			<div slot="header" class="clearfix">
+				<span>App页面</span>
+			</div>
+			<div class="tableControl">
+				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
+			</div>
+			<el-tree
+				class="expand-tree"
+				:data="appPages"
+				:props="defaultProps"
+				node-key="name"
+				highlight-current
+				:expand-on-click-node="false"
+				:render-content="renderContent"
+				@node-click="handleNodeClick">
+			</el-tree>
 		</el-card>
-
+		<el-card class="box-card menu-info">
+			<div slot="header" class="clearfix">
+				<span>{{title}}</span>
+			</div>
+			<el-form ref="form" :model="currentNode" label-width="80px">
+				<el-form-item label="名称">
+					<el-input v-model="currentNode.name"></el-input>
+				</el-form-item>
+				<el-form-item label="APP类型">
+					<el-select style="width: 100%" placeholder="请选择" v-model="currentNode.type">
+						<el-option label="司机端" value="Driver"></el-option>
+						<el-option label="货主端" value="Shipper"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="代码">
+					<el-input v-model="currentNode.code"></el-input>
+				</el-form-item>
+				<el-form-item label="描述">
+					<el-input v-model="currentNode.content"></el-input>
+				</el-form-item>
+				<!-- <el-form-item label="修改人">
+					<p>{{currentNode.updateName}}</p>
+				</el-form-item>
+				<el-form-item label="修改时间">
+					<p v-if="currentNode.updateTime">{{currentNode.updateTime | getdatefromtimestamp()}}</p>
+					<p v-else></p>
+				</el-form-item> -->
+				<el-form-item>
+					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
+					<el-button>取消</el-button>
+				</el-form-item>
+			</el-form>
+		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	export default {
-	    data() {
-	      return {
-	        tableData5: [{
-	          id: '12987122',
-	          name: '好滋好味鸡蛋仔',
-	          category: '江浙小吃、小吃零食',
-	          desc: '荷兰优质淡奶，奶香浓而不腻',
-	          address: '上海市普陀区真北路',
-	          shop: '王小虎夫妻店',
-	          shopId: '10333'
-	        }]
-	      }
-	  	},
-		methods: {
-			handleEdit(index, row) {
-		        console.log(index, row);
+import requestJava from '../../../common/requestJava'
+import TreeRender from '../../CommonComponents/TreeRender/AppPage'
+import { Message } from 'element-ui'
+export default {
+	data() {
+      	return {
+			defaultProps: {
+				children: 'children',
+				label: 'name'
 			},
-			handleDelete(index, row) {
-				console.log(index, row);
+			appPages: [],
+			currentNode: {
+				appPagePID: 1,
+				name: '',
+				type: '',
+				code: '',
+				content: ''
+			},
+			title: '添加顶级节点',
+			button: '立即创建',
+		}
+    },
+	created() {
+		this.getAppPages()
+	},
+    methods: {
+		addRoot() {
+			this.title = '添加顶级节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				appPagePID: 1,
+				name: '',
+				type: '',
+				code: '',
+				content: ''
 			}
-		
+		},
+		handleNodeClick(d) {
+			this.title = '编辑'
+			this.button = '确认修改'
+			this.getAppPage(d.appPageID)
+		},
+		renderContent(h, {node, data, store}) {
+			let that = this //指向vue
+			return h(TreeRender, {
+				props: {
+					DATA: data, //节点数据
+					NODE: node, //节点内容
+					STORE: store, //完整树形内容
+					CURRENTNODE: this.currentNode // 当前选择的节点
+				},
+				on: {//绑定方法
+					nodeAdd: ((s, d, n) => that.handleAdd(s, d, n)),
+					nodeDel: ((s, d, n) => that.handleDelete(s, d, n))
+				}
+			})
+		},
+		handleAdd(s, d, n){//增加节点
+			this.title = '添加子节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				appPagePID: this.currentNode.appPageID,
+				name: '',
+				type: '',
+				code: '',
+				content: ''
+			}
+		},
+		handleDelete(s, d, n){//删除节点
+			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delAppPage(d.appPageID)
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})         
+			})
+		},
+		submitForm(type) {
+			if (!this.currentNode.name) {
+				this.$message.error('名称不能为空！')
+				return
+			}
+			if (!this.currentNode.type) {
+				this.$message.error('App类型不能为空！')
+				return
+			}
+			if (!this.currentNode.code) {
+				this.$message.error('代码不能为空！')
+				return
+			}
+			// 创建
+			if (type == '立即创建') {
+				let params = {
+					name: this.currentNode.name,
+					type: this.currentNode.type,
+					code: this.currentNode.code,
+					content: this.currentNode.content,
+					appPagePID: this.currentNode.appPagePID,
+				}
+				this.addAppPage(params)
+			// 编辑
+			} else {
+				let params = {
+					appPageID: this.currentNode.appPageID,
+					name: this.currentNode.name,
+					type: this.currentNode.type,
+					code: this.currentNode.code,
+					content: this.currentNode.content,
+					appPagePID: this.currentNode.appPagePID,
+				}
+				this.updatetAppPage(params)
+			}
+		},
+		getAppPages() {
+			requestJava({
+				url: '/setAppPage/configuration/list',
+				method: 'get'
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.appPages = res.data.data
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		getAppPage(appPageID) {
+			let params = {
+				appPageID
+			}
+			requestJava({
+				url: '/setAppPage/configuration/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.currentNode = res.data.data
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		addAppPage(data) {
+			requestJava({
+				url: '/setAppPage/configuration/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.getAppPages()
+					this.addRoot()
+					this.$message.success('创建成功！')
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		updatetAppPage(data) {
+			requestJava({
+				url: '/setAppPage/configuration/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.getAppPages()
+					this.addRoot()
+					this.$message.success('编辑成功！')
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		delAppPage(appPageID) {
+			let data = {
+				appPageID
+			}
+			requestJava({
+				url: '/setAppPage/configuration/del',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.getAppPages()
+					this.addRoot()
+					this.$message.success('删除成功！')
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		}
 	}
+}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 	.main-content
-		.table
-			th
-				.cell
-					text-align center
-			.table-expand
-				font-size 0
-				label
-					width 120px
-					text-align right
-					color #99a9bf
-				.el-form-item
-					margin-right 0
-					margin-bottom 0
-					width 100%
+		display flex
+		.box-card
+			&.menu-list
+				flex 0 0 360px
+				margin-right 20px
+				.expand-tree
+					height 600px
+					overflow-y auto
+			&.menu-info
+				flex 1
+			.expand-tree
+				font-size 14px
+	.el-form-item__content
+		p
+			margin 0
+			border 1px solid #fff
+			border-bottom-color #dcdfe6
+			padding 0 15px
+			height 40px
+			font-family 'sans-serif'
+			line-height 40px
+			color #999
+		.el-input__inner
+			vertical-align top
 </style>

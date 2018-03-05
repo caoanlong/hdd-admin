@@ -23,7 +23,7 @@
 						<el-form-item label="类型">
 							<el-select v-model="Version.type" placeholder="请选择">
 								<el-option label="司机端" value="Driver"></el-option>
-								<el-option label="苹果端" value="货主端"></el-option>
+								<el-option label="货主端" value="Shipper"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="版本大小">
@@ -76,26 +76,23 @@
 					versionSize:'',
 					version:'',
 					versionMin:'',
-					isLatest:'',
+					isLatest: true,
 					downloadURL:'',
 					content:''
 				}
 			}
 		},
-		created() {
-			
-		},
 		methods: {
 			saveVersion() {
 				let data= {
-					deviceType:this.Version.deviceType,
-					type:this.Version.type,
-					versionSize:this.Version.versionSize,
-					version:this.Version.version,
-					versionMin:this.Version.versionMin,
-					isLatest:this.Version.isLatest,
-					downloadURL:this.Version.downloadURL,
-					content:this.Version.content
+					deviceType: this.Version.deviceType,
+					type: this.Version.type,
+					versionSize: this.Version.versionSize,
+					version: this.Version.version,
+					versionMin: this.Version.versionMin,
+					isLatest: this.Version.isLatest ? 'Y' : 'N',
+					downloadURL: this.Version.downloadURL,
+					content: this.Version.content
 				}
 				console.log(data)
 				requestJava({

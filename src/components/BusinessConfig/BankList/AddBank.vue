@@ -81,7 +81,7 @@
 					bgName: this.bankInfo.bgName
 				}
 				requestJava({
-					url: '/paySupportBank/save ',
+					url: '/paySupportBank/save',
 					method: 'post',
 					data
 				}).then(res => {

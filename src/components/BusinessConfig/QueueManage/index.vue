@@ -194,6 +194,7 @@ export default {
 			})
 		},
 		delQueue(queueIDs) {
+			console.log(queueIDs)
 			let data = {
 				queueIDs
 			}

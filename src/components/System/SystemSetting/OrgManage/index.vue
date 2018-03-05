@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card menu-list">
 			<div slot="header" class="clearfix">
-				<span>地区列表</span>
+				<span>机构列表</span>
 			</div>
 			<div class="tableControl">
 				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>

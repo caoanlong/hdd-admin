@@ -5,12 +5,12 @@
 				<span>APP版本列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addVersion">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addVersion">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
 					<el-table-column label="用户设备" align="center" width="80">
 						<template slot-scope="scope">
@@ -24,15 +24,12 @@
 							<span v-else-if="scope.row.type =='Shipper'">货主端</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="版本大小" prop="versionSize">
-					</el-table-column>
-					<el-table-column label="主版本号" prop="version">
-					</el-table-column>
-					<el-table-column label="最低版本号" prop="versionMin">
-					</el-table-column>
+					<el-table-column label="版本大小" prop="versionSize"></el-table-column>
+					<el-table-column label="主版本号" prop="version"></el-table-column>
+					<el-table-column label="最低版本号" prop="versionMin"></el-table-column>
 					<el-table-column label="发布时间" width="140" align="center">
 						<template slot-scope="scope">
-							<span>{{scope.row.releaseTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.releaseTime">{{scope.row.releaseTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="发布状态" prop="releaseStatus" align="center" width="70">
@@ -55,9 +52,9 @@
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" @click="viewVersion(scope.row.appVersionID)" icon="el-icon-view">查看</el-button>
 							<el-button type="default" size="mini" @click="editVersion(scope.row.appVersionID)" icon="el-icon-edit" title>编辑</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
-							<el-button type="default" size="mini" v-if="scope.row.releaseStatus=='Y'" icon="el-icon-upload2">下架</el-button>
-							<el-button type="default" size="mini" icon="el-icon-download" v-else>上架</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.appVersionID)">删除</el-button>
+							<el-button type="default" size="mini" v-if="scope.row.releaseStatus=='Y'" icon="el-icon-upload2" @click="releaseVersion(scope.row.appVersionID, 'N')">下架</el-button>
+							<el-button type="default" size="mini" icon="el-icon-download" v-else @click="releaseVersion(scope.row.appVersionID, 'Y')">上架</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -95,7 +92,7 @@ export default {
 			count: 0,
 			refreshing: false,
 			tableData: [],
-			selectedVersion:[]
+			selectedVersions: []
 		}
 	},
 	created() {
@@ -123,14 +120,17 @@ export default {
 				}
 			})
 		},
+		selectionChange(data) {
+			this.selectedVersions = data.map(item => item.appVersionID)
+		},
 		addVersion() {
 			this.$router.push({ name: 'addversion'})
 		},
-		editVersion(id) {
-			this.$router.push({ name: 'editversion', query: { appVersionID: id} })
+		editVersion(appVersionID) {
+			this.$router.push({ name: 'editversion', query: {appVersionID} })
 		},
-		viewVersion(id) {
-			this.$router.push({ name: 'viewversion', query: { appVersionID: id} })
+		viewVersion(appVersionID) {
+			this.$router.push({ name: 'viewversion', query: {appVersionID} })
 		},
 		refresh() {
 			this.refreshing = true
@@ -140,11 +140,11 @@ export default {
 			}, 500)
 		},
 		deleteConfirm(id) {
-			let ids = []
+			let ids = ''
 			if (id && typeof id == 'string') {
-				ids = [].concat(id)
+				ids = id
 			} else {
-				ids = this.selectedVersion
+				ids = this.selectedVersions.join(',')
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -163,9 +163,9 @@ export default {
 				})
 			})
 		},
-		delVersion(ids) {
+		delVersion(appVersionIDs) {
 			let data = {
-				ids: ids
+				appVersionIDs
 			}
 			requestJava({
 				url: '/setAppVersion/del',
@@ -178,12 +178,29 @@ export default {
 					Message.error(res.data.message)
 				}
 			})
+		},
+		releaseVersion(appVersionID, releaseStatus) {
+			let data = {
+				appVersionID,
+				releaseStatus
+			}
+			requestJava({
+				url: '/setAppVersion/release',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.getVersionList()
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		}
 	}
 }
 
 </script>
-<style lang="stylus">
-
+<style lang="stylus" scoped>
 
 </style>

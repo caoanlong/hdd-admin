@@ -6,7 +6,7 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="addBank">添加</el-button>
-                <el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+                <el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -16,13 +16,13 @@
 					<el-table-column label="单日限额" prop="dailyLimit"></el-table-column>
 					<el-table-column label="logo" align="center">
 						<template slot-scope="scope">
-							<img :src="scope.row.logoUrl">
+							<img class="imgBank" :src="scope.row.logoUrl">
 						</template>
 					</el-table-column>
 					<el-table-column label="logo图标名称" align="center" prop="logoName" width="100"></el-table-column>
 					<el-table-column label="背景图片">
 						<template slot-scope="scope">
-							<img :src="scope.row.bgUrl">
+							<img class="imgBank" :src="scope.row.bgUrl">
 						</template>
 					</el-table-column>
 					<el-table-column label="背景名称" prop="bgName"></el-table-column>
@@ -35,7 +35,7 @@
                         <template slot-scope="scope">
                             <el-button type="default" size="mini" icon="el-icon-view" @click="viewBank(scope.row.supportBankCode)">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="editBank(scope.row.supportBankCode)">编辑</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.supportBankCode)">删除</el-button>
                         </template>
                     </el-table-column>
 				</el-table>
@@ -71,7 +71,8 @@
 				pageNum: 1,
 				pageSize: 10,
 				count: 0,
-				tableData: []
+				tableData: [],
+				selectedBanks: []
 			}
 		},
 		created() {
@@ -86,7 +87,7 @@
 				this.getList()
 			},
 			selectionChange(data) {
-                // this.selectedtableDatas = data.map(item => item.MessageTemplate_ID)
+                this.selectedBanks = data.map(item => item.supportBankCode)
             },
 			getList(pageNum) {
 				let params = {
@@ -116,13 +117,55 @@
 			editBank(supportBankCode) {
 				this.$router.push({name: 'editbank', query: {supportBankCode}})
 			},
+			deleteConfirm(id) {
+				let ids = ''
+				if (id && typeof id == 'string') {
+					ids = id
+				} else {
+					ids = this.selectedBanks.join(',')
+				}
+				this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.delBank(ids)
+					this.$message({
+						type: 'success',
+						message: '删除成功!'
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					})
+				})
+			},
+			delBank(supportBankCodes) {
+				console.log(supportBankCodes)
+				let data = {
+					supportBankCodes
+				}
+				requestJava({
+					url: '/paySupportBank/del',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.getList()
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			}
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .table
 	p
 		margin 0
 		padding 0
-		
+.imgBank
+	width 30px
 </style>

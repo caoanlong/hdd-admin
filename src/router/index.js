@@ -40,7 +40,66 @@ let routerMap = [
 				meta: {
 					title: '无车承运人'
 				},
-				component: () => import('../components/CarFreeCarrier')
+				component: () => import('../components/CarFreeCarrier'),
+				redirect: '/cargouoload',
+				children: [
+					{
+						path: '/cargoupload',
+						name: 'cargoupload',
+						meta: {
+							title: '货源上传'
+						},
+						component: () => import('../components/CarFreeCarrier/CargoUpload')
+					},
+					{
+						path: '/truckupload',
+						name: 'truckupload',
+						meta: {
+							title: '车源上传'
+						},
+						component: () => import('../components/CarFreeCarrier/TruckUpload')
+					},
+					{
+						path: '/waybillupload',
+						name: 'waybillupload',
+						meta: {
+							title: '运单上传'
+						},
+						component: () => import('../components/CarFreeCarrier/WaybillUpload')
+					},
+					{
+						path: '/interfaceconfig',
+						name: 'interfaceconfig',
+						meta: {
+							title: '无车承运接口配置'
+						},
+						component: () => import('../components/CarFreeCarrier/InterfaceConfig')
+					},
+					{
+						path: '/addinterfaceconfig',
+						name: 'addinterfaceconfig',
+						meta: {
+							title: '添加无车承运接口配置'
+						},
+						component: () => import('../components/CarFreeCarrier/InterfaceConfig/AddInterfaceConfig')
+					},
+					{
+						path: '/editinterfaceconfig',
+						name: 'editinterfaceconfig',
+						meta: {
+							title: '编辑无车承运接口配置'
+						},
+						component: () => import('../components/CarFreeCarrier/InterfaceConfig/EditInterfaceConfig')
+					},
+					{
+						path: '/viewinterfaceconfig',
+						name: 'viewinterfaceconfig',
+						meta: {
+							title: '查看无车承运接口配置'
+						},
+						component: () => import('../components/CarFreeCarrier/InterfaceConfig/ViewInterfaceConfig')
+					},
+				]
 			},
 			{
 				path: '/customSevice',
@@ -323,6 +382,30 @@ let routerMap = [
 							title: '短信模板'
 						},
 						component: () => import('../components/BusinessConfig/SmsTemp')
+					},
+					{
+						path: '/viewsmstemp',
+						name: 'viewsmstemp',
+						meta: {
+							title: '查看短信模板'
+						},
+						component: () => import('../components/BusinessConfig/SmsTemp/ViewSmsTemp')
+					},
+					{
+						path: '/editsmstemp',
+						name: 'editsmstemp',
+						meta: {
+							title: '编辑短信模板'
+						},
+						component: () => import('../components/BusinessConfig/SmsTemp/EditSmsTemp')
+					},
+					{
+						path: '/addsmstemp',
+						name: 'addsmstemp',
+						meta: {
+							title: '添加短信模板'
+						},
+						component: () => import('../components/BusinessConfig/SmsTemp/AddSmsTemp')
 					},
 					{
 						path: '/taskmanage',
