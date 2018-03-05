@@ -28,8 +28,8 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addQueue">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addQueue">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -69,18 +69,18 @@
 					</el-table-column>
 					<el-table-column label="处理结果" prop="execContent">
 					</el-table-column>
-					<el-table-column label="更新人" prop="updateByName" align="center">
+					<el-table-column label="更新人" prop="updateBy" align="center">
 					</el-table-column>
 					<el-table-column label="更新时间" width="140" align="center">
-						<template slot-scope="scope">
+						<template slot-scope="scope" v-if="scope.row.updateTime">
 							<span>{{scope.row.updateTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
-							<el-button type="default" size="mini" icon="el-icon-edit" title>编辑</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewQueue(scope.row.queueID)">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="editQueue(scope.row.queueID)">编辑</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.queueID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -119,7 +119,8 @@ export default {
 			tableData: [],
 			findOpType:'',
 			findIsPush:'',
-			findIsFinish:''
+			findIsFinish:'',
+			selectedQueues:[]
 		}
 	},
 	created() {
@@ -159,18 +160,57 @@ export default {
 				}
 			})
 		},
-		handleEdit(index, row) {
-			console.log(index, row);
+		editQueue(id) {
+			this.$router.push({ name: 'editqueue', query: { queueID: id} })
 		},
-		handleDelete(index, row) {
-			console.log(index, row);
+		viewQueue(id) {
+			this.$router.push({ name: 'viewqueue', query: { queueID: id} })
+		},
+		deleteConfirm(id) {
+			let ids = []
+			if (id && typeof id == 'string') {
+				ids = [].concat(id)
+			} else {
+				ids = this.selectedQueues
+			}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delQueue(ids)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})
+			})
+		},
+		delQueue(ids) {
+			let data = {
+				ids: ids
+			}
+			request({
+				url: '/setQueue/configuration/del',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					alert(1)
+					this.getQueueList()
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		}
-
 	}
 }
 
 </script>
 <style lang="stylus">
-
 
 </style>

@@ -261,6 +261,22 @@ let routerMap = [
 						component: () => import('../components/BusinessConfig/QueueManage/AddQueue')
 					},
 					{
+						path: '/viewqueue',
+						name: 'viewqueue',
+						meta: {
+							title: '查看队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage/ViewQueue')
+					},
+					{
+						path: '/editqueue',
+						name: 'editqueue',
+						meta: {
+							title: '编辑队列配置'
+						},
+						component: () => import('../components/BusinessConfig/QueueManage/EditQueue')
+					},
+					{
 						path: '/apppage',
 						name: 'apppage',
 						meta: {
@@ -339,6 +355,30 @@ let routerMap = [
 							title: '版本管理'
 						},
 						component: () => import('../components/BusinessConfig/VersionManage')
+					},
+					{
+						path: '/viewversion',
+						name: 'viewversion',
+						meta: {
+							title: '查看App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/ViewVersion')
+					},
+					{
+						path: '/addversion',
+						name: 'addversion',
+						meta: {
+							title: '添加App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/AddVersion')
+					},
+					{
+						path: '/editversion',
+						name: 'editversion',
+						meta: {
+							title: '编辑App版本'
+						},
+						component: () => import('../components/BusinessConfig/VersionManage/EditVersion')
 					}
 				]
 			},

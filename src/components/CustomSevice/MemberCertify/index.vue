@@ -137,7 +137,7 @@ export default {
 		},
 		viewCompanyCertify() {
 			this.$router.push({name: 'viewcompanycertify'})
-		},
+		}
 	}
 }
 </script>

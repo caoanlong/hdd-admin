@@ -64,11 +64,11 @@
 					method: 'post',
 					data
 				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
+					if (res.data.code == 200) {
+						Message.success(res.data.message)
 						this.$router.push({name: 'queuemanage'})
 					} else {
-						Message.error(res.data.msg)
+						Message.error(res.data.message)
 					}
 				})
 			},
