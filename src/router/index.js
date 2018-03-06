@@ -52,6 +52,30 @@ let routerMap = [
 						component: () => import('../components/CarFreeCarrier/CargoUpload')
 					},
 					{
+						path: '/addcargo',
+						name: 'addcargo',
+						meta: {
+							title: '添加货源'
+						},
+						component: () => import('../components/CarFreeCarrier/CargoUpload/AddCargo')
+					},
+					{
+						path: '/viewcargo',
+						name: 'viewcargo',
+						meta: {
+							title: '查看货源'
+						},
+						component: () => import('../components/CarFreeCarrier/CargoUpload/ViewCargo')
+					},
+					{
+						path: '/editcargo',
+						name: 'editcargo',
+						meta: {
+							title: '编辑货源'
+						},
+						component: () => import('../components/CarFreeCarrier/CargoUpload/EditCargo')
+					},
+					{
 						path: '/truckupload',
 						name: 'truckupload',
 						meta: {
@@ -60,12 +84,60 @@ let routerMap = [
 						component: () => import('../components/CarFreeCarrier/TruckUpload')
 					},
 					{
+						path: '/addtruck',
+						name: 'addtruck',
+						meta: {
+							title: '添加车源'
+						},
+						component: () => import('../components/CarFreeCarrier/TruckUpload/AddTruck')
+					},
+					{
+						path: '/viewtruck',
+						name: 'viewtruck',
+						meta: {
+							title: '查看车源'
+						},
+						component: () => import('../components/CarFreeCarrier/TruckUpload/ViewTruck')
+					},
+					{
+						path: '/edittruck',
+						name: 'edittruck',
+						meta: {
+							title: '编辑车源'
+						},
+						component: () => import('../components/CarFreeCarrier/TruckUpload/EditTruck')
+					},
+					{
 						path: '/waybillupload',
 						name: 'waybillupload',
 						meta: {
 							title: '运单上传'
 						},
 						component: () => import('../components/CarFreeCarrier/WaybillUpload')
+					},
+					{
+						path: '/addwaybill',
+						name: 'addwaybill',
+						meta: {
+							title: '添加运单'
+						},
+						component: () => import('../components/CarFreeCarrier/WaybillUpload/AddWaybill')
+					},
+					{
+						path: '/viewwaybill',
+						name: 'viewwaybill',
+						meta: {
+							title: '查看运单'
+						},
+						component: () => import('../components/CarFreeCarrier/WaybillUpload/ViewWaybill')
+					},
+					{
+						path: '/editwaybill',
+						name: 'editwaybill',
+						meta: {
+							title: '编辑运单'
+						},
+						component: () => import('../components/CarFreeCarrier/WaybillUpload/EditWaybill')
 					},
 					{
 						path: '/interfaceconfig',

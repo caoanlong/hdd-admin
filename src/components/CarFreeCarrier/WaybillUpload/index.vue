@@ -19,7 +19,7 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('waybill','add')">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addWaybill">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
@@ -71,15 +71,31 @@
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-								<el-button type="default" size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-view">查看</el-button>
-								<el-button type="default" size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit">编辑</el-button>
+								<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
+								<el-button type="default" size="mini" icon="el-icon-edit">编辑</el-button>
 								<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="500"></el-pagination>
-				</div>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getWaybillList()">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
 			</div>
 		</el-card>
 	</div>
@@ -88,36 +104,24 @@
 export default {
 	data() {
 		return {
-			tableData: [{
-				date: '2016-05-02',
-				name: '王小虎',
-				address: '上海市普陀区金沙江路 1518 弄'
-			}, {
-				date: '2016-05-04',
-				name: '王小虎',
-				address: '上海市普陀区金沙江路 1517 弄'
-			}, {
-				date: '2016-05-01',
-				name: '王小虎',
-				address: '上海市普陀区金沙江路 1519 弄'
-			}, {
-				date: '2016-05-03',
-				name: '王小虎',
-				address: '上海市普陀区金沙江路 1516 弄'
-			}]
+			tableData: []
 		}
 	},
+	created() {
+		this.getWaybillList()
+	},
 	methods: {
-		handleEdit(index, row) {
-			console.log(index, row);
+		getWaybillList() {
+
 		},
-		handleDelete(index, row) {
-			console.log(index, row);
+		addWaybill() {
+			this.$router.push({ name: 'addwaybill' })
 		},
-		jump(routerName, params) {
-			if (this.$router) {
-				this.$router.push({ name: routerName, query: { type: params } })
-			}
+		editWaybill(id) {
+			this.$router.push({ name: 'editwaybill'})
+		},
+		viewWaybill(id) {
+			this.$router.push({ name: 'viewwaybill'})
 		}
 	}
 }
