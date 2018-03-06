@@ -72,7 +72,7 @@
 				<el-col :span="24">
 					<el-form label-width="120px">
 						<el-form-item>
-							<el-button>返回</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -90,12 +90,14 @@ export default {
 
 	},
 	methods: {
-
+		back() {
+			this.$router.go(-1)
+		}
 	}
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .el-form-item__content
 	p
 		margin 0

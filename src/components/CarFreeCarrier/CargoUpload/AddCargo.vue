@@ -82,7 +82,7 @@
 					<el-form label-width="120px">
 						<el-form-item>
 							<el-button type="primary">保存</el-button>
-							<el-button>取消</el-button>
+							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -210,12 +210,14 @@ export default {
 
 	},
 	methods: {
-
+		back() {
+			this.$router.go(-1)
+		}
 	}
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 
 
 </style>

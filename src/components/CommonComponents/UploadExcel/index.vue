@@ -77,7 +77,7 @@
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .excel-upload
 	display inline-block
 	margin 0 10px

@@ -1,285 +1,266 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span v-if="type=='add'">添加运单</span>
-				<span v-else>查看运单</span>
-			</div>
-			<el-form label-width="160px">
-				<div class="el-grop-tit clearfix">
+			<div slot="header" class="clearfix">查看运单</div>
+			<div class="el-grop-tit clearfix">
 					<p>基本信息</p>
 				</div>
-				<el-row :gutter="20">
-					<el-col :span="8">
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="报文参考号：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="单证名称：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="报文版本号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="发送方代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
+						<el-form-item label="报文功能代码：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="单证名称：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
 						<el-form-item label="接收方代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="报文版本号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
 						<el-form-item label="发送时间：">
 							<el-date-picker v-model="SendDate" type="date" placeholder="选择发送时间" style="width:100%">
 							</el-date-picker>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="报文功能代码：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<div class="el-grop-tit clearfix">
-					<p>运输信息</p>
-				</div>
-				<el-row :gutter="20">
-					<el-col :span="8">
+					</el-form>
+				</el-col>
+			</el-row>
+			<div class="el-grop-tit clearfix">
+				<p>运输信息</p>
+			</div>
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="原始单号：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="托运单号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="货物名称：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="货物类型分类代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="货物项毛重：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="体积：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="总件数：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="托运单号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="货物项毛重：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
 						<el-form-item label="运输方式代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="运输成本：">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="货物名称：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
+						<el-form-item label="体积：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
 						<el-form-item label="货币总金额：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="16">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
 						<el-form-item label="价格备注：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-				</el-row>
-				<div class="el-grop-tit clearfix">
-					<p>承运方信息</p>
-				</div>
-				<el-row :gutter="20">
-					<el-col :span="8">
+					</el-form>
+				</el-col>
+			</el-row>
+			<div class="el-grop-tit clearfix">
+				<p>承运方信息</p>
+			</div>
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="承运人：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="统一社会信用代码：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="许可证编号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="牌照类型代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="车辆牌照号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="车辆分类代码：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="车辆载质量：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="道路运输证号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="挂车牌照号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="所有人：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="许可证编号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="姓名：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="从业资格证号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="电话号码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="托运时间：">
-							<el-date-picker v-model="SendDate" type="date" placeholder="选择托期时间" style="width:100%">
-							</el-date-picker>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="业务类型代码：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="发运实际时间：">
 							<el-date-picker v-model="SendDate" type="date" placeholder="选择发运实际时间" style="width:100%">
 							</el-date-picker>
 						</el-form-item>
-					</el-col>
-					<el-col :span="8">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="统一社会信用代码：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="车辆牌照号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="道路运输证号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="姓名：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="托运时间：">
+							<el-date-picker v-model="SendDate" type="date" placeholder="选择托期时间" style="width:100%">
+							</el-date-picker>
+						</el-form-item>
 						<el-form-item label="收货时间：">
 							<el-date-picker v-model="SendDate" type="date" placeholder="选择收货时间" style="width:100%">
 							</el-date-picker>
 						</el-form-item>
-					</el-col>
-				</el-row>
-				<div class="el-grop-tit clearfix">
-					<p>发货方信息</p>
-				</div>
-				<el-row :gutter="20">
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="许可证编号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="车辆分类代码：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="挂车牌照号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="从业资格证号：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="业务类型代码：">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+					</el-form>
+				</el-col>
+			</el-row>
+			<div class="el-grop-tit clearfix">
+				<p>发货方信息</p>
+			</div>
+			<el-row>
+				<el-col :span="12">
+					<el-form label-width="160px">
 						<el-form-item label="发货人：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="12">
+					<el-form label-width="160px">
 						<el-form-item label="个人证件号：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="12">
+					<el-form label-width="160px">
 						<el-form-item label="国家行政区划名称：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="12">
+					<el-form label-width="160px">
 						<el-form-item label="国家行政区划代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
 						<el-form-item label="装货地点：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
 						<el-form-item label="其它备注：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-				</el-row>
-				<div class="el-grop-tit clearfix">
-					<p>收货方信息</p>
-				</div>
-				<el-row :gutter="20">
-					<el-col :span="6">
-						<el-form-item label="收货人：">
+					</el-form>
+				</el-col>
+			</el-row>
+			<div class="el-grop-tit clearfix">
+				<p>收货方信息</p>
+			</div>
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="160px">
+						<el-form-item label="收货人">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="国家行政区划名称：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="6">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="160px">
 						<el-form-item label="国家行政区划代码：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
 						<el-form-item label="收货地点：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="160px">
 						<el-form-item label="其它备注：">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
+					</el-form>
+				</el-col>
+			</el-row>
+			<div class="card-footer">
+				<el-row>
+					<el-col :span="24">
+						<el-form label-width="160px">
+							<el-form-item>
+								<el-button @click="back">返回</el-button>
+							</el-form-item>
+						</el-form>
 					</el-col>
 				</el-row>
-				<el-row gutter="20">
-					<el-col :span="24" style="border-top:1px solid #ddd;padding-top:20px">
-						<el-form-item>
-							<el-button @click="back" >返回</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
+			</div>
 		</el-card>
 	</div>
 </template>
@@ -412,7 +393,7 @@ export default {
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .el-textarea
 	textarea
 		resize none
@@ -431,4 +412,10 @@ export default {
 		padding-left 5px
 	&:first-child
 		margin-top -21px
+.card-footer
+	padding 20px
+	border-top 1px solid #ebeef5
+	margin 0 -20px -20px
+	.el-form-item
+		margin-bottom 0
 </style>

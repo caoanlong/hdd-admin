@@ -191,20 +191,6 @@
 		}
 	}
 </script>
-<style lang="stylus">
-	.main-content
-		.table
-			th
-				.cell
-					text-align center
-			.table-expand
-				font-size 0
-				label
-					width 120px
-					text-align right
-					color #99a9bf
-				.el-form-item
-					margin-right 0
-					margin-bottom 0
-					width 100%
+<style lang="stylus" scoped>
+
 </style>

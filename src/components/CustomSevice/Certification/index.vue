@@ -159,9 +159,6 @@ export default {
 }
 
 </script>
-<style lang="stylus">
-.table
-	p
-		margin 0
-		padding 0
+<style lang="stylus" scoped>
+
 </style>
