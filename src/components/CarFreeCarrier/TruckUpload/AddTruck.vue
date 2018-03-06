@@ -1,89 +1,87 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span v-if="type=='add'">添加车源</span>
-				<span v-else>查看车源</span>
-			</div>
-			<el-form label-width="120px">
-				<el-row :gutter="20">
-					<el-col :span="12">
-						<el-form-item label="报文参考号：">
+			<div slot="header" class="clearfix">添加车源</div>
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="130px">
+						<el-form-item label="报文参考号">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="单证名称：">
+						<el-form-item label="发送方代码">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="发送日期时间：">
+						<el-form-item label="报文功能代码">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="车辆长度">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="出发地区代码">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="130px">
+						<el-form-item label="单证名称">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="接收方代码">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="车辆牌照号">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="核定载质量">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="目的地地区代码">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="130px">
+						<el-form-item label="报文版本号">
+							<el-input auto-complete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="发送日期时间">
 							<el-date-picker v-model="SendDate" type="date" placeholder="选择日期" style="width:100%">
 							</el-date-picker>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="车辆牌照号：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="车辆类型：">
+						<el-form-item label="车辆类型">
 							<el-select v-model="TruckType" placeholder="请选择车辆类型" style="width:100%">
 								<el-option v-for="item in options" :key="item.value" :label="item.value+' '+item.label " :value="item.value">
 									<span style="float: left">{{ item.value }}</span>
 									<span style="float: right; color: #8492a6; font-size: 12px">{{ item.label }}</span></el-option>
 							</el-select>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="车辆长度：">
+						<el-form-item label="出发地">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="核定载质量：">
+						<el-form-item label="目的地">
 							<el-input auto-complete="off"></el-input>
 						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="出发地：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="目的地：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="状态：">
-							<el-input auto-complete="off"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="24">
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="130px">
 						<el-form-item label="错误描述：">
-							<el-input type="textarea" style="resize:none"></el-input>
+							<el-input type="textarea" resize="none"></el-input>
 						</el-form-item>
-					</el-col>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="130px">
 
-					
-					<el-col :span="24">
-						<el-form-item v-if="type=='add'||type=='addsub'">
-							<el-button>重置</el-button>
+						<el-form-item>
 							<el-button type="primary">保存</el-button>
+							<el-button @click.native="back">取消</el-button>
 						</el-form-item>
-						<el-form-item v-else-if="type=='edit'">
-							<el-button>取消</el-button>
-							<el-button type="primary">保存</el-button>
-						</el-form-item>
-						<el-form-item v-else>
-							<el-button type="primary">返回</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
+					</el-form>
+				</el-col>
+			</el-row>
 		</el-card>
 	</div>
 </template>
@@ -209,21 +207,14 @@ export default {
 		}
 	},
 	methods: {
-		handleEdit(index, row) {
-			console.log(index, row);
-		},
-		handleDelete(index, row) {
-			console.log(index, row);
+		back() {
+			this.$router.go(-1)
 		}
-
 	}
 }
 
 </script>
 <style lang="stylus">
-.el-textarea
-	textarea
-		resize none
-		min-height 99px!important
+
 
 </style>

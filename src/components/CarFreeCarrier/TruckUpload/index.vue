@@ -19,24 +19,24 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="jump('truck','add')">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addTruck">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column sortable label="报文参考号">
+					<el-table-column label="报文参考号">
 					</el-table-column>
-					<el-table-column sortable label="单证名称">
+					<el-table-column label="单证名称">
 					</el-table-column>
-					<el-table-column sortable label="发送时间">
+					<el-table-column label="发送时间">
 					</el-table-column>
-					<el-table-column sortable label="车辆牌照号">
+					<el-table-column label="车辆牌照号">
 					</el-table-column>
-					<el-table-column sortable label="车型代码">
+					<el-table-column label="车型代码">
 					</el-table-column>
-					<el-table-column sortable label="车辆长度">
+					<el-table-column label="车辆长度">
 					</el-table-column>
 					<el-table-column label="核定载质量">
 					</el-table-column>
@@ -44,11 +44,11 @@
 					</el-table-column>
 					<el-table-column label="目的地">
 					</el-table-column>
-					<el-table-column sortable label="状态">
+					<el-table-column label="状态">
 					</el-table-column>
 					<el-table-column label="描述">
 					</el-table-column>
-					<el-table-column sortable label="创建时间">
+					<el-table-column label="创建时间">
 					</el-table-column>
 					<el-table-column label="操作">
 					</el-table-column>
@@ -92,6 +92,15 @@
 			pageChange(index) {
 				// this.getList(index)
 			},
+			addTruck() {
+				this.$router.push({ name: 'addtruck' })
+			},
+			editTruck(id) {
+				this.$router.push({ name: 'edittruck'})
+			},
+			viewTruck(id) {
+				this.$router.push({ name: 'viewtruck'})
+			}
 		}
 	}	
 </script>
