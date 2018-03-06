@@ -13,7 +13,7 @@
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConstants(1)">查询</el-button>
+						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -21,7 +21,6 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -129,7 +128,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delConstants(ids)
+				this.delTruckBrands(ids)
 				this.$message({
 					type: 'success',
 					message: '删除成功!'
@@ -141,17 +140,17 @@ export default {
 				})
 			})
 		},
-		delConstants(ids) {
+		delTruckBrands(ids) {
 			let data = {
 				ids: ids
 			}
 			request({
-				url: '/base_conststand/delete',
+				url: '/base_truckbrand/delete',
 				method: 'post',
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.getConstants()
+					this.getTruckBrands()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -167,14 +166,7 @@ export default {
 			this.$router.push({ name: 'viewtruckbrand', query: {TruckBrand_ID} })
 		},
 		selectionChange(data) {
-			this.selectedTruckBrands = data.map(item => item.ConstStd_ID)
-		},
-		refresh() {
-			this.refreshing = true
-			this.getConstants()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
+			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
 		}
 	}
 }

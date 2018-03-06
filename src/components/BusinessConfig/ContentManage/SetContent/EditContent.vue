@@ -22,7 +22,8 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容">
-							<editor :defaultMsg="content.Content" :config="editorConfig" ref="ue"></editor>
+							<!-- <Editor :defaultMsg="content.Content" :config="editorConfig" ref="ue"></Editor> -->
+							<div id="editor" type="text/plain"></div>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<el-upload
@@ -62,7 +63,7 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
-	import Editor from '../../../CommonComponents/Editor'
+	// import Editor from '../../../CommonComponents/Editor'
 	export default {
 		data() {
 			return {
@@ -78,7 +79,8 @@
 					Sort: 1,
 					isEnable: true,
 					Tips: ''
-                },
+				},
+				editor: null,
 				editorConfig: {
 					initialFrameWidth: null,
 					initialFrameHeight: 350
@@ -86,10 +88,7 @@
 			}
         },
         created() {
-            this.getContentTopics()
-        },
-        mounted() {
-            this.getContent()
+			this.getContentTopics()
         },
 		methods: {
             editContent() {
@@ -127,7 +126,8 @@
 					method: 'get'
 				}).then(res => {
 					if (res.data.code == 0) {
-                        this.contentTopics = res.data.data
+						this.contentTopics = res.data.data
+						this.getContent()
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -143,7 +143,13 @@
                     params
 				}).then(res => {
 					if (res.data.code == 0) {
-                        this.content = res.data.data
+						this.content = res.data.data
+						// 初始化UE
+						this.editor = UE.getEditor('editor', this.editorConfig)
+						this.editor.addListener('ready', () => {
+							// 确保UE加载完成后，放入内容
+							this.editor.setContent(res.data.data.Content)
+						})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -154,7 +160,7 @@
 			},
 			getUEContent() {
 				return new Promise((resolve, reject) => {
-					let content = this.$refs.ue.getUEContent()
+					let content = this.editor.getContent()
 					resolve(content)
 				})
 			},
@@ -162,8 +168,11 @@
 				this.$router.go(-1)
 			}
 		},
+		destroyed() {
+			this.editor.destroy()
+		},
 		components: {
-			Editor
+			// Editor
 		}
 	}
 </script>

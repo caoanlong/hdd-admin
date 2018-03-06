@@ -25,19 +25,19 @@
 							<el-option label="成功" value="Y"></el-option>
 							<el-option label="失败" value="N"></el-option>
 						</el-select> -->
-						<el-select placeholder="请选择">
-							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
+						<el-select placeholder="请选择" v-model="findCertifyStatus">
+							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="钱包状态">
-						<el-select placeholder="请选择">
+						<el-select placeholder="请选择" v-model="findWalletStatus">
 							<el-option label="已激活" value="Y"></el-option>
 							<el-option label="未激活" value="N"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="实名状态">
-						<el-select placeholder="请选择">
-							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
+						<el-select placeholder="请选择" v-model="findRealNameStatus">
+							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -69,9 +69,13 @@
 					<el-table-column label="认证人" align="center" prop="certifypersonId"></el-table-column>
 					<el-table-column label="认证状态" width="140">
 						<template slot-scope="scope">
-							<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							<span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							</span>
 							<span v-if="scope.row.memCertifyPerson.certifyStatus && scope.row.memTruckCertify.certifyStatus">/</span>
-							<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							<span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="钱包状态" align="center" width="80">
@@ -135,6 +139,9 @@ export default {
 			findMemberType: '',
 			findKeywords: '',
 			findMemberStatus: '',
+			findCertifyStatus: '',
+			findRealNameStatus: '',
+			findWalletStatus: '',
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,

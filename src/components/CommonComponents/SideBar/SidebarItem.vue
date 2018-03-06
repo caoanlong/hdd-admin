@@ -2,7 +2,7 @@
 	<div class="menu-wrapper">
 		<template v-for="item in routes" v-if="item.IsShow == 'Y'">
 			<el-menu-item 
-				v-if="!item.children || item.children.length == 0"
+				v-if="!item.children || item.children.length == 0" 
 				:index="item.name" 
 				:class="{'submenu-title-noDropdown':!isNest}">
 				<svg-icon v-if="item.Icon" :icon-class="item.Icon"></svg-icon>
