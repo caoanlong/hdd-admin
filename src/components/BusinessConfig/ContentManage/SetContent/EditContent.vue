@@ -22,7 +22,6 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容">
-							<!-- <Editor :defaultMsg="content.Content" :config="editorConfig" ref="ue"></Editor> -->
 							<div id="editor" type="text/plain"></div>
 						</el-form-item>
 						<el-form-item label="图片上传">
@@ -63,7 +62,6 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
-	// import Editor from '../../../CommonComponents/Editor'
 	export default {
 		data() {
 			return {
@@ -170,9 +168,6 @@
 		},
 		destroyed() {
 			this.editor.destroy()
-		},
-		components: {
-			// Editor
 		}
 	}
 </script>
