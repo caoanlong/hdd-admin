@@ -21,8 +21,23 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="认证状态">
-						<el-select placeholder="请选择" value=''>
-							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
+						<!-- <el-select placeholder="请选择">
+							<el-option label="成功" value="Y"></el-option>
+							<el-option label="失败" value="N"></el-option>
+						</el-select> -->
+						<el-select placeholder="请选择" v-model="findCertifyStatus">
+							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="钱包状态">
+						<el-select placeholder="请选择" v-model="findWalletStatus">
+							<el-option label="已激活" value="Y"></el-option>
+							<el-option label="未激活" value="N"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="实名状态">
+						<el-select placeholder="请选择" v-model="findRealNameStatus">
+							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -32,18 +47,48 @@
 				</el-form>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="会员类型" prop="memberType" width="100"></el-table-column>
-					<el-table-column label="姓名" prop="name" width="90"></el-table-column>
-					<el-table-column label="手机号" align="center" prop="mobilePhone" width="100"></el-table-column>
-					<el-table-column label="车牌/企业名" prop="accountTitle"></el-table-column>
-					<el-table-column label="注册时间" align="center" prop="regDate" width="140"></el-table-column>
-					<el-table-column label="状态" align="center" prop="status" width="80"></el-table-column>
-					<el-table-column label="认证人" align="center" prop="handler" width="100"></el-table-column>
-					<el-table-column label="认证状态" width="80"></el-table-column>
-					<el-table-column label="钱包状态" align="center" prop="status" width="80"></el-table-column>
-					<el-table-column label="实名状态" align="center" prop="status" width="80"></el-table-column>
-					<el-table-column label="账号类型" align="center" prop="status" width="80"></el-table-column>
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+					<el-table-column label="会员类型" prop="type" width="100">
+						<template slot-scope="scope">
+							<span v-for="memberType in memberTypes" :key="memberType.Dict_ID" v-if="scope.row.type == memberType.VALUE">{{memberType.NAME}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="姓名" prop="realName" width="90"></el-table-column>
+					<el-table-column label="手机号" align="center" prop="mobile" width="100"></el-table-column>
+					<el-table-column label="车牌/企业名" prop="companyOrPlateNo"></el-table-column>
+					<el-table-column label="注册时间" align="center" prop="regDate" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="状态" align="center" width="80">
+						<template slot-scope="scope">
+							<span>{{scope.row.status == 'Y' ? '启用' : '封停'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="认证人" align="center" prop="certifypersonId"></el-table-column>
+					<el-table-column label="认证状态" width="140">
+						<template slot-scope="scope">
+							<span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							</span>
+							<span v-if="scope.row.memCertifyPerson.certifyStatus && scope.row.memTruckCertify.certifyStatus">/</span>
+							<span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="钱包状态" align="center" width="80">
+						<template slot-scope="scope">
+							<span>{{scope.row.walletStatus == 'Y' ? '已激活' : '未激活'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="实名状态" align="center" width="80">
+						<template slot-scope="scope">
+							<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.realNameStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="账号类型" align="center" prop="accountType"></el-table-column>
 					<el-table-column label="操作" width="220" align="center">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" @click="viewPersionCertify">
@@ -61,9 +106,25 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="pagination">
-					<el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
-				</div>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
 			</div>
 		</el-card>
 	</div>
@@ -78,28 +139,36 @@ export default {
 			findMemberType: '',
 			findKeywords: '',
 			findMemberStatus: '',
-			tableData: [{
-				memberType: '物流企业',
-				name: '曹阿龙',
-				accountTitle: '深圳市曹阿龙老司机有限公司',
-				mobilePhone: '13049497395',
-				regDate: '2017-10-10 21:05:07',
-				lastvisitDate: '2018-01-23 11:23:15',
-				creatDate: '2017-10-11 09:15:27',
-				handler: 'admin',
-				status: '启用',
-				certificateStatus: '',
-				address: '上海市普陀区金沙江路 1518 弄'
-			}],
+			findCertifyStatus: '',
+			findRealNameStatus: '',
+			findWalletStatus: '',
+			pageNum: 1,
+			pageSize: 10,
+			count: 0,
+			tableData: [],
 			memberTypes: [],
-			certifyStatus: []
+			certifyStatus: [],
+			selectedMembers: []
 		}
 	},
 	created() {
 		this.getMemberTypes()
 		this.getCertifyStatus()
+		this.getList()
 	},
 	methods: {
+		pageChange(index) {
+			this.getList(index)
+		},
+		reset() {
+			this.findMemberType = '',
+			this.findKeywords = '',
+			this.findMemberStatus = '',
+			this.getList()
+		},
+		selectionChange(data) {
+			this.selectedMembers = data.map(item => item.memId)
+		},
 		getMemberTypes() {
 			let params = {
 				TYPE: 'memberType',
@@ -129,6 +198,25 @@ export default {
 					this.certifyStatus = res.data.data
 				} else {
 					Message.error(res.data.msg)
+				}
+			})
+		},
+		getList(pageNum) {
+			let params = {
+				pageNum: pageNum || 1,
+				pageSize: this.pageSize,
+				// businessType: this.findBusinessType
+			}
+			requestJava({
+				url: '/mem/memMember/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+				} else {
+					Message.error(res.data.message)
 				}
 			})
 		},
