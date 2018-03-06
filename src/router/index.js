@@ -685,6 +685,30 @@ let routerMap = [
 									title: '车辆品牌'
 								},
 								component: () => import('../components/System/DataManage/TruckBrand')
+							},
+							{
+								path: '/addtruckbrand',
+								name: 'addtruckbrand',
+								meta: {
+									title: '添加车辆品牌'
+								},
+								component: () => import('../components/System/DataManage/TruckBrand/AddTruckBrand')
+							},
+							{
+								path: '/edittruckbrand',
+								name: 'edittruckbrand',
+								meta: {
+									title: '编辑车辆品牌'
+								},
+								component: () => import('../components/System/DataManage/TruckBrand/EditTruckBrand')
+							},
+							{
+								path: '/viewtruckbrand',
+								name: 'viewtruckbrand',
+								meta: {
+									title: '查看车辆品牌'
+								},
+								component: () => import('../components/System/DataManage/TruckBrand/ViewTruckBrand')
 							}
 						]
 					},

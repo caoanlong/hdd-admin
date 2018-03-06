@@ -7,7 +7,7 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="appKey：">
-						<el-input placeholder="appKey"></el-input>
+						<el-input placeholder="请输入..." v-model="findAppKey"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary">查询</el-button>
@@ -23,11 +23,11 @@
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="企业名称"></el-table-column>
 					<el-table-column label="企业接入码"></el-table-column>
-					<el-table-column label="Appkey"></el-table-column>
-					<el-table-column label="报文功能代码"></el-table-column>
-					<el-table-column label="报文版本号"></el-table-column>
-					<el-table-column label="接收方代码"></el-table-column>
-					<el-table-column label="用户名"></el-table-column>
+					<el-table-column label="Appkey" prop="appkey"></el-table-column>
+					<el-table-column label="报文功能代码" prop="messageFunctionCode"></el-table-column>
+					<el-table-column label="报文版本号" prop="documentVersionNumber"></el-table-column>
+					<el-table-column label="接收方代码" prop="recipientCode"></el-table-column>
+					<el-table-column label="用户名" prop="userID"></el-table-column>
 					<el-table-column label="操作" width="280" align="center">
 						<template slot-scope="scope">							
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewInterfaceConfig(scope.row.smsTemplateId)">查看</el-button>
@@ -65,6 +65,7 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			findAppKey: '',
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,
@@ -72,12 +73,34 @@ export default {
 			selectedInterfaceConfigs: []
 		}
 	},
+	created() {
+		this.getList()
+	},
 	methods: {
 		pageChange(index) {
-			// this.getList(index)
+			this.getList(index)
 		},
 		selectionChange(data) {
 			this.selectedInterfaceConfigs = data.map(item => item.smsTemplateId)
+		},
+		getList(pageNum) {
+			let params = {
+				pageNum: pageNum || 1,
+				pageSize: this.pageSize,
+				appkey: this.findAppKey
+			}
+			requestJava({
+				url: '/notruckUser/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.records
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		},
 		viewInterfaceConfig(smsTemplateId) {
 			this.$router.push({name: 'viewinterfaceconfig', query: {smsTemplateId}})

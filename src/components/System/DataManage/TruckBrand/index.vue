@@ -19,30 +19,30 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="AddConstant">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="常量类型" prop="Type"></el-table-column>
 					<el-table-column label="代码" prop="Code"></el-table-column>
 					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="值" prop="Value"></el-table-column>
-					<el-table-column label="描述" prop="Description"></el-table-column>
-					<el-table-column label="排序" prop="SortNumber" width="60" align="center"></el-table-column>
-					<el-table-column label="更新人" prop="UpdateBy" width="100" align="center"></el-table-column>
-					<el-table-column label="更新日期" align="center" width="140">
+					<el-table-column label="图片" prop="PictureURL">
 						<template slot-scope="scope">
-							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
+							<img class="table-img" :src="scope.row.PictureURL">
+						</template>
+					</el-table-column>
+					<el-table-column label="是否生效" prop="Enable">
+						<template slot-scope="scope">
+							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewConstant(scope.row.ConstStd_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editConstant(scope.row.ConstStd_ID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.ConstStd_ID)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewTruckBrand(scope.row.TruckBrand_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editTruckBrand(scope.row.TruckBrand_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -105,7 +105,7 @@ export default {
 				Name: this.findName
 			}
 			request({
-				url: '/base_conststand/list',
+				url: '/base_truckbrand/list',
 				method: 'get',
 				params
 			}).then(res => {
@@ -116,9 +116,6 @@ export default {
 					Message.error(res.data.msg)
 				}
 			})
-		},
-		AddTruckBrand() {
-			this.$router.push({ name: 'addconstant' })
 		},
 		deleteConfirm(id) {
 			let ids = []
@@ -160,12 +157,14 @@ export default {
 				}
 			})
 		},
-
-		editConstant(id) {
-			this.$router.push({ name: 'editconstant', query: { ConstStd_ID: id} })
+		addTruckBrand() {
+			this.$router.push({name: 'addtruckbrand'})
 		},
-		viewConstant(id) {
-			this.$router.push({ name: 'viewconstant', query: { ConstStd_ID: id} })
+		editTruckBrand(TruckBrand_ID) {
+			this.$router.push({ name: 'edittruckbrand', query: {TruckBrand_ID} })
+		},
+		viewTruckBrand(TruckBrand_ID) {
+			this.$router.push({ name: 'viewtruckbrand', query: {TruckBrand_ID} })
 		},
 		selectionChange(data) {
 			this.selectedTruckBrands = data.map(item => item.ConstStd_ID)
@@ -200,4 +199,6 @@ export default {
 	&:active
 		border-color #3a8ee6
 		color #3a8ee6
+.table-img
+	width 30px
 </style>
