@@ -5,21 +5,65 @@
 				<span>查看API请求日志</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
+				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="用户ID" ><p>{{apiLog.Mem_ID}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
 						<el-form-item label="设备类型" ><p>{{apiLog.DeviceType == 'iOS' ? '苹果端' : '安卓端'}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
 						<el-form-item label="日志类型" ><p>{{apiLog.LogType}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="16">
+					<el-form label-width="120px">
 						<el-form-item label="请求Uri" ><p>{{apiLog.Uri}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
 						<el-form-item label="请求方式" ><p>{{apiLog.Method}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="请求参数" ><p>{{apiLog.ReqParams}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="响应参数" ><p>{{apiLog.RespParams}}</p></el-form-item>
-						<el-form-item label="请求时间" ><p>{{new Date(apiLog.RequestDate).getTime() | getdatefromtimestamp()}}</p></el-form-item>
-						<el-form-item label="响应时间" ><p>{{new Date(apiLog.ResponseDate).getTime() | getdatefromtimestamp()}}</p></el-form-item>
-						<el-form-item label="客户端IP" ><p>{{apiLog.IP}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="客户端代理类型" ><p>{{apiLog.UserAgent}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="请求时间" ><p>{{new Date(apiLog.RequestDate).getTime() | getdatefromtimestamp()}}</p></el-form-item>
 						<el-form-item label="异常信息" ><p>{{apiLog.ExceptionInfo}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="响应时间" ><p>{{new Date(apiLog.ResponseDate).getTime() | getdatefromtimestamp()}}</p></el-form-item>
 						<el-form-item label="创建时间" ><p>{{new Date(apiLog.CreateDate).getTime() | getdatefromtimestamp()}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="客户端IP" ><p>{{apiLog.IP}}</p></el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">		
 						<el-form-item>
                             <el-button @click="back">返回</el-button>
                         </el-form-item>
@@ -73,25 +117,16 @@
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader
-	line-height 1
-	width 100px
-	height 100px
-	overflow hidden
-	border 1px dashed #d9d9d9
-	border-radius 6px
-	&:hover 
-		border-color #409eff
-	.avatar-uploader-icon
-		font-size 28px
-		color #8c939d
-		width 98px
-		height 98px
-		line-height 98px
-		text-align center
-	.avatar
-		width 98px
-		height 98px
-		display block
+.el-form-item__content
+	p
+		margin 0
+		border 1px solid #fff
+		border-bottom-color #dcdfe6
+		padding 0 15px
+		height 40px
+		font-family 'sans-serif'
+		line-height 40px
+		color #999
+	.el-input__inner
 		vertical-align top
 </style>

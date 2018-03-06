@@ -131,7 +131,7 @@
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .avatar-uploader 
 	.el-upload 
 		border 1px dashed #d9d9d9
@@ -153,8 +153,6 @@
 	width 98px
 	height 98px
 	display block
-</style>
-<style lang="stylus" scoped>
 .el-form-item__content
 	p
 		margin 0

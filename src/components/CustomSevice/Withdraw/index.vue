@@ -56,17 +56,17 @@
 					</el-table-column>
 					<el-table-column label="状态" align="center" width="140">
 						<template slot-scope="scope">
-							<span v-if="scope.row.status=='Draft'" style="#909399">草稿</span>
-							<span v-else-if="scope.row.status=='ForAudit'" style="#909399">待审核</span>
+							<span v-if="scope.row.status=='Draft'" style="color:#C0C4CC">草稿</span>
+							<span v-else-if="scope.row.status=='ForAudit'" style="color:#409EFF">待审核</span>
 							<span v-else-if="scope.row.status=='Rejected'" style="color:#F56C6C">已拒绝</span>
 							<span v-else-if="scope.row.status=='Paying'" style="color:#409EFF">处理中</span>
 							<span v-else-if="scope.row.status=='Success'" style="color:#67C23A">成功</span>
-							<span v-else style="color:#E6A23C">失败</span>
+							<span v-else style="color:#C0C4CC">失败</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="审批时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="审批人" align="center" prop="auditBy" width="100">

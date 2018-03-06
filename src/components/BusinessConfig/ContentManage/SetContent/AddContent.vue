@@ -147,7 +147,7 @@
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .avatar-uploader
 	line-height 1
 	width 100px

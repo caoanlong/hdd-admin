@@ -10,7 +10,7 @@
 						<el-input placeholder="请输入..." v-model="findMobile"></el-input>
 					</el-form-item>
 					<el-form-item label="设备类型" >
-						<el-select placeholder="请选择" v-model="findDeviceType" class="constantSelect">
+						<el-select placeholder="请选择" v-model="findDeviceType">
 							<el-option label="苹果端" value="iOS"></el-option>
 							<el-option label="安卓端" value="Android"></el-option>
 						</el-select>
@@ -29,13 +29,13 @@
 			</div>
 			<div class="table">
 				<el-table :data="apiLogs" border style="width: 100%" size="mini">
-					<el-table-column label="用户ID" prop="Mem_ID" width="160"></el-table-column>
-					<el-table-column label="设备类型" width="100">
+					<el-table-column label="用户ID" prop="Mem_ID" width="160" align="center"></el-table-column>
+					<el-table-column label="设备类型" width="100" align="center">
 						<template slot-scope="scope">
 							<span>{{scope.row.DeviceType == 'iOS' ? '苹果端' : '安卓端'}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="日志类型" prop="LogType" width="100"></el-table-column>
+					<el-table-column label="日志类型" prop="LogType" width="100" align="center"></el-table-column>
 					<el-table-column label="请求参数" prop="ReqParams"></el-table-column>
 					<el-table-column label="响应参数" prop="RespParams"></el-table-column>
 					<el-table-column label="请求时间" width="140">
@@ -48,7 +48,7 @@
 							<span>{{new Date(scope.row.ResponseDate).getTime() | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="操作" width="85" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewApiLog(scope.row.Log_ID)">查看</el-button>
 						</template>

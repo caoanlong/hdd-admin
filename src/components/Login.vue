@@ -85,7 +85,7 @@
 		}
 	}
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 	.login-container
 		.el-input
 			display inline-block
