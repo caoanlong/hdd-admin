@@ -7,18 +7,18 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="名称" >
+						<el-form-item label="名称">
 							<p>{{truckBrand.Name}}</p>
 						</el-form-item>
-						<el-form-item label="代码" >
+						<el-form-item label="代码">
 							<p>{{truckBrand.Code}}</p>
 						</el-form-item>
-						<el-form-item label="是否生效" >
+						<el-form-item label="是否生效">
 							<p>{{truckBrand.Enable == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
-						<el-form-item label="图片" >
+						<el-form-item label="图片">
 							<el-upload
-								class="avatar-uploader"
+								class="avatar-uploader" 
 								action="http://39.108.245.177:3001/uploadImg" 
                                 :disabled="true" 
 								@click.native="previewImg(truckBrand.PictureURL)"

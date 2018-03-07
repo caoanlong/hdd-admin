@@ -93,22 +93,20 @@
 			}
 		},
 		created() {
-			// this.getInfo()
+			this.getInfo()
 		},
 		methods: {
 			getInfo() {
 				let params = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					memID: this.$route.query.memID
+					certifyEnterpriceId: this.$route.query.certifyEnterpriceId
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/info',
+					url: '/mem/memMember/getCertifyEnterpriceInfo',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						this.payRealNameApply = res.data.data.payRealNameApply
-						this.memMember = res.data.data.memMember
+						this.certifyPerson = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -139,27 +137,27 @@
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
+.avatar-uploader
+	line-height 1
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
+	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
 		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
 .el-form-item__content
 	p
 		margin 0

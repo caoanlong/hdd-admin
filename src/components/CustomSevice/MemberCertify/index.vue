@@ -16,15 +16,11 @@
 					</el-form-item>
 					<el-form-item label="状态">
 						<el-select placeholder="请选择" v-model="findMemberStatus">
-							<el-option label="启用" value="N"></el-option>
-							<el-option label="封停" value="Y"></el-option>
+							<el-option label="启用" value="Y"></el-option>
+							<el-option label="封停" value="N"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="认证状态">
-						<!-- <el-select placeholder="请选择">
-							<el-option label="成功" value="Y"></el-option>
-							<el-option label="失败" value="N"></el-option>
-						</el-select> -->
 						<el-select placeholder="请选择" v-model="findCertifyStatus">
 							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
@@ -37,12 +33,12 @@
 					</el-form-item>
 					<el-form-item label="实名状态">
 						<el-select placeholder="请选择" v-model="findRealNameStatus">
-							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
+							<el-option v-for="realStatus in realNameStatus" :key="realStatus.VALUE" :label="realStatus.NAME" :value="realStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -70,11 +66,11 @@
 					<el-table-column label="认证状态" width="140">
 						<template slot-scope="scope">
 							<span>
-								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson && (scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE)">{{cerStatus.NAME}}</span>
 							</span>
-							<span v-if="scope.row.memCertifyPerson.certifyStatus && scope.row.memTruckCertify.certifyStatus">/</span>
+							<span v-if="(scope.row.memCertifyPerson && scope.row.memCertifyPerson.certifyStatus) && (scope.row.memTruckCertify && scope.row.memTruckCertify.certifyStatus)">/</span>
 							<span>
-								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify && (scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE)">{{cerStatus.NAME}}</span>
 							</span>
 						</template>
 					</el-table-column>
@@ -85,19 +81,31 @@
 					</el-table-column>
 					<el-table-column label="实名状态" align="center" width="80">
 						<template slot-scope="scope">
-							<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.realNameStatus == cerStatus.VALUE">{{cerStatus.NAME}}</span>
+							<span v-for="realStatus in realNameStatus" :key="realStatus.Dict_ID" v-if="scope.row.realNameStatus == realStatus.VALUE">{{realStatus.NAME}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="账号类型" align="center" prop="accountType"></el-table-column>
+					<el-table-column label="账号类型" align="center">
+						<template slot-scope="scope">
+							<span v-if="scope.row.accountType == 'CompanyAccount'">公司账户</span>
+							<span v-else-if="scope.row.accountType == 'PersonalAccount'">个人账户</span>
+							<span v-else>公司账户</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="220" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" @click="viewPersionCertify">
+							<el-button type="default" size="mini" @click="viewPersionCertify(scope.row.certifyPersonId)" 
+							v-if="scope.row.type != 'Tourist'">
 								<svg-icon icon-class="file-icon"></svg-icon> 个人
 							</el-button>
-							<el-button type="default" size="mini" @click="viewCompanyCertify">
+							<el-button type="default" size="mini" @click="viewCompanyCertify(scope.row.certifyEnterpriceId)" 
+							v-if="scope.row.type == 'NoTruck' || scope.row.type == '3PL' || scope.row.type == 'InfoDept'">
 								<svg-icon icon-class="file-icon"></svg-icon> 企业
 							</el-button>
-							<el-button type="default" size="mini" v-if="scope.row.status=='启用'">
+							<el-button type="default" size="mini" @click="viewTruckCertify(scope.row.truckCertifyId)" 
+							v-if="scope.row.type == 'Driver'">
+								<svg-icon icon-class="file-icon"></svg-icon> 车辆
+							</el-button>
+							<el-button type="default" size="mini" v-if="scope.row.status=='Y'">
 								<svg-icon icon-class="stop-icon"></svg-icon> 封停
 							</el-button>
 							<el-button type="default" size="mini" v-else>
@@ -109,7 +117,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
 							<el-option label="10" value="10"></el-option>
 							<el-option label="20" value="20"></el-option>
 							<el-option label="30" value="30"></el-option>
@@ -142,28 +150,34 @@ export default {
 			findCertifyStatus: '',
 			findRealNameStatus: '',
 			findWalletStatus: '',
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
 			memberTypes: [],
 			certifyStatus: [],
+			realNameStatus: [],
 			selectedMembers: []
 		}
 	},
 	created() {
 		this.getMemberTypes()
 		this.getCertifyStatus()
+		this.getRealNameStatus()
 		this.getList()
 	},
 	methods: {
 		pageChange(index) {
-			this.getList(index)
+			this.pageIndex = index
+			this.getList()
 		},
 		reset() {
-			this.findMemberType = '',
-			this.findKeywords = '',
-			this.findMemberStatus = '',
+			this.findMemberType = ''
+			this.findKeywords = ''
+			this.findMemberStatus = ''
+			this.findCertifyStatus = ''
+			this.findRealNameStatus = ''
+			this.findWalletStatus = ''
 			this.getList()
 		},
 		selectionChange(data) {
@@ -201,12 +215,34 @@ export default {
 				}
 			})
 		},
-		getList(pageNum) {
+		getRealNameStatus() {
 			let params = {
-				pageNum: pageNum || 1,
-				pageSize: this.pageSize,
-				// businessType: this.findBusinessType
+				TYPE: 'realNameStatus',
 			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.realNameStatus = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		getList() {
+			let params = {
+				pageNum: this.pageIndex || 1,
+				pageSize: this.pageSize,
+				type: this.findMemberType,
+				keywords: this.findKeywords,
+				status: this.findMemberStatus,
+				certifyStatus: this.findCertifyStatus,
+				realNameStatus: this.findRealNameStatus,
+				walletStatus: this.findWalletStatus
+			}
+			console.log(params)
 			requestJava({
 				url: '/mem/memMember/list',
 				method: 'get',
@@ -220,12 +256,15 @@ export default {
 				}
 			})
 		},
-		viewPersionCertify() {
-			this.$router.push({name: 'viewpersioncertify'})
+		viewPersionCertify(certifyPersonId) {
+			this.$router.push({name: 'viewpersioncertify', query: {certifyPersonId}})
 		},
-		viewCompanyCertify() {
-			this.$router.push({name: 'viewcompanycertify'})
-		}
+		viewCompanyCertify(certifyEnterpriceId) {
+			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId}})
+		},
+		viewTruckCertify(truckCertifyId) {
+			this.$router.push({name: 'viewtruckcertify', query: {truckCertifyId}})
+		},
 	}
 }
 </script>

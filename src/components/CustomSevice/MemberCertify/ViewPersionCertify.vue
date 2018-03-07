@@ -8,10 +8,10 @@
 				<el-col :span="12">
 					<el-form label-width="120px">
                         <el-form-item label="姓名">
-							<p>曹阿龙</p>
+							<p>{{certifyPerson.RealName}}</p>
 						</el-form-item>
 						<el-form-item label="身份证编号">
-							<p>429002654156798</p>
+							<p>{{certifyPerson.IDCardNum}}</p>
 						</el-form-item>
 						<el-form-item label="个人头像">
 							<el-upload 
@@ -19,7 +19,7 @@
 								class="avatar-uploader" 
 								:show-file-list="false" 
 								:disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<img v-if="certifyPerson.Picture_Front" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.Picture_Front" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -29,12 +29,13 @@
 								class="avatar-uploader" 
 								:show-file-list="false" 
 								:disabled="true">
-								<!-- <img v-if="payRealNameApply.idcardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardFrontPic" class="avatar"> -->
+								<img v-if="certifyPerson.IDCardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDCardFrontPic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="钱包状态">
-							<p>已激活</p>
+							<p v-if="certifyPerson.walletStatus == 'Y'">已激活</p>
+							<p v-else>未激活</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -52,8 +53,7 @@
 								class="avatar-uploader" 
 								:show-file-list="false" 
 								:disabled="true">
-								<!-- <img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
-								class="avatar"> -->
+								<img v-if="certifyPerson.IDHandheldPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDHandheldPic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -63,23 +63,23 @@
 								class="avatar-uploader" 
 								:show-file-list="false" 
 								:disabled="true">
-								<!-- <img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
-								class="avatar"> -->
+								<img v-if="certifyPerson.IDCardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDCardBackPic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
 						<el-form-item label="实名状态">
-							<p>草稿</p>
+							<p v-for="realStatus in realNameStatus" :key="realStatus.Dict_ID" v-if="certifyPerson.realNameStatus == realStatus.VALUE">{{realStatus.NAME}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="24">
 					<el-form label-width="120px">
                         <el-form-item label="审核说明">
-							<p>哈哈哈哈哈哈哈</p>
+							<el-input type="textarea">哈哈哈哈哈哈哈</el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary">实名认证</el-button>
+							<el-button type="success">激活</el-button>
+                            <el-button type="danger">拒绝</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -90,40 +90,51 @@
 </template>
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
+	import request from '../../../common/request'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
-				payRealNameApply:[],
-				memMember:[],
-				findAuditStatus:'',
-				flag:''
+				certifyPerson: {},
+				realNameStatus: []
 			}
 		},
 		created() {
-			// this.getInfo()
+			this.getRealNameStatus()
 		},
 		methods: {
 			getInfo() {
 				let params = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					memID: this.$route.query.memID
+					certifyPersonId: this.$route.query.certifyPersonId
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/info',
+					url: '/mem/memMember/getCertifyPersonInfo',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						this.payRealNameApply = res.data.data.payRealNameApply
-						this.memMember = res.data.data.memMember
+						this.certifyPerson = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			back() {
-				this.$router.go(-1)
+			getRealNameStatus() {
+				let params = {
+					TYPE: 'realNameStatus',
+				}
+				request({
+					url: '/sys_dict/list/type',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.realNameStatus = res.data.data
+						this.getInfo()
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
 			},
 			approve(flag) {
 				let data = {
@@ -142,32 +153,35 @@
 						Message.error(res.data.message)
 					}
 				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
 		}
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
+.avatar-uploader
+	line-height 1
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
+	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
 		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
 .el-form-item__content
 	p
 		margin 0
