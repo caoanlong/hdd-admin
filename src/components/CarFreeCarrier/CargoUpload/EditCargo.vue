@@ -5,76 +5,73 @@
 			<el-row>
 				<el-col :span="8">
 					<el-form label-width="120px">
-						<el-form-item label="报文参考号：">
-							<el-input ></el-input>
+						<el-form-item label="报文参考号">
+							<el-input v-model="CargoInfo.messageReferenceNumber" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="发送方代码：">
-							<el-input ></el-input>
+						<el-form-item label="发送方代码">
+							<el-input v-model="CargoInfo.senderCode" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="报文功能代码：">
-							<el-input ></el-input>
+						<el-form-item label="报文功能代码">
+							<el-input v-model="CargoInfo.messageFunctionCode" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="出发地区代码：">
-							<el-input ></el-input>
+						<el-form-item label="出发地区代码">
+							<el-input v-model="CargoInfo.countrySubdivisionCode"></el-input>
 						</el-form-item>
-						<el-form-item label="目的地区代码：">
-							<el-input ></el-input>
+						<el-form-item label="目的地区代码">
+							<el-input v-model="CargoInfo.destinationCountrySubdivisionCode"></el-input>
 						</el-form-item>
-						<el-form-item label="货物名称：">
-							<el-input ></el-input>
+						<el-form-item label="货物名称">
+							<el-input v-model="CargoInfo.descriptionOfGoods"></el-input>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
-						<el-form-item label="单证名称：">
-							<el-input ></el-input>
+						<el-form-item label="单证名称">
+							<el-input v-model="CargoInfo.documentName" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="接收方代码：">
-							<el-input ></el-input>
+						<el-form-item label="接收方代码">
+							<el-input v-model="CargoInfo.recipientCode" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="发货人：">
-							<el-input ></el-input>
+						<el-form-item label="发货人">
+							<el-input v-model="CargoInfo.consignor"></el-input>
 						</el-form-item>
-						<el-form-item label="收货人：">
-							<el-input ></el-input>
+						<el-form-item label="收货人">
+							<el-input v-model="CargoInfo.consignee"></el-input>
 						</el-form-item>
-						<el-form-item label="费用总金额：">
-							<el-input ></el-input>
+						<el-form-item label="费用总金额">
+							<el-input v-model="CargoInfo.totalMonetaryAmount"></el-input>
 						</el-form-item>
-						<el-form-item label="货物类型分类：">
-							<el-select v-model="CargoType" placeholder="请选择货物类型" style="width:100%">
-								<el-option v-for="item in CargoType" :key="item.Value" :label="item.Value+' '+item.Name " :value="item.Value">
-									<span style="float: left">{{ item.Value }}</span>
-									<span style="float: right; color: #8492a6; font-size: 12px">{{ item.Name }}</span></el-option>
+						<el-form-item label="货物类型分类">
+							<el-select v-model="CargoInfo.cargoTypeClassificationCode" placeholder="请选择货物类型" style="width:100%">
+								<el-option v-for="item in CargoType" :key="item.ConstStd_ID" :label="item.Name " :value="item.Value">
+								</el-option>
 							</el-select>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
-						<el-form-item label="报文版本号：">
-							<el-input ></el-input>
+						<el-form-item label="报文版本号">
+							<el-input v-model="CargoInfo.documentVersionNumber" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="发送日期时间：">
-							<el-date-picker type="date" placeholder="选择日期" style="width:100%">
-							</el-date-picker>
+						<el-form-item label="发送日期时间">
+							<el-input v-model="CargoInfo.messageSendingDateTime" :disabled="true"></el-input>
 						</el-form-item>
-						<el-form-item label="出发地：">
-							<el-input ></el-input>
+						<el-form-item label="出发地">
+							<el-input v-model="CargoInfo.placeOfLoading"></el-input>
 						</el-form-item>
-						<el-form-item label="目的地：">
-							<el-input ></el-input>
+						<el-form-item label="目的地">
+							<el-input v-model="CargoInfo.goodsReceiptPlace"></el-input>
 						</el-form-item>
-						<el-form-item label="车辆类型：">
-							<el-select v-model="TruckType" placeholder="请选择车辆类型" style="width:100%">
-								<el-option v-for="item in TruckType" :key="item.Value" :label="item.Value+' '+item.Name " :value="item.Value">
-									<span style="float: left">{{ item.Value }}</span>
-									<span style="float: right; color: #8492a6; font-size: 12px">{{ item.Name }}</span></el-option>
+						<el-form-item label="车辆类型">
+							<el-select v-model="CargoInfo.vehicleClassificationCode" placeholder="请选择车辆类型" style="width:100%">
+								<el-option v-for="item in TruckType" :key="item.ConstStd_ID" :label="item.Name " :value="item.Value">
+								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="货物项毛重：">
-							<el-input ></el-input>
+						<el-form-item label="货物项毛重">
+							<el-input v-model="CargoInfo.goodsItemGrossWeight"></el-input>
 						</el-form-item>
 					</el-form>
 				</el-col>
