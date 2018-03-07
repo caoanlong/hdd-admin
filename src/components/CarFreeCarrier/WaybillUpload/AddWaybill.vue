@@ -6,13 +6,13 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="报文参考号">
-							<el-input v-model="WaybillInfo.messageReferenceNumber" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.messageReferenceNumber" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="发送方代码">
-							<el-input v-model="WaybillInfo.senderCode" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.senderCode" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="报文功能代码">
-							<el-input v-model="WaybillInfo.messageFunctionCode" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.messageFunctionCode" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="承运人">
 							<el-input v-model="WaybillInfo.carrier"></el-input>
@@ -24,7 +24,7 @@
 							<el-input v-model="WaybillInfo.dateOfDelivery"></el-input>
 						</el-form-item>
 						<el-form-item label="装货地点">
-							<el-input v-model="WaybillInfo.name"></el-input>
+							<el-input v-model="WaybillInfo.loadingPlace"></el-input>
 						</el-form-item>
 						<el-form-item label="收货人">
 							<el-input v-model="WaybillInfo.consignee"></el-input>
@@ -58,16 +58,16 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="单证名称">
-							<el-input v-model="WaybillInfo.documentName" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.documentName" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="接收方代码">
-							<el-input v-model="WaybillInfo.recipientCode" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.recipientCode" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="原始单号">
 							<el-input v-model="WaybillInfo.originalAddNumber"></el-input>
 						</el-form-item>
 						<el-form-item label="统一社会信用代码">
-							<el-input v-model="WaybillInfo.name"></el-input>
+							<el-input v-model="WaybillInfo.uniformSocialCreditCode"></el-input>
 						</el-form-item>
 						<el-form-item label="业务类型代码">
 							<el-select v-model="WaybillInfo.serviceTypeCode" placeholder="请选择业务类型" style="width:100%">
@@ -76,7 +76,7 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="发货人">
-							<el-input v-model="WaybillInfo.name"></el-input>
+							<el-input v-model="WaybillInfo.consignor"></el-input>
 						</el-form-item>
 						<el-form-item label="国家行政区划名称">
 							<el-input v-model="WaybillInfo.nameConsignorDivisions"></el-input>
@@ -116,10 +116,10 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="报文版本号">
-							<el-input v-model="WaybillInfo.documentVersionNumber" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.documentVersionNumber" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="发送时间">
-							<el-input v-model="WaybillInfo.messageSendingDateTime" :disabled="true"></el-input>
+							<el-input v-model="apkInfo.messageSendingDateTime" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="托运单号">
 							<el-input v-model="WaybillInfo.shippingNoteNumber"></el-input>
@@ -171,26 +171,194 @@
 							<el-input type="textarea" v-model="WaybillInfo.networkAccessAddress" resize="none"></el-input>
 						</el-form-item>
 						<el-form-item>
-								<el-button type="primary">保存</el-button>
-								<el-button @click="back">取消</el-button>
-							</el-form-item>
+							<el-button type="primary" @click="SaveWaybill">保存</el-button>
+							<el-button @click="back">取消</el-button>
+						</el-form-item>
 					</el-form>
 				</el-col>
 			</el-row>
-
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../common/request'
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			SendDate: '',
-			TruckType: '',
-			CargoType: ''
+			TruckType: [],
+			CargoType: [],
+			notruck_transport:[],
+			notruck_LicensePlate:[],
+			notruck_business:[],
+			apkInfo:{
+				messageReferenceNumber:'',
+				senderCode:'',
+				messageFunctionCode:'',
+				documentName:'',
+				recipientCode:'',
+				documentVersionNumber:'',
+				messageSendingDateTime:''
+			},
+			WaybillInfo:{
+				carrier:'',
+				dteOfShipment:'',
+				dateOfDelivery:'',
+				name:'',
+				consignee:'',
+				codeConsigneeDivisions:'',
+				priceRemarks:'',
+				vehicleClassificationCode:'',
+				trailerLicenseNumber:'',
+				name:'',
+				nameGoods:'',
+				volume:'',
+				originalAddNumber:'',
+				name:'',
+				serviceTypeCode:'',
+				name:'',
+				nameConsignorDivisions:'',
+				receivingPlace:'',
+				transportationCost:'',
+				licensePlateCode:'',
+				vehicleLoadingQuality:'',
+				thePersonal:'',
+				certificateQualification:'',
+				codeGoods:'',
+				total:'',
+				shippingNoteNumber:'',
+				waybillLicenseNumber:'',
+				dateActualShipment:'',
+				personalNumber:'',
+				codeConsignorDivisions:'',
+				nameConsigneeDivisions:'',
+				totalAmountMoney:'',
+				vehicleLicenseNumber:'',
+				roadTransportNo:'',
+				carLicenseNumber:'',
+				phone:'',
+				goodsGross:'',
+				transportModeCode:'',
+				networkAccessAddress:''
+			}
 		}
 	},
+	created() {
+		this.getAPK()
+		this.getConstant('CargoType')
+		this.getConstant('TruckType')
+		this.getDict('notruck_transport')	
+		this.getDict('notruck_LicensePlate')	
+		this.getDict('notruck_business')
+	},
 	methods: {
+		getAPK() {
+			requestJava({
+				url: '/notruckWaybill/form',
+				method: 'get'
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.apkInfo = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		getConstant(Type) {
+			let params = {
+				Type
+			}
+			request({
+				url: '/base_conststand/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this[Type] = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		getDict(TYPE) {
+			let params = {
+				TYPE
+			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this[TYPE] = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		SaveWaybill() {
+			let data= {
+				messageReferenceNumber:this.apkInfo.messageReferenceNumber,
+				senderCode:this.apkInfo.senderCode,
+				messageFunctionCode:this.apkInfo.messageFunctionCode,
+				documentName:this.apkInfo.documentName,
+				recipientCode:this.apkInfo.recipientCode,
+				documentVersionNumber:this.apkInfo.documentVersionNumber,
+				messageSendingDateTime:this.apkInfo.messageSendingDateTime,
+				carrier:this.WaybillInfo.carrier,
+				dteOfShipment:this.WaybillInfo.dteOfShipment,
+				dateOfDelivery:this.WaybillInfo.dateOfDelivery,
+				name:this.WaybillInfo.name,
+				consignee:this.WaybillInfo.consignee,
+				codeConsigneeDivisions:this.WaybillInfo.codeConsigneeDivisions,
+				priceRemarks:this.WaybillInfo.priceRemarks,
+				vehicleClassificationCode:this.WaybillInfo.vehicleClassificationCode,
+				trailerLicenseNumber:this.WaybillInfo.trailerLicenseNumber,
+				name:this.WaybillInfo.name,
+				nameGoods:this.WaybillInfo.nameGoods,
+				volume:this.WaybillInfo.volume,
+				originalAddNumber:this.WaybillInfo.originalAddNumber,
+				name:this.WaybillInfo.name,
+				serviceTypeCode:this.WaybillInfo.serviceTypeCode,
+				name:this.WaybillInfo.name,
+				nameConsignorDivisions:this.WaybillInfo.nameConsignorDivisions,
+				receivingPlace:this.WaybillInfo.receivingPlace,
+				transportationCost:this.WaybillInfo.transportationCost,
+				licensePlateCode:this.WaybillInfo.licensePlateCode,
+				vehicleLoadingQuality:this.WaybillInfo.vehicleLoadingQuality,
+				thePersonal:this.WaybillInfo.thePersonal,
+				certificateQualification:this.WaybillInfo.certificateQualification,
+				codeGoods:this.WaybillInfo.codeGoods,
+				total:this.WaybillInfo.total,
+				shippingNoteNumber:this.WaybillInfo.shippingNoteNumber,
+				waybillLicenseNumber:this.WaybillInfo.waybillLicenseNumber,
+				dateActualShipment:this.WaybillInfo.dateActualShipment,
+				personalNumber:this.WaybillInfo.personalNumber,
+				codeConsignorDivisions:this.WaybillInfo.codeConsignorDivisions,
+				nameConsigneeDivisions:this.WaybillInfo.nameConsigneeDivisions,
+				totalAmountMoney:this.WaybillInfo.totalAmountMoney,
+				vehicleLicenseNumber:this.WaybillInfo.vehicleLicenseNumber,
+				roadTransportNo:this.WaybillInfo.roadTransportNo,
+				carLicenseNumber:this.WaybillInfo.carLicenseNumber,
+				phone:this.WaybillInfo.phone,
+				goodsGross:this.WaybillInfo.goodsGross,
+				transportModeCode:this.WaybillInfo.transportModeCode,
+				networkAccessAddress:this.WaybillInfo.networkAccessAddress
+			}
+			requestJava({
+				url: '/notruckWaybill/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.$router.push({name: 'waybillupload'})
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
 		back() {
 			this.$router.go(-1)
 		}

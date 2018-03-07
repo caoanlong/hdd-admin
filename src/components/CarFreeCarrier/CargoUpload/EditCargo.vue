@@ -78,7 +78,7 @@
 				<el-col :span="24">
 					<el-form label-width="120px">
 						<el-form-item>
-							<el-button type="primary">保存</el-button>
+							<el-button type="primary" @click="SaveCargo">保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -97,6 +97,7 @@ export default {
 			CargoType: [],
 			TruckType: [],
 			CargoInfo:{
+
 				messageReferenceNumber:'',
 				senderCode:'',
 				messageFunctionCode:'',
@@ -151,6 +152,35 @@ export default {
 			}).then(res => {
 				if (res.data.code == 200) {
 					this.CargoInfo = res.data.data
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		SaveCargo() {
+			let data= {
+				goodsId: this.$route.query.goodsId,
+				countrySubdivisionCode:this.CargoInfo.countrySubdivisionCode,
+				destinationCountrySubdivisionCode:this.CargoInfo.destinationCountrySubdivisionCode,
+				descriptionOfGoods:this.CargoInfo.descriptionOfGoods,
+				consignor:this.CargoInfo.consignor,
+				consignee:this.CargoInfo.consignee,
+				totalMonetaryAmount:this.CargoInfo.totalMonetaryAmount,
+				cargoTypeClassificationCode:this.CargoInfo.cargoTypeClassificationCode,
+				placeOfLoading:this.CargoInfo.placeOfLoading,
+				goodsReceiptPlace:this.CargoInfo.goodsReceiptPlace,
+				vehicleClassificationCode:this.CargoInfo.vehicleClassificationCode,
+				goodsItemGrossWeight:this.CargoInfo.goodsItemGrossWeight
+				
+			}
+			requestJava({
+				url: '/notruckCargosource/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.$router.push({name: 'cargoupload'})
 				} else {
 					Message.error(res.data.message)
 				}

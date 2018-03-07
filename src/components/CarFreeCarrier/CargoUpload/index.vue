@@ -17,8 +17,9 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddCargo">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
+				<el-button type="default" size="mini" icon="el-icon-upload2" @click="onSelectedFile">导入</el-button>
+				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
+				<a href="../../../../../static/cargo_template.xlsx" download="cargo_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
@@ -81,6 +82,15 @@
 <script type="text/javascript">
 import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
+import UploadExcel from '../../CommonComponents/UploadExcel'
+const userMap = {
+	'登录名': 'LoginName',
+	'姓名': 'Name',
+	'电话': 'Phone',
+	'手机': 'Mobile',
+	'归属公司': 'company.Name',
+	'归属部门': 'department.Name'
+}
 export default {
 	data() {
 		return {
@@ -89,6 +99,7 @@ export default {
 			count: 0,
 			tableData: [],
 			refreshing: false,
+			downloadLoading: false,
 			findMessageReferenceNumber:''
 		}
 	},
@@ -96,6 +107,25 @@ export default {
 		this.getCargoList()
 	},
 	methods: {
+		exportExcel() {
+			this.downloadLoading = true
+			import('../../../common/Export2Excel').then(excel => {
+				const tHeader = ['登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
+				const filterVal = [userMap['登录名'], userMap['姓名'], userMap['电话'], userMap['手机'], userMap['归属公司'], userMap['归属部门']]
+				const data = this.formatJson(filterVal, this.users)
+				excel.export_json_to_excel(tHeader, data, this.filename)
+				this.downloadLoading = false
+			})
+		},
+		formatJson(filterVal, jsonData) {
+			return jsonData.map(v => filterVal.map(j => {
+				if (j === 'timestamp') {
+					return parseTime(v[j])
+				} else {
+					return v[j]
+				}
+			}))
+		},
 		reset() {
 			this.findMessageReferenceNumber = ''
 		},
@@ -137,12 +167,47 @@ export default {
 			setTimeout(() => {
 				this.refreshing = false
 			}, 500)
+		},
+		onSelectedFile(result) {
+			new Promise((resolve, reject) => {
+				let uploadExcelUsers = []
+				result.forEach(item => {
+					let excelUser = {}
+					for (let key in item) {
+						excelUser[userMap[key]] = item[key]
+					}
+					uploadExcelUsers.push(excelUser)
+				})
+				resolve(uploadExcelUsers)
+			}).then(users => {
+				this.addUserMutiple(users)
+			})
 		}
+	},
+	components: {
+		UploadExcel
 	}
 }
 
 </script>
 <style lang="stylus" scoped>
-
+.download-btn
+	font-size 12px
+	color #606266
+	height 29px
+	line-height 29px
+	padding 0 15px
+	border 1px solid #dcdfe6
+	border-radius 3px
+	background #fff
+	margin 0 10px
+	display inline-block
+	&:hover
+		border-color #c6e2ff
+		color #409eff
+		background #ecf5ff
+	&:active
+		border-color #3a8ee6
+		color #3a8ee6
 
 </style>
