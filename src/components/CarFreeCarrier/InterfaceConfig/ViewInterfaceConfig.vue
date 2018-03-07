@@ -44,15 +44,15 @@
 			}
 		},
 		created() {
-			// this.getSmsTemp()
+			this.getInterfaceConfig()
 		},
 		methods: {
-			getSmsTemp() {
-				let params = {
-					smsTemplateId: this.$route.query.smsTemplateId
+			getInterfaceConfig() {
+				let params= {
+					userID: this.$route.query.userID,
 				}
 				requestJava({
-					url: '/sysSmsTemplate/info',
+					url: '/notruckUser/info',
 					method: 'get',
 					params
 				}).then(res => {

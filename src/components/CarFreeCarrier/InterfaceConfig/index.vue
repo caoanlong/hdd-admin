@@ -81,7 +81,7 @@ export default {
 			this.getList(index)
 		},
 		selectionChange(data) {
-			this.selectedInterfaceConfigs = data.map(item => item.smsTemplateId)
+			this.selectedInterfaceConfigs = data.map(item => item.userID)
 		},
 		getList(pageNum) {
 			let params = {
@@ -96,17 +96,17 @@ export default {
 			}).then(res => {
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
-					this.tableData = res.data.data.records
+					this.tableData = res.data.data.list
 				} else {
 					Message.error(res.data.message)
 				}
 			})
 		},
-		viewInterfaceConfig(smsTemplateId) {
-			this.$router.push({name: 'viewinterfaceconfig', query: {smsTemplateId}})
+		viewInterfaceConfig(userID) {
+			this.$router.push({name: 'viewinterfaceconfig', query: {userID}})
 		},
-		editInterfaceConfig(smsTemplateId) {
-			this.$router.push({name: 'editinterfaceconfig', query: {smsTemplateId}})
+		editInterfaceConfig(userID) {
+			this.$router.push({name: 'editinterfaceconfig', query: {userID}})
 		},
 		addInterfaceConfig() {
 			this.$router.push({name: 'addinterfaceconfig'})
@@ -135,13 +135,13 @@ export default {
 				})
 			})
 		},
-		delInterfaceConfig(smsTemplateIds) {
-			console.log(smsTemplateIds)
+		delInterfaceConfig(userID) {
+			console.log(userID)
 			let data = {
-				smsTemplateIds
+				userID
 			}
 			requestJava({
-				url: '/sysSmsTemplate/del',
+				url: '/notruckUser/del',
 				method: 'post',
 				data
 			}).then(res => {

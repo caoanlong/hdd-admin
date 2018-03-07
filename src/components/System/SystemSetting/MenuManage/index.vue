@@ -24,13 +24,13 @@
 			</div>
 			<el-form ref="form" :model="currentNode" label-width="80px">
 				<el-form-item label="标题">
-					<el-input v-model="currentNode.title"></el-input>
+					<el-input v-model="currentNode.Name"></el-input>
 				</el-form-item>
 				<el-form-item label="名字">
-					<el-input v-model="currentNode.name"></el-input>
+					<el-input v-model="currentNode.Target"></el-input>
 				</el-form-item>
 				<el-form-item label="路径">
-					<el-input v-model="currentNode.path"></el-input>
+					<el-input v-model="currentNode.Href"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
 					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> {{currentNode.Icon ? currentNode.Icon : iconTxt}}</el-button>
@@ -82,10 +82,10 @@ export default {
 				label: 'title'
 			},
 			currentNode: {
-				name: '',
-				title: '',
+				Target: '', // name
+				Name: '', // title
 				SortNumber: '',
-				path: '',
+				Href: '', // path
 				Icon: '',
 				IsShow: '',
 				sys_roles: []
@@ -112,10 +112,10 @@ export default {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				name: '',
-				title: '',
+				Target: '',
+				Name: '',
 				SortNumber: '',
-				path: '',
+				Href: '',
 				Icon: '',
 				IsShow: '',
 				sys_roles: []
@@ -147,10 +147,10 @@ export default {
 			this.button = '立即创建'
 			this.currentNode = {
 				Menu_PID: this.currentNode.Menu_ID,
-				name: '',
-				title: '',
+				Target: '',
+				Name: '',
 				SortNumber: '',
-				path: '',
+				Href: '',
 				Icon: '',
 				IsShow: '',
 				sys_roles: []
@@ -178,28 +178,28 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.title) {
+			if (!this.currentNode.Name) {
 				this.$message.error('标题不能为空！')
 				return
 			}
-			if (!this.currentNode.name) {
+			if (!this.currentNode.Target) {
 				this.$message.error('名字不能为空！')
 				return
 			}
-			if (!this.currentNode.path) {
+			if (!this.currentNode.Href) {
 				this.$message.error('路径不能为空！')
 				return
 			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
-					path: this.currentNode.path,
-					name: this.currentNode.name,
-					title: this.currentNode.title,
+					Href: this.currentNode.Href,
+					Target: this.currentNode.Target,
+					Name: this.currentNode.Name,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isShow ? 'Y' : 'N',
+					IsShow: this.isShow ? '1' : '0',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('addMenu', params)
@@ -210,13 +210,13 @@ export default {
 			} else {
 				let params = {
 					Menu_ID: this.currentNode.Menu_ID,
-					path: this.currentNode.path,
-					name: this.currentNode.name,
-					title: this.currentNode.title,
+					Href: this.currentNode.Href,
+					Target: this.currentNode.Target,
+					Name: this.currentNode.Name,
 					SortNumber: this.currentNode.SortNumber,
 					Icon: this.currentNode.Icon,
 					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isShow ? 'Y' : 'N',
+					IsShow: this.isShow ? '1' : '0',
 					sys_roles: this.selectedRoles
 				}
 				this.$store.dispatch('editMenu', params)
@@ -244,7 +244,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
-					this.isShow = res.data.data.IsShow == 'Y' ? true : false
+					this.isShow = res.data.data.IsShow == '1' ? true : false
 					this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
 				} else {
 					Message.error(res.data.msg)

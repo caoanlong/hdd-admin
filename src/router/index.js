@@ -837,8 +837,8 @@ let routerMap = [
 								component: () => import('../components/Transaction/PaymentsLog')
 							},
 							{
-								path: '/platformtransactionlog',
-								name: 'platformtransactionlog',
+								path: '/platformtranslog',
+								name: 'platformtranslog',
 								meta: {
 									title: '平台交易流水'
 								},
