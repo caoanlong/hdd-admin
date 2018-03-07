@@ -36,7 +36,7 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="addInterfaceConfig">立即保存</el-button>
+							<el-button type="primary" @click="updateInterfaceConfig">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -56,35 +56,52 @@
                     businessType: '',
                     code: '',
                     templateContent: ''
-                },
-				users: []
+                }
 			}
         },
         created() {
-            this.getUsers()
+			this.getUsers()
         },
 		methods: {
-			addInterfaceConfig() {
+			updateInterfaceConfig() {
 				let data= {
+					userID: this.$route.query.userID,
 					businessType: this.interfaceConfig.businessType,
 					code: this.interfaceConfig.businessType,
 					templateContent: this.interfaceConfig.templateContent,
 				}
 				console.log(data)
+				return
 				requestJava({
-					url: '/sysSmsTemplate/save',
+					url: '/notruckUser/save',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
 						Message.success(res.data.message)
-						this.$router.push({name: 'messagetemp'})
+						this.$router.push({name: 'interfaceconfig'})
 					} else {
 						Message.error(res.data.message)
 					}
 				})
-            },
-            // 获取所有用户
+			},
+			getInterfaceConfig() {
+				let params= {
+					userID: this.$route.query.userID,
+				}
+				requestJava({
+					url: '/notruckUser/info',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.interfaceConfig = res.data.data
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			// 获取所有用户
 			getUsers() {
 				let params = {
 					pageSize: 100
@@ -96,6 +113,7 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.users = res.data.data.rows
+						this.getInterfaceConfig()
 					} else {
 						Message.error(res.data.msg)
 					}

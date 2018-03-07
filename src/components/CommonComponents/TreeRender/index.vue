@@ -1,9 +1,9 @@
 <template>
 	<span class="tree-expand">
 		<span class="tree-label">
-			<span>{{DATA.title}}</span>
+			<span>{{DATA.Name}}</span>
 		</span>
-		<span class="tree-btn" v-show="CURRENTNODE ? CURRENTNODE.name == DATA.name : false">
+		<span class="tree-btn" v-show="CURRENTNODE ? CURRENTNODE.Target == DATA.Target : false">
 			<span class="control-btn add" @click.stop="nodeAdd(STORE, DATA, NODE)">
 				<i class="el-icon-plus"></i>添加
 			</span>

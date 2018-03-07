@@ -57,7 +57,6 @@
                     code: '',
                     templateContent: ''
                 },
-				users: []
 			}
         },
         created() {
@@ -72,13 +71,13 @@
 				}
 				console.log(data)
 				requestJava({
-					url: '/sysSmsTemplate/save',
+					url: '/notruckUser/save',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
 						Message.success(res.data.message)
-						this.$router.push({name: 'messagetemp'})
+						this.$router.push({name: 'interfaceconfig'})
 					} else {
 						Message.error(res.data.message)
 					}
