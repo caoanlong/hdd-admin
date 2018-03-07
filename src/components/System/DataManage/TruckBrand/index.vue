@@ -29,7 +29,7 @@
 					<el-table-column label="名称" prop="Name"></el-table-column>
 					<el-table-column label="图片" prop="PictureURL">
 						<template slot-scope="scope">
-							<img class="table-img" :src="scope.row.PictureURL">
+							<img class="table-img" :src="scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
 						</template>
 					</el-table-column>
 					<el-table-column label="是否生效" prop="Enable">
@@ -167,6 +167,13 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
+		},
+		previewImg(imgUrl) {
+			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+				dangerouslyUseHTMLString: true,
+				showConfirmButton: false,
+				customClass: 'img-preview'
+			})
 		}
 	}
 }
@@ -193,4 +200,5 @@ export default {
 		color #3a8ee6
 .table-img
 	width 30px
+	cursor pointer
 </style>

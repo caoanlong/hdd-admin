@@ -10,13 +10,10 @@
 						<el-input placeholder="请输入..." v-model="findBusinessType"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getTranSms(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getTranSms()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
-			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tranSms" border style="width: 100%" size="mini">
@@ -59,7 +56,7 @@
 					</el-col>
 					<el-col :span="12">
 						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+							<el-pagination :current-page="pageIndex" :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
 						</div>
 					</el-col>
 				</el-row>
@@ -75,19 +72,27 @@
 			return {
 				findBusinessType: '',
 				refreshing: false,
-				pageIndex: 1,
-				pageSize: 10,
+				pageIndex: Number(sessionStorage.getItem('pageIndex')) || 1,
+				pageSize: Number(sessionStorage.getItem('pageSize')) || 10,
 				count: 0,
 				tranSms: []
 			}
+		},
+		watch: {
+			pageSize(newVal) {
+				sessionStorage.setItem('pageSize', newVal)
+			},
+			pageIndex(newVal) {
+				sessionStorage.setItem('pageIndex', newVal)
+			},
 		},
 		created() {
 			this.getTranSms()
 		},
 		methods: {
-			getTranSms(pageIndex) {
+			getTranSms() {
 				let params = {
-					pageIndex: pageIndex || 1,
+					pageIndex: this.pageIndex || 1,
 					pageSize: this.pageSize,
 					BusinessType: this.findBusinessType
 				}
@@ -105,7 +110,8 @@
 				})
 			},
 			pageChange(index) {
-				this.getTranSms(index)
+				this.pageIndex = index
+				this.getTranSms()
 			},
 			// 重置搜索表单
 			reset() {

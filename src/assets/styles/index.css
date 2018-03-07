@@ -62,3 +62,7 @@ code a:hover{color:#20a0ff;}
 .text-input,.text-input .el-input__inner{vertical-align:top}
 
 .customerEditor{line-height: 1.15}
+
+.img-preview{
+	width: 30%
+}

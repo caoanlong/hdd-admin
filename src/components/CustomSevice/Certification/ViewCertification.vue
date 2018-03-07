@@ -12,6 +12,7 @@
 								action="" 
 								class="avatar-uploader" 
 								:show-file-list="false" 
+								@click.native="previewImg(memMember.headPicture)" 
 								:disabled="true">
 								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -25,6 +26,7 @@
 								action="" 
 								class="avatar-uploader" 
 								:show-file-list="false" 
+								@click.native="previewImg(payRealNameApply.idcardFrontPic)" 
 								:disabled="true">
 								<img v-if="payRealNameApply.idcardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardFrontPic" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -48,6 +50,7 @@
 								action="" 
 								class="avatar-uploader" 
 								:show-file-list="false" 
+								@click.native="previewImg(payRealNameApply.idcardBackPic)" 
 								:disabled="true">
 								<img v-if="payRealNameApply.idcardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardBackPic" 
 								class="avatar">
@@ -64,9 +67,6 @@
 						<el-form-item label="手机号码">
 							<p v-text="memMember.mobile"></p>
 						</el-form-item>
-						
-						
-						
 					</el-form>
 				</el-col>
 				<el-col :span="24">
@@ -131,6 +131,13 @@
 					}
 				})
 			},
+			previewImg(imgUrl) {
+				this.$alert(`<img style="width: 100%" src=http://develop.we-service.cn/hdd/image/${imgUrl} />`, '图片预览', {
+					dangerouslyUseHTMLString: true,
+					showConfirmButton: false,
+					customClass: 'img-preview'
+				})
+			},
 			back() {
 				this.$router.go(-1)
 			},
@@ -156,27 +163,27 @@
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
+.avatar-uploader
+	line-height 1
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
+	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
 		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
 .el-form-item__content
 	p
 		margin 0

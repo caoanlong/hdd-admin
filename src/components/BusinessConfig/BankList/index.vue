@@ -16,13 +16,13 @@
 					<el-table-column label="单日限额" prop="dailyLimit"></el-table-column>
 					<el-table-column label="logo" align="center">
 						<template slot-scope="scope">
-							<img class="imgBank" :src="scope.row.logoUrl">
+							<img class="imgBank" :src="scope.row.logoUrl" @click="previewImg(scope.row.logoUrl)">
 						</template>
 					</el-table-column>
 					<el-table-column label="logo图标名称" align="center" prop="logoName" width="100"></el-table-column>
 					<el-table-column label="背景图片">
 						<template slot-scope="scope">
-							<img class="imgBank" :src="scope.row.bgUrl">
+							<img class="imgBank" :src="scope.row.bgUrl" @click="previewImg(scope.row.bgUrl)">
 						</template>
 					</el-table-column>
 					<el-table-column label="背景名称" prop="bgName"></el-table-column>
@@ -101,7 +101,7 @@
 				}).then(res => {
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
-						this.tableData = res.data.data.records
+						this.tableData = res.data.data.list
 						console.log(res.data.data)
 					} else {
 						Message.error(res.data.message)
@@ -157,7 +157,14 @@
 						Message.error(res.data.message)
 					}
 				})
-			}
+			},
+			previewImg(imgUrl) {
+				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+					dangerouslyUseHTMLString: true,
+					showConfirmButton: false,
+					customClass: 'img-preview'
+				})
+			},
 		}
 	}
 </script>
@@ -168,4 +175,5 @@
 		padding 0
 .imgBank
 	width 30px
+	cursor pointer
 </style>
