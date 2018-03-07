@@ -6,66 +6,66 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="报文参考号：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.messageReferenceNumber}}</p>
 						</el-form-item>
 						<el-form-item label="发送方代码：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.senderCode}}</p>
 						</el-form-item>
 						<el-form-item label="报文功能代码：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.messageFunctionCode}}</p>
 						</el-form-item>
 						<el-form-item label="出发地区代码：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.countrySubdivisionCode}}</p>
 						</el-form-item>
 						<el-form-item label="目的地区代码：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.destinationCountrySubdivisionCode}}</p>
 						</el-form-item>
 						<el-form-item label="货物名称：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.descriptionOfGoods}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="单证名称：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="接收方代码：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="发货人：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="收货人：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="费用总金额：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="货物类型分类：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="报文版本号：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="发送日期时间：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="出发地：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="目的地：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="车辆类型：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 						<el-form-item label="货物项毛重：">
-							<p>{{}}</p>
+							<p>{{CargoInfo.1111}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -81,15 +81,34 @@
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			CargoInfo:{}
 		}
 	},
-	computed: {
-
+	created() {
+		this.getCargoInfo()
 	},
 	methods: {
+		getCargoInfo() {
+			let params = {
+				goodsId: this.$route.query.goodsId
+			}
+			requestJava({
+				url: '/notruckWaybill/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.CargoInfo = res.data.data
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
 		back() {
 			this.$router.go(-1)
 		}

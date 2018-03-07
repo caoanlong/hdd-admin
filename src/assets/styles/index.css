@@ -61,4 +61,4 @@ code a:hover{color:#20a0ff;}
 .table .el-table .cell{white-space: nowrap;}
 .text-input,.text-input .el-input__inner{vertical-align:top}
 
-.el-form-item__content{line-height: 1.15!important}
+.customerEditor{line-height: 1.15}

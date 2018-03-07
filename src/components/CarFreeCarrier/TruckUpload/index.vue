@@ -7,22 +7,22 @@
 			<div class="search">
 				<el-form :inline="true"  class="demo-form-inline"  size="small">
 					<el-form-item label="报文参考号：">
-						<el-input  placeholder="报文参考号"></el-input>
+						<el-input  placeholder="报文参考号" v-model="findMessageReferenceNumber"></el-input>
 					</el-form-item>
 					<el-form-item label="单证名称：">
-						<el-input  placeholder="单证名称"></el-input>
+						<el-input  placeholder="单证名称" v-model="findDocumentName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary"  @click.native="getTruckList(1)">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addTruck">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddTruck">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -53,7 +53,11 @@
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作">
+					<el-table-column label="操作" width="150" align="center">
+						<template slot-scope="scope">
+							<el-button type="default" size="mini" icon="el-icon-view" @click="ViewTruck(scope.row.notrucksourceId)">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="EditTruck(scope.row.notrucksourceId)">编辑</el-button>
+						</template>
 					</el-table-column>
 				</el-table>
 				<el-row type="flex">
@@ -88,17 +92,26 @@
 				pageNum: 1,
 				pageSize: 10,
 				count: 0,
-				tableData: []
+				tableData: [],
+				refreshing: false,
+				findMessageReferenceNumber:'',
+				findDocumentName:''
 			}
 		},
 		created() {
 			this.getTruckList()
 		},
 		methods: {
+			reset() {
+				this.findMessageReferenceNumber = ''
+				this.findDocumentName=''
+			},
 			getTruckList(pageNum) {
 				let params = {
 					pageNum: pageNum || 1,
-					pageSize: this.pageSize
+					pageSize: this.pageSize,
+					messageReferenceNumber: this.findMessageReferenceNumber,
+					documentName: this.findDocumentName
 				}
 				requestJava({
 					url: '/notruckTrucksource/list',
@@ -117,14 +130,21 @@
 			pageChange(index) {
 				// this.getList(index)
 			},
-			addTruck() {
+			AddTruck() {
 				this.$router.push({ name: 'addtruck' })
 			},
-			editTruck(id) {
+			EditTruck(notrucksourceId) {
 				this.$router.push({ name: 'edittruck'})
 			},
-			viewTruck(id) {
+			ViewTruck(notrucksourceId) {
 				this.$router.push({ name: 'viewtruck'})
+			},
+			refresh() {
+				this.refreshing = true
+				this.getTruckList()
+				setTimeout(() => {
+					this.refreshing = false
+				}, 500)
 			}
 		}
 	}	

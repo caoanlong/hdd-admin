@@ -22,7 +22,7 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容">
-							<editor :defaultMsg=content.Content :config=editorConfig ref="ue"></editor>
+							<editor :defaultMsg=content.Content :config=editorConfig ref="ue"  class="customerEditor"></editor>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<el-upload
