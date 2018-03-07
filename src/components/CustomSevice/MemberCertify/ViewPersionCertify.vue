@@ -75,7 +75,7 @@
 				<el-col :span="24">
 					<el-form label-width="120px">
                         <el-form-item label="审核说明">
-							<el-input type="textarea">哈哈哈哈哈哈哈</el-input>
+							<el-input type="textarea"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="success">激活</el-button>

@@ -8,31 +8,31 @@
 				<el-col :span="16">
 					<el-form label-width="160px">
 						<el-form-item label="公司名称">
-							<p>旅途</p>
+							<p>{{certifyEnterprice.CompanyName}}</p>
 						</el-form-item>
 						<el-form-item label="详细地址">
-							<p>天马山南路49号 衡阳体育宾馆</p>
+							<p>{{certifyEnterprice.DetailAddress}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="所在区域">
-							<p>湖南衡阳雁峰</p>
+							<p></p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证编号">
-							<p>44797789</p>
+							<p>{{certifyEnterprice.TransportationLicenseCode}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="社会信用代码">
-							<p>2575</p>
+							<p>{{certifyEnterprice.SocialCreditCode}}</p>
 						</el-form-item>
 						<el-form-item label="门面照片">
 							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<img v-if="certifyEnterprice.CompanyFacadePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.CompanyFacadePic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -45,7 +45,7 @@
 						</el-form-item>
 						<el-form-item label="营业执照图片">
 							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<img v-if="certifyEnterprice.BusinessLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.BusinessLicensePic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -54,11 +54,11 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="无车承运平台AppKey">
-							<p>44888</p>
+							<p></p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证照片">
 							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+								<img v-if="certifyEnterprice.TransportationLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.TransportationLicensePic" class="avatar">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -67,10 +67,11 @@
 				<el-col :span="24">
 					<el-form label-width="160px">
 						<el-form-item label="审核说明">
-							<p>哈哈来看的价格里面的规划</p>
+							<el-input type="textarea"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary">审核通过</el-button>
+							<el-button type="success">通过</el-button>
+                            <el-button type="danger">拒绝</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -86,10 +87,7 @@
 	export default {
 		data() {
 			return {
-				payRealNameApply:[],
-				memMember:[],
-				findAuditStatus:'',
-				flag:''
+				certifyEnterprice: {}
 			}
 		},
 		created() {
@@ -106,7 +104,7 @@
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						this.certifyPerson = res.data.data
+						this.certifyEnterprice = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}

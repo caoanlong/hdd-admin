@@ -13,7 +13,7 @@
                                 class="avatar-uploader" 
                                 :show-file-list="false" 
                                 :disabled="true">
-                                <!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+                                <img v-if="certifyTruck.FrontPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.FrontPic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                             <el-upload 
@@ -21,7 +21,7 @@
                                 class="avatar-uploader" 
                                 :show-file-list="false" 
                                 :disabled="true">
-                                <!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+                                <img v-if="certifyTruck.SidePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.SidePic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                             <el-upload 
@@ -34,22 +34,22 @@
                             </el-upload>
                         </el-form-item>
                         <el-form-item label="车牌号码">
-                            <p>429002654156798</p>
+                            <p>{{certifyTruck.PlateNo}}</p>
                         </el-form-item>
-                        <el-form-item label="车辆类型">
-                            <p>429002654156798</p>
+                        <el-form-item label="车牌类型">
+                            <p></p>
                         </el-form-item>
                         <el-form-item label="车型">
-                            <p>429002654156798</p>
+                            <p v-for="truckType in truckTypes" :key="truckType.ConstStd_ID" v-if="truckType.ConstStd_ID == certifyTruck.Type">certifyTruck.Name</p>
                         </el-form-item>
                         <el-form-item label="车长">
-                            <p>429002654156798</p>
+                            <p></p>
                         </el-form-item>
                         <el-form-item label="载重">
-                            <p>429002654156798</p>
+                            <p></p>
                         </el-form-item>
                         <el-form-item label="车主">
-                            <p>429002654156798</p>
+                            <p></p>
                         </el-form-item>
                         <el-form-item label="行驶照片">
                             <el-upload 
@@ -77,33 +77,47 @@
 </template>
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
+	import request from '../../../common/request'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
-				payRealNameApply:[],
-				memMember:[],
-				findAuditStatus:'',
-				flag:''
+                certifyTruck: {},
+                truckTypes: []
 			}
 		},
 		created() {
-			// this.getInfo()
+			this.getTruckType()
 		},
 		methods: {
 			getInfo() {
 				let params = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					memID: this.$route.query.memID
+					truckCertifyId: this.$route.query.truckCertifyId
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/info',
+					url: '/mem/memMember/getCertifyTruckInfo',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						this.payRealNameApply = res.data.data.payRealNameApply
-						this.memMember = res.data.data.memMember
+						this.certifyTruck = res.data.data
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+            },
+            getTruckType() {
+				let params = {
+					Type: 'TruckType',
+				}
+				request({
+					url: '/base_conststand/list/type',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.truckTypes = res.data.data
+						this.getInfo()
 					} else {
 						Message.error(res.data.msg)
 					}
