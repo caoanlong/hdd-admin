@@ -207,6 +207,14 @@ let routerMap = [
 						component: () => import('../components/CustomSevice/MemberCertify/ViewCompanyCertify')
 					},
 					{
+						path: '/viewtruckcertify',
+						name: 'viewtruckcertify',
+						meta: {
+							title: '车辆认证'
+						},
+						component: () => import('../components/CustomSevice/MemberCertify/ViewTruckCertify')
+					},
+					{
 						path: '/certification',
 						name: 'certification',
 						meta: {
