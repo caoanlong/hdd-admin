@@ -171,7 +171,7 @@
 							<el-input type="textarea" v-model="WaybillInfo.networkAccessAddress" resize="none"></el-input>
 						</el-form-item>
 						<el-form-item>
-								<el-button type="primary">保存</el-button>
+								<el-button type="primary" @click="SaveWaybill">保存</el-button>
 								<el-button @click="back">取消</el-button>
 							</el-form-item>
 					</el-form>
@@ -188,7 +188,47 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			WaybillInfo:{},
+			WaybillInfo:{
+				carrier:'',
+				dteOfShipment:'',
+				dateOfDelivery:'',
+				name:'',
+				consignee:'',
+				codeConsigneeDivisions:'',
+				priceRemarks:'',
+				vehicleClassificationCode:'',
+				trailerLicenseNumber:'',
+				name:'',
+				nameGoods:'',
+				volume:'',
+				originalAddNumber:'',
+				name:'',
+				serviceTypeCode:'',
+				name:'',
+				nameConsignorDivisions:'',
+				receivingPlace:'',
+				transportationCost:'',
+				licensePlateCode:'',
+				vehicleLoadingQuality:'',
+				thePersonal:'',
+				certificateQualification:'',
+				codeGoods:'',
+				total:'',
+				shippingNoteNumber:'',
+				waybillLicenseNumber:'',
+				dateActualShipment:'',
+				personalNumber:'',
+				codeConsignorDivisions:'',
+				nameConsigneeDivisions:'',
+				totalAmountMoney:'',
+				vehicleLicenseNumber:'',
+				roadTransportNo:'',
+				carLicenseNumber:'',
+				phone:'',
+				goodsGross:'',
+				transportModeCode:'',
+				networkAccessAddress:''
+			},
 			TruckType: [],
 			CargoType: [],
 			notruck_transport:[],
@@ -205,6 +245,62 @@ export default {
 		this.getDict('notruck_business')	
 	},
 	methods: {
+		SaveWaybill() {
+			let data= {
+				wayId: this.$route.query.wayId,
+				carrier:this.WaybillInfo.carrier,
+				dteOfShipment:this.WaybillInfo.dteOfShipment,
+				dateOfDelivery:this.WaybillInfo.dateOfDelivery,
+				name:this.WaybillInfo.name,
+				consignee:this.WaybillInfo.consignee,
+				codeConsigneeDivisions:this.WaybillInfo.codeConsigneeDivisions,
+				priceRemarks:this.WaybillInfo.priceRemarks,
+				vehicleClassificationCode:this.WaybillInfo.vehicleClassificationCode,
+				trailerLicenseNumber:this.WaybillInfo.trailerLicenseNumber,
+				name:this.WaybillInfo.name,
+				nameGoods:this.WaybillInfo.nameGoods,
+				volume:this.WaybillInfo.volume,
+				originalAddNumber:this.WaybillInfo.originalAddNumber,
+				name:this.WaybillInfo.name,
+				serviceTypeCode:this.WaybillInfo.serviceTypeCode,
+				name:this.WaybillInfo.name,
+				nameConsignorDivisions:this.WaybillInfo.nameConsignorDivisions,
+				receivingPlace:this.WaybillInfo.receivingPlace,
+				transportationCost:this.WaybillInfo.transportationCost,
+				licensePlateCode:this.WaybillInfo.licensePlateCode,
+				vehicleLoadingQuality:this.WaybillInfo.vehicleLoadingQuality,
+				thePersonal:this.WaybillInfo.thePersonal,
+				certificateQualification:this.WaybillInfo.certificateQualification,
+				codeGoods:this.WaybillInfo.codeGoods,
+				total:this.WaybillInfo.total,
+				shippingNoteNumber:this.WaybillInfo.shippingNoteNumber,
+				waybillLicenseNumber:this.WaybillInfo.waybillLicenseNumber,
+				dateActualShipment:this.WaybillInfo.dateActualShipment,
+				personalNumber:this.WaybillInfo.personalNumber,
+				codeConsignorDivisions:this.WaybillInfo.codeConsignorDivisions,
+				nameConsigneeDivisions:this.WaybillInfo.nameConsigneeDivisions,
+				totalAmountMoney:this.WaybillInfo.totalAmountMoney,
+				vehicleLicenseNumber:this.WaybillInfo.vehicleLicenseNumber,
+				roadTransportNo:this.WaybillInfo.roadTransportNo,
+				carLicenseNumber:this.WaybillInfo.carLicenseNumber,
+				phone:this.WaybillInfo.phone,
+				goodsGross:this.WaybillInfo.goodsGross,
+				transportModeCode:this.WaybillInfo.transportModeCode,
+				networkAccessAddress:this.WaybillInfo.networkAccessAddress
+			}
+			requestJava({
+				url: '/notruckWaybill/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.$router.push({name: 'waybillupload'})
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
 		getConstant(Type) {
 			let params = {
 				Type

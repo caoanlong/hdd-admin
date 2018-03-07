@@ -10,7 +10,6 @@ export default {
 	name: 'App',
 	watch: {
 		$route(newVal, oldVal) {
-			console.log(newVal.name, oldVal.name)
 			if (oldVal.name) {
 				sessionStorage.removeItem('pageSize')
 				sessionStorage.removeItem('pageIndex')

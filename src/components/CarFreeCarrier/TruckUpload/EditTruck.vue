@@ -6,7 +6,7 @@
 				<el-col :span="8">
 					<el-form label-width="130px">
 						<el-form-item label="报文参考号">
-							<el-input  v-model="TruckInfo.messageReferenceNumber" :disabled="true"></el-input>
+							<el-input v-model="TruckInfo.messageReferenceNumber" :disabled="true"></el-input>
 						</el-form-item>
 						<el-form-item label="发送方代码">
 							<el-input v-model="TruckInfo.senderCode" :disabled="true"></el-input>
@@ -68,9 +68,8 @@
 				</el-col>
 				<el-col :span="24">
 					<el-form label-width="130px">
-
 						<el-form-item>
-							<el-button type="primary">保存</el-button>
+							<el-button type="primary" @click="SaveTruck">保存</el-button>
 							<el-button @click.native="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -86,16 +85,24 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			TruckType: '',
-			TruckLength:'',
-			TruckInfo:{}
+			TruckType: [],
+			TruckLength: [],
+			TruckInfo: {
+				vehicleNumber: '',
+				vehicleClassificationCode: '',
+				vehicleLength: '',
+				vehicleTonnage: '',
+				placeOfLoading: '',
+				countrySubdivisionCode: '',
+				goodsReceiptPlace: '',
+				destinationCountrySubdivisionCode: ''
+			}
 		}
 	},
 	created() {
 		this.getConstant('TruckType')
 		this.getConstant('TruckLength')
 		this.getTruckInfo()
-		
 	},
 	methods: {
 		getConstant(Type) {
@@ -125,6 +132,31 @@ export default {
 			}).then(res => {
 				if (res.data.code == 200) {
 					this.TruckInfo = res.data.data
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		SaveTruck() {
+			let data = {
+				notrucksourceId: this.$route.query.notrucksourceId,
+				vehicleNumber: this.TruckInfo.vehicleNumber,
+				vehicleClassificationCode: this.TruckInfo.vehicleClassificationCode,
+				vehicleLength: this.TruckInfo.vehicleLength,
+				vehicleTonnage: this.TruckInfo.vehicleTonnage,
+				placeOfLoading: this.TruckInfo.placeOfLoading,
+				countrySubdivisionCode: this.TruckInfo.countrySubdivisionCode,
+				goodsReceiptPlace: this.TruckInfo.goodsReceiptPlace,
+				destinationCountrySubdivisionCode: this.TruckInfo.destinationCountrySubdivisionCode
+			}
+			requestJava({
+				url: '/notruckTrucksource/save',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.$router.push({ name: 'truckupload' })
 				} else {
 					Message.error(res.data.message)
 				}
