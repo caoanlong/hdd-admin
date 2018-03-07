@@ -115,7 +115,7 @@ export default {
 				pageNum: pageNum || 1,
 				pageSize: this.pageSize,
 				realName: this.findKeyWords,
-				auditStatus:this.findAuditStatus
+				auditStatus: this.findAuditStatus
 			}
 			requestJava({
 				url: '/customerservice/payRealNameApply/list',

@@ -13,13 +13,10 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getList(1)">查询</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
-			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -53,7 +50,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
 							<el-option label="10" value="10"></el-option>
 							<el-option label="20" value="20"></el-option>
 							<el-option label="30" value="30"></el-option>
@@ -65,7 +62,7 @@
 					</el-col>
 					<el-col :span="12">
 						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+							<el-pagination :current-page="pageIndex" :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
 						</div>
 					</el-col>
 				</el-row>
@@ -80,26 +77,35 @@
 		data() {
 			return {
 				findType: '',
-				pageNum: 1,
-				pageSize: 10,
+				pageIndex: Number(sessionStorage.getItem('pageIndex')) || 1,
+				pageSize: Number(sessionStorage.getItem('pageSize')) || 10,
 				count: 0,
 				tableData: []
 			}
+		},
+		watch: {
+			pageSize(newVal) {
+				sessionStorage.setItem('pageSize', newVal)
+			},
+			pageIndex(newVal) {
+				sessionStorage.setItem('pageIndex', newVal)
+			},
 		},
 		created() {
 			this.getList()
 		},
 		methods: {
 			pageChange(index) {
-				this.getList(index)
+				this.pageIndex = index
+				this.getList()
 			},
 			reset() {
 				this.findType = '',
 				this.getList()
 			},
-			getList(pageNum) {
+			getList() {
 				let params = {
-					pageNum: pageNum || 1,
+					pageNum: this.pageIndex || 1,
 					pageSize: this.pageSize,
 					type: this.findType
 				}

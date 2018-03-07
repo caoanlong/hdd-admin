@@ -1,9 +1,11 @@
 <template>
 	<div class="app-wrapper clearfix" :class="{hideSidebar: !sidebar.opened}">
 		<sidebar class="sidebar-container"></sidebar>
-		<div class="main-container">
-			<navbar></navbar>
-			<tags-view></tags-view>
+		<div class="main-container right-container">
+			<div class="top-bar">
+				<navbar></navbar>
+				<tags-view></tags-view>
+			</div>
 			<app-main></app-main>
 		</div>
 	</div>
@@ -32,5 +34,12 @@
 	.app-wrapper
 		position relative
 		height 100%
-		width 100%
+		.right-container
+			position relative
+			padding-top 80px
+			.top-bar
+				position fixed
+				top 0
+				width 100%
+				z-index 99
 </style>

@@ -40,7 +40,7 @@
 					</el-col>
 					<el-col :span="12">
 						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+							<el-pagination :current-page="pageIndex" :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
 						</div>
 					</el-col>
 				</el-row>
@@ -55,20 +55,28 @@ export default {
 	data() {
       	return {
 			refreshing: false,
-			pageIndex: 1,
-			pageSize: 10,
+			pageIndex: Number(sessionStorage.getItem('pageIndex')) || 1,
+			pageSize: Number(sessionStorage.getItem('pageSize')) || 10,
 			count: 0,
 			setContent: [],
 			selectedContents: []
 		}
 	},
+	watch: {
+		pageSize(newVal) {
+			sessionStorage.setItem('pageSize', newVal)
+		},
+		pageIndex(newVal) {
+			sessionStorage.setItem('pageIndex', newVal)
+		},
+	},
 	created() {
 		this.getContents()
 	},
 	methods: {
-		getContents(pageIndex) {
+		getContents() {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize
 			}
 			request({
@@ -85,7 +93,8 @@ export default {
 			})
 		},
 		pageChange(index) {
-			this.getContents(index)
+			this.pageIndex = index
+			this.getContents()
 		},
 		refresh() {
 			this.refreshing = true

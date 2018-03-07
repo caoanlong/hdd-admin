@@ -21,6 +21,7 @@
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
                                 :disabled="true" 
+								@click.native="previewImg(truckBrand.PictureURL)"
 								:show-file-list="false">
 								<img v-if="truckBrand.PictureURL" :src="truckBrand.PictureURL" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -68,7 +69,14 @@
 						Message.error(res.data.msg)
 					}
 				})
-            },
+			},
+			previewImg(imgUrl) {
+				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+					dangerouslyUseHTMLString: true,
+					showConfirmButton: false,
+					customClass: 'img-preview'
+				})
+			},
 			back() {
 				this.$router.go(-1)
 			}

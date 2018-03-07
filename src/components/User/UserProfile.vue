@@ -9,7 +9,11 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" :show-file-list="false" :on-success="handleAvatarSuccess">
+							<el-upload :disabled="!isEdit" class="avatar-uploader" 
+							action="http://39.108.245.177:3001/uploadImg" 
+							@click.native="previewImg(user.Photo)"
+							:show-file-list="false" 
+							:on-success="handleAvatarSuccess">
 								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -47,8 +51,6 @@
 							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Phone" :class="isEdit?'text-input':''"></el-input>
 							<p v-text="user.Phone" v-else></p>
 						</el-form-item>
-						
-						
 						<el-form-item label="用户名">
 							<el-input auto-complete="off" disabled v-model="user.LoginName" v-if="isEdit" :class="isEdit?'text-input':''"></el-input>
 							<p v-text="user.LoginName" v-else></p>
@@ -155,6 +157,16 @@
 			},
 			handleAvatarSuccess(res, file) {
 				this.user.Photo = 'http://39.108.245.177:4000' + res.data
+			},
+			previewImg(imgUrl) {
+				if (this.isEdit) {
+					return
+				}
+				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+					dangerouslyUseHTMLString: true,
+					showConfirmButton: false,
+					customClass: 'img-preview'
+				})
 			},
 			back() {
 				this.$router.go(-1)

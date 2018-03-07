@@ -63,21 +63,20 @@ export default {
 
 <style lang="stylus" scoped>
 .navbar
+	width 100%
 	height 50px
 	line-height 50px
 	border-radius 0px !important
+	display flex
 	.hamburger-container
 		line-height 58px
 		height 50px
-		float left
 		padding 0 10px
+		flex 0 0 40px
 	.breadcrumb-container
-		float left
-	.errLog-container
-		display inline-block
-		vertical-align top
+		flex 1
 	.right-menu
-		float right
+		flex 0 0 350px
 		height 100%
 		&:focus
 		 outline none

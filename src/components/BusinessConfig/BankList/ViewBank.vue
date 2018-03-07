@@ -20,6 +20,7 @@
                             <el-upload 
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
+								@click.native="previewImg(bankInfo.logoUrl)" 
 								:disabled="true" 
 								:show-file-list="false">
 								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
@@ -33,6 +34,7 @@
                             <el-upload 
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
+								@click.native="previewImg(bankInfo.bgUrl)" 
 								:disabled="true"  
 								:show-file-list="false">
 								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
@@ -49,6 +51,9 @@
 				</el-col>
 			</el-row>
 		</el-card>
+		<!-- <el-dialog title="图片预览">
+			<img src=""/>
+		</el-dialog> -->
 	</div>
 </template>
 <script type="text/javascript">
@@ -75,12 +80,18 @@
 				}).then(res => {
 					if (res.data.code == 200) {
                         this.bankInfo = res.data.data
-                        console.log(res.data.data)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
-            },
+			},
+			previewImg(imgUrl) {
+				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+					dangerouslyUseHTMLString: true,
+					showConfirmButton: false,
+					customClass: 'img-preview'
+				})
+			},
 			back() {
 				this.$router.go(-1)
 			}
