@@ -7,22 +7,22 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="托运单号：">
-						<el-input placeholder="托运单号"></el-input>
+						<el-input placeholder="托运单号" v-model="findShippingNoteNumber"></el-input>
 					</el-form-item>
 					<el-form-item label="承运人：">
-						<el-input placeholder="承运人"></el-input>
+						<el-input placeholder="承运人" v-model="findCarrier"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary"  @click.native="getWaybillList(1)">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addWaybill">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddWaybill">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -51,11 +51,10 @@
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="操作" width="150" align="center">
 						<template slot-scope="scope">
-								<el-button type="default" size="mini" icon="el-icon-view">查看</el-button>
-								<el-button type="default" size="mini" icon="el-icon-edit">编辑</el-button>
-								<el-button type="default" size="mini" icon="el-icon-delete">删除</el-button>
+								<el-button type="default" size="mini" icon="el-icon-view" @click="ViewWaybill(scope.row.wayId)">查看</el-button>
+								<el-button type="default" size="mini" icon="el-icon-edit" @click="EditWaybill(scope.row.wayId)">编辑</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -91,17 +90,26 @@ export default {
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,
-			tableData: []
+			tableData: [],
+			refreshing: false,
+			findShippingNoteNumber:'',
+			findCarrier:''
 		}
 	},
 	created() {
 		this.getWaybillList()
 	},
 	methods: {
+		reset() {
+			this.findShippingNoteNumber = ''
+			this.findCarrier=''
+		},
 		getWaybillList(pageNum) {
 			let params = {
 				pageNum: pageNum || 1,
-				pageSize: this.pageSize
+				pageSize: this.pageSize,
+				shippingNoteNumber:this.findShippingNoteNumber,
+				carrier:this.findCarrier
 			}
 			requestJava({
 				url: '/notruckWaybill/list',
@@ -120,14 +128,21 @@ export default {
 		pageChange(index) {
 			this.getWaybillList(index)
 		},
-		addWaybill() {
-			this.$router.push({ name: 'addwaybill' })
+		AddWaybill() {
+			this.$router.push({ name: 'addwaybill'})
 		},
-		editWaybill(id) {
-			this.$router.push({ name: 'editwaybill'})
+		EditWaybill(wayId) {
+			this.$router.push({ name: 'editwaybill', query: { wayId} })
 		},
-		viewWaybill(id) {
-			this.$router.push({ name: 'viewwaybill'})
+		ViewWaybill(wayId) {
+			this.$router.push({ name: 'viewwaybill', query: { wayId} })
+		},
+		refresh() {
+			this.refreshing = true
+			this.getWaybillList()
+			setTimeout(() => {
+				this.refreshing = false
+			}, 500)
 		}
 	}
 }

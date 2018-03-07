@@ -22,7 +22,7 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容">
-							<div id="editor" type="text/plain"></div>
+							<div id="editor" type="text/plain"  class="customerEditor"></div>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<el-upload
