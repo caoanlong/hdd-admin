@@ -26,48 +26,30 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column sortable label="托运单号">
+					<el-table-column label="托运单号" prop="shippingNoteNumber">
 					</el-table-column>
-					<el-table-column sortable label="承运人" align="center">
+					<el-table-column label="承运人" align="center" prop="carrier">
+					</el-table-column>
+					<el-table-column label="托运时间" prop="dteOfShipment" align="center">
+					</el-table-column>
+					<el-table-column label="实际发运时间" width="140" prop="dateActualShipment" align="center">
+					</el-table-column>
+					<el-table-column label="收货时间" prop="dateOfDelivery" align="center">
+					</el-table-column>
+					<el-table-column label="发货人" prop="consignor" align="center">
+					</el-table-column>
+					<el-table-column label="装货地点" prop="loadingPlace">
+					</el-table-column>
+					<el-table-column label="收货人" prop="consignee" align="center">
+					</el-table-column>
+					<el-table-column label="状态" prop="hasFail">
+					</el-table-column>
+					<el-table-column label="错误描述" prop="failDescription">
+					</el-table-column>
+					<el-table-column label="创建时间" prop="createTime"  align="center" width="140">
 						<template slot-scope="scope">
-							<el-popover trigger="hover" placement="top-start">
-								<p>姓名: {{ scope.row.name }}</p>
-								<p>装货住址: {{ scope.row.address }}</p>
-								<div slot="reference" class="name-wrapper">
-									<el-tag size="mini">{{ scope.row.name }}</el-tag>
-								</div>
-							</el-popover>
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
-					</el-table-column>
-					<el-table-column sortable label="托运时间" prop="date" align="center">
-						<template slot-scope="scope">
-							<i class="el-icon-time"></i>
-							<span>{{ scope.row.date }}</span>
-						</template>
-					</el-table-column>
-					<el-table-column sortable label="实际发运时间" width="140" prop="date" align="center">
-						<template slot-scope="scope">
-							<i class="el-icon-time"></i>
-							<span>{{ scope.row.date }}</span>
-						</template>
-					</el-table-column>
-					<el-table-column sortable label="收货时间" prop="date" align="center">
-						<template slot-scope="scope">
-							<i class="el-icon-time"></i>
-							<span>{{ scope.row.date }}</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="发货人" prop="name" align="center">
-					</el-table-column>
-					<el-table-column label="装货地点" prop="address">
-					</el-table-column>
-					<el-table-column label="收货人" prop="name" align="center">
-					</el-table-column>
-					<el-table-column sortable label="状态">
-					</el-table-column>
-					<el-table-column label="错误描述">
-					</el-table-column>
-					<el-table-column sortable label="创建时间" prop="date" align="center">
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
@@ -101,9 +83,14 @@
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			pageNum: 1,
+			pageSize: 10,
+			count: 0,
 			tableData: []
 		}
 	},
@@ -111,8 +98,27 @@ export default {
 		this.getWaybillList()
 	},
 	methods: {
-		getWaybillList() {
-
+		getWaybillList(pageNum) {
+			let params = {
+				pageNum: pageNum || 1,
+				pageSize: this.pageSize
+			}
+			requestJava({
+				url: '/notruckWaybill/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+					console.log(res.data)
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		pageChange(index) {
+			this.getWaybillList(index)
 		},
 		addWaybill() {
 			this.$router.push({ name: 'addwaybill' })
@@ -127,5 +133,5 @@ export default {
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 </style>

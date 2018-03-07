@@ -5,67 +5,89 @@
 				<span>{{isEdit ? '编辑个人资料' : '查看个人资料'}}</span>
 				<el-button style="float: right; padding: 3px 0" type="text" @click="editInfo">{{isEdit ? '取消编辑' : '编辑'}}</el-button>
 			</div>
-			<el-form label-width="160px">
-				<el-row :gutter="20">
-					<el-col :span="12" :offset="4">
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg"  
-								:show-file-list="false" 
-								:on-success="handleAvatarSuccess"
-								:disabled="!isEdit">
+							<el-upload disabled class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" :show-file-list="false" :on-success="handleAvatarSuccess">
 								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
-						</el-form-item> 
-						<el-form-item label="姓名">
-							<el-input auto-complete="off" v-if="isEdit" v-model="user.Name"></el-input>
-							<p v-text="user.Name" v-else></p>
 						</el-form-item>
-						<el-form-item label="邮箱">
-							<el-input auto-complete="off" v-if="isEdit" v-model="user.Email"></el-input>
-							<p v-text="user.Email" v-else></p>
-						</el-form-item>
-						<el-form-item label="手机">
-							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Mobile"></el-input>
-							<p v-text="user.Mobile" v-else></p>
-						</el-form-item>
-						<el-form-item label="电话">
-							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Phone"></el-input>
-							<p v-text="user.Phone" v-else></p>
-						</el-form-item>
+
 						<el-form-item label="公司">
 							<el-input auto-complete="off" disabled v-model="user.Company_ID" v-if="isEdit"></el-input>
 							<p v-text="user.Company_ID" v-else></p>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="姓名">
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.Name" :class="isEdit?'text-input':''"></el-input>
+							<p v-text="user.Name" v-else></p>
+						</el-form-item>
+						<el-form-item label="邮箱">
+							<el-input auto-complete="off" v-if="isEdit" v-model="user.Email" :class="isEdit?'text-input':''"></el-input>
+							<p v-text="user.Email" v-else></p>
+						</el-form-item>
 						<el-form-item label="部门">
-							<el-input auto-complete="off" disabled v-model="user.Organization_ID" v-if="isEdit"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.Organization_ID" v-if="isEdit" :class="isEdit?'text-input':''"></el-input>
 							<p v-text="user.Organization_ID" v-else></p>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="手机">
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Mobile" :class="isEdit?'text-input':''"></el-input>
+							<p v-text="user.Mobile" v-else></p>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input auto-complete="off"  v-if="isEdit" v-model="user.Phone" :class="isEdit?'text-input':''"></el-input>
+							<p v-text="user.Phone" v-else></p>
+						</el-form-item>
+						
+						
 						<el-form-item label="用户名">
-							<el-input auto-complete="off" disabled v-model="user.LoginName" v-if="isEdit"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.LoginName" v-if="isEdit" :class="isEdit?'text-input':''"></el-input>
 							<p v-text="user.LoginName" v-else></p>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="16">
+					<el-form label-width="120px">
 						<el-form-item label="用户角色">
-							<el-input auto-complete="off" disabled v-model="user.sys_roles.map(item => item.Name).join(',')" v-if="isEdit"></el-input>
+							<el-input auto-complete="off" disabled v-model="user.sys_roles.map(item => item.Name).join(',')" v-if="isEdit"></el-input :class="isEdit?'text-input':''">
 							<p v-else>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
 						</el-form-item>
-						<!-- <el-form-item label="用户类型">
-							<el-input auto-complete="off" disabled v-model="user.Type" v-if="isEdit"></el-input>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="用户类型">
+							<el-input auto-complete="off" disabled v-model="user.Type" v-if="isEdit" :class="isEdit?'text-input':''"></el-input>
 							<p v-else>{{user.Type}}</p>
-						</el-form-item> -->
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item label="备注">
-							 <el-input auto-complete="off" v-if="isEdit" v-model="user.Remark"></el-input>
+							 <el-input auto-complete="off" v-if="isEdit" v-model="user.Remark" :class="isEdit?'text-input':''"></el-input>
 							 <p v-text="user.Remark" v-else></p>
 						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
 							<el-button type="primary" v-show="isEdit" @click="editUser">保存</el-button>
 						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
+					</el-form>
+				</el-col>
+			</el-row>
 		</el-card>
 	</div>
 </template>
@@ -141,27 +163,27 @@
 	}
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
+.avatar-uploader
+	line-height 1
+	width 100px
+	height 100px
+	overflow hidden
+	border 1px dashed #d9d9d9
+	border-radius 6px
+	&:hover 
+		border-color #409eff
+	.avatar-uploader-icon
+		font-size 28px
+		color #8c939d
+		width 98px
+		height 98px
+		line-height 98px
+		text-align center
+	.avatar
+		width 98px
+		height 98px
+		display block
 		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
 .el-form-item__content
 	p
 		margin 0
@@ -172,6 +194,6 @@
 		font-family 'sans-serif'
 		line-height 40px
 		color #999
-	.el-input__inner
-		vertical-align top
+		box-sizing border-box
+	
 </style>

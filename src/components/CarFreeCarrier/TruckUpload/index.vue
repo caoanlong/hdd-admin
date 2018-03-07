@@ -26,29 +26,32 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="报文参考号">
+					<el-table-column label="报文参考号" prop="messageReferenceNumber">
 					</el-table-column>
-					<el-table-column label="单证名称">
+					<el-table-column label="单证名称" prop="documentName">
 					</el-table-column>
-					<el-table-column label="发送时间">
+					<el-table-column label="发送时间" prop="messageSendingDateTime">
 					</el-table-column>
-					<el-table-column label="车辆牌照号">
+					<el-table-column label="车辆牌照号" prop="vehicleNumber">
 					</el-table-column>
-					<el-table-column label="车型代码">
+					<el-table-column label="车型代码" prop="vehicleClassificationCode">
 					</el-table-column>
-					<el-table-column label="车辆长度">
+					<el-table-column label="车辆长度" prop="vehicleLength">
 					</el-table-column>
-					<el-table-column label="核定载质量">
+					<el-table-column label="核定载质量" prop="vehicleTonnage">
 					</el-table-column>
-					<el-table-column label="出发地">
+					<el-table-column label="出发地" prop="placeOfLoading">
 					</el-table-column>
-					<el-table-column label="目的地">
+					<el-table-column label="目的地" prop="goodsReceiptPlace">
 					</el-table-column>
-					<el-table-column label="状态">
+					<el-table-column label="状态" prop="hasFail">
 					</el-table-column>
-					<el-table-column label="描述">
+					<el-table-column label="描述" prop="failDescription">
 					</el-table-column>
-					<el-table-column label="创建时间">
+					<el-table-column label="创建时间" prop="createTime"  align="center" width="140">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
 					</el-table-column>
 					<el-table-column label="操作">
 					</el-table-column>
@@ -56,7 +59,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckList()">
 							<el-option label="10" value="10"></el-option>
 							<el-option label="20" value="20"></el-option>
 							<el-option label="30" value="30"></el-option>
@@ -88,7 +91,29 @@
 				tableData: []
 			}
 		},
+		created() {
+			this.getTruckList()
+		},
 		methods: {
+			getTruckList(pageNum) {
+				let params = {
+					pageNum: pageNum || 1,
+					pageSize: this.pageSize
+				}
+				requestJava({
+					url: '/notruckTrucksource/list',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.count = res.data.data.total
+						this.tableData = res.data.data.list
+						console.log(res.data)
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
 			pageChange(index) {
 				// this.getList(index)
 			},
@@ -104,5 +129,5 @@
 		}
 	}	
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 </style>

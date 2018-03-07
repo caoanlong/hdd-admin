@@ -203,7 +203,7 @@ export default {
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .download-btn
 	font-size 12px
 	color #606266

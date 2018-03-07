@@ -23,29 +23,32 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="报文参考号">
+					<el-table-column label="报文参考号" prop="messageReferenceNumber" align="center" width="140">
 					</el-table-column>
-					<el-table-column label="发送时间">
+					<el-table-column label="发送时间"prop="messageSendingDateTime" align="center" width="120">
 					</el-table-column>
-					<el-table-column label="发货人">
+					<el-table-column label="发货人" prop="consignor">
 					</el-table-column>
-					<el-table-column label="出发地">
+					<el-table-column label="出发地" prop="placeOfLoading">
 					</el-table-column>
-					<el-table-column label="费用总金额">
+					<el-table-column label="费用总金额" prop="totalMonetaryAmount">
 					</el-table-column>
-					<el-table-column label="车辆分类">
+					<el-table-column label="车辆分类" prop="vehicleClassificationCode">
 					</el-table-column>
-					<el-table-column label="货物名称">
+					<el-table-column label="货物名称" prop="descriptionOfGoods">
 					</el-table-column>
-					<el-table-column label="货物毛重">
+					<el-table-column label="货物毛重" prop="goodsItemGrossWeight">
 					</el-table-column>
-					<el-table-column label="状态">
+					<el-table-column label="状态" prop="hasFail">
 					</el-table-column>
-					<el-table-column label="失败描述">
+					<el-table-column label="失败描述" prop="failDescription">
 					</el-table-column>
-					<el-table-column label="创建时间">
+					<el-table-column label="创建时间" prop="createTime"  align="center" width="140">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
 					</el-table-column>
-					<el-table-column label="操作">
+					<el-table-column label="操作"  align="center">
 					</el-table-column>
 				</el-table>
 				<el-row type="flex">
@@ -72,9 +75,14 @@
 	</div>
 </template>
 <script type="text/javascript">
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			pageNum: 1,
+			pageSize: 10,
+			count: 0,
 			tableData: []
 		}
 	},
@@ -82,8 +90,27 @@ export default {
 		this.getCargoList()
 	},
 	methods: {
-		getCargoList() {
-
+		getCargoList(pageNum) {
+			let params = {
+				pageNum: pageNum || 1,
+				pageSize: this.pageSize
+			}
+			requestJava({
+				url: '/notruckCargosource/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+					console.log(res.data)
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		pageChange(index) {
+			this.getCargoList(index)
 		},
 		addCargo() {
 			this.$router.push({ name: 'addcargo' })
@@ -98,7 +125,7 @@ export default {
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 
 
 </style>

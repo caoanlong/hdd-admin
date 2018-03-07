@@ -287,7 +287,7 @@ export default {
 }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .el-row
     margin-bottom 20px
     &:last-child
