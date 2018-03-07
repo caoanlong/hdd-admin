@@ -342,6 +342,14 @@ let routerMap = [
 								component: () => import('../components/BusinessConfig/MessageManage/Message')
 							},
 							{
+								path: '/viewmessage',
+								name: 'viewmessage',
+								meta: {
+									title: '查看消息'
+								},
+								component: () => import('../components/BusinessConfig/MessageManage/Message/ViewMessage')
+							},
+							{
 								path: '/messagetemp',
 								name: 'messagetemp',
 								meta: {

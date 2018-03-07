@@ -56,9 +56,10 @@
 					<el-table-column label="App类型" prop="AppType"></el-table-column>
 					<el-table-column label="手机类型" prop="PhoneType"></el-table-column>
 					<el-table-column label="推送消息标题" prop="Title"></el-table-column>
-					<el-table-column label="操作" width="100" align="center">
+					<el-table-column label="操作" width="180" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-view">再次发送</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewMessage(scope.row.Msg_ID)">查看</el-button>
+							<el-button type="default" size="mini">再次发送</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -128,6 +129,9 @@ export default {
 					Message.error(res.data.msg)
 				}
 			})
+		},
+		viewMessage(Msg_ID) {
+			this.$router.push({ name: 'viewmessage', query: {Msg_ID} })
 		},
 	}
 }
