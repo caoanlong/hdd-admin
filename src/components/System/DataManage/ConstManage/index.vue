@@ -41,7 +41,7 @@
 					<el-table-column label="更新人" prop="UpdateBy" width="100" align="center"></el-table-column>
 					<el-table-column label="更新日期" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
+							<span v-if="scope.row.UpdateTime">{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">

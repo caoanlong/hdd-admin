@@ -128,16 +128,17 @@
 				})
 			},
 			pageChange(index) {
-				// this.getList(index)
+				this.getTruckList(index)
 			},
+			
 			AddTruck() {
-				this.$router.push({ name: 'addtruck' })
+				this.$router.push({ name: 'addtruck'})
 			},
 			EditTruck(notrucksourceId) {
-				this.$router.push({ name: 'edittruck'})
+				this.$router.push({ name: 'edittruck', query: { notrucksourceId}})
 			},
 			ViewTruck(notrucksourceId) {
-				this.$router.push({ name: 'viewtruck'})
+				this.$router.push({ name: 'viewtruck', query: { notrucksourceId}})
 			},
 			refresh() {
 				this.refreshing = true

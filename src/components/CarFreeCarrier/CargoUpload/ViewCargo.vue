@@ -28,44 +28,44 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="单证名称：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.documentName}}</p>
 						</el-form-item>
 						<el-form-item label="接收方代码：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.recipientCode}}</p>
 						</el-form-item>
 						<el-form-item label="发货人：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.consignor}}</p>
 						</el-form-item>
 						<el-form-item label="收货人：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.consignee}}</p>
 						</el-form-item>
 						<el-form-item label="费用总金额：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.totalMonetaryAmount}}</p>
 						</el-form-item>
 						<el-form-item label="货物类型分类：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.cargoTypeClassificationCode}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="报文版本号：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.documentVersionNumber}}</p>
 						</el-form-item>
 						<el-form-item label="发送日期时间：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.messageSendingDateTime}}</p>
 						</el-form-item>
 						<el-form-item label="出发地：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.placeOfLoading}}</p>
 						</el-form-item>
 						<el-form-item label="目的地：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.goodsReceiptPlace}}</p>
 						</el-form-item>
 						<el-form-item label="车辆类型：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.vehicleClassificationCode}}</p>
 						</el-form-item>
 						<el-form-item label="货物项毛重：">
-							<p>{{CargoInfo.1111}}</p>
+							<p>{{CargoInfo.goodsItemGrossWeight}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -98,7 +98,7 @@ export default {
 				goodsId: this.$route.query.goodsId
 			}
 			requestJava({
-				url: '/notruckWaybill/info',
+				url: '/notruckCargosource/info',
 				method: 'get',
 				params
 			}).then(res => {

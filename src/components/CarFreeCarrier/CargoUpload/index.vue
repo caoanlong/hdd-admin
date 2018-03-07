@@ -126,10 +126,10 @@ export default {
 			this.$router.push({ name: 'addcargo' })
 		},
 		EditCargo(goodsId) {
-			this.$router.push({ name: 'editcargo'})
+			this.$router.push({ name: 'editcargo', query: { goodsId} })
 		},
 		ViewCargo(goodsId) {
-			this.$router.push({ name: 'viewcargo'})
+			this.$router.push({ name: 'viewcargo' , query: { goodsId} })
 		},
 		refresh() {
 			this.refreshing = true
