@@ -20,8 +20,11 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddWaybill">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
-				<el-button type="default" size="mini" icon="el-icon-download">导出</el-button>
+				<el-upload class="upload-File" name="excel" :action="importFileUrl" :auto-upload="true" :onError="uploadError" :onSuccess="uploadSuccess" :beforeUpload="beforeFileUpload" :show-file-list="false">
+					<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
+				</el-upload>
+				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
+				<a href="../../../../../static/waybill.xlsx" download="waybill.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
@@ -82,11 +85,14 @@
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../common/requestJava'
+import requestJava, { javaUrl } from '../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
+			downloadLoading: false,
+			importFileUrl: javaUrl +'/notruckWaybill/importExcel',
+			exportExcelUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=waybill.xlsx',
 			pageNum: 1,
 			pageSize: 10,
 			count: 0,
@@ -143,10 +149,53 @@ export default {
 			setTimeout(() => {
 				this.refreshing = false
 			}, 500)
+		},
+		// 导入成功
+		uploadSuccess (response) {
+			Message.success(response.message)
+		},
+		// 导入失败
+		uploadError (response) {
+			Message.error(response.message)
+		},
+		beforeFileUpload (file) {
+			const extension = file.name.split('.')[1] === 'xls'
+			const extension2 = file.name.split('.')[1] === 'xlsx'
+			const isLt2M = file.size / 1024 / 1024 < 10
+			if (!extension && !extension2) {
+				Message.error('上传模板只能是 xls、xlsx格式!')
+			}
+			if (!isLt2M) {
+				Message.error('上传模板大小不能超过 10MB!')
+			}
+			return extension || extension2 && isLt2M
 		}
 	}
 }
 
 </script>
 <style lang="stylus" scoped>
+.download-btn
+.exportExcel
+	font-size 12px
+	color #606266
+	height 29px
+	line-height 29px
+	padding 0 15px
+	border 1px solid #dcdfe6
+	border-radius 3px
+	background #fff
+	margin-right 10px
+	display inline-block
+	vertical-align top
+	&:hover
+		border-color #c6e2ff
+		color #409eff
+		background #ecf5ff
+	&:active
+		border-color #3a8ee6
+		color #3a8ee6
+.upload-File
+	display inline-block
+	margin 0 10px
 </style>

@@ -107,6 +107,7 @@ export default {
 				documentName:'',
 				recipientCode:'',
 				consignor:'',
+				notruckuserId:'',
 				consignee:'',
 				totalMonetaryAmount:'',
 				cargoTypeClassificationCode:'',
@@ -160,6 +161,15 @@ export default {
 		SaveCargo() {
 			let data= {
 				goodsId: this.$route.query.goodsId,
+				notruckuserId:this.CargoInfo.notruckuserId,
+				messageReferenceNumber:this.CargoInfo.messageReferenceNumber,
+				senderCode:this.CargoInfo.senderCode,
+				messageFunctionCode:this.CargoInfo.messageFunctionCode,
+				countrySubdivisionCode:this.CargoInfo.countrySubdivisionCode,
+				destinationCountrySubdivisionCode:this.CargoInfo.destinationCountrySubdivisionCode,
+				descriptionOfGoods:this.CargoInfo.descriptionOfGoods,
+				documentName:this.CargoInfo.documentName,
+				recipientCode:this.CargoInfo.recipientCode,
 				countrySubdivisionCode:this.CargoInfo.countrySubdivisionCode,
 				destinationCountrySubdivisionCode:this.CargoInfo.destinationCountrySubdivisionCode,
 				descriptionOfGoods:this.CargoInfo.descriptionOfGoods,

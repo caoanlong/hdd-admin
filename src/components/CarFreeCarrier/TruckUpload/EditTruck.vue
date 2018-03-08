@@ -95,6 +95,7 @@ export default {
 				placeOfLoading: '',
 				countrySubdivisionCode: '',
 				goodsReceiptPlace: '',
+				notruckuserId:'',
 				destinationCountrySubdivisionCode: ''
 			}
 		}
@@ -147,6 +148,7 @@ export default {
 				placeOfLoading: this.TruckInfo.placeOfLoading,
 				countrySubdivisionCode: this.TruckInfo.countrySubdivisionCode,
 				goodsReceiptPlace: this.TruckInfo.goodsReceiptPlace,
+				notruckuserId:this.TruckInfo.notruckuserId,
 				destinationCountrySubdivisionCode: this.TruckInfo.destinationCountrySubdivisionCode
 			}
 			requestJava({

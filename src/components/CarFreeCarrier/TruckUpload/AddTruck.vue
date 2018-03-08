@@ -94,7 +94,8 @@ export default {
 				documentName:'',
 				recipientCode:'',
 				documentVersionNumber:'',
-				messageSendingDateTime:''
+				messageSendingDateTime:'',
+				notruckuserId:''
 			},
 			TruckType: [],
 			TruckLength:[],
@@ -148,6 +149,7 @@ export default {
 			let data= {
 				messageReferenceNumber:this.apkInfo.messageReferenceNumber,
 				senderCode:this.apkInfo.senderCode,
+				notruckuserId:this.apkInfo.notruckuserId,
 				messageFunctionCode:this.apkInfo.messageFunctionCode,
 				documentName:this.apkInfo.documentName,
 				recipientCode:this.apkInfo.recipientCode,

@@ -227,7 +227,8 @@ export default {
 				phone:'',
 				goodsGross:'',
 				transportModeCode:'',
-				networkAccessAddress:''
+				networkAccessAddress:'',
+				notruckuserId:''
 			},
 			TruckType: [],
 			CargoType: [],
@@ -252,6 +253,7 @@ export default {
 				dteOfShipment:this.WaybillInfo.dteOfShipment,
 				dateOfDelivery:this.WaybillInfo.dateOfDelivery,
 				name:this.WaybillInfo.name,
+				notruckuserId:this.WaybillInfo.notruckuserId,
 				consignee:this.WaybillInfo.consignee,
 				codeConsigneeDivisions:this.WaybillInfo.codeConsigneeDivisions,
 				priceRemarks:this.WaybillInfo.priceRemarks,
