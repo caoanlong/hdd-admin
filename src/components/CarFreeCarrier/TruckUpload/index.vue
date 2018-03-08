@@ -24,7 +24,7 @@
 					<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				</el-upload>
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
-				<a href="../../../../../static/trucksource.xlsx" download="trucksource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				<a :href="templateUrl" download="trucksource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
@@ -94,7 +94,8 @@
 			return {
 				downloadLoading: false,
 				importFileUrl: javaUrl + '/notruckTrucksource/importExcel',
-				exportExcelUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=trucksource.xlsx',
+				exportExcelUrl: javaUrl + '/notruckTrucksource/export',
+				templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=trucksource.xlsx ',
 				pageNum: 1,
 				pageSize: 10,
 				count: 0,
