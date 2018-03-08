@@ -174,8 +174,8 @@ let routerMap = [
 				]
 			},
 			{
-				path: '/customSevice',
-				name: 'customSevice',
+				path: '/customsevice',
+				name: 'customsevice',
 				meta: {
 					title: '客服管理'
 				},
@@ -183,8 +183,8 @@ let routerMap = [
 				redirect: '/memberCertify',
 				children: [
 					{
-						path: '/memberCertify',
-						name: 'memberCertify',
+						path: '/membercertify',
+						name: 'membercertify',
 						meta: {
 							title: '会员认证'
 						},

@@ -127,7 +127,7 @@
 				showSetUser:false,
 				defaultProps: {
 					children: 'children',
-					label: 'title'
+					label: 'Name'
 				},
 				selectedMenuId: [],
 				selectedUsers:[],

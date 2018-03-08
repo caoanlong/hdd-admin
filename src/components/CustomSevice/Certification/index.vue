@@ -149,7 +149,7 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 200) {
-					Message.success(res.data.msg)
+					Message.success(res.data.message)
 				} else {
 					Message.error(res.data.message)
 				}

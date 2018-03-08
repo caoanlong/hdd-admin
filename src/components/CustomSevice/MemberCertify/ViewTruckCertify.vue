@@ -62,11 +62,11 @@
                             </el-upload>
                         </el-form-item>
                         <el-form-item label="审核说明">
-                            <el-input type="textarea"></el-input>
+                            <el-input type="textarea" v-model="remark"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="success">通过</el-button>
-                            <el-button type="danger">拒绝</el-button>
+                            <el-button type="success" v-if="certifyTruck.CertifyStatus != 'Success'" @click="truckCertify('Success')">通过</el-button>
+                            <el-button type="danger" v-if="certifyTruck.CertifyStatus != 'Success'" @click="truckCertify('Failed')">拒绝</el-button>
                             <el-button @click.native="back">返回</el-button>
                         </el-form-item>
                     </el-form>
@@ -83,7 +83,8 @@
 		data() {
 			return {
                 certifyTruck: {},
-                truckTypes: []
+				truckTypes: [],
+				remark: ''
 			}
 		},
 		created() {
@@ -102,7 +103,7 @@
 					if (res.data.code == 200) {
 						this.certifyTruck = res.data.data
 					} else {
-						Message.error(res.data.msg)
+						Message.error(res.data.message)
 					}
 				})
             },
@@ -123,26 +124,29 @@
 					}
 				})
 			},
-			back() {
-				this.$router.go(-1)
-			},
-			approve(flag) {
+			// 车辆认证
+			truckCertify(status) {
 				let data = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					flag
+					memId: this.$route.query.memId,
+					status: status,
+					remark: this.remark,
+					plateNo: this.certifyTruck.plateNo
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/approve',
+					url: '/mem/memMember/approveCertifyTruck',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'certification'})
+						Message.success(res.data.message)
+						this.$router.push({name: 'membercertify'})
 					} else {
 						Message.error(res.data.message)
 					}
 				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
 		}
 	}

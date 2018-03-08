@@ -74,13 +74,22 @@
 				</el-col>
 				<el-col :span="24">
 					<el-form label-width="120px">
-                        <el-form-item label="审核说明">
-							<el-input type="textarea"></el-input>
+                        <el-form-item label="审核说明" v-if="certifyPerson.walletStatus == 'N'">
+							<el-input type="textarea" v-model="remark"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success">激活</el-button>
-                            <el-button type="danger">拒绝</el-button>
-							<el-button @click.native="back">返回</el-button>
+							<span v-if="certifyPerson.walletStatus == 'Y'">
+								<el-button type="primary" 
+								@click="realNameCertify" 
+								v-if="certifyPerson.realNameStatus == 'Failed' || certifyPerson.realNameStatus == 'Rejected' || certifyPerson.realNameStatus == 'Draft'">实名认证</el-button>
+							</span>
+							<span v-else>
+								<el-button type="success" @click="persionCertify('Success')">激活</el-button>
+                            	<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
+							</span>
+							<span>
+								<el-button @click="back">返回</el-button>
+							</span>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -96,7 +105,8 @@
 		data() {
 			return {
 				certifyPerson: {},
-				realNameStatus: []
+				realNameStatus: [],
+				remark: ''
 			}
 		},
 		created() {
@@ -136,19 +146,39 @@
 					}
 				})
 			},
-			approve(flag) {
+			// 个人认证(激活)
+			persionCertify(status) {
 				let data = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					flag
+					memId: this.$route.query.memId,
+					status: status,
+					remark: this.remark
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/approve',
+					url: '/mem/memMember/approveCertifyPerson',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'certification'})
+						Message.success(res.data.message)
+						this.$router.push({name: 'membercertify'})
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+			},
+			// 实名认证
+			realNameCertify() {
+				let data = {
+					memID: this.$route.query.memId
+				}
+				requestJava({
+					url: '/mem/memMember/uploadUsrIdCard',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.message)
+						this.$router.push({name: 'membercertify'})
 					} else {
 						Message.error(res.data.message)
 					}

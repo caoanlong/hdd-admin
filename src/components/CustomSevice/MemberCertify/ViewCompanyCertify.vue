@@ -67,11 +67,11 @@
 				<el-col :span="24">
 					<el-form label-width="160px">
 						<el-form-item label="审核说明">
-							<el-input type="textarea"></el-input>
+							<el-input type="textarea" v-model="remark"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success">通过</el-button>
-                            <el-button type="danger">拒绝</el-button>
+							<el-button type="success" v-if="certifyEnterprice.CertifyStatus != 'Success'" @click="enterpriceCertify('Success')">通过</el-button>
+                            <el-button type="danger" v-if="certifyEnterprice.CertifyStatus != 'Success'" @click="enterpriceCertify('Failed')">拒绝</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -87,7 +87,8 @@
 	export default {
 		data() {
 			return {
-				certifyEnterprice: {}
+				certifyEnterprice: {},
+				remark: ''
 			}
 		},
 		created() {
@@ -106,26 +107,29 @@
 					if (res.data.code == 200) {
 						this.certifyEnterprice = res.data.data
 					} else {
-						Message.error(res.data.msg)
+						Message.error(res.data.message)
 					}
 				})
 			},
 			back() {
 				this.$router.go(-1)
 			},
-			approve(flag) {
+			// 企业认证
+			enterpriceCertify(status) {
 				let data = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					flag
+					memId: this.$route.query.memId,
+					status: status,
+					remark: this.remark,
+					SocialCreditCode: this.certifyEnterprice.SocialCreditCode
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/approve',
+					url: '/mem/memMember/approveCertifyEnterprice',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'certification'})
+						Message.success(res.data.message)
+						this.$router.push({name: 'membercertify'})
 					} else {
 						Message.error(res.data.message)
 					}

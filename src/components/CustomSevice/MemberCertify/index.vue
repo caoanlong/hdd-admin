@@ -16,8 +16,8 @@
 					</el-form-item>
 					<el-form-item label="状态">
 						<el-select placeholder="请选择" v-model="findMemberStatus">
-							<el-option label="启用" value="Y"></el-option>
-							<el-option label="封停" value="N"></el-option>
+							<el-option label="启用" value="N"></el-option>
+							<el-option label="封停" value="Y"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="认证状态">
@@ -59,7 +59,7 @@
 					</el-table-column>
 					<el-table-column label="状态" align="center" width="80">
 						<template slot-scope="scope">
-							<span>{{scope.row.status == 'Y' ? '启用' : '封停'}}</span>
+							<span>{{scope.row.status == 'Y' ? '封停' : '启用'}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="认证人" align="center" prop="certifypersonId"></el-table-column>
@@ -93,11 +93,11 @@
 					</el-table-column>
 					<el-table-column label="操作" width="220" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" @click="viewPersionCertify(scope.row.certifyPersonId)" 
+							<el-button type="default" size="mini" @click="viewPersionCertify(scope.row.certifyPersonId, scope.row.memId)" 
 							v-if="scope.row.type != 'Tourist'">
 								<svg-icon icon-class="file-icon"></svg-icon> 个人
 							</el-button>
-							<el-button type="default" size="mini" @click="viewCompanyCertify(scope.row.certifyEnterpriceId)" 
+							<el-button type="default" size="mini" @click="viewCompanyCertify(scope.row.certifyEnterpriceId, scope.row.memId)" 
 							v-if="scope.row.type == 'NoTruck' || scope.row.type == '3PL' || scope.row.type == 'InfoDept'">
 								<svg-icon icon-class="file-icon"></svg-icon> 企业
 							</el-button>
@@ -105,10 +105,10 @@
 							v-if="scope.row.type == 'Driver'">
 								<svg-icon icon-class="file-icon"></svg-icon> 车辆
 							</el-button>
-							<el-button type="default" size="mini" v-if="scope.row.status=='Y'">
+							<el-button type="default" size="mini" v-if="scope.row.status=='N'" @click="updateStatus(scope.row.memId, 'Y')">
 								<svg-icon icon-class="stop-icon"></svg-icon> 封停
 							</el-button>
-							<el-button type="default" size="mini" v-else>
+							<el-button type="default" size="mini" v-else @click="updateStatus(scope.row.memId, 'N')">
 								<svg-icon icon-class="start-icon"></svg-icon> 启用
 							</el-button>
 						</template>
@@ -236,7 +236,7 @@ export default {
 				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				type: this.findMemberType,
-				keywords: this.findKeywords,
+				keyword: this.findKeywords,
 				status: this.findMemberStatus,
 				certifyStatus: this.findCertifyStatus,
 				realNameStatus: this.findRealNameStatus,
@@ -256,11 +256,29 @@ export default {
 				}
 			})
 		},
-		viewPersionCertify(certifyPersonId) {
-			this.$router.push({name: 'viewpersioncertify', query: {certifyPersonId}})
+		updateStatus(memId, status) {
+			let data = {
+				memId,
+				status
+			}
+			requestJava({
+				url: '/mem/memMember/updateStatus',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.getList()
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		},
-		viewCompanyCertify(certifyEnterpriceId) {
-			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId}})
+		viewPersionCertify(certifyPersonId, memId) {
+			this.$router.push({name: 'viewpersioncertify', query: {certifyPersonId, memId}})
+		},
+		viewCompanyCertify(certifyEnterpriceId, memId) {
+			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId, memId}})
 		},
 		viewTruckCertify(truckCertifyId) {
 			this.$router.push({name: 'viewtruckcertify', query: {truckCertifyId}})
