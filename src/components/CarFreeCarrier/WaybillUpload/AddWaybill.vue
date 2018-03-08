@@ -199,7 +199,8 @@ export default {
 				documentName:'',
 				recipientCode:'',
 				documentVersionNumber:'',
-				messageSendingDateTime:''
+				messageSendingDateTime:'',
+				notruckuserId:''
 			},
 			WaybillInfo:{
 				carrier:'',
@@ -306,6 +307,7 @@ export default {
 				recipientCode:this.apkInfo.recipientCode,
 				documentVersionNumber:this.apkInfo.documentVersionNumber,
 				messageSendingDateTime:this.apkInfo.messageSendingDateTime,
+				notruckuserId:this.apkInfo.notruckuserId,
 				carrier:this.WaybillInfo.carrier,
 				dteOfShipment:this.WaybillInfo.dteOfShipment,
 				dateOfDelivery:this.WaybillInfo.dateOfDelivery,

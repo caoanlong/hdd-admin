@@ -101,11 +101,13 @@ export default {
 				documentName:'',
 				recipientCode:'',
 				documentVersionNumber:'',
-				messageSendingDateTime:''
+				messageSendingDateTime:'',
+				notruckuserId:''
 			},
 			TruckType: [],
 			CargoType: [],
 			CargoInfo:{
+				
 				countrySubdivisionCode:'',
 				destinationCountrySubdivisionCode:'',
 				descriptionOfGoods:'',
@@ -163,6 +165,7 @@ export default {
 				recipientCode:this.apkInfo.recipientCode,
 				documentVersionNumber:this.apkInfo.documentVersionNumber,
 				messageSendingDateTime:this.apkInfo.messageSendingDateTime,
+				notruckuserId:this.apkInfo.notruckuserId,
 				countrySubdivisionCode:this.CargoInfo.countrySubdivisionCode,
 				destinationCountrySubdivisionCode:this.CargoInfo.destinationCountrySubdivisionCode,
 				descriptionOfGoods:this.CargoInfo.descriptionOfGoods,
@@ -173,8 +176,7 @@ export default {
 				placeOfLoading:this.CargoInfo.placeOfLoading,
 				goodsReceiptPlace:this.CargoInfo.goodsReceiptPlace,
 				vehicleClassificationCode:this.CargoInfo.vehicleClassificationCode,
-				goodsItemGrossWeight:this.CargoInfo.goodsItemGrossWeight
-				
+				goodsItemGrossWeight:this.CargoInfo.goodsItemGrossWeight	
 			}
 			requestJava({
 				url: '/notruckCargosource/save',
