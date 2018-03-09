@@ -15,25 +15,27 @@
 						</el-form-item>
 						<el-form-item label="组织机构">
 							<el-select style="width: 100%" placeholder="请选择" v-model="role.Organization_ID">
-								<el-option :label="organization.Name" :value="organization.Organization_ID" v-for="organization in organizations" :key="organization.Organization_ID"></el-option>
+								<el-option 
+								v-for="organization in organizations" 
+								:key="organization.Organization_ID" 
+								:label="organization.Name" 
+								:value="organization.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="角色类型">
 							<el-select style="width: 100%" placeholder="请选择" v-model="role.RoleType">
-								<el-option label="任务分配" value="任务分配"></el-option>
-								<el-option label="管理角色" value="管理角色"></el-option>
-								<el-option label="普通角色" value="普通角色"></el-option>
+								<el-option label="任务分配" value="assignment"></el-option>
+								<el-option label="管理角色" value="security-role"></el-option>
+								<el-option label="普通角色" value="user"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="数据范围">
 							<el-select style="width: 100%" placeholder="请选择" v-model="role.DataScope">
-								<el-option label="所有数据" value="所有数据"></el-option>
-								<el-option label="所在公司及以下数据" value="所在公司及以下数据"></el-option>
-								<el-option label="所在公司数据" value="所在公司数据"></el-option>
-								<el-option label="所在部门及以下数据" value="所在部门及以下数据"></el-option>
-								<el-option label="所在部门数据" value="所在部门数据"></el-option>
-								<el-option label="仅本人数据" value="仅本人数据"></el-option>
-								<el-option label="按明细设置" value="按明细设置"></el-option>
+								<el-option 
+								v-for="sysDataScope in sysDataScopes" 
+								:key="sysDataScope.Dict_ID" 
+								:label="sysDataScope.NAME" 
+								:value="sysDataScope.VALUE"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="是否系统数据">
@@ -77,12 +79,14 @@
 					Useable: 'Y',
 					Remark: ''
 				},
-				organizations: []
+				organizations: [],
+				sysDataScopes: []
 			}
 		},
 		created() {
 			this.getRole()
-			this.getOrgs()
+			this.getOrganizations()
+			this.getDataScope()
 		},
 		methods: {
 			getRole() {
@@ -128,17 +132,31 @@
 					}
 				})
 			},
-			getOrgs(Organization_PID) {
+			// 获取所有机构
+			getOrganizations() {
+				request({
+					url: '/sys_organization/list/all',
+					method: 'get'
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.organizations = res.data.data
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			// 获取数据范围
+			getDataScope() {
 				let params = {
-					Organization_PID: Organization_PID || ''
+					TYPE: 'sys_data_scope'
 				}
 				request({
-					url: '/sys_organization/list',
+					url: '/sys_dict/list/type',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-						this.organizations = res.data.data
+						this.sysDataScopes = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}

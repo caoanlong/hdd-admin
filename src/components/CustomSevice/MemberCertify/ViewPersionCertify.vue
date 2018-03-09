@@ -42,10 +42,10 @@
 				<el-col :span="12">
 					<el-form label-width="120px">
                         <el-form-item label="联系电话">
-							<p>13049497395</p>
+							<p>{{certifyPerson.mobile}}</p>
 						</el-form-item>
 						<el-form-item label="账户编号">
-							<p>68435131313464</p>
+							<p>{{certifyPerson.AccountCode}}</p>
 						</el-form-item>
 						<el-form-item label="手持身份证照片">
 							<el-upload 
@@ -169,7 +169,7 @@
 			// 实名认证
 			realNameCertify() {
 				let data = {
-					memID: this.$route.query.memId
+					memId: this.$route.query.memId
 				}
 				requestJava({
 					url: '/mem/memMember/uploadUsrIdCard',

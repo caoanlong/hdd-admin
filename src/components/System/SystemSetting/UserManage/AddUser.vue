@@ -27,16 +27,21 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="归属公司">
-							<el-select style="width: 100%" placeholder="请选择" v-model="user.Company_ID">
-								<el-option label="总公司" value="总公司"></el-option>
+							<el-select style="width: 100%" placeholder="请选择" v-model="user.Company_ID" @change="selectCompany">
+								<el-option 
+								v-for="company in companys" 
+								:key="company.Organization_ID" 
+								:label="company.Name" 
+								:value="company.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="归属部门">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Organization_ID">
-								<el-option label="市场部" value="市场部"></el-option>
-								<el-option label="行政部" value="行政部"></el-option>
-								<el-option label="财务部" value="财务部"></el-option>
-								<el-option label="技术部" value="技术部"></el-option>
+								<el-option 
+								v-for="department in departments" 
+								:key="department.Organization_ID" 
+								:label="department.Name" 
+								:value="department.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="密码">
@@ -123,11 +128,14 @@ export default {
 				Remark: '',
 				sys_roles: []
 			},
-			roles: []
+			roles: [],
+			companys: [],
+			departments: []
 		}
 	},
 	created() {
 		this.getRoles()
+		this.getCompanys()
 	},
 	methods: {
 		addUser() {
@@ -188,6 +196,29 @@ export default {
 					Message.error(res.data.msg)
 				}
 			})
+		},
+		getCompanys(Organization_PID) {
+			let params = {
+				Organization_PID
+			}
+			request({
+				url: '/sys_organization/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					if (Organization_PID) {
+						this.departments = res.data.data
+					} else {
+						this.companys = res.data.data
+					}
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		selectCompany(Organization_ID) {
+			this.getCompanys(Organization_ID)
 		},
 		handleAvatarSuccess(res, file) {
 			this.user.Photo = 'http://39.108.245.177:4000' + res.data

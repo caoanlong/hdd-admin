@@ -10,8 +10,8 @@
 						<el-input placeholder="请输入..." v-model="findAppKey"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary">查询</el-button>
-						<el-button type="default">重置</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -21,25 +21,25 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="企业名称"></el-table-column>
-					<el-table-column label="企业接入码"></el-table-column>
+					<el-table-column label="企业名称" prop="companyName"></el-table-column>
+					<el-table-column label="企业接入码" prop="senderCode"></el-table-column>
 					<el-table-column label="Appkey" prop="appkey"></el-table-column>
 					<el-table-column label="报文功能代码" prop="messageFunctionCode"></el-table-column>
 					<el-table-column label="报文版本号" prop="documentVersionNumber"></el-table-column>
 					<el-table-column label="接收方代码" prop="recipientCode"></el-table-column>
-					<el-table-column label="用户名" prop="userID"></el-table-column>
+					<el-table-column label="用户名" prop="userName"></el-table-column>
 					<el-table-column label="操作" width="280" align="center">
 						<template slot-scope="scope">							
-							<el-button type="default" size="mini" icon="el-icon-view" @click="viewInterfaceConfig(scope.row.smsTemplateId)">查看</el-button>
-							<el-button type="default" size="mini" icon="el-icon-edit" @click="editInterfaceConfig(scope.row.smsTemplateId)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.smsTemplateId)"> 删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-view" @click="viewInterfaceConfig(scope.row.noTruckUserID)">查看</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="editInterfaceConfig(scope.row.noTruckUserID)">修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.noTruckUserID)"> 删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
 							<el-option label="10" value="10"></el-option>
 							<el-option label="20" value="20"></el-option>
 							<el-option label="30" value="30"></el-option>
@@ -66,7 +66,7 @@ export default {
 	data() {
 		return {
 			findAppKey: '',
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
@@ -80,12 +80,16 @@ export default {
 		pageChange(index) {
 			this.getList(index)
 		},
+		reset() {
+			this.findAppKey = ''
+			this.getList()
+		},
 		selectionChange(data) {
 			this.selectedInterfaceConfigs = data.map(item => item.userID)
 		},
-		getList(pageNum) {
+		getList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				appkey: this.findAppKey
 			}
@@ -102,11 +106,11 @@ export default {
 				}
 			})
 		},
-		viewInterfaceConfig(userID) {
-			this.$router.push({name: 'viewinterfaceconfig', query: {userID}})
+		viewInterfaceConfig(noTruckUserID) {
+			this.$router.push({name: 'viewinterfaceconfig', query: {noTruckUserID}})
 		},
-		editInterfaceConfig(userID) {
-			this.$router.push({name: 'editinterfaceconfig', query: {userID}})
+		editInterfaceConfig(noTruckUserID) {
+			this.$router.push({name: 'editinterfaceconfig', query: {noTruckUserID}})
 		},
 		addInterfaceConfig() {
 			this.$router.push({name: 'addinterfaceconfig'})
@@ -135,10 +139,9 @@ export default {
 				})
 			})
 		},
-		delInterfaceConfig(userID) {
-			console.log(userID)
+		delInterfaceConfig(noTruckUserIDs) {
 			let data = {
-				userID
+				noTruckUserIDs
 			}
 			requestJava({
 				url: '/notruckUser/del',

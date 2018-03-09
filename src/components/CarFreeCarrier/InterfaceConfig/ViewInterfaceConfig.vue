@@ -2,28 +2,31 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>查看短信模板</span>
+				<span>查看无车承运接口配置</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="企业名称">
-                            <p>注册</p>
+                            <p>{{interfaceConfig.companyName}}</p>
 						</el-form-item>
 						<el-form-item label="企业接入码">
-							<p>{{interfaceConfig.code}}</p>
+							<p>{{interfaceConfig.senderCode}}</p>
 						</el-form-item>
 						<el-form-item label="Appkey">
-							<p>{{interfaceConfig.Appkey}}</p>
+							<p>{{interfaceConfig.appkey}}</p>
 						</el-form-item>
                         <el-form-item label="报文功能代码">
-							<p>{{interfaceConfig.templateContent}}</p>
+							<p>{{interfaceConfig.messageFunctionCode}}</p>
 						</el-form-item>
                         <el-form-item label="报文版本号">
-							<p>{{interfaceConfig.templateContent}}</p>
+							<p>{{interfaceConfig.documentVersionNumber}}</p>
 						</el-form-item>
                         <el-form-item label="接收方代码">
-							<p>{{interfaceConfig.templateContent}}</p>
+							<p>{{interfaceConfig.recipientCode}}</p>
+						</el-form-item>
+						<el-form-item label="用户">
+							<p>{{interfaceConfig.userName}}</p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -49,7 +52,7 @@
 		methods: {
 			getInterfaceConfig() {
 				let params= {
-					userID: this.$route.query.userID,
+					noTruckUserID: this.$route.query.noTruckUserID,
 				}
 				requestJava({
 					url: '/notruckUser/info',

@@ -2,36 +2,33 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>添加无车承运接口配置</span>
+				<span>编辑无车承运接口配置</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="企业名称">
-							<el-select style="width: 100%" placeholder="请选择" v-model="interfaceConfig.businessType">
-								<el-option label="注册" value="VERFIFY_CODE_REGISTER"></el-option>
-                                <el-option label="登录" value="VERFIFY_CODE_SINGIN"></el-option>
-                                <el-option label="更换手机号" value="VERFIFY_CODE_UPDATE_PHONE"></el-option>
-                                <el-option label="重置支付密码" value="VERIFY_CODE_PAY_PASSWORD_RESET"></el-option>
+							<el-select style="width: 100%" placeholder="请选择" v-model="interfaceConfig.companyName">
+								<el-option v-for="company in companys" :key="company.memberId" :label="company.companyName" :value="company.memberId"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="企业接入码">
-							<p>{{interfaceConfig.businessType}}</p>
+							<p>{{interfaceConfig.senderCode}}</p>
 						</el-form-item>
                         <el-form-item label="Appkey">
-							<p>{{interfaceConfig.businessType}}</p>
+							<p>{{interfaceConfig.appkey}}</p>
 						</el-form-item>
                         <el-form-item label="报文功能代码">
-							<el-input v-model="interfaceConfig.templateContent"></el-input>
+							<el-input v-model="interfaceConfig.messageFunctionCode"></el-input>
 						</el-form-item>
                         <el-form-item label="报文版本号">
-							<el-input v-model="interfaceConfig.templateContent"></el-input>
+							<el-input v-model="interfaceConfig.documentVersionNumber"></el-input>
 						</el-form-item>
                         <el-form-item label="接收方代码">
-							<el-input v-model="interfaceConfig.templateContent"></el-input>
+							<el-input v-model="interfaceConfig.recipientCode"></el-input>
 						</el-form-item>
 						<el-form-item label="用户">
-							<el-select style="width: 100%" placeholder="请选择" v-model="interfaceConfig.businessType">
+							<el-select style="width: 100%" placeholder="请选择" v-model="interfaceConfig.userName">
 								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID"></el-option>
 							</el-select>
 						</el-form-item>
@@ -53,25 +50,37 @@
 		data() {
 			return {
 				interfaceConfig: {
-                    businessType: '',
-                    code: '',
-                    templateContent: ''
-                }
+					appkey: "",
+					companyName: "",
+					documentName: "",
+					documentVersionNumber: "",
+					memberId: "",
+					messageFunctionCode: "",
+					noTruckUserID: "",
+					recipientCode: "",
+					senderCode: "",
+					userID: "",
+					userName: ""
+				},
+				users: [],
+				companys: []
 			}
         },
         created() {
-			this.getUsers()
+			this.getCompanys()
         },
 		methods: {
 			updateInterfaceConfig() {
 				let data= {
-					userID: this.$route.query.userID,
-					businessType: this.interfaceConfig.businessType,
-					code: this.interfaceConfig.businessType,
-					templateContent: this.interfaceConfig.templateContent,
+					noTruckUserID: this.interfaceConfig.noTruckUserID,
+					appkey: this.interfaceConfig.appkey,
+					documentVersionNumber: this.interfaceConfig.documentVersionNumber,
+					memberId: this.interfaceConfig.memberId,
+					messageFunctionCode: this.interfaceConfig.messageFunctionCode,
+					recipientCode: this.interfaceConfig.recipientCode,
+					senderCode: this.interfaceConfig.senderCode,
+					userID: this.interfaceConfig.userID,
 				}
-				console.log(data)
-				return
 				requestJava({
 					url: '/notruckUser/save',
 					method: 'post',
@@ -87,7 +96,7 @@
 			},
 			getInterfaceConfig() {
 				let params= {
-					userID: this.$route.query.userID,
+					noTruckUserID: this.$route.query.noTruckUserID,
 				}
 				requestJava({
 					url: '/notruckUser/info',
@@ -101,6 +110,20 @@
 					}
 				})
 			},
+			// 获取所有企业
+			getCompanys() {
+				requestJava({
+					url: '/notruckUser/getCertifyEnterprice',
+					method: 'get'
+				}).then(res => {
+					if (res.data.code == 200) {
+						this.companys = res.data.data
+						this.getUsers()
+					} else {
+						Message.error(res.data.message)
+					}
+				})
+            },
 			// 获取所有用户
 			getUsers() {
 				let params = {
