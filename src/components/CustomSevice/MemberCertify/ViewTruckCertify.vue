@@ -7,7 +7,7 @@
 			<el-row>
                 <el-col :span="14" :offset="5">
                     <el-form label-width="120px">
-                        <el-form-item label="车辆照片">
+                        <el-form-item label="车辆照片(前)">
                             <el-upload 
                                 action="" 
                                 class="avatar-uploader" 
@@ -16,6 +16,8 @@
                                 <img v-if="certifyTruck.FrontPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.FrontPic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
+                        </el-form-item>
+						<el-form-item label="车辆照片(侧)">
                             <el-upload 
                                 action="" 
                                 class="avatar-uploader" 
@@ -24,6 +26,8 @@
                                 <img v-if="certifyTruck.SidePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.SidePic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
+                        </el-form-item>
+						<el-form-item label="车辆照片(后)">
                             <el-upload 
                                 action="" 
                                 class="avatar-uploader" 
