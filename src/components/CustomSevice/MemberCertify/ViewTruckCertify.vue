@@ -29,7 +29,7 @@
                                 class="avatar-uploader" 
                                 :show-file-list="false" 
                                 :disabled="true">
-                                <!-- <img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar"> -->
+                                <img v-if="certifyTruck.BackPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.BackPic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                         </el-form-item>
@@ -37,16 +37,16 @@
                             <p>{{certifyTruck.PlateNo}}</p>
                         </el-form-item>
                         <el-form-item label="车牌类型">
-                            <p></p>
+                            <p>{{certifyTruck.PlateNoType}}</p>
                         </el-form-item>
                         <el-form-item label="车型">
-                            <p v-for="truckType in truckTypes" :key="truckType.ConstStd_ID" v-if="truckType.ConstStd_ID == certifyTruck.Type">certifyTruck.Name</p>
+                            <p>{{certifyTruck.Type}}</p>
                         </el-form-item>
                         <el-form-item label="车长">
-                            <p></p>
+                            <p>{{certifyTruck.Length}}</p>
                         </el-form-item>
                         <el-form-item label="载重">
-                            <p></p>
+                            <p>{{certifyTruck.Loads}}</p>
                         </el-form-item>
                         <el-form-item label="车主">
                             <p></p>
@@ -57,7 +57,7 @@
                                 class="avatar-uploader" 
                                 :show-file-list="false" 
                                 :disabled="true">
-                                <!-- <img v-if="payRealNameApply.idcardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + payRealNameApply.idcardFrontPic" class="avatar"> -->
+                                <img v-if="certifyTruck.DrivingLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.DrivingLicensePic" class="avatar">
                                 <i class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                         </el-form-item>

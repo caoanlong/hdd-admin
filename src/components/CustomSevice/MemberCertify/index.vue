@@ -62,7 +62,17 @@
 							<span>{{scope.row.status == 'Y' ? '封停' : '启用'}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="认证人" align="center" prop="certifypersonId"></el-table-column>
+					<el-table-column label="认证人" align="center">
+						<template slot-scope="scope">
+							<span>
+								<span>{{scope.row.certifyByPersonName}}</span>
+							</span>
+							<span v-if="scope.row.certifyByPersonName && scope.row.certifyCertifyByName">/</span>
+							<span>
+								<span>{{scope.row.certifyCertifyByName}}</span>
+							</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="认证状态" width="140">
 						<template slot-scope="scope">
 							<span>
