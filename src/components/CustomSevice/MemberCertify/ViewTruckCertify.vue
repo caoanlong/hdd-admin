@@ -53,7 +53,7 @@
                             <p>{{certifyTruck.Loads}}</p>
                         </el-form-item>
                         <el-form-item label="车主">
-                            <p></p>
+                            <p>{{certifyTruck.Mem_OwnerIDName}}</p>
                         </el-form-item>
                         <el-form-item label="行驶照片">
                             <el-upload 

@@ -8,7 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" :show-file-list="false" :on-success="handleAvatarSuccess">
+							<el-upload class="avatar-uploader" action="http://192.168.1.29:4441/sys/picture/upload" :show-file-list="false" :on-success="handleAvatarSuccess">
 								<img v-if="user.Photo" :src="user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -221,6 +221,7 @@ export default {
 			this.getCompanys(Organization_ID)
 		},
 		handleAvatarSuccess(res, file) {
+			console.log(res, file)
 			this.user.Photo = 'http://39.108.245.177:4000' + res.data
 		},
 		back() {
