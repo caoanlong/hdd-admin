@@ -111,7 +111,7 @@
 							v-if="scope.row.type == 'NoTruck' || scope.row.type == '3PL' || scope.row.type == 'InfoDept'">
 								<svg-icon icon-class="file-icon"></svg-icon> 企业
 							</el-button>
-							<el-button type="default" size="mini" @click="viewTruckCertify(scope.row.truckCertifyId)" 
+							<el-button type="default" size="mini" @click="viewTruckCertify(scope.row.truckCertifyId, scope.row.memId)" 
 							v-if="scope.row.type == 'Driver'">
 								<svg-icon icon-class="file-icon"></svg-icon> 车辆
 							</el-button>
@@ -290,8 +290,8 @@ export default {
 		viewCompanyCertify(certifyEnterpriceId, memId) {
 			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId, memId}})
 		},
-		viewTruckCertify(truckCertifyId) {
-			this.$router.push({name: 'viewtruckcertify', query: {truckCertifyId}})
+		viewTruckCertify(truckCertifyId, memId) {
+			this.$router.push({name: 'viewtruckcertify', query: {truckCertifyId, memId}})
 		},
 	}
 }

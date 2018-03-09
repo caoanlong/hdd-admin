@@ -130,7 +130,7 @@
 					memId: this.$route.query.memId,
 					status: status,
 					remark: this.remark,
-					plateNo: this.certifyTruck.plateNo
+					plateNo: this.certifyTruck.PlateNo
 				}
 				requestJava({
 					url: '/mem/memMember/approveCertifyTruck',
