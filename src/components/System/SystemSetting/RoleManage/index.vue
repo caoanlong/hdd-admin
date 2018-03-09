@@ -26,15 +26,17 @@
 					:data="roles" 
 					@selection-change="selectRoleChange" 
 					border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center" width="40">
-					</el-table-column>
-					<el-table-column label="角色名称" prop="Name" align="left">
-					</el-table-column>
-					<el-table-column label="英文名称" prop="EnName" align="left">
-					</el-table-column>
-					<el-table-column label="归属机构" prop="organization" align="left">
-					</el-table-column>
-					<el-table-column label="数据范围" prop="DataScope" align="left">
+					<el-table-column type="selection" align="center" width="40"></el-table-column>
+					<el-table-column label="角色名称" prop="Name" align="left"></el-table-column>
+					<el-table-column label="英文名称" prop="EnName" align="left"></el-table-column>
+					<el-table-column label="归属机构" prop="sys_organization.Name" align="left"></el-table-column>
+					<el-table-column label="数据范围" align="left">
+						<template slot-scope="scope">
+							<span 
+							v-for="sysDataScope in sysDataScopes" 
+							:key="sysDataScope.Dict_ID" 
+							v-if="sysDataScope.VALUE == scope.row.DataScope">{{sysDataScope.NAME}}</span>
+						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="420" align="center">
 						<template slot-scope="scope">
@@ -130,7 +132,8 @@
 					label: 'Name'
 				},
 				selectedMenuId: [],
-				selectedUsers:[],
+				selectedUsers: [],
+				sysDataScopes: []
 			}
 		},
 		computed: {
@@ -139,7 +142,7 @@
 			])
 		},
 		created() {
-			this.getRoles()
+			this.getDataScope()
 		},
 		methods: {
 			addRole() {
@@ -334,6 +337,24 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						Message.success(res.data.msg)
+					} else {
+						Message.error(res.data.msg)
+					}
+				})
+			},
+			// 获取数据范围
+			getDataScope() {
+				let params = {
+					TYPE: 'sys_data_scope'
+				}
+				request({
+					url: '/sys_dict/list/type',
+					method: 'get',
+					params
+				}).then(res => {
+					if (res.data.code == 0) {
+						this.sysDataScopes = res.data.data
+						this.getRoles()
 					} else {
 						Message.error(res.data.msg)
 					}
