@@ -133,14 +133,15 @@
 				},
 				selectedMenuId: [],
 				selectedUsers: [],
-				sysDataScopes: []
+				sysDataScopes: [],
+				menus: []
 			}
 		},
-		computed: {
-			...mapGetters([
-				'menus'
-			])
-		},
+		// computed: {
+		// 	...mapGetters([
+		// 		'menus'
+		// 	])
+		// },
 		created() {
 			this.getDataScope()
 		},
@@ -168,6 +169,23 @@
 			reset() {
 				this.findRoleName = ''
 			},
+			// 获取所有菜单
+			getMenus() {
+				return new Promise((resolve, reject) => {
+					request({
+						url: '/sys_menu/list/all',
+						method: 'get'
+					}).then(res => {
+						if (res.data.code == 0) {
+							this.menus = res.data.data
+							resolve()
+						} else {
+							Message.error(res.data.msg)
+							reject(res.data.msg)
+						}
+					})
+				})
+			},
 			getRoles(pageIndex) {
 				let params = {
 					pageIndex: pageIndex || 1,
@@ -182,10 +200,6 @@
 					if (res.data.code == 0) {
 						this.count = res.data.data.count
 						this.roles = res.data.data.rows
-						this.setRouteQuery({
-							pageIndex: res.data.data.pageIndex,
-							pageSize: res.data.data.pageSize,
-						})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -232,13 +246,16 @@
 				})
 			},
 			setAuth(data) {
-				this.setAuthId = data.Role_ID
-				this.showSetAuth = true
-				this.getRole(data.Role_ID, res => {
-					let menusID = res.sys_menus.map(item => item.Menu_ID)
-					this.$nextTick(() => {
-						this.$refs.tree.setCheckedKeys(menusID)
-						this.getRoles()
+				this.getMenus().then(() => {
+					this.setAuthId = data.Role_ID
+					this.showSetAuth = true
+					this.getRole(data.Role_ID, res => {
+						let menusID = res.sys_menus.map(item => item.Menu_ID)
+						this.$nextTick(() => {
+							this.$refs.tree.setCheckedKeys(menusID)
+							this.getRoles()
+							this.$store.dispatch('getMenu')
+						})
 					})
 				})
 			},
@@ -366,11 +383,6 @@
 				setTimeout(() => {
 					this.refreshing = false
 				}, 500)
-			},
-			setRouteQuery(json) {
-				for (let attr in json) {
-					this.$route.query[attr] = json[attr]
-				}
 			}
 		}
 	}

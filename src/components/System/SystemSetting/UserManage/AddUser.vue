@@ -8,8 +8,8 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg" :show-file-list="false" :on-success="handleAvatarSuccess">
-								<img v-if="user.Photo" :src="user.Photo" class="avatar">
+							<el-upload class="avatar-uploader" :action="javaUrl + '/sys/picture/upload'" :show-file-list="false" :on-success="handleAvatarSuccess">
+								<img v-if="user.Photo" :src="javaImgUrl + user.Photo" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -104,6 +104,7 @@
 </template>
 <script type="text/javascript">
 import request from '../../../../common/request'
+import { javaUrl, javaImgUrl } from '../../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
@@ -132,6 +133,10 @@ export default {
 			companys: [],
 			departments: []
 		}
+	},
+	computed: {
+		javaUrl: () => javaUrl,
+		javaImgUrl: () => javaImgUrl
 	},
 	created() {
 		this.getRoles()
@@ -221,7 +226,8 @@ export default {
 			this.getCompanys(Organization_ID)
 		},
 		handleAvatarSuccess(res, file) {
-			this.user.Photo = 'http://39.108.245.177:4000' + res.data
+			console.log(res, file)
+			this.user.Photo = res.data
 		},
 		back() {
 			this.$router.push({ name: 'usermanage' })
