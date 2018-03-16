@@ -23,8 +23,10 @@
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
 				<a :href="templateUrl" download="goodssource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
+				<button @click="doPrint">打印</button>
 			</div>
-			<div class="table">
+			<div class="table" id="table">
+				<!--startprint-->
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="报文参考号" prop="messageReferenceNumber" align="center" width="140">
 					</el-table-column>
@@ -62,6 +64,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
+				<!--endprint-->
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
@@ -89,6 +92,16 @@
 import requestJava, { javaUrl } from '../../../common/requestJava'
 import { Message } from 'element-ui'
 import UploadExcel from '../../CommonComponents/UploadExcel'
+// function doPrint() {
+// 	bdhtml=window.document.body.innerHTML; //获取当前页的html代码  
+// 	sprnstr="<!--startprint-->"; //设置打印开始区域   
+// 	eprnstr="<!--endprint-->";  //设置打印结束区域   
+// 	prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);  //从开始代码向后取html   
+// 	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));  //从结束代码向前取html   
+// 	window.document.body.innerHTML=prnhtml;  
+// 	window.print();  
+// 	window.document.body.innerHTML=bdhtml;    //还原页面  
+// }
 export default {
 	data() {
 		return {
@@ -108,6 +121,14 @@ export default {
 		this.getCargoList()
 	},
 	methods: {
+		doPrint() {
+			//获取当前页的html代码
+			var bdhtml = window.document.body.innerHTML  
+			window.document.body.innerHTML = document.getElementById('table').innerHTML  
+			window.print()
+			// 重新加载页面，以刷新数据
+    		window.location.reload()
+		},
 		reset() {
 			this.findMessageReferenceNumber = ''
 		},
