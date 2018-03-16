@@ -73,7 +73,7 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="认证状态" width="140">
+					<el-table-column label="认证状态" width="120" align="center">
 						<template slot-scope="scope">
 							<span>
 								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson && (scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE)">{{cerStatus.NAME}}</span>

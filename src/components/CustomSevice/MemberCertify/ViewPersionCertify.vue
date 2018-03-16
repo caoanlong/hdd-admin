@@ -87,7 +87,7 @@
 								<el-button type="success" @click="persionCertify('Success')">激活</el-button>
                             	<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
 							</span>
-							<span>
+							<span style="margin-left:10px">
 								<el-button @click="back">返回</el-button>
 							</span>
 						</el-form-item>
