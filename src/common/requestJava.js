@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import store from '../store'
 
 export const javaUrl = 'http://192.168.1.29:8080'
+// export const javaUrl = 'http://192.168.1.48:8080'
 export const javaImgUrl = 'http://develop.we-service.cn/hdd/image/'
 
 // create an axios instance
