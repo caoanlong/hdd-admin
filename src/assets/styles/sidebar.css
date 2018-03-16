@@ -2,10 +2,10 @@
 * @Author: coolia
 * @Date:   2018-01-17 11:19:03
 * @Last Modified by:   coolia
-* @Last Modified time: 2018-02-09 16:48:35
+* @Last Modified time: 2018-03-12 15:25:58
 */
-#app .main-container{min-height:100%;-webkit-transition:margin-left 0.28s;-moz-transition:margin-left 0.28s;transition:margin-left 0.28s;margin-left:180px;}
-#app .sidebar-container{-webkit-transition:width 0.28s;-moz-transition:width 0.28s;transition:width 0.28s;width:180px!important;height:100%;position:fixed;top:0;bottom:0;left:0;z-index:1001;}
+#app .main-container{min-height:100%;-webkit-transition:margin-left 0.28s;-moz-transition:margin-left 0.28s;transition:margin-left 0.28s;margin-left:200px;}
+#app .sidebar-container{-webkit-transition:width 0.28s;-moz-transition:width 0.28s;transition:width 0.28s;width:200px!important;height:100%;position:fixed;top:0;bottom:0;left:0;z-index:1001;}
 #app .sidebar-container a{display:inline-block;width:100%;}
 #app .sidebar-container .svg-icon{margin-right:5px;}
 #app .sidebar-container .el-menu{border:none;width:100%;}
@@ -19,6 +19,6 @@
 #app .hideSidebar .el-submenu > .el-submenu__title .el-submenu__icon-arrow{display:none;}
 #app .hideSidebar .el-submenu .nest-menu .el-submenu__icon-arrow{display:block!important;}
 #app .hideSidebar .el-submenu .nest-menu span{display:inline-block!important;}
-#app .nest-menu .el-submenu > .el-submenu__title,#app .el-submenu .el-menu-item{min-width:180px!important;background-color:#1f2d3d!important;}
+#app .nest-menu .el-submenu > .el-submenu__title,#app .el-submenu .el-menu-item{min-width:200px!important;background-color:#1f2d3d!important;}
 #app .nest-menu .el-submenu > .el-submenu__title:hover,#app .el-submenu .el-menu-item:hover{background-color:#001528!important;}
-#app .el-menu--collapse .el-menu .el-submenu{min-width:180px!important;}
+#app .el-menu--collapse .el-menu .el-submenu{min-width:200px!important;} 
