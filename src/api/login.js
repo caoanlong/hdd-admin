@@ -1,12 +1,13 @@
 import request from '../common/request'
+import requestJava from '../common/requestJava'
 
-export function login(LoginName, Password) {
+export function login(username, password) {
 	const data = {
-		LoginName,
-		Password
+		username,
+		password
 	}
-	return request({
-		url: '/user/login',
+	return requestJava({
+		url: '/mem/login',
 		method: 'post',
 		data
 	})
@@ -18,10 +19,9 @@ export function logout() {
 	})
 }
 
-export function getUserInfo(token) {
+export function getUserInfo() {
 	return request({
 		url: '/user/info',
-		method: 'get',
-		params: { token }
+		method: 'get'
 	})
 }

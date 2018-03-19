@@ -36,8 +36,8 @@
 			// 	}
 			// }
 			const validatePassword = (rule, value, callback) => {
-				if (value.length < 6) {
-					callback(new Error('密码不能少于6位！'))
+				if (value.length < 5) {
+					callback(new Error('密码不能少于5位！'))
 				} else {
 					callback()
 				}
@@ -68,6 +68,7 @@
 					if (valid) {
 						this.loading = true
 						this.$store.dispatch('Login', this.loginForm).then((res) => {
+							this.$store.dispatch('GetUserInfo')
 							this.$store.dispatch('getMenu')
 							this.loading = false
 							Message.success('登录成功')

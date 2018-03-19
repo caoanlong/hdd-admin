@@ -17,7 +17,9 @@ export default {
 		}
 	},
 	created() {
-		this.$store.dispatch('getMenu')
+		if (this.$route.name != 'login' || sessionStorage.getItem('menus') == 'undefined') {
+			this.$store.dispatch('getMenu')
+		}
 	}
 }
 </script>

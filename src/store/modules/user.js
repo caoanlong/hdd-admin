@@ -28,16 +28,10 @@ const user = {
 			return new Promise((resolve, reject) => {
 				login(LoginName, Password).then(response => {
 					let data = response.data
-					if (data.code == 0) {
+					if (data.code == 200) {
 						console.log(data)
-						commit('SET_TOKEN', response.headers['x-access-token'])
-						commit('SET_LOGIN_NAME', data.data.LoginName)
-						commit('SET_NAME', data.data.Name)
-						commit('SET_PHOTO', data.data.Photo)
-						localStorage.setItem('token', response.headers['x-access-token'])
-						localStorage.setItem('LoginName', data.data.LoginName)
-						localStorage.setItem('Name', data.data.Name)
-						localStorage.setItem('Photo', data.data.Photo)
+						commit('SET_TOKEN', response.headers['authorization'])
+						localStorage.setItem('token', response.headers['authorization'])
 						resolve(data.data)
 					} else {
 						reject(data.msg)
@@ -62,13 +56,16 @@ const user = {
 				})
 			})
 		},
-		GetUserInfo({ commit }, token) {
+		GetUserInfo({ commit }) {
 			return new Promise((resolve, reject) => {
-				getUserInfo(token).then(response => {
+				getUserInfo().then(response => {
 					const data = response.data
-					commit('SET_LOGIN_NAME', data.LoginName)
-					commit('SET_NAME', data.Name)
-					commit('SET_PHOTO', data.Photo)
+					commit('SET_LOGIN_NAME', data.data.LoginName)
+					commit('SET_NAME', data.data.Name)
+					commit('SET_PHOTO', data.data.Photo)
+					localStorage.setItem('LoginName', data.data.LoginName)
+					localStorage.setItem('Name', data.data.Name)
+					localStorage.setItem('Photo', data.data.Photo)
 					resolve(data)
 				}).catch(error => {
 					reject(error)

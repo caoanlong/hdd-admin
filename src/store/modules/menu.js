@@ -2,7 +2,7 @@ import {getMenus, addMenu, updateMenu, delMenu} from '../../api/menu'
 
 const menu = {
 	state: {
-		menus: JSON.parse(sessionStorage.getItem('menus'))
+		menus: sessionStorage.getItem('menus') != 'undefined' ? JSON.parse(sessionStorage.getItem('menus')) : ''
 	},
 	mutations: {
 		GET_MENU: (state) => {

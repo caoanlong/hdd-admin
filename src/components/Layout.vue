@@ -34,12 +34,19 @@
 	.app-wrapper
 		position relative
 		height 100%
+		margin-left 180px
 		.right-container
 			position relative
 			padding-top 80px
+	.top-bar
+		position fixed
+		top 0
+		right 0
+		z-index 99
+		left 180px
+	#app
+		.hideSidebar
+			margin-left 36px
 			.top-bar
-				position fixed
-				top 0
-				width 100%
-				z-index 99
+				left 36px
 </style>

@@ -149,7 +149,7 @@ export default {
 		margin 0
 		background #fff
 		z-index 2
-		position absolute
+		position fixed
 		list-style-type none
 		padding 5px 0
 		border-radius 4px

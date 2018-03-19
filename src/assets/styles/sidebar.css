@@ -4,7 +4,7 @@
 * @Last Modified by:   coolia
 * @Last Modified time: 2018-02-09 16:48:35
 */
-#app .main-container{min-height:100%;-webkit-transition:margin-left 0.28s;-moz-transition:margin-left 0.28s;transition:margin-left 0.28s;margin-left:180px;}
+#app .main-container{min-height:100%;}
 #app .sidebar-container{-webkit-transition:width 0.28s;-moz-transition:width 0.28s;transition:width 0.28s;width:180px!important;height:100%;position:fixed;top:0;bottom:0;left:0;z-index:1001;}
 #app .sidebar-container a{display:inline-block;width:100%;}
 #app .sidebar-container .svg-icon{margin-right:5px;}
@@ -22,3 +22,4 @@
 #app .nest-menu .el-submenu > .el-submenu__title,#app .el-submenu .el-menu-item{min-width:180px!important;background-color:#1f2d3d!important;}
 #app .nest-menu .el-submenu > .el-submenu__title:hover,#app .el-submenu .el-menu-item:hover{background-color:#001528!important;}
 #app .el-menu--collapse .el-menu .el-submenu{min-width:180px!important;}
+#app .hideSidebar .el-menu-item,#app .hideSidebar .el-menu-item .el-tooltip{padding-left:10px!important;}
