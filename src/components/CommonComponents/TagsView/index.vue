@@ -102,7 +102,7 @@ export default {
 			this.visible = true
 			this.selectedTag = tag
 			this.left = e.clientX
-			this.top = e.clientY
+			this.top = 85
 		},
 		closeMenu() {
 			this.visible = false
