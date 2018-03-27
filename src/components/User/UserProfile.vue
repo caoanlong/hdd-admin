@@ -9,14 +9,11 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload :disabled="!isEdit" class="avatar-uploader" 
-							action="http://39.108.245.177:3001/uploadImg" 
-							@click.native="previewImg(user.Photo)"
-							:show-file-list="false" 
-							:on-success="handleAvatarSuccess">
-								<img v-if="user.Photo" :src="user.Photo" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload 
+								:files="[user.Photo]" 
+								@imgUrlBack="handleAvatarSuccess"
+								:isPreview="!isEdit" 
+								:fixed="true"/>
 						</el-form-item>
 
 						<el-form-item label="公司">
@@ -96,6 +93,7 @@
 <script type="text/javascript">
 	import request from '../../common/request'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -150,13 +148,16 @@
 					if (res.data.code == 0) {
 						Message.success(res.data.msg)
 						this.isEdit = !this.isEdit
+						this.$store.dispatch('GetUserInfo')
+
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			handleAvatarSuccess(res, file) {
-				this.user.Photo = 'http://39.108.245.177:4000' + res.data
+			handleAvatarSuccess(res) {
+				this.user.Photo = res
+				console.log(res)
 			},
 			previewImg(imgUrl) {
 				if (this.isEdit) {
@@ -171,6 +172,9 @@
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

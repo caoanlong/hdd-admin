@@ -23,7 +23,7 @@
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
 				<a :href="templateUrl" download="goodssource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
 				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
-				<button @click="doPrint">打印</button>
+				<!-- <button @click="doPrint">打印</button> -->
 			</div>
 			<div class="table" id="table">
 				<!--startprint-->
@@ -121,6 +121,7 @@ export default {
 		this.getCargoList()
 	},
 	methods: {
+		// 打印
 		doPrint() {
 			//获取当前页的html代码
 			var bdhtml = window.document.body.innerHTML  

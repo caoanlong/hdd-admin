@@ -14,17 +14,13 @@
 							<el-input v-model="truckBrand.Code"></el-input>
 						</el-form-item>
 						<el-form-item label="是否生效">
-                            <el-switch v-model="truckBrand.Enable"></el-switch>
+							<el-switch v-model="truckBrand.Enable"></el-switch>
 						</el-form-item>
-                        <el-form-item label="图片">
-                            <el-upload
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								:show-file-list="false" 
-								:on-success="handleAvatarSuccess">
-								<img v-if="truckBrand.PictureURL" :src="truckBrand.PictureURL" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+						<el-form-item label="图片">
+							<ImageUpload 
+								:files="[truckBrand.PictureURL]" 
+								@imgUrlBack="handleAvatarSuccess"
+								:fixed="true"/>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click.native="updateTruckBrand">立即保存</el-button>
@@ -39,6 +35,7 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -49,14 +46,14 @@
 					PictureURL: ''
 				}
 			}
-        },
-        created() {
-            this.getTruckBrand()
-        },
+		},
+		created() {
+			this.getTruckBrand()
+		},
 		methods: {
 			updateTruckBrand() {
 				let data= {
-                    TruckBrand_ID: this.$route.query.TruckBrand_ID,
+					TruckBrand_ID: this.$route.query.TruckBrand_ID,
 					Name: this.truckBrand.Name,
 					Code: this.truckBrand.Code,
 					Enable: this.truckBrand.Enable ? 'Y' : 'N',
@@ -74,10 +71,10 @@
 						Message.error(res.data.msg)
 					}
 				})
-            },
-            getTruckBrand() {
-                let params= {
-                    TruckBrand_ID: this.$route.query.TruckBrand_ID
+			},
+			getTruckBrand() {
+				let params= {
+					TruckBrand_ID: this.$route.query.TruckBrand_ID
 				}
 				request({
 					url: '/base_truckbrand/info',
@@ -85,19 +82,22 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-                        this.truckBrand = res.data.data
-                        this.truckBrand.Enable = res.data.data.Enable == 'Y' ? true : false
+						this.truckBrand = res.data.data
+						this.truckBrand.Enable = res.data.data.Enable == 'Y' ? true : false
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
-            },
-            handleAvatarSuccess(res, file) {
-				this.truckBrand.PictureURL = 'http://39.108.245.177:4000' + res.data
+			},
+			handleAvatarSuccess(res) {
+				this.truckBrand.PictureURL = res
 			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

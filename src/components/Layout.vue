@@ -31,7 +31,6 @@
 	}
 </script>
 <style lang="stylus" scoped>
-	
 	.app-wrapper
 		position relative
 		height 100%

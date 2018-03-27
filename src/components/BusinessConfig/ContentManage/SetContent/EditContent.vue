@@ -25,14 +25,9 @@
 							<div id="editor" type="text/plain"  class="customerEditor"></div>
 						</el-form-item>
 						<el-form-item label="图片上传">
-							<el-upload
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								:show-file-list="false" 
-								:on-success="handleAvatarSuccess">
-								<img v-if="content.PictureURL" :src="content.PictureURL" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload 
+								:files="[content.PictureURL]" 
+								@imgUrlBack="handleAvatarSuccess"/>
 						</el-form-item>
 						<el-form-item label="图片URL">
 							<el-input v-model="content.PictureURL"></el-input>
@@ -62,6 +57,7 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -153,8 +149,8 @@
 					}
 				})
             },
-			handleAvatarSuccess(res, file) {
-				this.content.PictureURL = 'http://39.108.245.177:4000' + res.data
+			handleAvatarSuccess(res) {
+				this.content.PictureURL = res
 			},
 			getUEContent() {
 				return new Promise((resolve, reject) => {
@@ -168,6 +164,9 @@
 		},
 		destroyed() {
 			this.editor.destroy()
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

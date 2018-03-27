@@ -71,7 +71,7 @@
 					</el-table-column>
 					<el-table-column label="审批人" align="center" prop="auditBy" width="100">
 					</el-table-column>
-					<el-table-column label="操作" width="150" align="center">
+					<el-table-column label="操作" width="150">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.mobile,scope.row.cashID)">查看</el-button>
 							<el-button size="mini" @click="EditWithDraw(scope.row.mobile,scope.row.cashID)" v-if="scope.row.status=='ForAudit'">

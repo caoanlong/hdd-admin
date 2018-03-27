@@ -17,27 +17,18 @@
 							<el-input v-model="bankInfo.perLimit"></el-input>
 						</el-form-item>
 						<el-form-item label="logo">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg"  
-								:show-file-list="false" 
-								:on-success="handleLogoUrlSuccess">
-								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload 
+								:files="[bankInfo.logoUrl]" 
+								@imgUrlBack="handleLogoUrlSuccess"
+								:fixed="true"/>
 						</el-form-item>
 						<el-form-item label="logo名称">
 							<el-input v-model="bankInfo.logoName"></el-input>
 						</el-form-item>
 						<el-form-item label="背景图片">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg"  
-								:show-file-list="false" 
-								:on-success="handleBgUrlSuccess">
-								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+                            <ImageUpload 
+								:files="[bankInfo.bgUrl]" 
+								@imgUrlBack="handleBgUrlSuccess"/>
 						</el-form-item>
 						<el-form-item label="背景名称">
 							<el-input v-model="bankInfo.bgName"></el-input>
@@ -55,6 +46,7 @@
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -114,15 +106,18 @@
 					}
 				})
             },
-            handleLogoUrlSuccess(res, file) {
-				this.bankInfo.logoUrl = 'http://39.108.245.177:4000' + res.data
+            handleLogoUrlSuccess(res) {
+				this.bankInfo.logoUrl = res
 			},
-			handleBgUrlSuccess(res, file) {
-				this.bankInfo.bgUrl = 'http://39.108.245.177:4000' + res.data
+			handleBgUrlSuccess(res) {
+				this.bankInfo.bgUrl = res
 			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

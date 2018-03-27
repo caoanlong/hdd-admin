@@ -44,7 +44,7 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="会员类型" prop="type" width="100">
+					<el-table-column label="会员类型" width="100">
 						<template slot-scope="scope">
 							<span v-for="memberType in memberTypes" :key="memberType.Dict_ID" v-if="scope.row.type == memberType.VALUE">{{memberType.NAME}}</span>
 						</template>
@@ -252,17 +252,17 @@ export default {
 				realNameStatus: this.findRealNameStatus,
 				walletStatus: this.findWalletStatus
 			}
-			console.log(params)
 			requestJava({
 				url: '/mem/memMember/list',
 				method: 'get',
 				params
 			}).then(res => {
+				console.log(res)
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list
 				} else {
-					Message.error(res.data.message)
+					Message.error(res.data.message || res.data.msg)
 				}
 			})
 		},
@@ -280,7 +280,7 @@ export default {
 					Message.success(res.data.message)
 					this.getList()
 				} else {
-					Message.error(res.data.message)
+					Message.error(res.data.message || res.data.msg)
 				}
 			})
 		},

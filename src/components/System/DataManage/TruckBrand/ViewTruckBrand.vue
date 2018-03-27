@@ -17,15 +17,9 @@
 							<p>{{truckBrand.Enable == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
 						<el-form-item label="图片">
-							<el-upload
-								class="avatar-uploader" 
-								action="http://39.108.245.177:3001/uploadImg" 
-                                :disabled="true" 
-								@click.native="previewImg(truckBrand.PictureURL)"
-								:show-file-list="false">
-								<img v-if="truckBrand.PictureURL" :src="truckBrand.PictureURL" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload 
+								:files="[truckBrand.PictureURL]" 
+								:isPreview="true"/>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -39,6 +33,7 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -55,8 +50,8 @@
 		},
 		methods: {
 			getTruckBrand() {
-                let params= {
-                    TruckBrand_ID: this.$route.query.TruckBrand_ID
+				let params= {
+					TruckBrand_ID: this.$route.query.TruckBrand_ID
 				}
 				request({
 					url: '/base_truckbrand/info',
@@ -64,22 +59,18 @@
 					params
 				}).then(res => {
 					if (res.data.code == 0) {
-                        this.truckBrand = res.data.data
+						this.truckBrand = res.data.data
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			previewImg(imgUrl) {
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-					dangerouslyUseHTMLString: true,
-					showConfirmButton: false,
-					customClass: 'img-preview'
-				})
-			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>
