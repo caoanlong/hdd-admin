@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>申请列表</span>
+				<span>商户申请列表</span>
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
@@ -26,43 +26,46 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					<el-table-column label="账号" prop="accountCode" width="120">
-					</el-table-column>
-					<el-table-column label="姓名" prop="realName" width="120">
-					</el-table-column>
-					<el-table-column label="身份证号" align="center" prop="IDCardNum" width="150">
-					</el-table-column>
-					<el-table-column label="状态" prop="auditStatus" align="center" width="80">
+					<el-table-column label="企业名称" prop="companyName"></el-table-column>
+					<el-table-column label="信用代码" prop="socialCreditCode"></el-table-column>
+					<el-table-column label="法人姓名" prop="realName" width="80"></el-table-column>
+					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>
+					<el-table-column label="开户银行户名" prop="bandkCustName" width="100"></el-table-column>
+                    <el-table-column label="审批人" prop="auditByName"></el-table-column>
+					<el-table-column label="审批状态" prop="auditStatus" width="100">
 						<template slot-scope="scope">
-							<span v-if="scope.row.auditStatus=='Draft'" style="#909399">草稿</span>
-							<span v-else-if="scope.row.auditStatus=='Commited'" style="color:#409EFF">已提交</span>
-							<span v-else-if="scope.row.auditStatus=='Success'" style="color:#67C23A">成功</span>
-							<span v-else-if="scope.row.auditStatus=='Failed'" style="color:#E6A23C">失败</span>
-							<span v-else style="color:#F56C6C">已拒绝</span>
+							<span v-if="scope.row.auditStatus == auditStatus.VALUE" v-for="auditStatus in auditStatusList" :key="auditStatus.Dict_ID">{{auditStatus.NAME}}</span>
 						</template>
-					</el-table-column>
-					<el-table-column label="申请时间" align="center" width="140">
-						<template slot-scope="scope">
-							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
-						</template>
-					</el-table-column>
-					</el-table-column>
-					<el-table-column label="审批人" align="center" prop="auditBy">
 					</el-table-column>
 					<el-table-column label="审批时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="260">
+                    <el-table-column label="审核失败原因" prop="auditFailedReason"></el-table-column>
+                    <el-table-column label="是否有效" prop="isValid"></el-table-column>
+                    <el-table-column label="创建时间" width="140">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID, scope.row.memID)">查看</el-button>
-							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, '')">
-								<svg-icon icon-class="approve-icon"></svg-icon> 审核通过
-							</el-button>
-							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, 'Rejected')">
-								<svg-icon icon-class="approve-icon"></svg-icon> 驳回
-							</el-button>
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作">
+                        <template slot-scope="scope">
+							<el-dropdown  @command="handleCommand"  trigger="click">
+								<el-button type="default" size="mini">操作<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+								<el-dropdown-menu slot="dropdown">
+									<el-dropdown-item :command="{
+                                        type: 'view', 
+                                        businessApplyID: scope.row.businessApplyID}" icon="el-icon-view">查看</el-dropdown-item>
+									<el-dropdown-item :command="{
+                                        type: '', 
+                                        businessApplyID: scope.row.businessApplyID}">审核通过</el-dropdown-item>
+									<el-dropdown-item :command="{
+                                        type: 'Rejected', 
+                                        businessApplyID: scope.row.businessApplyID
+                                        }">驳回</el-dropdown-item>
+								</el-dropdown-menu>
+							</el-dropdown>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -90,6 +93,7 @@
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../common/request'
 import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
@@ -99,12 +103,13 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
+			auditStatusList: [],
 			findKeyWords:'',
 			findAuditStatus:''
 		}
 	},
 	created() {
-		this.getList()
+		this.getAuditStatus()
 	},
 	methods: {
 		pageChange(index) {
@@ -114,11 +119,11 @@ export default {
 			let params = {
 				pageNum: pageNum || 1,
 				pageSize: this.pageSize,
-				realName: this.findKeyWords,
-				auditStatus: this.findAuditStatus
+				// realName: this.findKeyWords,
+				// auditStatus: this.findAuditStatus
 			}
 			requestJava({
-				url: '/customerservice/payRealNameApply/list',
+				url: '/payBusinessApply/list',
 				method: 'get',
 				params
 			}).then(res => {
@@ -130,18 +135,38 @@ export default {
 				}
 			})
 		},
+		getAuditStatus() {
+			let params = {
+				TYPE: 'payRealNameApply_auditStatus'
+			}
+			request({
+				url: '/sys_dict/list/type',
+				method: 'get',
+				params
+			}).then(res => {
+				this.auditStatusList = res.data.data
+				this.getList()
+			})
+		},
 		reset() {
 			this.findKeyWords = '',
 			this.findAuditStatus = '',
 			this.getList()
+        },
+        handleCommand(command) {
+			if(command.type == 'view'){
+				this.$router.push({ 
+                    name: 'viewmerchantcertify' , 
+                    query: { 'businessApplyID': command.businessApplyID } 
+                })
+			} else {
+                this.approve(command)
+			}
 		},
-		viewCertification(realNameApplyID, memID) {
-			this.$router.push({ name: 'viewcertification', query: { realNameApplyID, memID} })
-		},
-		approve(realNameApplyID, flag) {
+		approve(command) {
 			let data = {
-				realNameApplyID,
-				flag
+				businessApplyID: command.businessApplyID,
+				flag: command.type
 			}
 			requestJava({
 				url: '/customerservice/payRealNameApply/approve',

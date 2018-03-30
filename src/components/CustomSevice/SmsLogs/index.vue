@@ -40,10 +40,20 @@
 					<el-table-column label="返回结果" prop="ResultMsg"></el-table-column>
 					<el-table-column label="状态" prop="Status" width="100">
 						<template slot-scope="scope">
-							<span>{{scope.row.Status == 'Success' ? '成功' : '失败'}}</span>
+							<span v-if="scope.row.Status == 'Success'">成功</span>
+							<span v-else-if="scope.row.Status == 'Failed'">失败</span>
+							<span v-else-if="scope.row.Status == 'Sending'">发送中</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="业务类型" prop="SendData"></el-table-column>
+					<el-table-column label="业务类型" prop="BusinessType">
+						<template slot-scope="scope">
+							<span v-if="scope.row.BusinessType == 'VERFIFY_CODE_REGISTER'">注册</span>
+							<span v-else-if="scope.row.BusinessType == 'VERFIFY_CODE_SINGIN'">登录</span>
+							<span v-else-if="scope.row.BusinessType == 'VERFIFY_CODE_UPDATE_PHONE'">更换手机号</span>
+							<span v-else-if="scope.row.BusinessType == 'VERIFY_CODE_PAY_PASSWORD_RESET'">重置支付密码</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="验证码" prop="SendData"></el-table-column>
 					<el-table-column label="发送时间" width="140">
 						<template slot-scope="scope">
 							<span>{{ new Date(scope.row.SendTime).getTime() | getdatefromtimestamp() }}</span>

@@ -269,7 +269,6 @@ export default {
 							Name: item.Name
 						}
 					})
-					console.log(this.roles)
 				} else {
 					Message.error(res.data.msg)
 				}

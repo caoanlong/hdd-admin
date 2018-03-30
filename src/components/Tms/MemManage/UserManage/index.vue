@@ -1,0 +1,154 @@
+<template>
+	<div class="main-content">
+		<el-card class="box-card">
+			<div slot="header" class="clearfix">
+				<span>用户列表</span>
+			</div>
+			<div class="search">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="申请时间">
+						<el-date-picker 
+							v-model="findDataRange" 
+							type="daterange" 
+							range-separator="至" 
+							start-placeholder="开始时间" 
+							end-placeholder="结束时间" 
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="table">
+				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
+					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
+					<el-table-column label="用户ID" prop="userID"></el-table-column>
+					<el-table-column label="用户名" prop="userName"></el-table-column>
+					<el-table-column label="联系人" prop="contacts"></el-table-column>
+					<el-table-column label="公司名称" prop="Name"></el-table-column>
+					<el-table-column label="公司地址" prop="Name"></el-table-column>
+					<el-table-column label="申请状态" prop="Enable">
+						<template slot-scope="scope">
+							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="申请时间" prop="Name"></el-table-column>
+					<el-table-column label="通过时间" prop="Name"></el-table-column>
+					<el-table-column label="操作" width="230" align="center">
+						<template slot-scope="scope">
+							<el-button size="mini" icon="el-icon-view" @click="viewUserManage(scope.row.User_ID)">查看详情</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<el-row type="flex">
+					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
+						<span>总共 {{count}} 条记录每页显示</span>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckBrands">
+							<el-option label="10" value="10"></el-option>
+							<el-option label="20" value="20"></el-option>
+							<el-option label="30" value="30"></el-option>
+							<el-option label="40" value="40"></el-option>
+							<el-option label="50" value="50"></el-option>
+							<el-option label="100" value="100"></el-option>
+						</el-select>
+						<span>条记录</span>
+					</el-col>
+					<el-col :span="12">
+						<div class="pagination">
+							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
+		</el-card>
+	</div>
+</template>
+<script type="text/javascript">
+import request from '../../../../common/request'
+import { Message } from 'element-ui'
+export default {
+	data() {
+		return {
+			refreshing: false,
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			truckBrands: [],
+			selectedTruckBrands: [],
+			findDataRange: '',
+			startDate: 0,
+			endDate: 0
+		}
+	},
+	created() {
+		this.getTruckBrands()
+	},
+	methods: {
+		selectDateRange(date) {
+			this.startDate = new Date(date[0]).getTime()
+			this.endDate = new Date(date[1]).getTime()
+		},
+		pageChange(index) {
+			this.getTruckBrands(index)
+		},
+		// 重置搜索表单
+		reset() {
+			this.findCode = ''
+			this.findName = ''
+		},
+		getTruckBrands(pageIndex) {
+			let params = {
+				pageIndex: pageIndex || 1,
+				pageSize: this.pageSize,
+				Code: this.findCode,
+				Name: this.findName
+			}
+			request({
+				url: '/base_truckbrand/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.truckBrands = res.data.data.rows
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		viewUserManage(User_ID) {
+			this.$router.push({ name: 'tmsviewusermanage', query: {User_ID} })
+		},
+		selectionChange(data) {
+			this.selectedTruckBrands = data.map(item => item.User_ID)
+		}
+	}
+}
+
+</script>
+<style lang="stylus" scoped>
+.download-btn
+	font-size 12px
+	color #606266
+	height 29px
+	line-height 29px
+	padding 0 15px
+	border 1px solid #dcdfe6
+	border-radius 3px
+	background #fff
+	margin 0 10px
+	display inline-block
+	&:hover
+		border-color #c6e2ff
+		color #409eff
+		background #ecf5ff
+	&:active
+		border-color #3a8ee6
+		color #3a8ee6
+.table-img
+	width 30px
+	cursor pointer
+</style>

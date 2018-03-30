@@ -231,6 +231,22 @@ let routerMap = [
 						component: () => import('../components/CustomSevice/Certification/ViewCertification')
 					},
 					{
+						path: '/merchantcertify',
+						name: 'merchantcertify',
+						meta: {
+							title: '商户认证'
+						},
+						component: () => import('../components/CustomSevice/MerchantCertify')
+					},
+					{
+						path: '/viewmerchantcertify',
+						name: 'viewmerchantcertify',
+						meta: {
+							title: '商户认证详情'
+						},
+						component: () => import('../components/CustomSevice/MerchantCertify/ViewMerchantCertify')
+					},
+					{
 						path: '/withdraw',
 						name: 'withdraw',
 						meta: {
@@ -861,6 +877,108 @@ let routerMap = [
 								component: () => import('../components/Transaction/PlatformTransactionLog')
 							}
 						]
+					}
+				]
+			},
+			{
+				path: '/tms',
+				name: 'tms',
+				meta: {
+					title: 'TMS管理'
+				},
+				component: () => import('../components/Tms'),
+				redirect: '/tmsmemmanage',
+				children: [
+					{
+						path: '/tmsmemmanage',
+						name: 'tmsmemmanage',
+						meta: {
+							title: '会员管理'
+						},
+						component: () => import('../components/Tms/MemManage'),
+						redirect: '/tmsusermanage',
+						children: [
+							{
+								path: '/tmsusermanage',
+								name: 'tmsusermanage',
+								meta: {
+									title: '用户管理'
+								},
+								component: () => import('../components/Tms/MemManage/UserManage')
+							},
+							{
+								path: '/tmsviewusermanage',
+								name: 'tmsviewusermanage',
+								meta: {
+									title: '查看用户'
+								},
+								component: () => import('../components/Tms/MemManage/UserManage/ViewUserManage')
+							},
+							{
+								path: '/tmsarchivemanage',
+								name: 'tmsarchivemanage',
+								meta: {
+									title: '档案管理'
+								},
+								component: () => import('../components/Tms/MemManage/ArchiveManage')
+							},
+							{
+								path: '/tmstruckmanage',
+								name: 'tmstruckmanage',
+								meta: {
+									title: '车辆管理'
+								},
+								component: () => import('../components/Tms/MemManage/TruckManage')
+							},
+							{
+								path: '/tmspersonmanage',
+								name: 'tmspersonmanage',
+								meta: {
+									title: '人员管理'
+								},
+								component: () => import('../components/Tms/MemManage/PersonManage')
+							},
+							{
+								path: '/tmsshippermanage',
+								name: 'tmsshippermanage',
+								meta: {
+									title: '托运人管理'
+								},
+								component: () => import('../components/Tms/MemManage/ShipperManage')
+							},
+							{
+								path: '/tmsrecdeliverycomp',
+								name: 'tmsrecdeliverycomp',
+								meta: {
+									title: '收发货单位'
+								},
+								component: () => import('../components/Tms/MemManage/RecDeliveryComp')
+							},
+						]
+					},
+					{
+						path: '/tmscarrierbill',
+						name: 'tmscarrierbill',
+						meta: {
+							title: '承运单管理'
+						},
+						component: () => import('../components/Tms/CarrierbillManage')
+					},
+					{
+						path: '/tmsdispatchbill',
+						name: 'tmsdispatchbill',
+						meta: {
+							title: '调度单管理'
+						},
+						component: () => import('../components/Tms/DispatchbillManage')
+					},
+					{
+						path: '/tmssettlemanage',
+						name: 'tmssettlemanage',
+						meta: {
+							title: '结算管理'
+						},
+						component: () => import('../components/Tms/SettleManage')
 					}
 				]
 			},

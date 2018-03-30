@@ -5,7 +5,7 @@ import store from '../store'
 // create an axios instance
 const service = axios.create({
 	baseURL: process.env.BASE_API, // api的base_url
-	timeout: 5000, // request timeout,
+	timeout: 45000, // request timeout,
 	// headers: { 'Authorization': localStorage.getItem('token') }
 })
 

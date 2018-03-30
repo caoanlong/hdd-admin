@@ -6,10 +6,10 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="手机号">
-						<el-input placeholder="请输入..." v-model="findMobile"></el-input>
+					<el-form-item label="请求参数">
+						<el-input placeholder="请输入..." v-model="findReqParams"></el-input>
 					</el-form-item>
-					<el-form-item label="设备类型" >
+					<el-form-item label="设备类型">
 						<el-select placeholder="请选择" v-model="findDeviceType">
 							<el-option label="苹果端" value="iOS"></el-option>
 							<el-option label="安卓端" value="Android"></el-option>
@@ -83,7 +83,7 @@
 	export default {
 		data() {
 			return {
-				findMobile: '',
+				findReqParams: '',
 				findDeviceType: '',
 				findLogType: '',
 				refreshing: false,
@@ -101,7 +101,7 @@
 				let params = {
 					pageIndex: pageIndex || 1,
 					pageSize: this.pageSize,
-					ReqParams: this.findMobile,
+					ReqParams: this.findReqParams,
 					DeviceType: this.findDeviceType,
 					LogType: this.findLogType
 				}

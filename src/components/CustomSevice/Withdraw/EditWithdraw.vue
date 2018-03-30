@@ -27,8 +27,7 @@
 						<el-form-item label="单位">
 							<p v-text="memMember.plateNoOrCompanyName"></p>
 						</el-form-item>
-						
-							</el-form>
+					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
