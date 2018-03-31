@@ -86,7 +86,6 @@
 					if (res.data.code == 200) {
 						this.scheduleJobList = res.data.data.scheduleJobList
 						this.executingJobList = res.data.data.executingJobList
-						console.log(res.data.data)
 					} else {
 						Message.error(res.data.message)
 					}

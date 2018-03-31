@@ -257,7 +257,6 @@ export default {
 				method: 'get',
 				params
 			}).then(res => {
-				console.log(res)
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list

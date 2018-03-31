@@ -117,9 +117,8 @@
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
 						this.tableData = res.data.data.list
-						console.log(res.data.data.list)
 					} else {
-						Message.error(res.data.message)
+						Message.error(res.data.msg)
 					}
 				})
 			},
