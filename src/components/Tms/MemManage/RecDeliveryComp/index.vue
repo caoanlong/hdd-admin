@@ -6,10 +6,16 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="代码">
+					<el-form-item label="公司名称">
 						<el-input placeholder="请输入..." v-model="findCode"></el-input>
 					</el-form-item>
-					<el-form-item label="名称">
+					<el-form-item label="地址">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="联系人">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="联系方式">
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -19,28 +25,22 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addRecDeliveryComp">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="代码" prop="Code"></el-table-column>
-					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="图片" prop="PictureURL">
-						<template slot-scope="scope">
-							<img class="table-img" :src="scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
-						</template>
-					</el-table-column>
-					<el-table-column label="是否生效" prop="Enable">
-						<template slot-scope="scope">
-							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
-						</template>
-					</el-table-column>
+					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+					<el-table-column label="用户" prop="Code"></el-table-column>
+					<el-table-column label="公司名称" prop="Name"></el-table-column>
+					<el-table-column label="地址" prop="Name"></el-table-column>
+					<el-table-column label="联系人" prop="Name"></el-table-column>
+					<el-table-column label="联系电话" prop="Name"></el-table-column>
+					<el-table-column label="录入时间" prop="Name"></el-table-column>					
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewTruckBrand(scope.row.TruckBrand_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTruckBrand(scope.row.TruckBrand_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewRecDeliveryComp(scope.row.TruckBrand_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editRecDeliveryComp(scope.row.TruckBrand_ID)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -156,14 +156,14 @@ export default {
 				}
 			})
 		},
-		addTruckBrand() {
-			this.$router.push({name: 'addtruckbrand'})
+		addRecDeliveryComp() {
+			this.$router.push({name: 'addtmsrecdeliverycomp'})
 		},
-		editTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'edittruckbrand', query: {TruckBrand_ID} })
+		editRecDeliveryComp(TruckBrand_ID) {
+			this.$router.push({ name: 'edittmsrecdeliverycomp'})
 		},
-		viewTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'viewtruckbrand', query: {TruckBrand_ID} })
+		viewRecDeliveryComp(TruckBrand_ID) {
+			this.$router.push({ name: 'viewtmsrecdeliverycomp'})
 		},
 		selectionChange(data) {
 			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)

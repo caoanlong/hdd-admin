@@ -19,28 +19,28 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTmsArchive">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="代码" prop="Code"></el-table-column>
-					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="图片" prop="PictureURL">
+					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+					<el-table-column label="用户名" prop="Code"></el-table-column>
+					<el-table-column label="车牌号" prop="Name"></el-table-column>
+					<el-table-column label="自编号" prop="Name"></el-table-column>
+					<el-table-column label="道路运输证号" prop="Name"></el-table-column>
+					<el-table-column label="姓名" prop="Name"></el-table-column>
+					<el-table-column label="身份证号" prop="Name"></el-table-column>
+					<el-table-column label="从业资格证号" prop="Name"></el-table-column>
+					<el-table-column label="联系电话" prop="Name"></el-table-column>
+					<el-table-column label="载重" prop="Name"></el-table-column>
+					<el-table-column label="备注" prop="Name"></el-table-column>
+					<el-table-column label="创建时间" prop="Name"></el-table-column>
+					<el-table-column label="建档时间" prop="Name"></el-table-column>
+					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
-							<img class="table-img" :src="scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
-						</template>
-					</el-table-column>
-					<el-table-column label="是否生效" prop="Enable">
-						<template slot-scope="scope">
-							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
-						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewTruckBrand(scope.row.TruckBrand_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTruckBrand(scope.row.TruckBrand_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewTmsArchive(scope.row.TruckBrand_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editTmsArchive(scope.row.TruckBrand_ID)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -156,14 +156,14 @@ export default {
 				}
 			})
 		},
-		addTruckBrand() {
-			this.$router.push({name: 'addtruckbrand'})
+		addTmsArchive() {
+			this.$router.push({name: 'addtmsarchive'})
 		},
-		editTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'edittruckbrand', query: {TruckBrand_ID} })
+		editTmsArchive(TruckBrand_ID) {
+			this.$router.push({ name: 'edittmsarchive'})
 		},
-		viewTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'viewtruckbrand', query: {TruckBrand_ID} })
+		viewTmsArchive(TruckBrand_ID) {
+			this.$router.push({ name: 'viewtmsarchive'})
 		},
 		selectionChange(data) {
 			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)

@@ -923,12 +923,60 @@ let routerMap = [
 								component: () => import('../components/Tms/MemManage/ArchiveManage')
 							},
 							{
+								path: '/addtmsarchive',
+								name: 'addtmsarchive',
+								meta: {
+									title: '添加档案'
+								},
+								component: () => import('../components/Tms/MemManage/ArchiveManage/AddTmsArchive')
+							},
+							{
+								path: '/viewtmsarchive',
+								name: 'viewtmsarchive',
+								meta: {
+									title: '查看档案'
+								},
+								component: () => import('../components/Tms/MemManage/ArchiveManage/ViewTmsArchive')
+							},
+							{
+								path: '/edittmsarchive',
+								name: 'edittmsarchive',
+								meta: {
+									title: '编辑档案'
+								},
+								component: () => import('../components/Tms/MemManage/ArchiveManage/EditTmsArchive')
+							},
+							{
 								path: '/tmstruckmanage',
 								name: 'tmstruckmanage',
 								meta: {
 									title: '车辆管理'
 								},
 								component: () => import('../components/Tms/MemManage/TruckManage')
+							},
+							{
+								path: '/addtmstruck',
+								name: 'addtmstruck',
+								meta: {
+									title: '添加车辆'
+								},
+								component: () => import('../components/Tms/MemManage/TruckManage/AddTmsTruck')
+							},
+							{
+								path: '/edittmstruck',
+								name: 'edittmstruck',
+								meta: {
+									title: '编辑车辆'
+								},
+								component: () => import('../components/Tms/MemManage/TruckManage/EditTmsTruck')
+							},
+							{
+								path: '/viewtmstruck',
+								name: 'viewtmstruck',
+								meta: {
+									title: '车辆详情'
+								},
+								component: () => import('../components/Tms/MemManage/TruckManage/ViewTmsTruck')
 							},
 							{
 								path: '/tmspersonmanage',
@@ -939,12 +987,60 @@ let routerMap = [
 								component: () => import('../components/Tms/MemManage/PersonManage')
 							},
 							{
+								path: '/viewtmsperson',
+								name: 'viewtmsperson',
+								meta: {
+									title: '人员详情'
+								},
+								component: () => import('../components/Tms/MemManage/PersonManage/ViewTmsPerson')
+							},
+							{
+								path: '/edittmsperson',
+								name: 'edittmsperson',
+								meta: {
+									title: '编辑人员'
+								},
+								component: () => import('../components/Tms/MemManage/PersonManage/EditTmsPerson')
+							},
+							{
+								path: '/addtmsperson',
+								name: 'addtmsperson',
+								meta: {
+									title: '添加人员'
+								},
+								component: () => import('../components/Tms/MemManage/PersonManage/AddTmsPerson')
+							},
+							{
 								path: '/tmsshippermanage',
 								name: 'tmsshippermanage',
 								meta: {
 									title: '托运人管理'
 								},
 								component: () => import('../components/Tms/MemManage/ShipperManage')
+							},
+							{
+								path: '/viewtmsshipper',
+								name: 'viewtmsshipper',
+								meta: {
+									title: '托运人详情'
+								},
+								component: () => import('../components/Tms/MemManage/ShipperManage/ViewTmsShipper')
+							},
+							{
+								path: '/addtmsshipper',
+								name: 'addtmsshipper',
+								meta: {
+									title: '添加托运人'
+								},
+								component: () => import('../components/Tms/MemManage/ShipperManage/AddTmsShipper')
+							},
+							{
+								path: '/edittmsshipper',
+								name: 'edittmsshipper',
+								meta: {
+									title: '编辑托运人'
+								},
+								component: () => import('../components/Tms/MemManage/ShipperManage/EditTmsShipper')
 							},
 							{
 								path: '/tmsrecdeliverycomp',
@@ -954,6 +1050,30 @@ let routerMap = [
 								},
 								component: () => import('../components/Tms/MemManage/RecDeliveryComp')
 							},
+							{
+								path: '/viewtmsrecdeliverycomp',
+								name: 'viewtmsrecdeliverycomp',
+								meta: {
+									title: '收发货单位详情'
+								},
+								component: () => import('../components/Tms/MemManage/RecDeliveryComp/ViewTmsRecDeliveryComp')
+							},
+							{
+								path: '/addtmsrecdeliverycomp',
+								name: 'addtmsrecdeliverycomp',
+								meta: {
+									title: '添加收发货单位'
+								},
+								component: () => import('../components/Tms/MemManage/RecDeliveryComp/AddTmsRecDeliveryComp')
+							},
+							{
+								path: '/edittmsrecdeliverycomp',
+								name: 'edittmsrecdeliverycomp',
+								meta: {
+									title: '编辑收发货单位'
+								},
+								component: () => import('../components/Tms/MemManage/RecDeliveryComp/EditTmsRecDeliveryComp')
+							}
 						]
 					},
 					{

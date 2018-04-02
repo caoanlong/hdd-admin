@@ -2,21 +2,74 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>查看用户详情</span>
+				<span>用户详情</span>
 			</div>
 			<el-row>
-				<el-col :span="14" :offset="5">
+				<el-col :span="8">
 					<el-form label-width="120px">
-						<el-form-item label="银行代码">
-							<p>{{bankInfo.supportBankCode}}</p>
-						</el-form-item>
-						<el-form-item label="银行名称">
+					<el-form-item label="用户ID">
+						<p>{{bankInfo.supportBankCode}}</p>
+					</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="用户名">
 							<p>{{bankInfo.bankName}}</p>
 						</el-form-item>
-						<el-form-item label="单笔限额">
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="联系人">
 							<p>{{bankInfo.perLimit}}</p>
 						</el-form-item>
-						<el-form-item label="logo">
+						
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+					<el-form-item label="公司名称">
+						<p>{{bankInfo.perLimit}}</p>
+					</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="16">
+					<el-form label-width="120px">
+						<el-form-item label="公司地址">
+							<p>{{bankInfo.perLimit}}</p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="申请时间">
+							<p>{{bankInfo.perLimit}}</p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="通过时间">
+							<p>{{bankInfo.perLimit}}</p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="运输许可证">
+							<el-upload class="avatar-uploader" action="http://39.108.245.177:3001/uploadImg"  @click.native="previewImg(bankInfo.logoUrl)"  :disabled="true"  :show-file-list="false">
+								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="营业执照">
                             <el-upload 
 								class="avatar-uploader"
 								action="http://39.108.245.177:3001/uploadImg" 
@@ -27,24 +80,20 @@
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
-						<el-form-item label="logo名称">
-							<p>{{bankInfo.logoName}}</p>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
+						<el-form-item label="备注">
+							<p>{{bankInfo.perLimit}}</p>
 						</el-form-item>
-						<el-form-item label="背景图片">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								@click.native="previewImg(bankInfo.bgUrl)" 
-								:disabled="true"  
-								:show-file-list="false">
-								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
-						</el-form-item>
-						<el-form-item label="背景名称">
-							<p>{{bankInfo.bgName}}</p>
-						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
+					<el-form label-width="120px">
 						<el-form-item>
+							<el-button type="success">通过</el-button>
+							<el-button type="danger">拒绝</el-button>
 							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>

@@ -35,11 +35,11 @@
 							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="申请时间" prop="Name"></el-table-column>
-					<el-table-column label="通过时间" prop="Name"></el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="申请时间" prop="CreateTime"></el-table-column>
+					<el-table-column label="通过时间" prop="CreateTime"></el-table-column>
+					<el-table-column label="操作" width="90" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewUserManage(scope.row.User_ID)">查看详情</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewUserManage(scope.row.User_ID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
