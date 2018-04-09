@@ -7,44 +7,50 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
-						<el-form-item label="银行代码">
-							<p>{{bankInfo.supportBankCode}}</p>
+						<el-form-item label="用户ID">
+							<p>{{user.memberID}}</p>
 						</el-form-item>
-						<el-form-item label="银行名称">
-							<p>{{bankInfo.bankName}}</p>
+						<el-form-item label="用户名">
+							<p>{{user.userName}}</p>
 						</el-form-item>
-						<el-form-item label="单笔限额">
-							<p>{{bankInfo.perLimit}}</p>
+						<el-form-item label="联系人">
+							<p>{{user.contact}}</p>
 						</el-form-item>
-						<el-form-item label="logo">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								@click.native="previewImg(bankInfo.logoUrl)" 
-								:disabled="true" 
-								:show-file-list="false">
-								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+						<el-form-item label="公司名称">
+							<p>{{user.companyName}}</p>
 						</el-form-item>
-						<el-form-item label="logo名称">
-							<p>{{bankInfo.logoName}}</p>
+						<el-form-item label="公司地址">
+							<p>{{user.companyArea + user.detailAddress}}</p>
 						</el-form-item>
-						<el-form-item label="背景图片">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								@click.native="previewImg(bankInfo.bgUrl)" 
-								:disabled="true"  
-								:show-file-list="false">
-								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+						<el-form-item label="申请时间">
+							<p>{{user.applyTime | getdatefromtimestamp()}}</p>
 						</el-form-item>
-						<el-form-item label="背景名称">
-							<p>{{bankInfo.bgName}}</p>
+						<el-form-item label="通过时间">
+							<p>{{user.auditTime | getdatefromtimestamp()}}</p>
+						</el-form-item>
+						<el-form-item label="经营许可证号">
+							<p>{{user.businessLicNo}}</p>
+						</el-form-item>
+						<el-form-item label="运输许可证">
+							<ImageUpload 
+								:isPreview="user.auditStatus != 'Pending'"
+								:width="200" :height="120"
+								:files="[user.roadTransportLicUrl]" 
+								@imgUrlBack="handleRoadTransportLicUrlSuccess"/>
+						</el-form-item>
+						<el-form-item label="营业执照图片">
+							<ImageUpload 
+								:isPreview="user.auditStatus != 'Pending'"
+								:width="200" :height="120"
+								:files="[user.businessLicUrl]" 
+								@imgUrlBack="handleBusinessLicUrlSuccess"/>
+						</el-form-item>
+						<el-form-item label="备注">
+							<el-input type="textarea" :disabled="user.auditStatus != 'Pending'" v-model="user.remark"></el-input>
 						</el-form-item>
 						<el-form-item>
+							<el-button type="success" v-if="user.auditStatus == 'Pending'" @click="audit('Passed')">通过</el-button>
+							<el-button type="danger" v-if="user.auditStatus == 'Pending'" @click="audit('Rejected')">拒绝</el-button>
 							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -56,42 +62,78 @@
 <script type="text/javascript">
 	import requestJava from '../../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
-				bankInfo: {}
+				user: {
+					memberID: '',
+					userName: '',
+					contact: '',
+					companyName: '',
+					companyArea: '',
+					roadTransportLicUrl: '',
+					businessLicUrl: '',
+					remark: ''
+				}
 			}
         },
         created() {
-            this.getBank()
+            this.getInfo()
         },
 		methods: {
-            getBank() {
+            getInfo() {
                 let params= {
-					supportBankCode: this.$route.query.supportBankCode,
+					applyRecordID: this.$route.query.applyRecordID
 				}
 				requestJava({
-					url: '/paySupportBank/info',
+					url: '/admin/applyrecord/info',
 					method: 'get',
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-                        this.bankInfo = res.data.data
+						this.user = res.data.data
+						this.user.roadTransportLicUrl = this.imgUrl + res.data.data.roadTransportLicUrl
+						this.user.businessLicUrl = this.imgUrl + res.data.data.businessLicUrl
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
 			},
-			previewImg(imgUrl) {
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-					dangerouslyUseHTMLString: true,
-					showConfirmButton: false,
-					customClass: 'img-preview'
+			handleRoadTransportLicUrlSuccess(res) {
+				this.user.roadTransportLicUrl = res
+			},
+			handleBusinessLicUrlSuccess(res) {
+				this.user.businessLicUrl = res
+			},
+			audit(status) {
+				let data = {
+					BusinessLicUrl: this.user.businessLicUrl, //	运输许可证图片	string	
+					RoadTransportLicUrl: this.user.businessLicUrl, //	营业执照图片	string	
+					applyRecordID: this.user.applyRecordID, //	审核ID	number	
+					auditStatus: status, //	审核状态	string	Draft :草稿 ；Pending :待审核；Passed：已开通；Rejected：已拒绝
+					businessLicNo: this.user.businessLicNo, //	许可证号码	string	
+					remark: this.user.remark
+				}
+				requestJava({
+					url: '/admin/applyrecord/auditing',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 200) {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'tmsusermanage'})
+					} else {
+						Message.error(res.data.msg)
+					}
 				})
 			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

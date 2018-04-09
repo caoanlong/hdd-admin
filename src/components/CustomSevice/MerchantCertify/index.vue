@@ -51,7 +51,8 @@
 					</el-table-column>
 					<el-table-column label="操作">
                         <template slot-scope="scope">
-							<el-dropdown  @command="handleCommand"  trigger="click">
+							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.businessApplyID)">查看</el-button>
+							<!-- <el-dropdown  @command="handleCommand"  trigger="click">
 								<el-button type="default" size="mini">操作<i class="el-icon-arrow-down el-icon--right"></i></el-button>
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item :command="{
@@ -65,7 +66,7 @@
                                         businessApplyID: scope.row.businessApplyID
                                         }">驳回</el-dropdown-item>
 								</el-dropdown-menu>
-							</el-dropdown>
+							</el-dropdown> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -162,6 +163,12 @@ export default {
 			} else {
                 this.approve(command)
 			}
+		},
+		viewWithDraw(businessApplyID) {
+			this.$router.push({ 
+				name: 'viewmerchantcertify',
+				query: { businessApplyID } 
+			})
 		},
 		approve(command) {
 			let data = {

@@ -30,7 +30,7 @@
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="报文参考号" prop="messageReferenceNumber" align="center" width="140">
 					</el-table-column>
-					<el-table-column label="发送时间"prop="messageSendingDateTime" align="center" width="120">
+					<el-table-column label="发送时间" prop="messageSendingDateTime" align="center" width="120">
 					</el-table-column>
 					<el-table-column label="发货人" prop="consignor">
 					</el-table-column>

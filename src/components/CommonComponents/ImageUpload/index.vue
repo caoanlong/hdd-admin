@@ -23,6 +23,7 @@
 		</div>
 		<el-dialog :fullscreen="true" title="裁剪图片" :visible.sync="isShowCropper">
 			<vueCropper
+				style="height: 600px" 
 				ref="cropper"
 				:autoCrop="true"
 				:autoCropWidth="200"
@@ -108,6 +109,7 @@
 		methods: {
 			addImg() {
 				this.localImgUrl = window.URL.createObjectURL(this.$refs.uploadFile.files[0])
+				console.log(this.localImgUrl)
 				this.isShowCropper = true
 			},
 			upload() {
@@ -156,8 +158,6 @@
 	}
 </script>
 <style lang="stylus" scoped>
-	.vue-cropper
-		height 600px
 	.imgUpload
 		.imgLi
 			float left

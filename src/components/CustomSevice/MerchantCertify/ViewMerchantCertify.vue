@@ -127,14 +127,14 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="是否有效">
-							<p>{{meechantCertify.isValid}}</p>
+							<p>{{meechantCertify.isInvalid == 'N' ? '是' : '否'}}</p>
 						</el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="审核时间">
-							<p>{{meechantCertify.auditTime && (meechantCertify.auditTime | getdatefromtimestamp())}}</p>
+							<p>{{meechantCertify.auditTime | getdatefromtimestamp()}}</p>
 						</el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -149,22 +149,15 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-form-item label="驳回原因" v-if="meechantCertify.auditStatus == 'Rejected'">
+                    <!-- <el-form-item label="驳回原因" v-if="meechantCertify.auditStatus == 'Rejected'">
                         <p v-text="meechantCertify.auditFailedReason"></p>
-                    </el-form-item>
-                    <el-form-item label="驳回原因" v-else>
-                        <!-- <el-select style="width: 100%" placeholder="如驳回，请输入驳回原因" v-model="meechantCertify.auditFailedReason" >
-                            <el-option label="草稿" value="Draft"></el-option>
-                            <el-option label="已提交" value="Commited"></el-option>
-                            <el-option label="成功" value="Success"></el-option>
-                            <el-option label="失败" value="Failed"></el-option>
-                            <el-option label="已拒绝" value="Rejected"></el-option>
-                        </el-select> -->
+                    </el-form-item> -->
+                    <el-form-item label="驳回原因" v-if="meechantCertify.auditStatus == 'Commited'">
 						<el-input type="textarea" v-model="meechantCertify.auditFailedReason"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="approve('')">审核通过</el-button>
-                        <el-button type="danger" @click="approve('Rejected')">驳回</el-button>
+                        <el-button type="primary" @click="approve('Success')" v-if="meechantCertify.auditStatus == 'Commited'">审核通过</el-button>
+                        <el-button type="danger" @click="approve('Rejected')" v-if="meechantCertify.auditStatus == 'Commited'">驳回</el-button>
                         <el-button @click="back">返回</el-button>
                     </el-form-item>
 			    </el-row>
@@ -181,8 +174,7 @@
 		data() {
 			return {
 				meechantCertify: {},
-				auditStatusList: [],
-				flag:''
+				auditStatusList: []
 			}
 		},
 		created() {
@@ -221,19 +213,20 @@
 			back() {
 				this.$router.go(-1)
 			},
-			approve(flag) {
+			approve(auditStatus) {
 				let data = {
-					realNameApplyID: this.$route.query.realNameApplyID,
-					flag
+					businessApplyID: this.$route.query.businessApplyID,
+					auditFailedReason: this.meechantCertify.auditFailedReason,
+					auditStatus
 				}
 				requestJava({
-					url: '/customerservice/payRealNameApply/approve',
+					url: '/payBusinessApply/approve',
 					method: 'post',
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
 						Message.success(res.data.message)
-						this.$router.push({name: 'certification'})
+						this.$router.push({name: 'merchantcertify'})
 					} else {
 						Message.error(res.data.message)
 					}
