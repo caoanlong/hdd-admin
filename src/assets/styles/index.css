@@ -66,3 +66,12 @@ code a:hover{color:#20a0ff;}
 .img-preview{
 	width: 30%
 }
+.wf-card{padding:10px;background:#fff;-webkit-box-shadow:0 2px 12px 0 rgba(0,0,0,.1);-moz-box-shadow:0 2px 12px 0 rgba(0,0,0,.1);box-shadow:0 2px 12px 0 rgba(0,0,0,.1);}
+.wf-card .header{background:#e2ecf6;height:50px;line-height:50px;padding:0 15px;color:#3582d0;position:relative;margin-bottom:20px;}
+.wf-table{background:#e2ecf6;border-spacing:1px;width:100%;margin-bottom:10px;font-size:14px;}
+.wf-table caption{height:40px;line-height:40px;text-align:left;background:#e2ecf6;color:#3582d0;font-weight:bold;padding:0 15px;}
+.wf-table th,.wf-table td{background:#fff;padding:6px 10px;height:36px;line-height:24px;color:#666;}
+.wf-table .labels{color:#3582d0}
+.wf-table th,.wf-table .total td{background:#f3f7fa;color:#7eaad7;}
+.is-center{text-align:center;}
+.wf-footer{margin-top:10px;}

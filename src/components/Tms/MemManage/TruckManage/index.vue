@@ -6,10 +6,22 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="代码">
+					<el-form-item label="车牌号">
 						<el-input placeholder="请输入..." v-model="findCode"></el-input>
 					</el-form-item>
-					<el-form-item label="名称">
+					<el-form-item label="车辆编号">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="牵引质量">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="车长">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="车宽">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="车高">
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -19,28 +31,54 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTmsTruck">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="代码" prop="Code"></el-table-column>
-					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="图片" prop="PictureURL">
+					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+					<el-table-column label="所属地区" prop="Code"></el-table-column>
+					<el-table-column label="所性企业" prop="Code"></el-table-column>
+					<el-table-column label="自编号" prop="Code"></el-table-column>
+
+					<el-table-column label="车牌号" prop="Code"></el-table-column>
+					<el-table-column label="车牌颜色" prop="Code"></el-table-column>
+					<el-table-column label="车辆类别" prop="Code"></el-table-column>
+					<el-table-column label="车辆类型" prop="Code"></el-table-column>
+					<el-table-column label="道路运输证号" prop="Code"></el-table-column>
+
+					<el-table-column label="经营范围" prop="Code"></el-table-column>
+					<el-table-column label="道路运输证年审期至" prop="Code"></el-table-column>
+					<el-table-column label="行驶证审验效期至" prop="Code"></el-table-column>
+
+					<el-table-column label="承运人责任险有效期至" prop="Code"></el-table-column>
+					<el-table-column label="等级评定" prop="Code"></el-table-column>
+					<el-table-column label="下次等评日期" prop="Code"></el-table-column>
+					<el-table-column label="二级维护日期" prop="Code"></el-table-column>
+					<el-table-column label="下次二级维护日期" prop="Code"></el-table-column>
+
+					<el-table-column label="载重" prop="Code"></el-table-column>
+					<el-table-column label="罐体类型" prop="Code"></el-table-column>
+					<el-table-column label="罐体容积" prop="Code"></el-table-column>
+					<el-table-column label="罐体检测有效期至" prop="Code"></el-table-column>
+					<el-table-column label="安全阀检测有效期至" prop="Code"></el-table-column>
+
+					<el-table-column label="压力表检测有效期至" prop="Code"></el-table-column>
+					<el-table-column label="挂车车牌" prop="Code"></el-table-column>
+					<el-table-column label="汽车生产厂家" prop="Code"></el-table-column>
+					<el-table-column label="品牌型号" prop="Code"></el-table-column>
+					<el-table-column label="发动机号" prop="Code"></el-table-column>
+					<el-table-column label="车架号" prop="Code"></el-table-column>
+					<el-table-column label="行驶证注册日期" prop="Code"></el-table-column>
+					<el-table-column label="行驶证发证日期" prop="Code"></el-table-column>
+					<el-table-column label="牵引质量" prop="Code"></el-table-column>
+					<el-table-column label="车长" prop="Code"></el-table-column>
+					<el-table-column label="车宽" prop="Code"></el-table-column>
+					<el-table-column label="车高" prop="Name"></el-table-column>
+					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
-							<img class="table-img" :src="scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
-						</template>
-					</el-table-column>
-					<el-table-column label="是否生效" prop="Enable">
-						<template slot-scope="scope">
-							<span>{{scope.row.Enable == 'Y' ? '是' : '否'}}</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
-						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewTruckBrand(scope.row.TruckBrand_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTruckBrand(scope.row.TruckBrand_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="viewTmsTruck(scope.row.TruckBrand_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="editTmsTruck(scope.row.TruckBrand_ID)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -156,17 +194,17 @@ export default {
 				}
 			})
 		},
-		addTruckBrand() {
-			this.$router.push({name: 'addtruckbrand'})
+		addTmsTruck() {
+			this.$router.push({name: 'addtmstruck'})
 		},
-		editTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'edittruckbrand', query: {TruckBrand_ID} })
+		editTmsTruck(TruckBrand_ID) {
+			this.$router.push({ name: 'edittmstruck', query: {TruckBrand_ID} })
 		},
-		viewTruckBrand(TruckBrand_ID) {
-			this.$router.push({ name: 'viewtruckbrand', query: {TruckBrand_ID} })
+		viewTmsTruck(TruckBrand_ID) {
+			this.$router.push({ name: 'viewtmstruck', query: {TruckBrand_ID} })
 		},
 		selectionChange(data) {
-			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
+			this.selectedTrucks = data.map(item => item.TruckBrand_ID)
 		},
 		previewImg(imgUrl) {
 			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
