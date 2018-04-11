@@ -1099,7 +1099,50 @@ let routerMap = [
 							title: '结算管理'
 						},
 						component: () => import('../components/Tms/SettleManage')
-					}
+					},
+					{
+						path: '/tmssysmanage',
+						name: 'tmssysmanage',
+						meta: {
+							title: 'TMS系统管理'
+						},
+						component: () => import('../components/Tms/SystemManage'),
+						redirect: '/tmsconstmanage',
+						children: [
+							{
+								path: '/tmsconstmanage',
+								name: 'tmsconstmanage',
+								meta: {
+									title: 'TMS常量管理'
+								},
+								component: () => import('../components/Tms/SystemManage/ConstManage')
+							},
+							{
+								path: '/viewtmsconst',
+								name: 'viewtmsconst',
+								meta: {
+									title: '查看TMS常量'
+								},
+								component: () => import('../components/Tms/SystemManage/ConstManage/ViewConst')
+							},
+							{
+								path: '/addtmsconst',
+								name: 'addtmsconst',
+								meta: {
+									title: '添加TMS常量'
+								},
+								component: () => import('../components/Tms/SystemManage/ConstManage/AddConst')
+							},
+							{
+								path: '/edittmsconst',
+								name: 'edittmsconst',
+								meta: {
+									title: '编辑TMS常量'
+								},
+								component: () => import('../components/Tms/SystemManage/ConstManage/EditConst')
+							},
+						]
+					},
 				]
 			},
 			{
