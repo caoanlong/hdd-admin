@@ -5,8 +5,8 @@ import store from '../store'
 // 杨霞
 // export const javaUrl = 'http://192.168.1.68:9898'
 // 张颜
-export const javaUrl = 'http://192.168.1.29:9898'
-// export const javaUrl = 'http://192.168.1.48:9898'
+// export const javaUrl = 'http://192.168.1.29:9898'
+export const javaUrl = 'http://192.168.1.48:9898'
 export const javaImgUrl = 'http://develop.we-service.cn/hdd/image/'
 
 // create an axios instance

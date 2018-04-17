@@ -4,6 +4,29 @@
 			<div slot="header" class="clearfix">
 				<span>用户列表</span>
 			</div>
+			<div class="search">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="关键字">
+						<el-input placeholder="请输入..." v-model="findKeyword"></el-input>
+					</el-form-item>
+					<el-form-item label="申请时间">
+						<el-date-picker
+							v-model="findRangeDate"
+							type="daterange"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							value-format="timestamp"
+							:clearable="false"
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
@@ -68,6 +91,10 @@ export default {
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
+			findRangeDate: [],
+			findStartDate: '',
+			findEndDate: '',
+			findKeyword: '',
 			tableData: [],
 			selectedList: [],
 		}
@@ -76,6 +103,10 @@ export default {
 		this.getList()
 	},
 	methods: {
+		selectDateRange(date) {
+			this.findStartDate = date[0]
+			this.findEndDate = date[1]
+		},
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()

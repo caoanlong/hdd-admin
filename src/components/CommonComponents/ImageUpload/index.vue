@@ -1,10 +1,10 @@
 <template>
 	<div class="imgUpload clearfix">
 		<div class="imgLi" 
-			:style="{'width': width+'px','height': height+'px'}" 
-			v-for="(file, i) in fileUrl"
-			:key="i" v-if="file">
-			<img :src="file">
+		:style="{'width': width+'px','height': height+'px'}" 
+		v-for="(file,i) in fileUrl"
+		:key="i" v-if="file">
+			<img v-if="file" :src="imgUrl + file">
 			<div class="controller">
 				<div class="controllerBtn">
 					<div class="perviewBtn" @click.stop="showImgModal(file)"></div>
@@ -12,16 +12,13 @@
 				</div>
 			</div>
 		</div>
-		<div 
-			class="addBtn" 
-			:style="{'width': width + 'px','height': height + 'px'}" 
-			v-show="isLimit && !isPreview">
+		<div class="addBtn" :style="{'width':width+'px','height':height+'px'}" v-show="isLimit && !isPreview">
 			<div class="addIcon">
 				<i style="font-size: 30px; position: relative; top: 10px" class="el-icon-plus avatar-uploader-icon"></i>
 			</div>
 			<input type="file" name="" @change.stop="addImg" ref="uploadFile"/>
 		</div>
-		<el-dialog :fullscreen="true" title="裁剪图片" :visible.sync="isShowCropper">
+		<el-dialog title="裁剪图片" :visible.sync="isShowCropper">
 			<vueCropper
 				style="height: 600px" 
 				ref="cropper"
@@ -43,16 +40,10 @@
 </template>
 <script>
 	import axios from 'axios'
+	import { Message } from 'element-ui'
+	import { javaUrl } from '../../../common/requestJava'
+	import { formDataReq } from '../../../common/utils'
 	import VueCropper from 'vue-cropper'
-	import { javaUrl, javaImgUrl } from '../../../common/requestJava'
-
-	function formDataReq(json) {
-		let formData = new FormData()
-		for (let attr in json) {
-			formData.append(attr, json[attr])
-		}
-		return formData
-	}
 	export default {
 		props: {
 			width: {
@@ -68,7 +59,8 @@
 				default: 1
 			},
 			files: {
-				type: Array
+				type: Array,
+				default: () => []
 			},
 			isPreview: {
 				type: Boolean,
@@ -85,9 +77,10 @@
 		},
 		data() {
 			return {
-				fileUrl: [],
+				fileUrl: this.files[0] ? this.files : [],
 				localImgUrl: '',
-				isShowCropper: false
+				isShowCropper: false,
+				isUploaded: false
 			}
 		},
 		computed: {
@@ -107,30 +100,34 @@
 			}
 		},
 		methods: {
-			addImg() {
-				this.localImgUrl = window.URL.createObjectURL(this.$refs.uploadFile.files[0])
-				console.log(this.localImgUrl)
-				this.isShowCropper = true
+			addImg(e) {
+				if (this.$refs.uploadFile.value != '') {
+					this.localImgUrl = window.URL.createObjectURL(this.$refs.uploadFile.files[0])
+					this.isShowCropper = true
+					this.$refs.uploadFile.value = ''
+				}
 			},
 			upload() {
+				if (this.isUploaded) {
+					Message.error('正在上传,请稍等！')
+					return
+				}
+				if (this.fileUrl.length > this.limitNum) {
+					return
+				}
+				this.isUploaded = true
 				this.$refs.cropper.getCropBlob((data) => {
-					let url = javaUrl + '/sys/picture/upload'
-					let headers = {
-						'Content-type':'multipart/form-data;charset=UTF-8'
-					}
+					let url = javaUrl + "/sys/picture/upload"
+					let headers = {'Content-type':'multipart/form-data;charset=UTF-8'}
 					let params = formDataReq({
 						"file": data
 					})
 					axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
 					axios.post(url, params, headers).then(res => {
-						console.log(res.data.data)
-						this.fileUrl.push(javaImgUrl + res.data.data)
+						this.fileUrl.push(res.data.data)
+						this.$emit('imgUrlBack', this.fileUrl)
 						this.isShowCropper = false
-						if (this.limitNum == 1) {
-							this.$emit('imgUrlBack', this.fileUrl[0])
-						} else {
-							this.$emit('imgUrlBack', this.fileUrl)
-						}
+						this.isUploaded = false
 					}).catch(err => {
 						console.log('服务器异常' + err)
 					})
@@ -138,14 +135,10 @@
 			},
 			delImg(i) {
 				this.fileUrl.splice(i, 1)
-				if (this.fileUrl.length > 0 && this.fileUrl[0]) {
-					this.$emit('imgUrlBack', this.fileUrl)
-				} else {
-					this.$emit('imgUrlBack', '')
-				}
+				this.$emit('imgUrlBack', this.fileUrl)
 			},
-			showImgModal(imgUrl) {
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
+			showImgModal(url) {
+				this.$alert(`<img style="width: 100%" src=${this.imgUrl + url} />`, '图片预览', {
 					dangerouslyUseHTMLString: true,
 					showConfirmButton: false,
 					customClass: 'img-preview'

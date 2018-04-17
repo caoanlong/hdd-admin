@@ -23,13 +23,16 @@
 							<p>{{user.companyArea + user.detailAddress}}</p>
 						</el-form-item>
 						<el-form-item label="申请时间">
-							<p>{{user.applyTime | getdatefromtimestamp()}}</p>
+							<p v-if="user.applyTime">{{user.applyTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 						<el-form-item label="通过时间">
-							<p>{{user.auditTime | getdatefromtimestamp()}}</p>
+							<p v-if="user.auditTime">{{user.auditTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 						<el-form-item label="经营许可证号">
-							<p>{{user.businessLicNo}}</p>
+							<p v-if="user.auditStatus != 'Pending'">{{user.businessLicNo}}</p>
+							<el-input v-else v-model="user.businessLicNo"></el-input>
 						</el-form-item>
 						<el-form-item label="运输许可证">
 							<ImageUpload 
@@ -97,8 +100,8 @@
 				}).then(res => {
 					if (res.data.code == 200) {
 						this.user = res.data.data
-						this.user.roadTransportLicUrl = this.imgUrl + res.data.data.roadTransportLicUrl
-						this.user.businessLicUrl = this.imgUrl + res.data.data.businessLicUrl
+						this.user.roadTransportLicUrl = res.data.data.roadTransportLicUrl
+						this.user.businessLicUrl = res.data.data.businessLicUrl
 					} else {
 						Message.error(res.data.msg)
 					}
