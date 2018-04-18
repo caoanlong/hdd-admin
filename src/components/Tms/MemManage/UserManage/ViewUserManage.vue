@@ -34,6 +34,12 @@
 							<p v-if="user.auditStatus != 'Pending'">{{user.businessLicNo}}</p>
 							<el-input v-else v-model="user.businessLicNo"></el-input>
 						</el-form-item>
+						<el-form-item label="公司LOGO">
+							<ImageUpload 
+								:isPreview="user.auditStatus != 'Pending'"
+								:files="[user.logoUrl]" 
+								@imgUrlBack="handleLogoUrlSuccess"/>
+						</el-form-item>
 						<el-form-item label="运输许可证">
 							<ImageUpload 
 								:isPreview="user.auditStatus != 'Pending'"
@@ -107,6 +113,9 @@
 					}
 				})
 			},
+			handleLogoUrlSuccess(res) {
+				this.user.logoUrl = res
+			},
 			handleRoadTransportLicUrlSuccess(res) {
 				this.user.roadTransportLicUrl = res
 			},
@@ -116,11 +125,12 @@
 			audit(status) {
 				let data = {
 					BusinessLicUrl: this.user.businessLicUrl, //	运输许可证图片	string	
-					RoadTransportLicUrl: this.user.businessLicUrl, //	营业执照图片	string	
+					RoadTransportLicUrl: this.user.roadTransportLicUrl, //	营业执照图片	string	
 					applyRecordID: this.user.applyRecordID, //	审核ID	number	
 					auditStatus: status, //	审核状态	string	Draft :草稿 ；Pending :待审核；Passed：已开通；Rejected：已拒绝
 					businessLicNo: this.user.businessLicNo, //	许可证号码	string	
-					remark: this.user.remark
+					remark: this.user.remark,
+					logoUrl: this.user.logoUrl
 				}
 				requestJava({
 					url: '/admin/applyrecord/auditing',

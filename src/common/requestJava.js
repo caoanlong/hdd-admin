@@ -6,7 +6,10 @@ import store from '../store'
 // export const javaUrl = 'http://192.168.1.68:9898'
 // 张颜
 // export const javaUrl = 'http://192.168.1.29:9898'
-export const javaUrl = 'http://192.168.1.48:9898'
+// 农信卡
+// export const javaUrl = 'http://192.168.1.49:9898'
+// export const javaUrl = 'http://192.168.1.48:9898'  // 测试环境
+export const javaUrl = 'http://tms.develop.we-service.cn/tms-admin-practice' // 演练环境
 export const javaImgUrl = 'http://develop.we-service.cn/hdd/image/'
 
 // create an axios instance

@@ -7,7 +7,7 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="关键字">
-						<el-input placeholder="请输入..." v-model="findKeyword"></el-input>
+						<el-input style="width: 300px" placeholder="手机号、用户名、公司名、联系人" v-model="findKeyword"></el-input>
 					</el-form-item>
 					<el-form-item label="申请时间">
 						<el-date-picker
@@ -16,14 +16,12 @@
 							range-separator="至"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
-							value-format="timestamp"
-							:clearable="false"
 							@change="selectDateRange">
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -63,12 +61,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -104,17 +102,29 @@ export default {
 	},
 	methods: {
 		selectDateRange(date) {
-			this.findStartDate = date[0]
-			this.findEndDate = date[1]
+			console.log(date)
+			this.findStartDate = new Date(date[0]).getTime()
+			this.findEndDate = new Date(date[1]).getTime()
 		},
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
 		},
+		// 重置搜索表单
+		reset() {
+			this.findRangeDate = []
+			this.findStartDate = ''
+			this.findEndDate = ''
+			this.findKeyword = ''
+			this.getList()
+		},
 		getList() {
 			let params = {
 				current: this.pageIndex || 1,
-				size: this.pageSize
+				size: this.pageSize,
+				keyword: this.findKeyword,
+				applyTimeBegin: this.findStartDate,
+				applyTimeEnd: this.findEndDate
 			}
 			requestJava({
 				url: '/admin/applyrecord/getList',
