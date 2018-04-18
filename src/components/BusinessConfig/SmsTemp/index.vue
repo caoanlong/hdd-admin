@@ -137,6 +137,13 @@
 				if (id && typeof id == 'string') {
 					ids = id
 				} else {
+					if (this.selectedSmsTemps.length == 0) {
+						this.$message({
+							type: 'warning',
+							message: '请选择'
+						})
+						return
+					}
 					ids = this.selectedSmsTemps.join(',')
 				}
 				this.$confirm('此操作将永久删除, 是否继续?', '提示', {

@@ -205,6 +205,13 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
+				if (this.selectedUsers.length == 0) {
+					this.$message({
+						type: 'warning',
+						message: '请选择'
+					})
+					return
+				}
 				ids = this.selectedUsers
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -272,6 +279,7 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item.User_ID)
+			console.log(this.selectedUsers )
 		},
 		refresh() {
 			this.refreshing = true
