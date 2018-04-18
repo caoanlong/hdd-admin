@@ -210,6 +210,13 @@
 				if (id && typeof id == 'string') {
 					ids = [].concat(id)
 				} else {
+					if (this.selectedRoles.length == 0) {
+						this.$message({
+							type: 'warning',
+							message: '请选择'
+						})
+						return
+					}
 					ids = this.selectedRoles
 				}
 				this.$confirm('此操作将永久删除, 是否继续?', '提示', {

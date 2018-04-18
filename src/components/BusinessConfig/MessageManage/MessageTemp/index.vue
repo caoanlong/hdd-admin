@@ -193,8 +193,8 @@
                 } else {
                     if (this.selectedMessagetemplates.length == 0) {
                         this.$message({
-                            type: 'info',
-                            message: '未选择'
+                            type: 'warning',
+                            message: '请选择'
                         })
                         return
                     }

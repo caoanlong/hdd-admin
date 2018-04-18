@@ -117,7 +117,7 @@ export default {
 			pageSize: 10,
 			count: 0,
 			truckBrands: [],
-			selectedTruckBrands: [],
+			selectedTrucks: [],
 			findCode:'',
 			findName: '',
 		}
@@ -159,7 +159,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				ids = this.selectedTruckBrands
+				if (this.selectedTrucks.length == 0) {
+					this.$message({
+						type: 'warning',
+						message: '请选择'
+					})
+					return
+				}
+				ids = this.selectedTrucks
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',

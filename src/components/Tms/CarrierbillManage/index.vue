@@ -33,12 +33,12 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddCarrierbill">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 				<el-button type="default" size="mini" icon="el-icon-news">调度</el-button>
 				<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" border style="width: 100%" size="mini" stripe>
+				<el-table :data="tableData" border style="width: 100%" size="mini" stripe @selection-change="selectionChange">
 					<el-table-column type="selection" width="36" align="center" fixed>
 					</el-table-column>
 					<el-table-column label="处理状态"  prop="Status" width="90" align="center">
@@ -125,6 +125,7 @@ export default {
 				CreatDate:'',
 				DeliveryDate:''
 			},
+			selectedList: [],
 			tableData: [
 				{
 					Status: '待执行',
@@ -367,6 +368,56 @@ export default {
 				this.refreshing = false
 			}, 500)
 		},
+		selectionChange(data) {
+			this.selectedList = data.map(item => item.applyRecordID)
+        },
+		deleteConfirm(id) {
+			let ids = []
+			if (id && typeof id == 'string') {
+				ids = [].concat(id)
+			} else {
+				if (this.selectedList.length == 0) {
+					this.$message({
+						type: 'warning',
+						message: '请选择'
+					})
+					return
+				}
+				ids = this.selectedList
+			}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.del(ids)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})
+			})
+		},
+		del(ids) {
+			let data = {
+				ids: ids
+			}
+			requestJava({
+				url: '/base_truckbrand/delete',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.getTruckBrands()
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		}
 	}
 }
 
