@@ -23,8 +23,6 @@
 				style="height: 600px" 
 				ref="cropper"
 				:autoCrop="true"
-				:autoCropWidth="200"
-				:autoCropHeight="200" 
 				:fixed="fixed" 
 				:fixedNumber="fixedNumber" 
 				:img="localImgUrl" 

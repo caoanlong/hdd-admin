@@ -105,13 +105,13 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="auditPage()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="auditPage">
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -133,8 +133,8 @@
 						<el-input type="textarea" placeholder="如果驳回，请填写驳回原因" v-model="payCash.auditFailedReason" resize="none"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click="audit($route.query.cashID, '0')">同意</el-button>
-						<el-button type="danger"  @click="audit($route.query.cashID, '1')">驳回</el-button>
+						<el-button type="primary"  @click="audit('success')">同意</el-button>
+						<el-button type="danger"  @click="audit('Disagree')">驳回</el-button>
 						<el-button type="default" @click.native="back">返回</el-button>
 					</el-form-item>
 				</el-form>
@@ -154,7 +154,7 @@
 				auditPagePayWalletBill:[],
 				auditPageMemMember:[],
 				auditPageList:[],
-				pageNum: 1,
+				pageIndex: 1,
 				pageSize: 10,
 				count: 0
 			}
@@ -183,12 +183,12 @@
 					}
 				})
 			},
-			auditPage(pageNum) {
+			auditPage() {
 				let params = {
-					pageNum: pageNum || 1,
+					pageNum: this.pageIndex,
 					pageSize: this.pageSize,
 					mobile: this.$route.query.mobile,
-					id:this.$route.query.cashID
+					id: this.$route.query.cashID
 				}
 				requestJava({
 					url: '/payCash/auditPage',
@@ -208,15 +208,13 @@
 				})
 			},
 			pageChange(index) {
-				this.auditPage(index)
+				this.pageIndex = index
+				this.auditPage()
 			},
-			back() {
-				this.$router.go(-1)
-			},
-			audit(cashID, flag) {
+			audit(auditStatus) {
 				let data = {
-					cashID,
-					flag
+					cashID: this.$route.query.cashID,
+					auditStatus
 				}
 				requestJava({
 					url: '/payCash/audit',
@@ -229,6 +227,9 @@
 						Message.error(res.data.message)
 					}
 				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
 		}
 	}

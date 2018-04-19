@@ -37,6 +37,9 @@
 						<el-form-item label="公司LOGO">
 							<ImageUpload 
 								:isPreview="user.auditStatus != 'Pending'"
+								:width="160" :height="40" 
+								:fixed="true" 
+								:fixedNumber="[4, 1]" 
 								:files="[user.logoUrl]" 
 								@imgUrlBack="handleLogoUrlSuccess"/>
 						</el-form-item>
