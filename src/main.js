@@ -14,6 +14,7 @@ import router from './router'
 import store from './store'
 // global filters
 import * as filters from './filters'
+import globals from './common/global'
 // icon
 import './assets/icons'
  // permission control 判断是否登录
@@ -30,11 +31,9 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.use(Element)
+Vue.use(globals)
 
 Vue.config.productionTip = false
-
-// Vue.prototype.imgUrl = "http://develop.we-service.cn/hdd/image/"   // 测试环境
-Vue.prototype.imgUrl = "http://www.hdd56.com/hdd/image/"  // 生产环境
 
 /* eslint-disable no-new */
 new Vue({
