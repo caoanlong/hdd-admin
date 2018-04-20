@@ -8,14 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<img v-if="memMember.headPicture" :src="'http://develop.we-service.cn/hdd/image/' + memMember.headPicture" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[memMember.headPicture]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -145,6 +138,7 @@
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -231,6 +225,9 @@
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

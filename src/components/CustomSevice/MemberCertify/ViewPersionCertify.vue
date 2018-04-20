@@ -14,24 +14,10 @@
 							<p>{{certifyPerson.IDCardNum}}</p>
 						</el-form-item>
 						<el-form-item label="个人头像">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<img v-if="certifyPerson.Picture_Front" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.Picture_Front" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyPerson.Picture_Front]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="身份证正面">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<img v-if="certifyPerson.IDCardFrontPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDCardFrontPic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyPerson.IDCardFrontPic]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="钱包状态">
 							<p v-if="certifyPerson.walletStatus == 'Y'">已激活</p>
@@ -48,24 +34,10 @@
 							<p>{{certifyPerson.AccountCode}}</p>
 						</el-form-item>
 						<el-form-item label="手持身份证照片">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<img v-if="certifyPerson.IDHandheldPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDHandheldPic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyPerson.IDHandheldPic]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="身份证背面">
-							<el-upload 
-								action="" 
-								class="avatar-uploader" 
-								:show-file-list="false" 
-								:disabled="true">
-								<img v-if="certifyPerson.IDCardBackPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyPerson.IDCardBackPic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyPerson.IDCardBackPic]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="实名状态">
 							<p v-for="realStatus in realNameStatus" :key="realStatus.Dict_ID" v-if="certifyPerson.realNameStatus == realStatus.VALUE">{{realStatus.NAME}}</p>
@@ -101,6 +73,7 @@
 	import requestJava from '../../../common/requestJava'
 	import request from '../../../common/request'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -187,6 +160,9 @@
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

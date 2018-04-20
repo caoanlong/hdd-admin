@@ -33,7 +33,8 @@ Vue.use(Element)
 
 Vue.config.productionTip = false
 
-Vue.prototype.imgUrl = "http://develop.we-service.cn/hdd/image/"
+// Vue.prototype.imgUrl = "http://develop.we-service.cn/hdd/image/"   // 测试环境
+Vue.prototype.imgUrl = "http://www.hdd56.com/hdd/image/"  // 生产环境
 
 /* eslint-disable no-new */
 new Vue({

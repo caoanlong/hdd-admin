@@ -90,7 +90,7 @@
 				})
 			},
 			handleAvatarSuccess(res) {
-				this.truckBrand.PictureURL = res
+				this.truckBrand.PictureURL = res[0]
 			},
 			back() {
 				this.$router.go(-1)

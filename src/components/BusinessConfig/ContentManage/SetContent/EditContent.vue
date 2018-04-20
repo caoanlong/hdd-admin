@@ -150,7 +150,7 @@
 				})
             },
 			handleAvatarSuccess(res) {
-				this.content.PictureURL = res
+				this.content.PictureURL = res[0]
 			},
 			getUEContent() {
 				return new Promise((resolve, reject) => {

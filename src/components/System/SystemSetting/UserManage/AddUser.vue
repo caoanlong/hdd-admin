@@ -8,10 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload class="avatar-uploader" :action="javaUrl + '/sys/picture/upload'" :show-file-list="false" :on-success="handleAvatarSuccess">
-								<img v-if="user.Photo" :src="javaImgUrl + user.Photo" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[user.Photo]" @imgUrlBack="handleAvatarSuccess" :fixed="true"/>
 						</el-form-item>
 						<el-form-item label="登录名">
 							<el-input auto-complete="off" v-model="user.LoginName"></el-input>
@@ -104,8 +101,8 @@
 </template>
 <script type="text/javascript">
 import request from '../../../../common/request'
-import { javaUrl, javaImgUrl } from '../../../../common/requestJava'
 import { Message } from 'element-ui'
+import ImageUpload from '../../../CommonComponents/ImageUpload'
 export default {
 	data() {
 		return {
@@ -133,10 +130,6 @@ export default {
 			companys: [],
 			departments: []
 		}
-	},
-	computed: {
-		javaUrl: () => javaUrl,
-		javaImgUrl: () => javaImgUrl
 	},
 	created() {
 		this.getRoles()
@@ -225,13 +218,15 @@ export default {
 		selectCompany(Organization_ID) {
 			this.getCompanys(Organization_ID)
 		},
-		handleAvatarSuccess(res, file) {
-			console.log(res, file)
-			this.user.Photo = res.data
+		handleAvatarSuccess(res) {
+			this.user.Photo = res[0]
 		},
 		back() {
 			this.$router.push({ name: 'usermanage' })
 		}
+	},
+	components: {
+		ImageUpload
 	}
 }
 

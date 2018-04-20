@@ -29,7 +29,7 @@
 					<el-table-column label="名称" prop="Name"></el-table-column>
 					<el-table-column label="图片" prop="PictureURL">
 						<template slot-scope="scope">
-							<img class="table-img" :src="scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
+							<img class="table-img" :src="imgUrl + scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
 						</template>
 					</el-table-column>
 					<el-table-column label="是否生效" prop="Enable">

@@ -8,10 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="车辆照片(前)">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyTruck.FrontPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.FrontPic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyTruck.FrontPic]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="车牌号码">
 							<p>{{certifyTruck.PlateNo}}</p>
@@ -20,20 +17,14 @@
 							<p>{{certifyTruck.Length}}</p>
 						</el-form-item>
 						<el-form-item label="行驶照片">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyTruck.DrivingLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.DrivingLicensePic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyTruck.DrivingLicensePic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="车辆照片(侧)">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyTruck.SidePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.SidePic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyTruck.SidePic]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="车牌类型">
 							<p>{{certifyTruck.PlateNoType}}</p>
@@ -46,18 +37,11 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="车辆照片(后)">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyTruck.BackPic" :src="'http://develop.we-service.cn/hdd/image/' + certifyTruck.BackPic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyTruck.BackPic]" :isPreview="true"/>
 						</el-form-item>
-						
-						
 						<el-form-item label="车型">
 							<p>{{certifyTruck.Type}}</p>
 						</el-form-item>
-						
-						
 						<el-form-item label="车主">
 							<p></p>
 						</el-form-item>
@@ -83,6 +67,7 @@
 import requestJava from '../../../common/requestJava'
 import request from '../../../common/request'
 import { Message } from 'element-ui'
+import ImageUpload from '../../CommonComponents/ImageUpload'
 export default {
 	data() {
 		return {
@@ -152,6 +137,9 @@ export default {
 		back() {
 			this.$router.go(-1)
 		}
+	},
+	components: {
+		ImageUpload
 	}
 }
 

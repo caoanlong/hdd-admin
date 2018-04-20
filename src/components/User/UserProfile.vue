@@ -15,7 +15,6 @@
 								:isPreview="!isEdit" 
 								:fixed="true"/>
 						</el-form-item>
-
 						<el-form-item label="公司">
 							<el-input auto-complete="off" disabled v-model="user.Company_ID" v-if="isEdit"></el-input>
 							<p v-text="user.Company_ID" v-else></p>
@@ -156,18 +155,7 @@
 				})
 			},
 			handleAvatarSuccess(res) {
-				this.user.Photo = res
-				console.log(res)
-			},
-			previewImg(imgUrl) {
-				if (this.isEdit) {
-					return
-				}
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-					dangerouslyUseHTMLString: true,
-					showConfirmButton: false,
-					customClass: 'img-preview'
-				})
+				this.user.Photo = res[0]
 			},
 			back() {
 				this.$router.go(-1)

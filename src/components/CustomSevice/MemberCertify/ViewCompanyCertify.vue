@@ -31,10 +31,7 @@
 							<p>{{certifyEnterprice.SocialCreditCode}}</p>
 						</el-form-item>
 						<el-form-item label="门面照片">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyEnterprice.CompanyFacadePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.CompanyFacadePic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyEnterprice.CompanyFacadePic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -44,10 +41,7 @@
 							<p>55786</p>
 						</el-form-item>
 						<el-form-item label="营业执照图片">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyEnterprice.BusinessLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.BusinessLicensePic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyEnterprice.BusinessLicensePic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -57,10 +51,7 @@
 							<p></p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证照片">
-							<el-upload action="" class="avatar-uploader" :show-file-list="false" :disabled="true">
-								<img v-if="certifyEnterprice.TransportationLicensePic" :src="'http://develop.we-service.cn/hdd/image/' + certifyEnterprice.TransportationLicensePic" class="avatar">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[certifyEnterprice.TransportationLicensePic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -84,6 +75,7 @@
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -111,9 +103,6 @@
 					}
 				})
 			},
-			back() {
-				this.$router.go(-1)
-			},
 			// 企业认证
 			enterpriceCertify(status) {
 				let data = {
@@ -134,7 +123,13 @@
 						Message.error(res.data.message)
 					}
 				})
+			},
+			back() {
+				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

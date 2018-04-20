@@ -8,14 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<el-upload disabled class="avatar-uploader" 
-							action="http://39.108.245.177:3001/uploadImg" 
-							@click.native="previewImg(user.Photo)"
-							:show-file-list="false" 
-							:on-success="handleAvatarSuccess">
-								<img v-if="user.Photo" :src="user.Photo" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[user.Photo]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="登录名">
 							<p>{{user.LoginName}}</p>
@@ -83,6 +76,7 @@
 <script type="text/javascript">
 import request from '../../../../common/request'
 import { Message } from 'element-ui'
+import ImageUpload from '../../../CommonComponents/ImageUpload'
 export default {
 	data() {
 		return {
@@ -131,19 +125,12 @@ export default {
 				}
 			})
 		},
-		handleAvatarSuccess(res, file) {
-			this.user.avatar = 'http://39.108.245.177:4000' + res.data
-		},
-		previewImg(imgUrl) {
-			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-				dangerouslyUseHTMLString: true,
-				showConfirmButton: false,
-				customClass: 'img-preview'
-			})
-		},
 		back() {
 			this.$router.go(-1)
 		}
+	},
+	components: {
+		ImageUpload
 	}
 }
 

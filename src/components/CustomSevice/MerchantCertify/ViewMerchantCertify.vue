@@ -25,7 +25,7 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="营业执照照片">
-							<ImageUpload :isPreview="true" :files="[imgUrl + meechantCertify.businessLicensePic]"/>
+							<ImageUpload :isPreview="true" :files="[meechantCertify.businessLicensePic]"/>
 						</el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -57,12 +57,12 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="身份证正面照">
-							<ImageUpload :isPreview="true" :files="[imgUrl + meechantCertify.idCardFrontPic]"/>
+							<ImageUpload :isPreview="true" :files="[meechantCertify.idCardFrontPic]"/>
 						</el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="身份证背面照">
-							<ImageUpload :isPreview="true" :files="[imgUrl + meechantCertify.idCardBackPic]"/>
+							<ImageUpload :isPreview="true" :files="[meechantCertify.idCardBackPic]"/>
 						</el-form-item>
                     </el-col>
                 </el-row>
@@ -105,12 +105,12 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="银行卡正面照">
-							<ImageUpload :isPreview="true" :files="[imgUrl + meechantCertify.bankCardFrontPic]"/>
+							<ImageUpload :isPreview="true" :files="[meechantCertify.bankCardFrontPic]"/>
 						</el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="银行卡背面照">
-							<ImageUpload :isPreview="true" :files="[imgUrl + meechantCertify.bankCardBackPic]"/>
+							<ImageUpload :isPreview="true" :files="[meechantCertify.bankCardBackPic]"/>
 						</el-form-item>
                     </el-col>
                 </el-row>

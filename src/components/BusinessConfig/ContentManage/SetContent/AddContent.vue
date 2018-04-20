@@ -25,9 +25,7 @@
 							<editor :defaultMsg=content.Content :config=editorConfig ref="ue"  class="customerEditor"></editor>
 						</el-form-item>
 						<el-form-item label="图片上传">
-							<ImageUpload 
-								:files="[content.PictureURL]" 
-								@imgUrlBack="handleAvatarSuccess"/>
+							<ImageUpload :files="[content.PictureURL]" @imgUrlBack="handleAvatarSuccess"/>
 						</el-form-item>
 						<el-form-item label="图片URL">
 							<el-input v-model="content.PictureURL"></el-input>
@@ -126,7 +124,7 @@
 				})
 			},
 			handleAvatarSuccess(res) {
-				this.content.PictureURL = res
+				this.content.PictureURL = res[0]
 			},
 			getUEContent() {
 				return new Promise((resolve, reject) => {
