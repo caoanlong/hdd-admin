@@ -14,21 +14,39 @@
 			<div slot="header" class="clearfix">
 				<span>{{title}}</span>
 			</div>
-			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-row :gutter="20">
+			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
+				<el-row>
 					<el-col :span="12">
-						<el-form-item label="归属区域">
+						<el-form-item label="归属区域" prop="Area_ID">
 							<el-cascader
 								style="width: 100%"
 								:options="distData"
-								v-model="selectedAreas"
+								v-model="selectArea"
 								@change="handleDistChange">
 							</el-cascader>
 						</el-form-item>
-						<el-form-item label="机构名称">
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="是否可用">
+							<el-switch v-model="currentNode.Useable"></el-switch>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="机构名称" prop="Name">
 							<el-input v-model="currentNode.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="机构级别">
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="机构编码" prop="Code">
+							<el-input v-model="currentNode.Code"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="机构级别" prop="Grade">
 							<el-select style="width: 100%" v-model="currentNode.Grade" placeholder="请选择">
 								<el-option value="1" label="一级"></el-option>
 								<el-option value="2" label="二级"></el-option>
@@ -36,34 +54,9 @@
 								<el-option value="4" label="四级"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="主负责人">
-							<el-select style="width: 100%" v-model="currentNode.PrimaryPerson" filterable placeholder="请选择">
-								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="副负责人">
-							<el-select style="width: 100%" v-model="currentNode.DeputyPerson" filterable placeholder="请选择">
-								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="负责人">
-							<el-input v-model="currentNode.Master"></el-input>
-						</el-form-item>
-						<el-form-item label="电话">
-							<el-input v-model="currentNode.Phone"></el-input>
-						</el-form-item>
 					</el-col>
 					<el-col :span="12">
-						<el-form-item label="是否可用">
-							<el-switch v-model="isUseable"></el-switch>
-						</el-form-item>
-						<el-form-item label="机构编码">
-							<el-input v-model="currentNode.Code"></el-input>
-						</el-form-item>
-						
-						<el-form-item label="机构类型">
+						<el-form-item label="机构类型" prop="Type">
 							<el-select style="width: 100%" v-model="currentNode.Type" placeholder="请选择">
 								<el-option value="1" label="公司"></el-option>
 								<el-option value="2" label="部门"></el-option>
@@ -71,24 +64,65 @@
 								<el-option value="0" label="其他"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="邮政编码">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="主负责人" prop="PrimaryPerson">
+							<el-select style="width: 100%" v-model="currentNode.PrimaryPerson" filterable placeholder="请选择">
+								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="副负责人" prop="DeputyPerson">
+							<el-select style="width: 100%" v-model="currentNode.DeputyPerson" filterable placeholder="请选择">
+								<el-option v-for="user in users" :key="user.User_ID" :label="user.Name" :value="user.User_ID">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="负责人" prop="Master">
+							<el-input v-model="currentNode.Master"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="电话" prop="Phone">
+							<el-input v-model="currentNode.Phone"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="邮政编码" prop="ZipCode">
 							<el-input v-model="currentNode.ZipCode"></el-input>
 						</el-form-item>
-						<el-form-item label="传真">
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="传真" prop="Fax">
 							<el-input v-model="currentNode.Fax"></el-input>
 						</el-form-item>
-						<el-form-item label="邮箱">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="邮箱" prop="Email">
 							<el-input v-model="currentNode.Email"></el-input>
 						</el-form-item>
+					</el-col>
+					<el-col :span="12">
 						<el-form-item label="排序">
 							<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
-						
 					</el-col>
 				</el-row>
-				<el-form-item label="联系地址">
-							<el-input v-model="currentNode.Address"></el-input>
-						</el-form-item>
+				<el-form-item label="联系地址" prop="Address">
+					<el-input v-model="currentNode.Address"></el-input>
+				</el-form-item>
 				<el-form-item label="备注">
 					<el-input type="textarea" resize="none" v-model="currentNode.Remark"></el-input>
 				</el-form-item>
@@ -126,7 +160,7 @@ export default {
 				DeputyPerson: '',
 				Master: '',
 				Phone: '',
-				Useable: '',
+				Useable: true,
 				Code: '',
 				Type: '',
 				ZipCode: '',
@@ -136,14 +170,29 @@ export default {
 				Remark: '',
 				SortNumber:''
 			},
-			isUseable: true,
-			selectedAreas: [],
+			selectArea: [],
 			users: [],
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
 			selectedIcon: '',
-			iconTxt: '添加图标'
+			iconTxt: '添加图标',
+			rules: {
+				Area_ID: [
+					{require: true, message: '请选择区域', trigger: 'blur'},
+				],
+				Name: [
+					{require: true, message: '请输入名称', trigger: 'blur'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Code: [
+					{require: true, message: '请输入机构编码', trigger: 'blur'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Area_ID: [
+					{require: true, message: '请选择区域', trigger: 'blur'}
+				],
+			}
 		}
 	},
 	created() {
@@ -161,7 +210,7 @@ export default {
 				DeputyPerson: '',
 				Master: '',
 				Phone: '',
-				Useable: '',
+				Useable: true,
 				Code: '',
 				Type: '',
 				ZipCode: '',
@@ -204,7 +253,7 @@ export default {
 				DeputyPerson: '',
 				Master: '',
 				Phone: '',
-				Useable: '',
+				Useable: true,
 				Code: '',
 				Type: '',
 				ZipCode: '',
@@ -234,34 +283,18 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.Name) {
-				this.$message.error('机构名称不能为空！')
-				return
-			}
-			if (!this.currentNode.Code) {
-				this.$message.error('机构编码不能为空！')
-				return
-			}
-			if (!this.currentNode.Grade) {
-				this.$message.error('机构级别不能为空！')
-				return
-			}
-			if (!this.currentNode.Type) {
-				this.$message.error('机构类型不能为空！')
-				return
-			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
 					Organization_PID: this.currentNode.Organization_PID,
-					Area_ID: this.selectedAreas[this.selectedAreas.length - 1],
+					Area_ID: this.currentNode.Area_ID,
 					Name: this.currentNode.Name,
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
 					DeputyPerson: this.currentNode.DeputyPerson,
 					Master: this.currentNode.Master,
 					Phone: this.currentNode.Phone,
-					Useable: this.isUseable ? 'Y' : 'N',
+					Useable: this.currentNode.Useable ? 'Y' : 'N',
 					Code: this.currentNode.Code,
 					Type: this.currentNode.Type,
 					ZipCode: this.currentNode.ZipCode,
@@ -271,22 +304,25 @@ export default {
 					Remark: this.currentNode.Remark,
 					SortNumber: this.currentNode.SortNumber
 				}
-				this.addOrg(params)
-				this.addRoot()
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.addOrg(params)
+						this.addRoot()
+					}
+				})
 			// 编辑
 			} else {
-				console.log(this.selectedAreas)
 				let params = {
 					Organization_ID: this.currentNode.Organization_ID,
 					Organization_PID: this.currentNode.Organization_PID,
-					Area_ID: this.selectedAreas[this.selectedAreas.length - 1],
+					Area_ID: this.currentNode.Area_ID,
 					Name: this.currentNode.Name,
 					Grade: this.currentNode.Grade,
 					PrimaryPerson: this.currentNode.PrimaryPerson,
 					DeputyPerson: this.currentNode.DeputyPerson,
 					Master: this.currentNode.Master,
 					Phone: this.currentNode.Phone,
-					Useable: this.isUseable ? 'Y' : 'N',
+					Useable: this.currentNode.Useable ? 'Y' : 'N',
 					Code: this.currentNode.Code,
 					Type: this.currentNode.Type,
 					ZipCode: this.currentNode.ZipCode,
@@ -296,9 +332,12 @@ export default {
 					Remark: this.currentNode.Remark,
 					SortNumber: this.currentNode.SortNumber
 				}
-				console.log(params)
-				this.updateOrg(params)
-				this.addRoot()
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.updateOrg(params)
+						this.addRoot()
+					}
+				})
 			}
 		},
 		selectIcon(icon) {
@@ -351,11 +390,10 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
-					console.log(res.data.data)
-					this.isUseable = res.data.data.Useable == 'Y' ? true : false
+					this.currentNode.Useable = res.data.data.Useable == 'Y' ? true : false
 					let path = res.data.data.base_area.Path
 					if (path) {
-						this.selectedAreas = path.split(',').filter(item => item)
+						this.currentNode.Area_ID = path.split(',').filter(item => item)
 					}
 				} else {
 					Message.error(res.data.msg)
@@ -425,7 +463,7 @@ export default {
 			})
 		},
 		handleDistChange(val) {
-			console.log('active item:', val)
+			this.currentNode.Area_ID = val[val.length - 1]
 		}
 	}
 }

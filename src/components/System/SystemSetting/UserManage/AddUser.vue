@@ -4,26 +4,24 @@
 			<div slot="header" class="clearfix">
 				<span>添加用户</span>
 			</div>
-			<el-row>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="头像">
+			<el-form label-width="120px" :model="user" :rules="rules" ref="ruleForm">
+				<el-row>
+					<el-col :span="8">
+						<el-form-item label="头像" prop="Photo">
 							<ImageUpload :files="[user.Photo]" @imgUrlBack="handleAvatarSuccess" :fixed="true"/>
 						</el-form-item>
-						<el-form-item label="登录名">
+						<el-form-item label="登录名" prop="LoginName">
 							<el-input auto-complete="off" v-model="user.LoginName"></el-input>
 						</el-form-item>
-						<el-form-item label="支付密码">
+						<el-form-item label="支付密码" prop="PayPassword">
 							<el-input auto-complete="off" v-model="user.PayPassword"></el-input>
 						</el-form-item>
-						<el-form-item label="手机">
+						<el-form-item label="手机" prop="Mobile">
 							<el-input auto-complete="off" v-model="user.Mobile"></el-input>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="归属公司">
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="归属公司" prop="Company_ID">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Company_ID" @change="selectCompany">
 								<el-option 
 								v-for="company in companys" 
@@ -32,7 +30,7 @@
 								:value="company.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="归属部门">
+						<el-form-item label="归属部门" prop="Organization_ID">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Organization_ID">
 								<el-option 
 								v-for="department in departments" 
@@ -41,10 +39,10 @@
 								:value="department.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="密码">
+						<el-form-item label="密码" prop="Password">
 							<el-input auto-complete="off" v-model="user.Password"></el-input>
 						</el-form-item>
-						<el-form-item label="邮箱">
+						<el-form-item label="邮箱" prop="Email">
 							<el-input auto-complete="off" v-model="user.Email"></el-input>
 						</el-form-item>
 						<el-form-item label="是否允许登录">
@@ -53,34 +51,30 @@
 								<el-radio label="N">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="工号">
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="工号" prop="JobNo">
 							<el-input auto-complete="off" v-model="user.JobNo"></el-input>
 						</el-form-item>
-						<el-form-item label="姓名">
+						<el-form-item label="姓名" prop="Name">
 							<el-input auto-complete="off" v-model="user.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="确认密码" v-model="user.Password2">
-							<el-input auto-complete="off"></el-input>
+						<el-form-item label="确认密码" prop="Password2">
+							<el-input auto-complete="off" v-model="user.Password2"></el-input>
 						</el-form-item>
-						<el-form-item label="电话">
+						<el-form-item label="电话" prop="Phone">
 							<el-input auto-complete="off" v-model="user.Phone"></el-input>
 						</el-form-item>
-						<el-form-item label="用户类型">
+						<el-form-item label="用户类型" prop="Type">
 							<el-select style="width: 100%" placeholder="请选择" v-model="user.Type">
 								<el-option label="系统管理" :value="0"></el-option>
 								<el-option label="部门经理" :value="1"></el-option>
 								<el-option label="普通用户" :value="2"></el-option>
 							</el-select>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="24">
-					<el-form label-width="120px">
-						<el-form-item label="角色权限">
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="角色权限" prop="sys_roles">
 							<el-select style="width: 100%" v-model="user.sys_roles" multiple placeholder="请选择">
 								<el-option v-for="role in roles" :key="role.EnName" :label="role.Name" :value="role.Role_ID">
 								</el-option>
@@ -90,12 +84,12 @@
 							<el-input type="textarea" resize="none" v-model="user.Remark" :rows="5"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="addUser">立即创建</el-button>
-							<el-button @click.native="back">取消</el-button>
+							<el-button type="primary" @click="addUser">立即创建</el-button>
+							<el-button @click="back">取消</el-button>
 						</el-form-item>
-					</el-form>
-				</el-col>
-			</el-row>
+					</el-col>
+				</el-row>
+			</el-form>
 		</el-card>
 	</div>
 </template>
@@ -103,8 +97,28 @@
 import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import ImageUpload from '../../../CommonComponents/ImageUpload'
+import { checkMobile, checkTel } from '../../../../common/validator'
 export default {
 	data() {
+		var validatePass = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请输入密码'))
+			} else {
+			if (this.user.Password2 !== '') {
+				this.$refs.ruleForm.validateField('Password2')
+			}
+				callback()
+			}
+		}
+		var validatePass2 = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请再次输入密码'))
+			} else if (value !== this.user.Password) {
+				callback(new Error('两次输入密码不一致!'))
+			} else {
+				callback()
+			}
+		}
 		return {
 			user: {
 				Company_ID: '',
@@ -128,7 +142,56 @@ export default {
 			},
 			roles: [],
 			companys: [],
-			departments: []
+			departments: [],
+			rules: {
+				Photo: [
+					{required: true, message: '请上传头像'}
+				],
+				LoginName: [
+					{required: true, message: '请输入登录名'},
+					{ min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				PayPassword: [
+					{required: true, message: '请输入支付密码'},
+					{ min: 6, max: 8, message: '长度在 6 到 8 个字符'}
+				],
+				Mobile: [
+					{required: true, validator: checkMobile}
+				],
+				Company_ID: [
+					{required: true, message: '请选择公司', trigger: 'change'}
+				],
+				Organization_ID: [
+					{required: true, message: '请选择部门'}
+				],
+				Password: [
+					{required: true, validator: validatePass},
+					{ min: 6, max: 8, message: '长度在 6 到 8 个字符'}
+				],
+				Email: [
+					{type: 'email', message: '请输入正确的邮箱地址'}
+				],
+				JobNo: [
+					{required: true, message: '请输入工号'},
+					{ min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Name: [
+					{required: true, message: '请输入姓名'},
+					{ min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Password2: [
+					{required: true, validator: validatePass2}
+				],
+				Phone: [
+					{validator: checkTel}
+				],
+				Type: [
+					{required: true, message: '请选择类型'}
+				],
+				sys_roles: [
+					{required: true, message: '请选择角色'}
+				],
+			}
 		}
 	},
 	created() {
@@ -137,38 +200,23 @@ export default {
 	},
 	methods: {
 		addUser() {
-			let data = {
-				Company_ID: this.user.Company_ID,
-				Organization_ID: this.user.Organization_ID,
-				LoginName: this.user.LoginName,
-				Password: this.user.Password,
-				Password2: this.user.Password2,
-				PayPassword: this.user.PayPassword,
-				JobNo: this.user.JobNo,
-				Name: this.user.Name,
-				Sex: this.user.Sex,
-				Email: this.user.Email,
-				Phone: this.user.Phone,
-				Mobile: this.user.Mobile,
-				Type: 0,
-				Photo: this.user.Photo,
-				PCID: this.user.PCID,
-				LoginFlag: this.user.LoginFlag,
-				Remark: this.user.Remark,
-				sys_roles: this.user.sys_roles
-			}
+			let data = this.user
 			console.log(data)
-			request({
-				url: '/sys_user/add',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					console.log(res.data)
-					Message.success(res.data.msg)
-					this.$router.push({ name: 'usermanage' })
-				} else {
-					Message.error(res.data.msg)
+			this.$refs['ruleForm'].validate(valid => {
+				if (valid) {
+					request({
+						url: '/sys_user/add',
+						method: 'post',
+						data
+					}).then(res => {
+						if (res.data.code == 0) {
+							console.log(res.data)
+							Message.success(res.data.msg)
+							this.$router.push({ name: 'usermanage' })
+						} else {
+							Message.error(res.data.msg)
+						}
+					})
 				}
 			})
 		},
@@ -189,7 +237,6 @@ export default {
 							Name: item.Name
 						}
 					})
-					console.log(this.roles)
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -222,7 +269,7 @@ export default {
 			this.user.Photo = res[0]
 		},
 		back() {
-			this.$router.push({ name: 'usermanage' })
+			this.$router.go(-1)
 		}
 	},
 	components: {

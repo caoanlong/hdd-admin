@@ -33,7 +33,10 @@
 					<el-input v-model="currentNode.Href"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true"><svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> {{currentNode.Icon ? currentNode.Icon : iconTxt}}</el-button>
+					<el-button type="primary" plain @click="selectIcondialog = true">
+						<svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> 
+						{{currentNode.Icon ? currentNode.Icon : iconTxt}}
+					</el-button>
 				</el-form-item>
 				<el-form-item label="排序">
 					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
