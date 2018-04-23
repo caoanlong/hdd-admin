@@ -13,19 +13,27 @@
 						<el-input placeholder="承运人" v-model="findCarrier"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click.native="getWaybillList(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary"  @click="getWaybillList()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddWaybill">添加</el-button>
-				<el-upload class="upload-File" name="excel" :action="importFileUrl" :auto-upload="true" :onError="uploadError" :onSuccess="uploadSuccess" :beforeUpload="beforeFileUpload" :show-file-list="false">
+				<el-upload 
+					class="upload-File" 
+					name="excel" 
+					:action="importFileUrl" 
+					:auto-upload="true" 
+					:onError="uploadError" 
+					:onSuccess="uploadSuccess" 
+					:beforeUpload="beforeFileUpload" 
+					:headers="uploadHeaders" 
+					:show-file-list="false">
 					<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				</el-upload>
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
 				<a :href="templateUrl" download="waybill.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -94,7 +102,8 @@ export default {
 			importFileUrl: javaUrl +'/notruckWaybill/importExcel',
 			exportExcelUrl: javaUrl + '/notruckWaybill/export',
 			templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=waybill.xlsx ',
-			pageNum: 1,
+			uploadHeaders: {'Authorization': localStorage.getItem('token')},
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
@@ -111,9 +120,13 @@ export default {
 			this.findShippingNoteNumber = ''
 			this.findCarrier=''
 		},
-		getWaybillList(pageNum) {
+		pageChange(index) {
+			this.pageIndex = index
+			this.getWaybillList()
+		},
+		getWaybillList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				shippingNoteNumber:this.findShippingNoteNumber,
 				carrier:this.findCarrier
@@ -132,9 +145,6 @@ export default {
 				}
 			})
 		},
-		pageChange(index) {
-			this.getWaybillList(index)
-		},
 		AddWaybill() {
 			this.$router.push({ name: 'addwaybill'})
 		},
@@ -144,16 +154,10 @@ export default {
 		ViewWaybill(wayId) {
 			this.$router.push({ name: 'viewwaybill', query: { wayId} })
 		},
-		refresh() {
-			this.refreshing = true
-			this.getWaybillList()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
-		},
 		// 导入成功
 		uploadSuccess (response) {
 			Message.success(response.message)
+			this.getWaybillList()
 		},
 		// 导入失败
 		uploadError (response) {

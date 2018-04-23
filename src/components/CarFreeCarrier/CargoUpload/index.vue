@@ -10,19 +10,27 @@
 						<el-input placeholder="报文参考号" v-model="findMessageReferenceNumber"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click.native="getCargoList(1)">查询</el-button>
+						<el-button type="primary"  @click.native="getCargoList()">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddCargo">添加</el-button>
-				<el-upload class="upload-File" name="excel" :action="importFileUrl" :auto-upload="true" :onError="uploadError" :onSuccess="uploadSuccess" :beforeUpload="beforeFileUpload" :show-file-list="false">
+				<el-upload 
+					class="upload-File" 
+					name="excel" 
+					:action="importFileUrl" 
+					:auto-upload="true" 
+					:onError="uploadError" 
+					:onSuccess="uploadSuccess" 
+					:beforeUpload="beforeFileUpload" 
+					:headers="uploadHeaders"
+					:show-file-list="false">
 					<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				</el-upload>
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
 				<a :href="templateUrl" download="goodssource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 				<!-- <button @click="doPrint">打印</button> -->
 			</div>
 			<div class="table" id="table">
@@ -109,11 +117,11 @@ export default {
 			importFileUrl: javaUrl + '/notruckCargosource/importExcel',
 			exportExcelUrl: javaUrl + '/notruckCargosource/export',
 			templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=goodssource.xlsx ',
-			pageNum: 1,
+			uploadHeaders: {'Authorization': localStorage.getItem('token')},
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			refreshing: false,
 			findMessageReferenceNumber:''
 		}
 	},
@@ -133,9 +141,9 @@ export default {
 		reset() {
 			this.findMessageReferenceNumber = ''
 		},
-		getCargoList(pageNum) {
+		getCargoList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				messageReferenceNumber: this.findMessageReferenceNumber
 			}
@@ -147,14 +155,14 @@ export default {
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list
-					console.log(res.data)
 				} else {
 					Message.error(res.data.message)
 				}
 			})
 		},
-		pageChange(index) {
-			this.getCargoList(index)
+		pageChange() {
+			this.pageIndex = index
+			this.getCargoList()
 		},
 		AddCargo() {
 			this.$router.push({ name: 'addcargo' })
@@ -165,16 +173,10 @@ export default {
 		ViewCargo(goodsId) {
 			this.$router.push({ name: 'viewcargo' , query: { goodsId} })
 		},
-		refresh() {
-			this.refreshing = true
-			this.getCargoList()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
-		},
 		// 导入
 		uploadSuccess (response) {
 			Message.success(response.message)
+			this.getCargoList()
 		},
 		// 上传错误
 		uploadError (response) {

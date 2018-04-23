@@ -24,8 +24,8 @@
 			<div slot="header" class="clearfix">
 				<span>{{title}}</span>
 			</div>
-			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-form-item label="区域类型">
+			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
+				<el-form-item label="区域类型" prop="Depth">
 					<el-select style="width: 100%" v-model="currentNode.Depth" placeholder="请选择">
 						<el-option :value="1" label="省份/直辖市"></el-option>
 						<el-option :value="2" label="地市/区县"></el-option>
@@ -33,26 +33,26 @@
 						<el-option :value="0" label="国家"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="区域编码">
+				<el-form-item label="区域编码" prop="Code">
 					<el-input v-model="currentNode.Code"></el-input>
 				</el-form-item>
-				<el-form-item label="区域名称">
+				<el-form-item label="区域名称" prop="Name">
 					<el-input v-model="currentNode.Name"></el-input>
 				</el-form-item>
-				<el-form-item label="经度">
+				<el-form-item label="经度" prop="Lng">
 					<el-input v-model="currentNode.Lng"></el-input>
 				</el-form-item>
-				<el-form-item label="纬度">
+				<el-form-item label="纬度" prop="Lat">
 					<el-input v-model="currentNode.Lat"></el-input>
 				</el-form-item>
 				<el-form-item label="是否热点">
-					<el-switch v-model="isHot"></el-switch>
+					<el-switch v-model="currentNode.HotspotStatus"></el-switch>
 				</el-form-item>
 				<el-form-item label="排序">
 					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
+					<el-button type="primary" @click="submitForm(button)">{{button}}</el-button>
 					<el-button>取消</el-button>
 				</el-form-item>
 			</el-form>
@@ -63,6 +63,7 @@
 import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender/Area'
 import request from '../../../../common/request'
+import { checkFloat6 } from '../../../../common/validator'
 export default {
 	data() {
 		return {
@@ -71,36 +72,54 @@ export default {
 				label: 'Name'
 			},
 			currentNode: {
+				Area_PID: '',
 				Depth: '',
 				Code: '',
 				Name: '',
 				Lng: '',
 				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				HotspotStatus: false,
+				SortNumber: 1
 			},
-			isHot: false,
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectIcondialog: false,
 			selectedIcon: '',
-			iconTxt: '添加图标'
+			iconTxt: '添加图标',
+			rules: {
+				Depth: [
+					{required: true, message: '请选择类型'},
+				],
+				Code: [
+					{required: true, message: '请输入编码'},
+					{min: 6, max: 6, message: '长度为 6 个字符'}
+				],
+				Name: [
+					{required: true, message: '请输入名称'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Lng: [
+					{validator: checkFloat6}
+				],
+				Lat: [
+					{validator: checkFloat6}
+				],
+			}
 		}
-	},
-	created() {
 	},
 	methods: {
 		addRoot() {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
+				Area_PID: '',
 				Depth: '',
 				Code: '',
 				Name: '',
 				Lng: '',
 				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				HotspotStatus: false,
+				SortNumber: 1
 			}
 		},
 		handleNodeClick(d) {
@@ -133,8 +152,8 @@ export default {
 				Name: '',
 				Lng: '',
 				Lat: '',
-				HotspotStatus: '',
-				SortNumber: ''
+				HotspotStatus: false,
+				SortNumber: 1
 			}
 		},
 		handleDelete(s, d, n){//删除节点
@@ -156,47 +175,43 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.Depth) {
-				this.$message.error('区域类型不能为空！')
-				return
-			}
-			if (!this.currentNode.Code) {
-				this.$message.error('区域编码不能为空！')
-				return
-			}
-			if (!this.currentNode.Name) {
-				this.$message.error('区域名称不能为空！')
-				return
-			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
-					Area_PID: this.currentNode.Area_PID,
+					Area_PID: this.currentNode.Area_PID || '',
 					Depth: this.currentNode.Depth,
 					Code: this.currentNode.Code,
 					Name: this.currentNode.Name,
 					Lng: this.currentNode.Lng,
 					Lat: this.currentNode.Lat,
-					HotspotStatus: this.isHot ? 'Y' : 'N',
+					HotspotStatus: this.currentNode.HotspotStatus ? 'Y' : 'N',
 					SortNumber: this.currentNode.SortNumber
 				}
-				this.addArea(params)
-				this.addRoot()
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.addArea(params)
+						this.addRoot()
+					}
+				})
 			// 编辑
 			} else {
 				let params = {
 					Area_ID: this.currentNode.Area_ID,
-					Area_PID: this.currentNode.Area_PID,
+					Area_PID: this.currentNode.Area_PID || '',
 					Depth: this.currentNode.Depth,
 					Code: this.currentNode.Code,
 					Name: this.currentNode.Name,
 					Lng: this.currentNode.Lng,
 					Lat: this.currentNode.Lat,
-					HotspotStatus: this.isHot ? 'Y' : 'N',
+					HotspotStatus: this.currentNode.HotspotStatus ? 'Y' : 'N',
 					SortNumber: this.currentNode.SortNumber
 				}
-				this.updateArea(params)
-				this.addRoot()
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.updateArea(params)
+						this.addRoot()
+					}
+				})
 			}
 		},
 		selectIcon(icon) {
@@ -249,7 +264,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					this.currentNode = res.data.data
-					this.isHot = res.data.data.HotspotStatus == 'Y' ? true : false
+					this.currentNode.HotspotStatus = res.data.data.HotspotStatus == 'Y' ? true : false
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -264,6 +279,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -278,6 +294,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -292,6 +309,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}

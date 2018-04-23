@@ -123,7 +123,7 @@
 				<el-form-item label="联系地址" prop="Address">
 					<el-input v-model="currentNode.Address"></el-input>
 				</el-form-item>
-				<el-form-item label="备注">
+				<el-form-item label="备注" prop="Remark">
 					<el-input type="textarea" resize="none" v-model="currentNode.Remark"></el-input>
 				</el-form-item>
 				<el-form-item>
@@ -139,6 +139,7 @@ import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender/Area'
 import request from '../../../../common/request'
 import { regionData } from 'element-china-area-data'
+import { checkTel, checkFax } from '../../../../common/validator'
 export default {
 	data() {
 		return {
@@ -179,19 +180,54 @@ export default {
 			iconTxt: '添加图标',
 			rules: {
 				Area_ID: [
-					{require: true, message: '请选择区域', trigger: 'blur'},
+					{required: true, message: '请选择区域'},
 				],
 				Name: [
-					{require: true, message: '请输入名称', trigger: 'blur'},
+					{required: true, message: '请输入名称'},
 					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				],
 				Code: [
-					{require: true, message: '请输入机构编码', trigger: 'blur'},
+					{required: true, message: '请输入机构编码'},
 					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				],
-				Area_ID: [
-					{require: true, message: '请选择区域', trigger: 'blur'}
+				Grade: [
+					{required: true, message: '请选择机构级别'},
 				],
+				Type: [
+					{required: true, message: '请选择机构类型'},
+				],
+				PrimaryPerson: [
+					{required: true, message: '请输入主负责人'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				DeputyPerson: [
+					{required: true, message: '请输入副负责人'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Master: [
+					{required: true, message: '请输入负责人'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Phone: [
+					{required: true, message: '请输入电话'},
+					{validator: checkTel}
+				],
+				ZipCode: [
+					{min: 6, max: 6, message: '长度为 6 个字符'}
+				],
+				Fax: [
+					{validator: checkFax}
+				],
+				Email: [
+					{type: 'email', message: '请输入正确的邮箱地址'}
+				],
+				Address: [
+					{required: true, message: '请输入联系地址'},
+					{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
+				],
+				Remark: [
+					{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
+				]
 			}
 		}
 	},

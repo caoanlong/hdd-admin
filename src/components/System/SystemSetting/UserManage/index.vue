@@ -81,6 +81,7 @@
 import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
+import { validUploadFile } from '../../../../common/utils'
 const userMap = {
 	'登录名': 'LoginName',
 	'姓名': 'Name',
@@ -132,22 +133,18 @@ export default {
 				}
 			}))
 		},
+		// 选择导入文件
 		onSelectedFile(result) {
-			new Promise((resolve, reject) => {
-				let uploadExcelUsers = []
-				result.forEach(item => {
-					let excelUser = {}
-					for (let key in item) {
-						excelUser[userMap[key]] = item[key]
-					}
-					uploadExcelUsers.push(excelUser)
-				})
-				resolve(uploadExcelUsers)
-			}).then(users => {
-				this.addUserMutiple(users)
+			validUploadFile(result, userMap, [
+				'登录名', '姓名', '电话', '手机', '归属公司', '归属部门'
+			]).then(res => {
+				this.addMutiple(res)
+			}).catch(err => {
+				Message.error(err)
 			})
 		},
-		addUserMutiple(users) {
+		// 导入
+		addMutiple(users) {
 			let data = {
 				users: users,
 			}

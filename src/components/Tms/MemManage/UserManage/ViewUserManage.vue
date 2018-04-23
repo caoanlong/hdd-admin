@@ -117,13 +117,13 @@
 				})
 			},
 			handleLogoUrlSuccess(res) {
-				this.user.logoUrl = res
+				this.user.logoUrl = res[0]
 			},
 			handleRoadTransportLicUrlSuccess(res) {
-				this.user.roadTransportLicUrl = res
+				this.user.roadTransportLicUrl = res[0]
 			},
 			handleBusinessLicUrlSuccess(res) {
-				this.user.businessLicUrl = res
+				this.user.businessLicUrl = res[0]
 			},
 			audit(status) {
 				let data = {

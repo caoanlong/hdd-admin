@@ -62,12 +62,22 @@ export const checkTel = (rule, value, callback) => {
 	}
 	let regTel = /^([0-9]{3,4}-)?[0-9]{7,8}$/
 	let regMobile = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
-	if (!regMobile.test(value)) {
+	if (!regMobile.test(value) && !regTel.test(value)) {
 		callback(new Error('请输入正确的电话'))
 		return
 	}
+	callback()
+}
+
+// 验证传真(可以为空)
+export const checkFax = (rule, value, callback) => {
+	if (!value) {
+		callback()
+		return
+	}
+	let regTel = /^([0-9]{3,4}-)?[0-9]{7,8}$/
 	if (!regTel.test(value)) {
-		callback(new Error('请输入正确的电话'))
+		callback(new Error('请输入正确的传真'))
 		return
 	}
 	callback()
@@ -80,6 +90,26 @@ export const checkEmail = (rule, value, callback) => {
 		callback(new Error('请输入正确的邮箱'))
 	} else {
 		callback()
+	}
+}
+
+
+// 验证非负浮点数（正浮点数 + 0） 2位小数
+export const checkFloat2 = (rule, value, callback) => {
+	let r = /^[0-9]+(.[0-9]{1,2})?$/
+	if (r.test(value) || value == 0) {
+		callback()
+	} else {
+		callback(new Error('请输入正确的数字'))
+	}
+}
+// 验证非负浮点数（正浮点数 + 0） 6位小数
+export const checkFloat6 = (rule, value, callback) => {
+	let r = /^[0-9]+(.[0-9]{1,6})?$/
+	if (r.test(value) || value == 0) {
+		callback()
+	} else {
+		callback(new Error('请输入正确的数字'))
 	}
 }
 

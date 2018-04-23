@@ -15,13 +15,13 @@
 					<el-table-column label="用户设备" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.deviceType =='Android'">安卓端</span>
-							<span v-else-if="scope.row.deviceType =='iOS'">苹果端</span>
+							<span v-if="scope.row.deviceType =='IOS'">苹果端</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="类型" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type =='Driver'">司机端</span>
-							<span v-else-if="scope.row.type =='Shipper'">货主端</span>
+							<span v-if="scope.row.type =='Shipper'">货主端</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="版本大小" prop="versionSize"></el-table-column>
@@ -62,12 +62,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getVersionList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>

@@ -66,7 +66,8 @@
 						</el-form-item>
 						<el-form-item label="申请日期">
 							<template slot-scope="scope">
-								<p>{{payCash.cashTime | getdatefromtimestamp()}}</p>
+								<p v-if="payCash.cashTime">{{payCash.cashTime | getdatefromtimestamp()}}</p>
+								<p v-else></p>
 							</template>
 						</el-form-item>
 					</el-form>
@@ -81,12 +82,19 @@
 				<el-table :data="auditPageList" border style="width: 100%" size="mini">
 					<el-table-column label="日期" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="款项名称" align="center" prop="billType" width="100">
+					<el-table-column label="款项名称" align="center" width="120">
+						<template slot-scope="scope">
+							<span v-for="billType in billTypes" :key="billType.Dict_ID" v-if="billType.VALUE == scope.row.billType">{{billType.NAME}}</span>
+						</template>
 					</el-table-column>
 					<el-table-column label="收支类型" prop="type">
+						<template slot-scope="scope">
+							<span v-if="scope.row.type == 'Receive'">收款</span>
+							<span v-if="scope.row.type == 'Pay'">付款</span>
+						</template>
 					</el-table-column>
 					<el-table-column label="对方账号" align="center" prop="oppositeMobile">
 					</el-table-column>
@@ -136,6 +144,7 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import request from '../../../common/request'
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../CommonComponents/ImageUpload'
@@ -150,14 +159,31 @@
 				auditPageList:[],
 				pageIndex: 1,
 				pageSize: 10,
-				count: 0
+				count: 0,
+				billTypes: []
 			}
 		},
 		created() {
 			this.getInfo()
-			this.auditPage()
+			this.getBillType()
 		},
 		methods: {
+			pageChange(index) {
+				this.pageIndex = index
+				this.auditPage()
+			},
+			getBillType() {
+				let params = {
+					TYPE: 'billType'
+				}
+				request({
+					url: '/sys_dict/list/type',
+					params
+				}).then(res => {
+					this.billTypes = res.data.data
+					this.auditPage()
+				})
+			},
 			getInfo() {
 				let params = {
 					mobile: this.$route.query.mobile,
@@ -171,7 +197,6 @@
 					if (res.data.code == 200) {
 						this.payCash = res.data.data.payCash
 						this.memMember = res.data.data.memMember
-						console.log(res.data.data)
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -195,15 +220,10 @@
 						this.auditPageMemMember = res.data.data.memMember
 						this.auditPageList = res.data.data.page.list
 						this.count = res.data.data.page.total
-						console.log(res.data.data)
 					} else {
 						Message.error(res.data.msg)
 					}
 				})
-			},
-			pageChange(index) {
-				this.pageIndex = index
-				this.auditPage()
 			},
 			audit(auditStatus) {
 				let data = {

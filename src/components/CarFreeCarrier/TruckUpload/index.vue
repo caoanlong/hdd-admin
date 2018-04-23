@@ -13,19 +13,27 @@
 						<el-input  placeholder="单证名称" v-model="findDocumentName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click.native="getTruckList(1)">查询</el-button>
+						<el-button type="primary"  @click.native="getTruckList()">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="AddTruck">添加</el-button>
-				<el-upload class="upload-File" name="excel" :action="importFileUrl" :auto-upload="true" :onError="uploadError" :onSuccess="uploadSuccess" :beforeUpload="beforeFileUpload" :show-file-list="false">
+				<el-upload 
+					class="upload-File" 
+					name="excel" 
+					:action="importFileUrl" 
+					:auto-upload="true" 
+					:onError="uploadError" 
+					:onSuccess="uploadSuccess" 
+					:beforeUpload="beforeFileUpload" 
+					:headers="uploadHeaders" 
+					:show-file-list="false">
 					<el-button type="default" size="mini" icon="el-icon-upload2">导入</el-button>
 				</el-upload>
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
 				<a :href="templateUrl" download="trucksource.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
@@ -96,11 +104,11 @@
 				importFileUrl: javaUrl + '/notruckTrucksource/importExcel',
 				exportExcelUrl: javaUrl + '/notruckTrucksource/export',
 				templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=trucksource.xlsx ',
-				pageNum: 1,
+				uploadHeaders: {'Authorization': localStorage.getItem('token')},
+				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
 				tableData: [],
-				refreshing: false,
 				findMessageReferenceNumber:'',
 				findDocumentName:''
 			}
@@ -113,9 +121,13 @@
 				this.findMessageReferenceNumber = ''
 				this.findDocumentName=''
 			},
-			getTruckList(pageNum) {
+			pageChange(index) {
+				this.pageIndex = index
+				this.getTruckList()
+			},
+			getTruckList() {
 				let params = {
-					pageNum: pageNum || 1,
+					pageNum: this.pageIndex || 1,
 					pageSize: this.pageSize,
 					messageReferenceNumber: this.findMessageReferenceNumber,
 					documentName: this.findDocumentName
@@ -128,16 +140,11 @@
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
 						this.tableData = res.data.data.list
-						console.log(res.data)
 					} else {
 						Message.error(res.data.message)
 					}
 				})
 			},
-			pageChange(index) {
-				this.getTruckList(index)
-			},
-			
 			AddTruck() {
 				this.$router.push({ name: 'addtruck'})
 			},
@@ -147,16 +154,10 @@
 			ViewTruck(notrucksourceId) {
 				this.$router.push({ name: 'viewtruck', query: { notrucksourceId}})
 			},
-			refresh() {
-				this.refreshing = true
-				this.getTruckList()
-				setTimeout(() => {
-					this.refreshing = false
-				}, 500)
-			},
 			// 导入
 			uploadSuccess (response) {
 				Message.success(response.message)
+				this.getTruckList()
 			},
 			// 上传错误
 			uploadError (response) {

@@ -2,21 +2,21 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>编辑用户</span>
+				<span>编辑字典</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="键值">
+					<el-form label-width="120px" :model="dict" :rules="rules" ref="ruleForm">
+						<el-form-item label="键值" prop="VALUE">
 							<el-input auto-complete="off" v-model="dict.VALUE"></el-input>
 						</el-form-item>
-						<el-form-item label="标签">
+						<el-form-item label="标签" prop="NAME">
 							<el-input auto-complete="off" v-model="dict.NAME"></el-input>
 						</el-form-item>
-						<el-form-item label="类型">
+						<el-form-item label="类型" prop="TYPE">
 							<el-input auto-complete="off" v-model="dict.TYPE"></el-input>
 						</el-form-item>
-						<el-form-item label="描述">
+						<el-form-item label="描述" prop="Description">
 							<el-input auto-complete="off" v-model="dict.Description"></el-input>
 						</el-form-item>
 						<el-form-item label="排序">
@@ -24,7 +24,7 @@
 						</el-form-item>
 
 						<el-form-item>
-							<el-button type="primary" @click.native="editDict">立即保存</el-button>
+							<el-button type="primary" @click.native="addDict">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -46,6 +46,23 @@
 					VALUE:'',
 					Description:'',
 					SortNumber:''
+				},
+				rules: {
+					VALUE: [
+						{required: true, message: '请输入键值'},
+						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+					],
+					NAME: [
+						{required: true, message: '请输入标签'},
+						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+					],
+					TYPE: [
+						{required: true, message: '请输入类型'},
+						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+					],
+					Description: [
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
 				}
 			}
 		},
@@ -64,7 +81,6 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.dict = res.data.data
-						console.log(this.dict)
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -72,24 +88,27 @@
 			},
 			editDict() {
 				let data= {
-					Dict_ID:this.dict.Dict_ID,
-					TYPE:this.dict.TYPE,
-					NAME:this.dict.NAME,
-					VALUE:this.dict.VALUE,
-					Description:this.dict.Description,
-					SortNumber:this.dict.SortNumber
+					Dict_ID: this.dict.Dict_ID,
+					TYPE: this.dict.TYPE,
+					NAME: this.dict.NAME,
+					VALUE: this.dict.VALUE,
+					Description: this.dict.Description,
+					SortNumber: this.dict.SortNumber
 				}
-				console.log(data)
-				request({
-					url: '/sys_dict/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'dictmanage'})
-					} else {
-						Message.error(res.data.msg)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						request({
+							url: '/sys_dict/update',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 0) {
+								Message.success(res.data.msg)
+								this.$router.push({name: 'dictmanage'})
+							} else {
+								Message.error(res.data.msg)
+							}
+						})
 					}
 				})
 			},

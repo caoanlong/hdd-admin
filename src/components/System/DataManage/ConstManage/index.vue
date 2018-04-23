@@ -16,7 +16,7 @@
 						<el-input placeholder="名称" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getConstants(1)">查询</el-button>
+						<el-button type="primary" @click="getConstants">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -55,13 +55,13 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getConstants()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getConstants">
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -79,6 +79,7 @@
 import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
+import { validUploadFile } from '../../../../common/utils'
 const userMap = {
 	'常量类型':'Type',
 	'代码':'Code',
@@ -127,22 +128,18 @@ export default {
 				}
 			}))
 		},
+		// 选择导入文件
 		onSelectedFile(result) {
-			new Promise((resolve, reject) => {
-				let uploadExcelConstants = []
-				result.forEach(item => {
-					let excelConstant = {}
-					for (let key in item) {
-						excelConstant[userMap[key]] = item[key]
-					}
-					uploadExcelConstants.push(excelConstant)
-				})
-				resolve(uploadExcelConstants)
-			}).then(constants => {
-				this.addUserMutiple(constants)
+			validUploadFile(result, userMap, [
+				'常量类型', '代码', '名称', '值'
+			]).then(res => {
+				this.addMutiple(res)
+			}).catch(err => {
+				Message.error(err)
 			})
 		},
-		addUserMutiple(consts) {
+		// 导入
+		addMutiple(consts) {
 			let data = {
 				consts: consts,
 			}
@@ -161,7 +158,8 @@ export default {
 			})
 		},
 		pageChange(index) {
-			this.getConstants(index)
+			this.pageIndex = index
+			this.getConstants()
 		},
 		// 重置搜索表单
 		reset() {
@@ -184,9 +182,9 @@ export default {
 				}
 			})
 		},
-		getConstants(pageIndex) {
+		getConstants() {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				Type: this.findType,
 				Name: this.findName

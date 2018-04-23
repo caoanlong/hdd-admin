@@ -44,7 +44,8 @@
 						</el-form-item>
 						<el-form-item label="审批日期">
 							<template slot-scope="scope">
-								<p>{{payCash.auditTime | getdatefromtimestamp()}}</p>
+								<p v-if="payCash.auditTime">{{payCash.auditTime | getdatefromtimestamp()}}</p>
+								<p v-else></p>
 							</template>
 						</el-form-item>
 					</el-form>
@@ -62,7 +63,8 @@
 						</el-form-item>
 						<el-form-item label="申请日期">
 							<template slot-scope="scope">
-								<p>{{payCash.cashTime | getdatefromtimestamp()}}</p>
+								<p v-if="payCash.cashTime">{{payCash.cashTime | getdatefromtimestamp()}}</p>
+								<p v-else></p>
 							</template>
 						</el-form-item>
 						

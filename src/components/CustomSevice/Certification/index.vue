@@ -11,15 +11,11 @@
 					</el-form-item>
 					<el-form-item label="状态">
 						<el-select placeholder="请选择" v-model="findAuditStatus">
-							<el-option label="草稿" value="Draft"></el-option>
-							<el-option label="已提交" value="Commited"></el-option>
-							<el-option label="成功" value="Success"></el-option>
-							<el-option label="失败" value="Failed"></el-option>
-							<el-option label="已拒绝" value="Rejected"></el-option>
+							<el-option v-for="item in realNameStatus" :key="item.Dict_ID" :label="item.NAME" :value="item.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getList(1)">查询</el-button>
+						<el-button type="primary" @click.native="getList()">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -43,26 +39,25 @@
 					</el-table-column>
 					<el-table-column label="申请时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
-					</el-table-column>
 					</el-table-column>
 					<el-table-column label="审批人" align="center" prop="auditBy">
 					</el-table-column>
 					<el-table-column label="审批时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.auditTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="260">
+					<el-table-column label="操作">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewCertification(scope.row.realNameApplyID, scope.row.memID)">查看</el-button>
-							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, '')">
+							<!-- <el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, '')">
 								<svg-icon icon-class="approve-icon"></svg-icon> 审核通过
 							</el-button>
 							<el-button v-if="scope.row.auditStatus=='Commited'" type="default" size="mini" @click="approve(scope.row.realNameApplyID, 'Rejected')">
 								<svg-icon icon-class="approve-icon"></svg-icon> 驳回
-							</el-button>
+							</el-button> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -70,12 +65,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -90,29 +85,44 @@
 	</div>
 </template>
 <script type="text/javascript">
+import request from '../../../common/request'
 import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
 			findKeyWords:'',
-			findAuditStatus:''
+			findAuditStatus:'',
+			realNameStatus: []
 		}
 	},
 	created() {
+		this.getRealNameStatus()
 		this.getList()
 	},
 	methods: {
 		pageChange(index) {
-			this.getList(index)
+			this.pageIndex = index
+			this.getList()
 		},
-		getList(pageNum) {
+		getRealNameStatus() {
 			let params = {
-				pageNum: pageNum || 1,
+				TYPE: 'realNameStatus'
+			}
+			request({
+				url: '/sys_dict/list/type',
+				params
+			}).then(res => {
+				this.realNameStatus = res.data.data
+			})
+		},
+		getList() {
+			let params = {
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				realName: this.findKeyWords,
 				auditStatus: this.findAuditStatus

@@ -30,7 +30,7 @@
 						</el-date-picker>
 					</el-form-item>			
 					<el-form-item>
-						<el-button type="primary" @click.native="getList(1)">查询</el-button>
+						<el-button type="primary" @click.native="getList">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -71,7 +71,7 @@
 					</el-table-column>
 					<el-table-column label="审批人" align="center" prop="auditBy" width="100">
 					</el-table-column>
-					<el-table-column label="操作" width="150">
+					<el-table-column label="操作" width="150" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.mobile,scope.row.cashID)">查看</el-button>
 							<el-button size="mini" @click="EditWithDraw(scope.row.mobile,scope.row.cashID)" v-if="scope.row.status=='ForAudit'">
@@ -83,7 +83,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
 							<el-option label="10" :value="10"></el-option>
 							<el-option label="20" :value="20"></el-option>
 							<el-option label="30" :value="30"></el-option>
@@ -109,7 +109,7 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
@@ -125,12 +125,12 @@ export default {
 	},
 	methods: {
 		selectDateRange(date) {
-			console.log(date)
 			this.startDate = new Date(date[0]).getTime()
 			this.endDate = new Date(date[1]).getTime()
 		},
 		pageChange(index) {
-			this.getList(index)
+			this.pageIndex = index
+			this.getList()
 		},
 		reset() {
 			this.findMobile = ''
@@ -138,12 +138,12 @@ export default {
 			this.findDataRange = ''
 			this.getList()
 		},
-		getList(pageNum) {
+		getList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
-				mobile:this.findMobile,
-				status:this.findStatus,
+				mobile: this.findMobile,
+				status: this.findStatus,
 				startDate: this.startDate,
 				endDate: this.endDate
 			}
