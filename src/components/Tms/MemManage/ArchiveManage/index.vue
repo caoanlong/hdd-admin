@@ -45,7 +45,7 @@
 							<span v-if="scope.row.archiveTime">{{scope.row.archiveTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="230" align="center" fixed="right">
+					<el-table-column label="操作" width="120" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.transportRecordID)">查看</el-button>
 						</template>

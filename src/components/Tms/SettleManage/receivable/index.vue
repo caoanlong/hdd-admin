@@ -13,7 +13,6 @@
 							range-separator="至" 
 							start-placeholder="开始日期" 
 							end-placeholder="结束日期" 
-							
 							:clearable="false" 
 							@change="selectDateRange">
 						</el-date-picker>
@@ -107,6 +106,14 @@ export default {
 		this.getList()
 	},
 	methods: {
+		pageChange() {
+			this.pageIndex = index
+			this.getList()
+		},
+		selectDateRange(date) {
+			this.findshipperBeginDate = new Date(date[0]).getTime()
+			this.findshipperEndDate = new Date(date[1]).getTime()
+		},
 		reset() {
 			this.findRangeDate = []
 			this.findshipperBeginDate = ''
@@ -124,17 +131,9 @@ export default {
 				url: '/finance/payableDetail',
 				params
 			}).then(res => {
-				this.tableData = res.data.data.records
+				this.tableData = res.data.data.list
 				this.total = res.data.data.total
 			})
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		selectDateRange(date) {
-			this.findshipperBeginDate = new Date(date[0]).getTime()
-			this.findshipperEndDate = new Date(date[1]).getTime()
 		}
 	}
 }

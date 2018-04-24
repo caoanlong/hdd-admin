@@ -7,7 +7,6 @@
 					<el-form-item label="关键字" >
 						<el-input placeholder="请输入关键字" style="width:150px"></el-input>
 					</el-form-item>
-					
 					<el-form-item label="创建时间">
 						<el-date-picker v-model="carrierbills.CreatDate" type="date" placeholder="选择创建时间" style="width:140px"></el-date-picker>
 					</el-form-item>
@@ -267,76 +266,6 @@ export default {
 					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
 					CargoName:'R72/炸药'
 				},
-				{
-					Status: '待执行',
-					CarrierNum: '20180205011',
-					ConsigneeCompany: '四川铁建',
-					Discharge: '云南省红河州个旧市金湖广场',
-					Consignee: '铁建',
-					ArrivalDate: '2018:02:06 18:00',
-					CargoTotal: '9吨',
-					ConsignerCompany: '安宁~~化工厂',
-					DeliveryDate: '2018:02:06 18:00',
-					Consigner: '李铁军',
-					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
-					CargoName:'R11炸药、R33硝酸'
-				},
-				{
-					Status: '待执行',
-					CarrierNum: '20180205012',
-					ConsigneeCompany: '昆钢鑫龙',
-					Discharge: '尖山',
-					Consignee: '刘备',
-					ArrivalDate: '2018:02:06 18:00',
-					CargoTotal: '330吨',
-					ConsignerCompany: '安宁~~化工厂',
-					DeliveryDate: '2018:02:06 18:00',
-					Consigner: '李铁军',
-					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
-					CargoName:'炸药'
-				},
-				{
-					Status: '待执行',
-					CarrierNum: '20180205013',
-					ConsigneeCompany: '云南磷化',
-					Discharge: '云南省昭通市镇远县城李家沟',
-					Consignee: '磷化',
-					ArrivalDate: '2018:02:06 18:00',
-					CargoTotal: '9.76吨/10方',
-					ConsignerCompany: '安宁~~化工厂',
-					DeliveryDate: '2018-02-06 18:00',
-					Consigner: '李铁军',
-					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
-					CargoName:'R72/炸药'
-				},
-				{
-					Status: '待执行',
-					CarrierNum: '20180205014',
-					ConsigneeCompany: '四川铁建',
-					Discharge: '云南省红河州个旧市金湖广场',
-					Consignee: '铁建',
-					ArrivalDate: '2018:02:06 18:00',
-					CargoTotal: '9吨',
-					ConsignerCompany: '安宁~~化工厂',
-					DeliveryDate: '2018:02:06 18:00',
-					Consigner: '李铁军',
-					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
-					CargoName:'R11炸药、R33硝酸'
-				},
-				{
-					Status: '待执行',
-					CarrierNum: '20180205015',
-					ConsigneeCompany: '昆钢鑫龙',
-					Discharge: '尖山',
-					Consignee: '刘备',
-					ArrivalDate: '2018:02:06 18:00',
-					CargoTotal: '330吨',
-					ConsignerCompany: '安宁~~化工厂',
-					DeliveryDate: '2018:02:06 18:00',
-					Consigner: '李铁军',
-					Dispatch: '云南省昆明市安宁市区山顶上化工厂',
-					CargoName:'炸药'
-				}
 			],
 			refreshing: false
 		}

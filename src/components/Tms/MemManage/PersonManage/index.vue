@@ -127,7 +127,6 @@ export default {
 				if (res.data.code == 200) {
 					this.total = res.data.data.total
 					this.tableData = res.data.data.list
-					console.log(res.data)
 				} else {
 					Message.error(res.data.message)
 				}

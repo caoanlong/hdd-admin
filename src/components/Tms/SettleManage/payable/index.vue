@@ -24,7 +24,14 @@
 						<el-input placeholder="请输入..." v-model="findconsigneeCompanyName"></el-input>
 					</el-form-item>
 					<el-form-item label="发货日期">
-						<el-date-picker v-model="findRangeDate" type="daterange" range-separator="至" value-format="timestamp" start-placeholder="开始日期" end-placeholder="结束日期" :clearable="false" @change="selectDateRange">
+						<el-date-picker 
+							v-model="findRangeDate" 
+							type="daterange" 
+							range-separator="至" 
+							start-placeholder="开始日期" 
+							end-placeholder="结束日期" 
+							:clearable="false" 
+							@change="selectDateRange">
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
@@ -158,16 +165,24 @@ export default {
 		this.getDetail()
 	},
 	methods: {
+		pageChange(index) {
+			this.pageIndex = index
+			this.getDetail()
+		},
+		selectDateRange(date) {
+			this.findshipperBeginDate = new Date(date[0]).getTime()
+			this.findshipperEndDate = new Date(date[1]).getTime()
+		},
 		reset() {
 			this.findRangeDate = [],
-				this.findshipperBeginDate = '',
-				this.findshipperEndDate = '',
-				this.findplateNo = '',
-				this.findName = '',
-				this.findshipperCompanyName = '',
-				this.findconsigneeCompanyName = '',
-				this.findcode = '',
-				this.getDetail()
+			this.findshipperBeginDate = '',
+			this.findshipperEndDate = '',
+			this.findplateNo = '',
+			this.findName = '',
+			this.findshipperCompanyName = '',
+			this.findconsigneeCompanyName = '',
+			this.findcode = '',
+			this.getDetail()
 		},
 		getDetail() {
 			let params = {
@@ -187,17 +202,9 @@ export default {
 				url: '/finance/payableDetail',
 				params
 			}).then(res => {
-				this.tableData = res.data.data.records
+				this.tableData = res.data.data.list
 				this.total = res.data.data.total			
 			})
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getDetail()
-		},
-		selectDateRange(date) {
-			this.findshipperBeginDate = date[0]
-			this.findshipperEndDate = date[1]
 		},
 		handleTabSelected(tab) {
 			this.tabSelected = tab.$options.propsData.name
