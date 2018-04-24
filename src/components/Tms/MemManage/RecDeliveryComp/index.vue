@@ -92,7 +92,7 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			selecteds: [],
+			selectedList: [],
 			findRangeDate: [],
 			findCompanyArea: '',
 			findCompanyName: '',
@@ -116,7 +116,7 @@ export default {
 			this.findCreateTimeEnd = new Date(date[1]).getTime()
 		},
 		selectionChange(data) {
-			this.selecteds = data.map(item => item.customerID)
+			this.selectedList = data.map(item => item.customerID)
 		},
 		// 重置搜索表单
 		reset() {
@@ -159,14 +159,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [id]
 			} else {
-				if (this.selecteds.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selecteds
+				ids = this.selectedList
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',

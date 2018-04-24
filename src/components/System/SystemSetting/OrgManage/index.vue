@@ -445,7 +445,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
-					this.getOrgs()
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -460,7 +460,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
-					this.getOrgs()
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -475,6 +475,7 @@ export default {
 			}).then(res => {
 				if (res.data.code == 0) {
 					Message.success(res.data.msg)
+					this.$refs['ruleForm'].resetFields()
 				} else {
 					Message.error(res.data.msg)
 				}
