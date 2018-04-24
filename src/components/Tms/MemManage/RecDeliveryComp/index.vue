@@ -146,13 +146,13 @@ export default {
 			}).catch(err => {})
 		},
 		add() {
-			this.$router.push({ name: 'addtmsshipper'})
+			this.$router.push({ name: 'addtmsrecdeliverycomp'})
 		},
 		view(customerID) {
-			this.$router.push({ name: 'viewtmsshipper', query: { customerID }})
+			this.$router.push({ name: 'viewtmsrecdeliverycomp', query: { customerID }})
 		},
 		edit(customerID) {
-			this.$router.push({ name: 'edittmsshipper', query: { customerID }})
+			this.$router.push({ name: 'edittmsrecdeliverycomp', query: { customerID }})
 		},
 		deleteConfirm(id) {
 			let ids = []
