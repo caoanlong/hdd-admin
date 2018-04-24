@@ -6,55 +6,61 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="代码">
-						<el-input placeholder="请输入..." v-model="findCode"></el-input>
-					</el-form-item>
-					<el-form-item label="名称">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					<el-form-item label="建档时间">
+						<el-date-picker
+							v-model="findRangeDate"
+							type="daterange"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期" 
+							@change="selectDateRange">
+						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTmsArchive">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
-			</div>
 			<div class="table">
-				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-					<el-table-column label="用户名" prop="Code"></el-table-column>
-					<el-table-column label="车牌号" prop="Name"></el-table-column>
-					<el-table-column label="自编号" prop="Name"></el-table-column>
-					<el-table-column label="道路运输证号" prop="Name"></el-table-column>
-					<el-table-column label="姓名" prop="Name"></el-table-column>
-					<el-table-column label="身份证号" prop="Name"></el-table-column>
-					<el-table-column label="从业资格证号" prop="Name"></el-table-column>
-					<el-table-column label="联系电话" prop="Name"></el-table-column>
-					<el-table-column label="载重" prop="Name"></el-table-column>
-					<el-table-column label="备注" prop="Name"></el-table-column>
-					<el-table-column label="创建时间" prop="Name"></el-table-column>
-					<el-table-column label="建档时间" prop="Name"></el-table-column>
+					<el-table-column label="用户" prop="memberCompany"></el-table-column>
+					<el-table-column label="车牌号" prop="plateNo"></el-table-column>
+					<el-table-column label="自编号" prop="code"></el-table-column>
+					<el-table-column label="道路运输证号" prop="transportLicenceCode"></el-table-column>
+					<el-table-column label="姓名" prop="realName"></el-table-column>
+					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>
+					<el-table-column label="从业资格证号" prop="qualificationCode"></el-table-column>
+					<el-table-column label="联系电话" prop="mobile"></el-table-column>
+					<el-table-column label="载重" prop="loads"></el-table-column>
+					<el-table-column label="备注" prop="remark"></el-table-column>
+					<el-table-column label="创建时间">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="建档时间">
+						<template slot-scope="scope">
+							<span v-if="scope.row.archiveTime">{{scope.row.archiveTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewTmsArchive(scope.row.TruckBrand_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTmsArchive(scope.row.TruckBrand_ID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.transportRecordID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckBrands()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -69,118 +75,60 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
+import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
-			truckBrands: [],
-			selectedTruckBrands: [],
-			findCode:'',
-			findName: '',
+			tableData: [],
+			selectedList: [],
+			findRangeDate: [],
+			findBeginTime: '',
+			findEndTime: '',
 		}
 	},
 	created() {
-		this.getTruckBrands()
+		this.getList()
 	},
 	methods: {
-		pageChange(index) {
-			this.getTruckBrands(index)
+		pageChange() {
+			this.pageIndex = index
+			this.getList()
+		},
+		selectDateRange(date) {
+			this.findBeginTime = new Date(date[0]).getTime()
+			this.findEndTime = new Date(date[1]).getTime()
+		},
+		selectionChange(data) {
+			this.selectedList = data.map(item => item.transportRecordID)
 		},
 		// 重置搜索表单
 		reset() {
-			this.findCode = ''
-			this.findName = ''
+			this.findRangeDate = []
+			this.findBeginTime = ''
+			this.findEndTime = ''
+			this.getList()
 		},
-		getTruckBrands(pageIndex) {
+		getList() {
 			let params = {
-				pageIndex: pageIndex || 1,
-				pageSize: this.pageSize,
-				Code: this.findCode,
-				Name: this.findName
+				"current": this.pageIndex || 1,
+				"size": this.pageSize,
+				"beginTime": this.findBeginTime,
+				"endTime": this.findEndTime
 			}
-			request({
-				url: '/base_truckbrand/list',
-				method: 'get',
+			requestJava({
+				url: '/transportRecord/findList',
 				params
 			}).then(res => {
-				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.truckBrands = res.data.data.rows
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.count = res.data.data.total
+				this.tableData = res.data.data.list
 			})
 		},
-		deleteConfirm(id) {
-			let ids = []
-			if (id && typeof id == 'string') {
-				ids = [].concat(id)
-			} else {
-				if (this.selectedTruckBrands.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
-					return
-				}
-				ids = this.selectedTruckBrands
-			}
-			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				this.delTruckBrands(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})
-			})
-		},
-		delTruckBrands(ids) {
-			let data = {
-				ids: ids
-			}
-			request({
-				url: '/base_truckbrand/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getTruckBrands()
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
-		},
-		addTmsArchive() {
-			this.$router.push({name: 'addtmsarchive'})
-		},
-		editTmsArchive(TruckBrand_ID) {
-			this.$router.push({ name: 'edittmsarchive'})
-		},
-		viewTmsArchive(TruckBrand_ID) {
-			this.$router.push({ name: 'viewtmsarchive'})
-		},
-		selectionChange(data) {
-			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
-		},
-		previewImg(imgUrl) {
-			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-				dangerouslyUseHTMLString: true,
-				showConfirmButton: false,
-				customClass: 'img-preview'
-			})
+		view(transportRecordID) {
+			this.$router.push({ name: 'viewtmsarchive', query: { transportRecordID }})
 		}
 	}
 }

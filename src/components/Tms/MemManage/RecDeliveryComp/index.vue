@@ -50,7 +50,11 @@
 					</el-table-column>
 					<el-table-column label="联系人" prop="contactName"></el-table-column>
 					<el-table-column label="联系方式" prop="contactPhone"></el-table-column>
-					<el-table-column label="录入时间" prop="createTime"></el-table-column>					
+					<el-table-column label="录入时间">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>					
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.customerID)">查看</el-button>
