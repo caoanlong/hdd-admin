@@ -8,22 +8,25 @@
 				<el-col :span="12" :offset="6" >
 					<el-form label-width="120px">
 						<el-form-item label="用户名">
-							<el-input placeholder="请输入内容"></el-input>
+							<el-input placeholder="请输入..." v-model="info.name"></el-input>
 						</el-form-item>
 						<el-form-item label="公司名称">
-							<el-input placeholder="请输入内容"></el-input>
+							<el-input placeholder="请输入..." v-model="info.companyName"></el-input>
 						</el-form-item>
-						<el-form-item label="公司地址">
-							<el-input placeholder="请输入内容"></el-input>
+						<el-form-item label="公司地区">
+							<DistPicker @selectChange="selectAreaChange"/>
+						</el-form-item>
+						<el-form-item label="公司详细地址">
+							<el-input placeholder="请输入..." v-model="info.detailAddress"></el-input>
 						</el-form-item>
 						<el-form-item label="联系人">
-							<el-input placeholder="请输入内容"></el-input>
+							<el-input placeholder="请输入..." v-model="info.contactName"></el-input>
 						</el-form-item>
 						<el-form-item label="联系电话">
-							<el-input placeholder="请输入内容"></el-input>
+							<el-input placeholder="请输入..." v-model="info.contactPhone"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary">保存</el-button>
+							<el-button type="primary" @click="save">保存</el-button>
 							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -35,36 +38,41 @@
 <script type="text/javascript">
 	import requestJava from '../../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import DistPicker from '../../../CommonComponents/DistPicker'
 	export default {
 		data() {
 			return {
-				bankInfo: {},
-				date:''
+				info: {
+					'name': '',
+					'companyName': '',
+					'companyArea': '',
+					'detailAddress': '',
+					'contactName': '',
+					'contactPhone': ''
+				},
+				selectedArea: []
 			}
         },
-        created() {
-            // this.getBank()
-        },
 		methods: {
-            getBank() {
-                let params= {
-					TruckBrand_ID: this.$route.query.TruckBrand_ID,
-				}
+			selectAreaChange(data) {
+				this.info.companyArea = data
+			},
+			save() {
+				let data = this.info
 				requestJava({
-					url: '/base_truckbrand/info',
-					method: 'get',
-					params
+					url: '/customer/add',
+					method: 'post',
+					data
 				}).then(res => {
-					if (res.data.code == 200) {
-                        this.bankInfo = res.data.data
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
+                    Message.success('成功！')
+				}).catch(err => {})
 			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			DistPicker
 		}
 	}
 </script>

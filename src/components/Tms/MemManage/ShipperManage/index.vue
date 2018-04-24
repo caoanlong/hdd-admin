@@ -6,17 +6,27 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="录入时间">
+						<el-date-picker
+							v-model="findRangeDate"
+							type="daterange"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期" 
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>
 					<el-form-item label="公司名称">
-						<el-input placeholder="请输入..." v-model="findCode"></el-input>
+						<el-input placeholder="请输入..." v-model="findCompanyName"></el-input>
 					</el-form-item>
 					<el-form-item label="地址">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-input placeholder="请输入..." v-model="findCompanyArea"></el-input>
 					</el-form-item>
 					<el-form-item label="联系人">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-input placeholder="请输入..." v-model="findContactName"></el-input>
 					</el-form-item>
 					<el-form-item label="联系方式">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-input placeholder="请输入..." v-model="findContactPhone"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList()">查询</el-button>
@@ -25,23 +35,27 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addTmsShipper">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData"  @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-					<el-table-column label="用户" prop="Code"></el-table-column>
-					<el-table-column label="公司名称" prop="Name"></el-table-column>
-					<el-table-column label="地址" prop="Name"></el-table-column>
-					<el-table-column label="联系人" prop="Name"></el-table-column>
-					<el-table-column label="联系电话" prop="Name"></el-table-column>
-					<el-table-column label="录入时间" prop="Name"></el-table-column>					
+					<el-table-column label="用户" prop="name"></el-table-column>
+					<el-table-column label="公司名称" prop="companyName"></el-table-column>
+					<el-table-column label="地址">
+						<template slot-scope="scope">
+							<span>{{scope.row.companyArea}}{{scope.row.detailAddress}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="联系人" prop="contactName"></el-table-column>
+					<el-table-column label="联系方式" prop="contactPhone"></el-table-column>
+					<el-table-column label="录入时间" prop="createTime"></el-table-column>					
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewTmsShipper(scope.row.TruckBrand_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTmsShipper(scope.row.TruckBrand_ID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.TruckBrand_ID)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.customerID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.customerID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.customerID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -49,12 +63,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -79,6 +93,7 @@ export default {
 			count: 0,
 			tableData: [],
 			selecteds: [],
+			findRangeDate: [],
 			findCompanyArea: '',
 			findCompanyName: '',
 			findContactName: '',
@@ -95,6 +110,13 @@ export default {
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
+		},
+		selectDateRange(date) {
+			this.findCreateTimeBegin = new Date(date[0]).getTime()
+			this.findCreateTimeEnd = new Date(date[1]).getTime()
+		},
+		selectionChange(data) {
+			this.selecteds = data.map(item => item.customerID)
 		},
 		// 重置搜索表单
 		reset() {
@@ -121,12 +143,21 @@ export default {
 			}).then(res => {
 				this.count = res.data.data.total
 				this.tableData = res.data.data.list
-			})
+			}).catch(err => {})
+		},
+		add() {
+			this.$router.push({ name: 'addtmsshipper'})
+		},
+		view(customerID) {
+			this.$router.push({ name: 'viewtmsshipper', query: { customerID }})
+		},
+		edit(customerID) {
+			this.$router.push({ name: 'edittmsshipper', query: { customerID }})
 		},
 		deleteConfirm(id) {
 			let ids = []
 			if (id && typeof id == 'string') {
-				ids = [].concat(id)
+				ids = [id]
 			} else {
 				if (this.selecteds.length == 0) {
 					this.$message({
@@ -142,7 +173,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delTruckBrands(ids)
+				this.del(ids)
 				this.$message({
 					type: 'success',
 					message: '删除成功!'
@@ -154,58 +185,22 @@ export default {
 				})
 			})
 		},
-		delTruckBrands(ids) {
+		del(ids) {
 			let data = {
 				ids: ids
 			}
 			request({
-				url: '/base_truckbrand/delete',
+				url: '/customer/delete',
 				method: 'post',
 				data
 			}).then(res => {
-				if (res.data.code == 0) {
-					this.getList()
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.getList()
 			})
-		},
-		addTmsShipper() {
-			this.$router.push({name: 'addtmsshipper'})
-		},
-		editTmsShipper(TruckBrand_ID) {
-			this.$router.push({ name: 'edittmsshipper', query: {TruckBrand_ID} })
-		},
-		viewTmsShipper(TruckBrand_ID) {
-			this.$router.push({ name: 'viewtmsshipper', query: {TruckBrand_ID} })
-		},
-		selectionChange(data) {
-			this.selecteds = data.map(item => item.TruckBrand_ID)
 		}
 	}
 }
 
 </script>
 <style lang="stylus" scoped>
-.download-btn
-	font-size 12px
-	color #606266
-	height 29px
-	line-height 29px
-	padding 0 15px
-	border 1px solid #dcdfe6
-	border-radius 3px
-	background #fff
-	margin 0 10px
-	display inline-block
-	&:hover
-		border-color #c6e2ff
-		color #409eff
-		background #ecf5ff
-	&:active
-		border-color #3a8ee6
-		color #3a8ee6
-.table-img
-	width 30px
-	cursor pointer
+
 </style>
