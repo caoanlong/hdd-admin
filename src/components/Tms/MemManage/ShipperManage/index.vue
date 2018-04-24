@@ -19,17 +19,17 @@
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTmsShipper">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addTmsShipper">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="用户" prop="Code"></el-table-column>
 					<el-table-column label="公司名称" prop="Name"></el-table-column>
@@ -48,7 +48,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckBrands()">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
 							<el-option label="10" value="10"></el-option>
 							<el-option label="20" value="20"></el-option>
 							<el-option label="30" value="30"></el-option>
@@ -69,51 +69,58 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
+import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
-			truckBrands: [],
-			selectedTruckBrands: [],
-			findCode:'',
-			findName: '',
+			tableData: [],
+			selecteds: [],
+			findCompanyArea: '',
+			findCompanyName: '',
+			findContactName: '',
+			findContactPhone: '',
+			findCreateTimeBegin: '',
+			findCreateTimeEnd: '',
+			findDetailAddress: ''
 		}
 	},
 	created() {
-		this.getTruckBrands()
+		this.getList()
 	},
 	methods: {
 		pageChange(index) {
-			this.getTruckBrands(index)
+			this.pageIndex = index
+			this.getList()
 		},
 		// 重置搜索表单
 		reset() {
 			this.findCode = ''
 			this.findName = ''
+			this.getList()
 		},
-		getTruckBrands(pageIndex) {
+		getList() {
 			let params = {
-				pageIndex: pageIndex || 1,
-				pageSize: this.pageSize,
-				Code: this.findCode,
-				Name: this.findName
+				"current": this.pageIndex,
+				"size": this.pageSize,
+				"type": "Consignor",
+				"companyArea": this.findCompanyArea,
+				"companyName": this.findCompanyName,
+				"contactName": this.findContactName,
+				"contactPhone": this.findContactPhone,
+				"createTimeBegin": this.findCreateTimeBegin,
+				"createTimeEnd": this.findCreateTimeEnd,
+				"detailAddress": this.findDetailAddress
 			}
-			request({
-				url: '/base_truckbrand/list',
-				method: 'get',
+			requestJava({
+				url: '/customer/findList',
 				params
 			}).then(res => {
-				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.truckBrands = res.data.data.rows
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.count = res.data.data.total
+				this.tableData = res.data.data.list
 			})
 		},
 		deleteConfirm(id) {
@@ -121,14 +128,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				if (this.selectedTruckBrands.length == 0) {
+				if (this.selecteds.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedTruckBrands
+				ids = this.selecteds
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -157,7 +164,7 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.getTruckBrands()
+					this.getList()
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -173,7 +180,7 @@ export default {
 			this.$router.push({ name: 'viewtmsshipper', query: {TruckBrand_ID} })
 		},
 		selectionChange(data) {
-			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
+			this.selecteds = data.map(item => item.TruckBrand_ID)
 		}
 	}
 }

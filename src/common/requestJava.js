@@ -31,9 +31,14 @@ service.interceptors.request.use(config => {
 // respone interceptor
 service.interceptors.response.use(
 response => {
-	if (response.data.code == 10016) {
-		localStorage.clear()
-		window.location.href = '/#/login'
+	if (response.data.code != 200) {
+		if (response.data.code == 10016) {
+			localStorage.clear()
+			Message.error(response.data.msg)
+			window.location.href = '/#/login'
+			return Promise.reject('error')
+		}
+		Message.error(response.data.msg)
 		return Promise.reject('error')
 	}
 	return response
