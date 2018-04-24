@@ -5,51 +5,45 @@
 				<span>档案详情</span>
 			</div>
 			<el-row :gutter="20">
-				<el-col :span="8">
-					<el-form label-width="160px">
-						<el-form-item label="用户名">
-							<p></p>
+				<el-col :span="12" :offset="6" >
+					<el-form label-width="120px">
+						<el-form-item label="用户">
+							<p>{{info.memberCompany}}</p>
 						</el-form-item>
-						<el-form-item label="姓名">
-							<p></p>
+						<el-form-item label="车牌号">
+							<p>{{info.plateNo}}</p>
+						</el-form-item>
+						<el-form-item label="自编号">
+							<p>{{info.code}}</p>
 						</el-form-item>
 						<el-form-item label="道路运输证号">
-							<p></p>
+							<p>{{info.transportLicenceCode}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="160px">
-						<el-form-item label="车牌号">
-							<p></p>
+						<el-form-item label="姓名">
+							<p>{{info.realName}}</p>
 						</el-form-item>
 						<el-form-item label="身份证号">
-							<p></p>
+							<p>{{info.idCardNum}}</p>
 						</el-form-item>
 						<el-form-item label="从业资格证号">
-							<p></p>
+							<p>{{info.qualificationCode}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="160px">
-						<el-form-item label="自编号">
-							<p></p>
-						</el-form-item>
-						
 						<el-form-item label="联系电话">
-							<p></p>
+							<p>{{info.mobile}}</p>
 						</el-form-item>
 						<el-form-item label="载重">
-							<p></p>
+							<p>{{info.loads}}</p>
 						</el-form-item>
-
-					</el-form>
-				</el-col>
-				<el-col :span="24">
-					<el-form label-width="160px">
 						<el-form-item label="备注">
-							<p></p>
+							<p>{{info.remark}}</p>
+						</el-form-item>
+						<el-form-item label="创建时间">
+							<p v-if="info.createTime">{{info.createTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
+						</el-form-item>
+						<el-form-item label="建档时间">
+							<p v-if="info.archiveTime">{{info.archiveTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
@@ -66,28 +60,23 @@
 	export default {
 		data() {
 			return {
-				bankInfo: {}
+				info: {}
 			}
         },
         created() {
-            // this.getBank()
+            this.getInfo()
         },
 		methods: {
-            getBank() {
+            getInfo() {
                 let params= {
-					TruckBrand_ID: this.$route.query.TruckBrand_ID,
+					transportRecordID: this.$route.query.transportRecordID
 				}
 				requestJava({
-					url: '/base_truckbrand/info',
-					method: 'get',
+					url: '/transportRecord/findById',
 					params
 				}).then(res => {
-					if (res.data.code == 200) {
-                        this.bankInfo = res.data.data
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
+                    this.info = res.data.data
+				}).catch(err => {})
 			},
 			back() {
 				this.$router.go(-1)
