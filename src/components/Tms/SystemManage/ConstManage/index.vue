@@ -4,6 +4,23 @@
 			<div slot="header" class="clearfix">
 				<span>常量列表</span>
 			</div>
+			<!-- <div class="search">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="常量类型" >
+						<el-select placeholder="请选择" v-model="findType" class="constantSelect">
+							<el-option v-for="item in constTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="名称">
+						<el-input placeholder="名称" v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div> -->
             <div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
@@ -11,34 +28,23 @@
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="用户ID" prop="memberID" width="150"></el-table-column>
-					<el-table-column label="用户名" prop="userName"></el-table-column>
-					<el-table-column label="联系人" prop="contact"></el-table-column>
-					<el-table-column label="公司名称" prop="companyName"></el-table-column>
-					<el-table-column label="公司地址" prop="companyArea"></el-table-column>
-					<el-table-column label="申请状态">
+					<el-table-column label="常量类型" prop="type" width="150"></el-table-column>
+					<el-table-column label="代码" prop="code"></el-table-column>
+					<el-table-column label="名称" prop="value"></el-table-column>
+					<el-table-column label="值" prop="name"></el-table-column>
+					<el-table-column label="描述" prop="description"></el-table-column>
+					<el-table-column label="排序" prop="sortNumber"></el-table-column>
+					<el-table-column label="更新人" prop="updateBy"></el-table-column>
+					<el-table-column label="更新时间">
 						<template slot-scope="scope">
-							<span v-if="scope.row.auditStatus == 'Draft'">草稿</span>
-							<span v-else-if="scope.row.auditStatus == 'Pending'">待审核</span>
-							<span v-else-if="scope.row.auditStatus == 'Passed'">已开通</span>
-							<span v-else-if="scope.row.auditStatus == 'Rejected'">已拒绝</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="申请时间" width="140">
-						<template slot-scope="scope">
-							<span v-if="scope.row.applyTime">{{scope.row.applyTime | getdatefromtimestamp()}}</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="通过时间" width="140">
-						<template slot-scope="scope">
-							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.updateTime">{{scope.row.updateTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.applyRecordID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.applyRecordID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.applyRecordID)">删除</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.constStdID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.constStdID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.constStdID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -46,12 +52,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -76,12 +82,18 @@ export default {
 			count: 0,
 			tableData: [],
 			selectedList: [],
+			constTypeList: [],
+			findType: '',
+			findName: ''
 		}
 	},
 	created() {
 		this.getList()
 	},
 	methods: {
+		selectionChange(data) {
+			this.selectedList = data.map(item => item.constStdID)
+        },
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
@@ -95,35 +107,34 @@ export default {
                 value: ''
 			}
 			requestJava({
-				url: '/base/const/findList',
+				url: '/admin/baseConst/list',
 				method: 'get',
 				params
 			}).then(res => {
-				console.log(res.data.data)
-				if (res.data.code == 200) {
-					this.count = res.data.data.total
-					this.tableData = res.data.data.list
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.count = res.data.data.total
+				this.tableData = res.data.data.list
 			})
-        },
+		},
+		getConstTypes() {
+			requestJava({
+				url: '/admin/baseConst/type',
+			}).then(res => {
+				this.constTypeList = res.data.data.list
+			})
+		},
         add() {
             this.$router.push({ name: 'addtmsconst' })
         },
-		view(applyRecordID) {
-			this.$router.push({ name: 'viewtmsconst', query: {applyRecordID} })
+		view(constStdID) {
+			this.$router.push({ name: 'viewtmsconst', query: {constStdID} })
         },
-        edit(applyRecordID) {
-            this.$router.push({ name: 'edittmsconst', query: {applyRecordID} })
-        },
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.applyRecordID)
+        edit(constStdID) {
+            this.$router.push({ name: 'edittmsconst', query: {constStdID} })
         },
         deleteConfirm(id) {
 			let ids = []
 			if (id && typeof id == 'string') {
-				ids = [].concat(id)
+				ids = [id]
 			} else {
 				if (this.selectedList.length == 0) {
 					this.$message({
@@ -156,7 +167,7 @@ export default {
 				ids: ids
 			}
 			requestJava({
-				url: '/base_truckbrand/delete',
+				url: '/admin/baseConst/delete',
 				method: 'post',
 				data
 			}).then(res => {
