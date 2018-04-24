@@ -6,23 +6,23 @@
 			</div>
 			<el-row :gutter="20">
 				<el-col :span="12" :offset="6" >
-					<el-form label-width="120px">
-						<el-form-item label="用户名">
+					<el-form label-width="120px" :model="info" :rules="rules" ref="ruleForm">
+						<el-form-item label="用户名" prop="name">
 							<el-input placeholder="请输入..." v-model="info.name"></el-input>
 						</el-form-item>
-						<el-form-item label="公司名称">
+						<el-form-item label="公司名称" prop="companyName">
 							<el-input placeholder="请输入..." v-model="info.companyName"></el-input>
 						</el-form-item>
-						<el-form-item label="公司地区">
+						<el-form-item label="公司地区" prop="companyArea">
 							<DistPicker :selected="selectedArea" @selectChange="selectAreaChange"/>
 						</el-form-item>
-						<el-form-item label="公司详细地址">
+						<el-form-item label="公司详细地址" prop="detailAddress">
 							<el-input placeholder="请输入..." v-model="info.detailAddress"></el-input>
 						</el-form-item>
-						<el-form-item label="联系人">
+						<el-form-item label="联系人" prop="contactName">
 							<el-input placeholder="请输入..." v-model="info.contactName"></el-input>
 						</el-form-item>
-						<el-form-item label="联系电话">
+						<el-form-item label="联系电话" prop="contactPhone">
 							<el-input placeholder="请输入..." v-model="info.contactPhone"></el-input>
 						</el-form-item>
 						<el-form-item>
@@ -39,6 +39,7 @@
 	import requestJava from '../../../../common/requestJava'
 	import { Message } from 'element-ui'
 	import DistPicker from '../../../CommonComponents/DistPicker'
+	import { checkTel } from '../../../../common/validator'
 	export default {
 		data() {
 			return {
@@ -50,7 +51,32 @@
 					'contactName': '',
 					'contactPhone': ''
 				},
-				selectedArea: []
+				selectedArea: [],
+				rules: {
+					name: [
+						{required: true, message: '请输入用户名'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					companyName: [
+						{required: true, message: '请输入公司名'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					companyArea: [
+						{required: true, message: '请选择公司地区'},
+					],
+					detailAddress: [
+						{required: true, message: '请输入详细地址'},
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
+					],
+					contactName: [
+						{required: true, message: '请输入联系人'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					contactPhone: [
+						{required: true, message: '请输入联系电话'},
+						{validator: checkTel}
+					]
+				}
 			}
         },
         created() {
@@ -62,13 +88,17 @@
 			},
 			save() {
 				let data = this.info
-				requestJava({
-					url: '/customer/update',
-					method: 'post',
-					data
-				}).then(res => {
-                    Message.success('成功！')
-				}).catch(err => {})
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						requestJava({
+							url: '/customer/update',
+							method: 'post',
+							data
+						}).then(res => {
+							Message.success('成功！')
+						}).catch(err => {})
+					}
+				})
 			},
             getInfo() {
                 let params = {
