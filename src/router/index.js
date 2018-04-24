@@ -1093,6 +1093,14 @@ let routerMap = [
 						component: () => import('../components/Tms/DispatchbillManage')
 					},
 					{
+						path: '/viewtmsdispatchbill',
+						name: 'viewtmsdispatchbill',
+						meta: {
+							title: '调度单详情'
+						},
+						component: () => import('../components/Tms/DispatchbillManage/ViewDispatchBill')
+					},
+					{
 						path: '/tmssettlemanage',
 						name: 'tmssettlemanage',
 						meta: {
@@ -1116,6 +1124,14 @@ let routerMap = [
 									title: '应付管理'
 								},
 								component: () => import('../components/Tms/SettleManage/payable')
+							},
+							{
+								path: '/tmssettleconfig',
+								name: 'tmssettleconfig',
+								meta: {
+									title: '结算模板'
+								},
+								component: () => import('../components/Tms/SettleManage/settleconfig')
 							}
 						]
 					},
