@@ -1098,7 +1098,26 @@ let routerMap = [
 						meta: {
 							title: '结算管理'
 						},
-						component: () => import('../components/Tms/SettleManage')
+						component: () => import('../components/Tms/SettleManage'),
+						redirect: '/tmsreceivable',
+						children: [
+							{
+								path: '/tmsreceivable',
+								name: 'tmsreceivable',
+								meta: {
+									title: '应收管理'
+								},
+								component: () => import('../components/Tms/SettleManage/receivable')
+							},
+							{
+								path: '/tmspayable',
+								name: 'tmspayable',
+								meta: {
+									title: '应付管理'
+								},
+								component: () => import('../components/Tms/SettleManage/payable')
+							}
+						]
 					},
 					{
 						path: '/tmssysmanage',

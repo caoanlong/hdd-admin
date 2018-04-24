@@ -113,3 +113,31 @@ export const checkFloat6 = (rule, value, callback) => {
 	}
 }
 
+export const checkIDCard = (rule, value, callback) => {
+	if (!value) {
+		callback(new Error('身份证号不能为空'))
+	}
+	let regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+	if(!regIdNo.test(value)){  
+		callback(new Error('请输入正确的身份证号'))
+	} else {
+		callback()
+	}
+}
+// 限制长度50
+export const limitLength50 = (rule, value, callback) => {
+	if (value.length > 50) {
+		callback(new Error('长度不能超过50'))
+	} else {
+		callback()
+	}
+}
+
+// 限制长度100
+export const limitLength100 = (rule, value, callback) => {
+	if (value.length > 100) {
+		callback(new Error('长度不能超过100'))
+	} else {
+		callback()
+	}
+}
