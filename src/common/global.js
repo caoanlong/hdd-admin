@@ -1,5 +1,3 @@
-import { javaImgUrl } from './requestJava'
-
 export default function install(Vue) {
-    Vue.prototype.imgUrl = javaImgUrl
+    Vue.prototype.imgUrl = process.env.BASE_IMG_API
 }
