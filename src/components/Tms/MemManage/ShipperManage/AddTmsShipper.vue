@@ -7,8 +7,8 @@
 			<el-row :gutter="20">
 				<el-col :span="12" :offset="6" >
 					<el-form label-width="120px" :model="info" :rules="rules" ref="ruleForm">
-						<el-form-item label="用户名" prop="name">
-							<el-input placeholder="请输入..." v-model="info.name"></el-input>
+						<el-form-item label="用户名" prop="userName">
+							<el-input placeholder="请输入..." v-model="info.userName"></el-input>
 						</el-form-item>
 						<el-form-item label="公司名称" prop="companyName">
 							<el-input placeholder="请输入..." v-model="info.companyName"></el-input>
@@ -44,7 +44,7 @@
 		data() {
 			return {
 				info: {
-					'name': '',
+					'userName': '',
 					'companyName': '',
 					'companyArea': '',
 					'detailAddress': '',
@@ -53,7 +53,7 @@
 				},
 				selectedArea: [],
 				rules: {
-					name: [
+					userName: [
 						{required: true, message: '请输入用户名'},
 						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 					],

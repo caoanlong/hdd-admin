@@ -104,16 +104,11 @@
 				}
 				requestJava({
 					url: '/admin/applyrecord/info',
-					method: 'get',
 					params
 				}).then(res => {
-					if (res.data.code == 200) {
-						this.user = res.data.data
-						this.user.roadTransportLicUrl = res.data.data.roadTransportLicUrl
-						this.user.businessLicUrl = res.data.data.businessLicUrl
-					} else {
-						Message.error(res.data.msg)
-					}
+					this.user = res.data.data
+					this.user.roadTransportLicUrl = res.data.data.roadTransportLicUrl
+					this.user.businessLicUrl = res.data.data.businessLicUrl
 				})
 			},
 			handleLogoUrlSuccess(res) {

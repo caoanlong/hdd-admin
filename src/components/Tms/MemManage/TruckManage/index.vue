@@ -56,26 +56,70 @@
 					<el-table-column label="车辆类型" prop="truckType"></el-table-column>
 					<el-table-column label="道路运输证号" prop="roadTransportNo"></el-table-column>
 					<el-table-column label="经营范围" prop="businessScope"></el-table-column>
-					<el-table-column label="道路运输证年审期至" prop="roadTransportLicAnnualPeriod"></el-table-column>
-					<el-table-column label="行驶证审验效期至" prop="driverLicExamineExpires"></el-table-column>
-					<el-table-column label="承运人责任险有效期至" prop="carrierRiskInsuranceExpires"></el-table-column>
+					<el-table-column label="道路运输证年审期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.roadTransportLicAnnualPeriod">{{scope.row.roadTransportLicAnnualPeriod | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="行驶证审验效期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.driverLicExamineExpires">{{scope.row.driverLicExamineExpires | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="承运人责任险有效期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.carrierRiskInsuranceExpires">{{scope.row.carrierRiskInsuranceExpires | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="等级评定" prop="rank"></el-table-column>
-					<el-table-column label="下次等评日期" prop="nextRankEvaluteTime"></el-table-column>
-					<el-table-column label="二级维护日期" prop="secondaMaintainTime"></el-table-column>
-					<el-table-column label="下次二级维护日期" prop="nextSecondLevel"></el-table-column>
+					<el-table-column label="下次等评日期">
+						<template slot-scope="scope">
+							<span v-if="scope.row.nextRankEvaluteTime">{{scope.row.nextRankEvaluteTime | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="二级维护日期">
+						<template slot-scope="scope">
+							<span v-if="scope.row.secondaMaintainTime">{{scope.row.secondaMaintainTime | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="下次二级维护日期">
+						<template slot-scope="scope">
+							<span v-if="scope.row.nextSecondLevel">{{scope.row.nextSecondLevel | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="载重" prop="loads"></el-table-column>
 					<el-table-column label="罐体类型" prop="cannedType"></el-table-column>
 					<el-table-column label="罐体容积" prop="tankVolume"></el-table-column>
-					<el-table-column label="罐体检测有效期至" prop="tankQCExpires"></el-table-column>
-					<el-table-column label="安全阀检测有效期至" prop="safetyValvesQCExpires"></el-table-column>
-					<el-table-column label="压力表检测有效期至" prop="pressureGaugeQCExpires"></el-table-column>
+					<el-table-column label="罐体检测有效期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.tankQCExpires">{{scope.row.tankQCExpires | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="安全阀检测有效期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.safetyValvesQCExpires">{{scope.row.safetyValvesQCExpires | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="压力表检测有效期至">
+						<template slot-scope="scope">
+							<span v-if="scope.row.pressureGaugeQCExpires">{{scope.row.pressureGaugeQCExpires | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="挂车车牌" prop="trailerPlateNo"></el-table-column>
 					<el-table-column label="汽车生产厂家" prop="manufacturer"></el-table-column>
 					<el-table-column label="品牌型号" prop="carBrandModel"></el-table-column>
 					<el-table-column label="发动机号" prop="engineNO"></el-table-column>
 					<el-table-column label="车架号" prop="vehicleFrameNO"></el-table-column>
-					<el-table-column label="行驶证注册日期" prop="driverLicRegisterTime"></el-table-column>
-					<el-table-column label="行驶证发证日期" prop="driverLicIssueTime"></el-table-column>
+					<el-table-column label="行驶证注册日期">
+						<template slot-scope="scope">
+							<span v-if="scope.row.driverLicRegisterTime">{{scope.row.driverLicRegisterTime | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="行驶证发证日期">
+						<template slot-scope="scope">
+							<span v-if="scope.row.driverLicIssueTime">{{scope.row.driverLicIssueTime | getdatefromtimestamp(true)}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="牵引质量" prop="tractiveTonnage"></el-table-column>
 					<el-table-column label="车长" prop="length"></el-table-column>
 					<el-table-column label="车宽" prop="width"></el-table-column>
@@ -112,7 +156,7 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
+import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
 export default {
 	data() {
@@ -147,7 +191,7 @@ export default {
 			this.findCreateTimeEnd = new Date(date[1]).getTime()
 		},
 		selectionChange(data) {
-			this.selectedList = data.map(item => item.TruckBrand_ID)
+			this.selectedList = data.map(item => item.truckID)
 		},
 		// 重置搜索表单
 		reset() {
@@ -175,7 +219,7 @@ export default {
 				"createTimeBegin": this.findCreateTimeBegin,
 				"createTimeEnd": this.findCreateTimeEnd
 			}
-			request({
+			requestJava({
 				url: '/truck/findList',
 				method: 'get',
 				params

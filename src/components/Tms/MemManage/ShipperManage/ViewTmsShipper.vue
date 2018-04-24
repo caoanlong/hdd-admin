@@ -8,7 +8,7 @@
 				<el-col :span="12" :offset="6" >
 					<el-form label-width="120px">
 						<el-form-item label="用户名">
-							<p>{{info.name}}</p>
+							<p>{{info.userName}}</p>
 						</el-form-item>
 						<el-form-item label="公司名称">
 							<p>{{info.companyName}}</p>

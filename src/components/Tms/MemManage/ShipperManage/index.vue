@@ -41,7 +41,7 @@
 			<div class="table">
 				<el-table :data="tableData"  @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-					<el-table-column label="用户" prop="name"></el-table-column>
+					<el-table-column label="用户" prop="userName"></el-table-column>
 					<el-table-column label="公司名称" prop="companyName"></el-table-column>
 					<el-table-column label="地址">
 						<template slot-scope="scope">
