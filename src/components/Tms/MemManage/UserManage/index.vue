@@ -26,8 +26,8 @@
 				</el-form>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
+				<el-table :data="tableData" border style="width: 100%" size="mini">
+					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="用户ID" prop="memberID" width="150"></el-table-column>
 					<el-table-column label="用户名" prop="userName"></el-table-column>
 					<el-table-column label="联系人" prop="contact"></el-table-column>
@@ -51,9 +51,9 @@
 							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="操作" width="100" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewUserManage(scope.row.applyRecordID)">查看详情</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.applyRecordID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -93,8 +93,7 @@ export default {
 			findStartDate: '',
 			findEndDate: '',
 			findKeyword: '',
-			tableData: [],
-			selectedList: [],
+			tableData: []
 		}
 	},
 	created() {
@@ -102,7 +101,6 @@ export default {
 	},
 	methods: {
 		selectDateRange(date) {
-			console.log(date)
 			this.findStartDate = new Date(date[0]).getTime()
 			this.findEndDate = new Date(date[1]).getTime()
 		},
@@ -128,23 +126,14 @@ export default {
 			}
 			requestJava({
 				url: '/admin/applyrecord/getList',
-				method: 'get',
 				params
 			}).then(res => {
-				console.log(res.data.data)
-				if (res.data.code == 200) {
-					this.count = res.data.data.total
-					this.tableData = res.data.data.list
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.count = res.data.data.total
+				this.tableData = res.data.data.list
 			})
 		},
-		viewUserManage(applyRecordID) {
+		view(applyRecordID) {
 			this.$router.push({ name: 'tmsviewusermanage', query: {applyRecordID} })
-		},
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.applyRecordID)
 		}
 	}
 }

@@ -6,7 +6,7 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="建档时间">
+					<el-form-item label="创建时间">
 						<el-date-picker
 							v-model="findRangeDate"
 							type="daterange"
@@ -23,7 +23,7 @@
 				</el-form>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="用户" prop="memberCompany"></el-table-column>
 					<el-table-column label="车牌号" prop="plateNo"></el-table-column>
@@ -35,17 +35,17 @@
 					<el-table-column label="联系电话" prop="mobile"></el-table-column>
 					<el-table-column label="载重" prop="loads"></el-table-column>
 					<el-table-column label="备注" prop="remark"></el-table-column>
-					<el-table-column label="创建时间">
+					<el-table-column label="创建时间" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="建档时间">
+					<el-table-column label="建档时间" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.archiveTime">{{scope.row.archiveTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="120" align="center" fixed="right">
+					<el-table-column label="操作" width="100" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.transportRecordID)">查看</el-button>
 						</template>
@@ -84,7 +84,6 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			selectedList: [],
 			findRangeDate: [],
 			findBeginTime: '',
 			findEndTime: '',
@@ -94,16 +93,13 @@ export default {
 		this.getList()
 	},
 	methods: {
-		pageChange() {
+		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
 		},
 		selectDateRange(date) {
 			this.findBeginTime = new Date(date[0]).getTime()
 			this.findEndTime = new Date(date[1]).getTime()
-		},
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.transportRecordID)
 		},
 		// 重置搜索表单
 		reset() {
@@ -116,8 +112,8 @@ export default {
 			let params = {
 				"current": this.pageIndex || 1,
 				"size": this.pageSize,
-				"beginTime": this.findBeginTime,
-				"endTime": this.findEndTime
+				"createTimeBegin": this.findBeginTime,
+				"createTimeEnd": this.findEndTime
 			}
 			requestJava({
 				url: '/transportRecord/findList',

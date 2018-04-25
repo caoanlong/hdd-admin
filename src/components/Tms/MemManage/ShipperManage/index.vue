@@ -34,12 +34,8 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
-			</div>
 			<div class="table">
-				<el-table :data="tableData"  @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="用户" prop="userName"></el-table-column>
 					<el-table-column label="公司名称" prop="companyName"></el-table-column>
@@ -55,11 +51,9 @@
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>					
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="操作" width="100" align="center">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.customerID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.customerID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.customerID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -96,7 +90,6 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			selectedList: [],
 			findRangeDate: [],
 			findCompanyArea: '',
 			findCompanyName: '',
@@ -119,13 +112,16 @@ export default {
 			this.findCreateTimeBegin = new Date(date[0]).getTime()
 			this.findCreateTimeEnd = new Date(date[1]).getTime()
 		},
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.customerID)
-		},
 		// 重置搜索表单
 		reset() {
-			this.findCode = ''
-			this.findName = ''
+			this.findRangeDate = []
+			this.findCompanyArea = ''
+			this.findCompanyName = ''
+			this.findContactName = ''
+			this.findContactPhone = ''
+			this.findCreateTimeBegin = ''
+			this.findCreateTimeEnd = ''
+			this.findDetailAddress = ''
 			this.getList()
 		},
 		getList() {
@@ -149,57 +145,8 @@ export default {
 				this.tableData = res.data.data.list
 			}).catch(err => {})
 		},
-		add() {
-			this.$router.push({ name: 'addtmsshipper'})
-		},
 		view(customerID) {
 			this.$router.push({ name: 'viewtmsshipper', query: { customerID }})
-		},
-		edit(customerID) {
-			this.$router.push({ name: 'edittmsshipper', query: { customerID }})
-		},
-		deleteConfirm(id) {
-			let ids = []
-			if (id && typeof id == 'string') {
-				ids = [id]
-			} else {
-				if (this.selectedList.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
-					return
-				}
-				ids = this.selectedList
-			}
-			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				this.del(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})
-			})
-		},
-		del(ids) {
-			let data = {
-				ids: ids
-			}
-			request({
-				url: '/customer/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				this.getList()
-			})
 		}
 	}
 }
