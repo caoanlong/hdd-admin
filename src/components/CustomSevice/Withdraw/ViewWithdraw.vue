@@ -67,7 +67,6 @@
 								<p v-else></p>
 							</template>
 						</el-form-item>
-						
 					</el-form>
 				</el-col>
 				<el-col :span="24">

@@ -40,12 +40,8 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
-			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="所属地区" prop="area"></el-table-column>
 					<el-table-column label="所属企业" prop="companyName"></el-table-column>
@@ -124,11 +120,9 @@
 					<el-table-column label="车长" prop="length"></el-table-column>
 					<el-table-column label="车宽" prop="width"></el-table-column>
 					<el-table-column label="车高" prop="high"></el-table-column>
-					<el-table-column label="操作" width="230" align="center" fixed="right">
+					<el-table-column label="操作" width="100" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.truckID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.truckID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.truckID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -166,7 +160,6 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			selectedList: [],
 			findRangeDate: [],
 			findPlateNo: '',
 			findCode: '',
@@ -189,9 +182,6 @@ export default {
 		selectDateRange(date) {
 			this.findCreateTimeBegin = new Date(date[0]).getTime()
 			this.findCreateTimeEnd = new Date(date[1]).getTime()
-		},
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.truckID)
 		},
 		// 重置搜索表单
 		reset() {
@@ -221,68 +211,14 @@ export default {
 			}
 			requestJava({
 				url: '/truck/findList',
-				method: 'get',
 				params
 			}).then(res => {
 				this.count = res.data.data.total
 				this.tableData = res.data.data.list
-			})
-		},
-		add() {
-			this.$router.push({name: 'addtmstruck'})
-		},
-		edit(truckID) {
-			this.$router.push({ name: 'edittmstruck', query: {truckID} })
+			}).catch(err => {})
 		},
 		view(truckID) {
 			this.$router.push({ name: 'viewtmstruck', query: {truckID} })
-		},
-		deleteConfirm(id) {
-			let ids = []
-			if (id && typeof id == 'string') {
-				ids = [id]
-			} else {
-				if (this.selectedList.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
-					return
-				}
-				ids = this.selectedList
-			}
-			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				this.delTruckBrands(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})
-			})
-		},
-		del(ids) {
-			let data = {
-				ids: ids
-			}
-			request({
-				url: '/base_truckbrand/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getList()
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
 		}
 	}
 }

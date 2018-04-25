@@ -56,11 +56,11 @@
 					<el-form label-width="120px">
 						<el-form-item label="状态">
 							<template slot-scope="scope">
-								<p v-if="payCash.status=='Draft'">草稿</p>
-								<p v-else-if="payCash.status=='ForAudit'">待审核</p>
-								<p v-else-if="payCash.status=='Rejected'">已拒绝</p>
-								<p v-else-if="payCash.status=='Paying'">处理中</p>
-								<p v-else-if="payCash.status=='Success'">成功</p>
+								<p v-if="payCash.status == 'Draft'">草稿</p>
+								<p v-else-if="payCash.status == 'ForAudit'">待审核</p>
+								<p v-else-if="payCash.status == 'Rejected'">已拒绝</p>
+								<p v-else-if="payCash.status == 'Paying'">处理中</p>
+								<p v-else-if="payCash.status == 'Success'">成功</p>
 								<p v-else>失败</p>
 							</template>
 						</el-form-item>
@@ -136,7 +136,7 @@
 					<el-form-item>
 						<el-button type="primary"  @click="audit('success')">同意</el-button>
 						<el-button type="danger"  @click="audit('Disagree')">驳回</el-button>
-						<el-button type="default" @click.native="back">返回</el-button>
+						<el-button type="default" @click="back">返回</el-button>
 					</el-form-item>
 				</el-form>
 			</el-col>
@@ -151,8 +151,8 @@
 	export default {
 		data() {
 			return {
-				payCash:[],
-				memMember:[],
+				payCash: {},
+				memMember: {},
 				auditPagePayCash:[],
 				auditPagePayWalletBill:[],
 				auditPageMemMember:[],
@@ -187,7 +187,7 @@
 			getInfo() {
 				let params = {
 					mobile: this.$route.query.mobile,
-					cashID:this.$route.query.cashID
+					cashID: this.$route.query.cashID
 				}
 				requestJava({
 					url: '/payCash/info',
@@ -228,6 +228,8 @@
 			audit(auditStatus) {
 				let data = {
 					cashID: this.$route.query.cashID,
+					auditFailedReason: this.payCash.auditFailedReason,
+					status: this.payCash.status,
 					auditStatus
 				}
 				requestJava({

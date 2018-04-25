@@ -29,7 +29,6 @@ const user = {
 				login(LoginName, Password).then(response => {
 					let data = response.data
 					if (data.code == 200) {
-						console.log(data)
 						commit('SET_TOKEN', response.headers['authorization'])
 						localStorage.setItem('token', response.headers['authorization'])
 						resolve(data.data)

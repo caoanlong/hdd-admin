@@ -9,7 +9,7 @@
 				<span class="status status3" v-else-if="dispatchBill.status == 'Signed'">已签收</span>
 				<span class="status status3" v-else-if="dispatchBill.status == 'Canceled'">作废</span>
 			</div>
-			<table class="wf-table" v-for="(item, index) in dispatchBill.transceiveInfos">
+			<table class="wf-table" v-for="(item, index) in dispatchBill.transceiveInfos" :key="index">
 				<caption>收发货信息{{index+1}}</caption>
 				<tr>
 					<td><span class="justify">发货人</span>{{item.shipperName}}</td>
