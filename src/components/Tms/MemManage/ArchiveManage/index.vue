@@ -6,7 +6,7 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
-					<el-form-item label="建档时间">
+					<el-form-item label="创建时间">
 						<el-date-picker
 							v-model="findRangeDate"
 							type="daterange"
@@ -35,12 +35,12 @@
 					<el-table-column label="联系电话" prop="mobile"></el-table-column>
 					<el-table-column label="载重" prop="loads"></el-table-column>
 					<el-table-column label="备注" prop="remark"></el-table-column>
-					<el-table-column label="创建时间">
+					<el-table-column label="创建时间" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="建档时间">
+					<el-table-column label="建档时间" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.archiveTime">{{scope.row.archiveTime | getdatefromtimestamp()}}</span>
 						</template>
