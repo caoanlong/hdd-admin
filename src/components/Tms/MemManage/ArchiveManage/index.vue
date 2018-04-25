@@ -23,7 +23,7 @@
 				</el-form>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="用户" prop="memberCompany"></el-table-column>
 					<el-table-column label="车牌号" prop="plateNo"></el-table-column>
@@ -84,7 +84,6 @@ export default {
 			pageSize: 10,
 			count: 0,
 			tableData: [],
-			selectedList: [],
 			findRangeDate: [],
 			findBeginTime: '',
 			findEndTime: '',
@@ -102,9 +101,6 @@ export default {
 			this.findBeginTime = new Date(date[0]).getTime()
 			this.findEndTime = new Date(date[1]).getTime()
 		},
-		selectionChange(data) {
-			this.selectedList = data.map(item => item.transportRecordID)
-		},
 		// 重置搜索表单
 		reset() {
 			this.findRangeDate = []
@@ -116,8 +112,8 @@ export default {
 			let params = {
 				"current": this.pageIndex || 1,
 				"size": this.pageSize,
-				"beginTime": this.findBeginTime,
-				"endTime": this.findEndTime
+				"createTimeBegin": this.findBeginTime,
+				"createTimeEnd": this.findEndTime
 			}
 			requestJava({
 				url: '/transportRecord/findList',

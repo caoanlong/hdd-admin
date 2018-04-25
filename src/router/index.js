@@ -923,28 +923,12 @@ let routerMap = [
 								component: () => import('../components/Tms/MemManage/ArchiveManage')
 							},
 							{
-								path: '/addtmsarchive',
-								name: 'addtmsarchive',
-								meta: {
-									title: '添加档案'
-								},
-								component: () => import('../components/Tms/MemManage/ArchiveManage/AddTmsArchive')
-							},
-							{
 								path: '/viewtmsarchive',
 								name: 'viewtmsarchive',
 								meta: {
 									title: '查看档案'
 								},
 								component: () => import('../components/Tms/MemManage/ArchiveManage/ViewTmsArchive')
-							},
-							{
-								path: '/edittmsarchive',
-								name: 'edittmsarchive',
-								meta: {
-									title: '编辑档案'
-								},
-								component: () => import('../components/Tms/MemManage/ArchiveManage/EditTmsArchive')
 							},
 							{
 								path: '/tmstruckmanage',

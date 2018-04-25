@@ -5,7 +5,7 @@
 				<span>用户详情</span>
 			</div>
 			<el-row>
-				<el-col :span="8">
+				<el-col :span="12" :offset="6">
 					<el-form label-width="120px">
 						<el-form-item label="用户ID">
 							<p>{{user.memberID}}</p>
@@ -62,7 +62,7 @@
 						</el-form-item>
 					</el-form>
 				</el-col>
-				<el-col :span="24">
+				<el-col :span="12" :offset="6">
 					<el-form label-width="120px">
 						<el-form-item>
 							<el-button type="success" v-if="user.auditStatus == 'Pending'" @click="audit('Passed')">通过</el-button>

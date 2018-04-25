@@ -114,8 +114,14 @@ export default {
 		},
 		// 重置搜索表单
 		reset() {
-			this.findCode = ''
-			this.findName = ''
+			this.findRangeDate = []
+			this.findCompanyArea = ''
+			this.findCompanyName = ''
+			this.findContactName = ''
+			this.findContactPhone = ''
+			this.findCreateTimeBegin = ''
+			this.findCreateTimeEnd = ''
+			this.findDetailAddress = ''
 			this.getList()
 		},
 		getList() {
