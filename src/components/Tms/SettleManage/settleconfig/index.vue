@@ -30,79 +30,72 @@
 					:data="tableData" 
 					
 					border style="width: 100%" size="mini" stripe>
-					<el-table-column label="id" type="selection" align="center" width="40"></el-table-column>
+					<el-table-column label="序号" type="index" align="center" fixed width="60"></el-table-column>
 					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
-					<el-table-column label="发货地" prop="shipperArea" width="100"></el-table-column>
-					<el-table-column label="发货详细地址" prop="shipperDetailAddress" width="100"></el-table-column>
+					<el-table-column label="发货地" prop="shipperArea" width="140"></el-table-column>
+					<el-table-column label="发货详细地址" prop="shipperDetailAddress" width="140"></el-table-column>
 					<el-table-column label="收货单位" prop="consigneeCompanyName"></el-table-column>
-					<el-table-column label="收货地" prop="consigneeArea" width="100"></el-table-column>
-					<el-table-column label="收货详细地址" prop="consigneeDetailAddress" width="100"></el-table-column>
-					<el-table-column label="对内运距" prop="mileage"></el-table-column>
-					<el-table-column label="对内运价" prop="internalPrice"></el-table-column>
-					<el-table-column label="对内TKM" prop="internalUnitPrice"></el-table-column>
-					<el-table-column label="对外运距" prop="externalMileage"></el-table-column>
-					<el-table-column label="对外运价" prop="externalPrice"></el-table-column>
-					<el-table-column label="对外TKM" prop="externalUnitPrice"></el-table-column>
-					<el-table-column label="对内月结比率" prop="internalAbschlussRate" width="100">
+					<el-table-column label="收货地" prop="consigneeArea" width="140"></el-table-column>
+					<el-table-column label="收货详细地址" prop="consigneeDetailAddress" width="140"></el-table-column>
+					<el-table-column label="对内运距" prop="mileage" align="center"></el-table-column>
+					<el-table-column label="对内运价" prop="internalPrice" align="center"></el-table-column>
+					<el-table-column label="对内TKM" prop="internalUnitPrice" align="center"></el-table-column>
+					<el-table-column label="对外运距" prop="externalMileage" align="center"></el-table-column>
+					<el-table-column label="对外运价" prop="externalPrice" align="center"></el-table-column>
+					<el-table-column label="对外TKM" prop="externalUnitPrice" align="center"></el-table-column>
+					<el-table-column label="对内月结比率" prop="internalAbschlussRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.internalAbschlussRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对内现付比率" prop="internalCashRate" width="100">
+					<el-table-column label="对内现付比率" prop="internalCashRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.internalCashRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对内到付比率" prop="internalCodRate" width="100">
+					<el-table-column label="对内到付比率" prop="internalCodRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.internalCodRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对内收货方到付比率" prop="internalConsigneeCodRate" width="140">
+					<el-table-column label="对内收货方到付比率" prop="internalConsigneeCodRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.internalConsigneeCodRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对内回单比率" prop="internalPorRate" width="140">
+					<el-table-column label="对内回单比率" prop="internalPorRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.internalPorRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外月结比率" prop="externalAbschlussRate" width="100">
+					<el-table-column label="对外月结比率" prop="externalAbschlussRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.externalAbschlussRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外现付比率" prop="externalCashRate" width="100">
+					<el-table-column label="对外现付比率" prop="externalCashRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.externalCashRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外到付比率" prop="externalCodRate" width="100">
+					<el-table-column label="对外到付比率" prop="externalCodRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.externalCodRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外收货方到付比率" prop="externalConsigneeCodRate" width="140">
+					<el-table-column label="对外收货方到付比率" prop="externalConsigneeCodRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.externalConsigneeCodRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外回单比率" prop="externalPorRate" width="140">
+					<el-table-column label="对外回单比率" prop="externalPorRate" width="140" align="center">
 						<template slot-scope="scope">
 							{{(scope.row.externalPorRate)*100+'%'}}
 						</template>
 					</el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-dropdown  @command="handleCommand"  trigger="click">
-								<el-button type="primary" size="mini">操作<i class="el-icon-arrow-down el-icon--right"></i></el-button>
-								<el-dropdown-menu slot="dropdown">
-									<el-dropdown-item :command="{type: 'view', id: scope.row.transporPriceID}" icon="el-icon-view">查看</el-dropdown-item>
-									<el-dropdown-item :command="{type: 'edit', id: scope.row.transporPriceID}">编辑</el-dropdown-item>
-									<el-dropdown-item :command="{type: 'delete', id: scope.row.transporPriceID}">删除</el-dropdown-item>
-								</el-dropdown-menu>
-							</el-dropdown>
+								<el-button type="primary" size="mini" @click="view(scope.row.transporPriceID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -171,7 +164,7 @@ export default {
 					url: '/transportPrice/findList',
 					params
 				}).then(res => {
-					this.tableData = res.data.data.records
+					this.tableData = res.data.data.list
 					this.total = res.data.data.total
 				})
 			},
@@ -182,6 +175,9 @@ export default {
 		selectDateRange(date) {
 			this.findshipperBeginDate = new Date(date[0]).getTime()
 			this.findshipperEndDate = new Date(date[1]).getTime()
+		},
+		view(transporPriceID){
+			this.$router.push({ name: 'viewtmssettleconfig' , query: { transporPriceID} })
 		}
 	}
 }

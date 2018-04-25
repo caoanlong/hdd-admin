@@ -6,6 +6,12 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="mini">
+					<el-form-item label="发货单位">
+						<el-input placeholder="请输入..." v-model="findshipperCompanyName"></el-input>
+					</el-form-item>
+					<el-form-item label="收货单位">
+						<el-input placeholder="请输入..." v-model="findconsigneeCompanyName"></el-input>
+					</el-form-item>
 					<el-form-item label="发货时间">
 						<el-date-picker 
 							v-model="findRangeDate" 
@@ -31,7 +37,7 @@
 							{{scope.row.shipperDate | getdatefromtimestamp(true)}}
 						</template>
 					</el-table-column>
-					<el-table-column label="发货单号" prop="consigneNum"></el-table-column>
+					<el-table-column label="发货单号" prop="shipperNo"></el-table-column>
 					<el-table-column label="承运单号" prop="carrierOrderNo"></el-table-column>
 					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
 					<el-table-column label="收货单位" prop="consigneeCompanyName"></el-table-column>
@@ -48,17 +54,23 @@
 					</el-table-column>
 					<el-table-column label="车辆编号" prop="code"></el-table-column>
 					<el-table-column label="车牌号码" prop="plateNo"></el-table-column>
+					<el-table-column label="荷载吨位">
+						<template slot-scope="scope">
+							{{scope.row.loads?(scope.row.loads+''):''}}
+						</template>
+					</el-table-column>
 					<el-table-column label="驾驶员" prop="realName"></el-table-column>
-					<el-table-column label="核载吨位" prop="loads"></el-table-column>
 					<el-table-column label="收货地区" prop="consigneeArea" width="120"></el-table-column>
 					<el-table-column label="收货详细地址" prop="consigneeDetailAddress"></el-table-column>
-					<el-table-column label="对外里程" prop="externalMile"></el-table-column>
-					<el-table-column label="对外单价" prop="externalUnitPrice"></el-table-column>
-					<el-table-column label="签收货量" prop="receiveNum"></el-table-column>
-					<el-table-column label="外部运费" prop="externalFreight"></el-table-column>
-					<el-table-column label="其他" prop="other"></el-table-column>
+					<el-table-column label="应收款" prop="receivables"></el-table-column>
+					<el-table-column label="签收货量">
+						<template slot-scope="scope">
+							{{scope.row.cargoNum ?scope.row.cargoNum +'件':''}}{{scope.row.cargoNum ?'/':''}}{{scope.row.cargoVolume ?scope.row.cargoVolume +'方':''}}{{scope.row.cargoVolume ?'/':''}}{{scope.row.cargoWeight?scope.row.cargoWeight+'吨':''}}
+						</template>	
+					</el-table-column>
+					<el-table-column label="其他金额" prop="otherAmount"></el-table-column>
 					<el-table-column label="备注" prop="remark"></el-table-column>
-					<el-table-column label="总计" prop="totalNum" align="center" width="120"></el-table-column>
+					<el-table-column label="总计" prop="allmoney" align="center" width="120"></el-table-column>
 				</el-table>
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
@@ -96,6 +108,8 @@ export default {
 			findRangeDate: [],
 			findshipperBeginDate:'',
 			findshipperEndDate:'',
+			findshipperCompanyName:'',
+			findconsigneeCompanyName:'',
 			pageIndex: 1,
 			pageSize: 10,
 			total: 0,
@@ -106,7 +120,7 @@ export default {
 		this.getList()
 	},
 	methods: {
-		pageChange() {
+		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
 		},
@@ -118,6 +132,8 @@ export default {
 			this.findRangeDate = []
 			this.findshipperBeginDate = ''
 			this.findshipperEndDate = ''
+			this.findshipperCompanyName= ''
+			this.findconsigneeCompanyName= ''
 			this.getList()
 		},
 		getList() {
@@ -125,10 +141,12 @@ export default {
 				current: this.pageIndex,
 				size: this.pageSize,
 				shipperBeginDate: this.findshipperBeginDate,
-				shipperEndDate: this.findshipperEndDate
+				shipperEndDate: this.findshipperEndDate,
+				shipperCompanyName:this.findshipperCompanyName,
+				consigneeCompanyName:this.findconsigneeCompanyName
 			}
 			requestJava({
-				url: '/finance/payableDetail',
+				url: '/finance/receivableDetail',
 				params
 			}).then(res => {
 				this.tableData = res.data.data.list

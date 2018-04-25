@@ -13,19 +13,19 @@
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="性别">
-							<p>{{staff.sex}}</p>
+							<p>{{comStaffIdentification.sex=='M'?'男':'女'}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="身份证号">
-							<p>{{staff.idCardNum}}</p>
+							<p>{{comStaffIdentification.idCardNum}}</p>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="20">
 					<el-col :span="8">
 						<el-form-item label="家庭地址">
-							<p>{{staff.homeAddress}}</p>
+							<p>{{comStaffIdentification.homeAddress}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
@@ -62,17 +62,17 @@
 						<el-form-item label="状态">
 							<p v-if="staff.status == 'Passed'">通过</p>
 							<p v-else-if="staff.status == 'NotPassed'">不通过</p>
-							<p v-else-if="staff.status == 'Other'">其他</p>
+							<p v-else>其他</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="准驾车型">
-							<p>{{staff.quasiDrivingType}}</p>
+							<p>{{comStaffIdentification.quasiDrivingType}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="驾驶证初次发证件时间">
-							<p v-if="staff.driverLicenseFirstTime">{{staff.driverLicenseFirstTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.driverLicenseFirstTime">{{comStaffIdentification.driverLicenseFirstTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
@@ -80,19 +80,19 @@
 				<el-row :gutter="20">
 					<el-col :span="8">
 						<el-form-item label="驾驶证审验有效期至">
-							<p v-if="staff.driverLicExamineEndTime">{{staff.driverLicExamineEndTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.driverLicExamineEndTime">{{comStaffIdentification.driverLicExamineEndTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="合同有效期起">
-							<p v-if="staff.laborContractBeginTime">{{staff.laborContractBeginTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.laborContractBeginTime">{{comStaffIdentification.laborContractBeginTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="合同有效期至">
-							<p v-if="staff.laborContractEndTime">{{staff.laborContractEndTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.laborContractEndTime">{{comStaffIdentification.laborContractEndTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
@@ -100,17 +100,17 @@
 				<el-row :gutter="20">
 					<el-col :span="8">
 						<el-form-item label="从业资格证件号">
-							<p>{{staff.qualificationCode}}</p>
+							<p>{{comStaffIdentification.qualificationCode}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="从业资格类别">
-							<p>{{staff.qualificationType}}</p>
+							<p>{{comStaffIdentification.qualificationType}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="从业资格证有效期至">
-							<p v-if="staff.qualificationExpirationTime">{{staff.qualificationExpirationTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.qualificationExpirationTime">{{comStaffIdentification.qualificationExpirationTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
@@ -118,18 +118,18 @@
 				<el-row :gutter="20">
 					<el-col :span="8">
 						<el-form-item label="诚信考核等级">
-							<p>{{staff.integrityExamineGrade}}</p>
+							<p>{{comStaffIdentification.integrityExamineGrade}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="诚信考核有效期至">
-							<p v-if="staff.integrityExamineEndTime">{{staff.integrityExamineEndTime | getdatefromtimestamp(true)}}</p>
+							<p v-if="comStaffIdentification.integrityExamineEndTime">{{comStaffIdentification.integrityExamineEndTime | getdatefromtimestamp(true)}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="职称或技术等级">
-							<p>{{staff.titleLever}}</p>
+							<p>{{comStaffIdentification.titleLever}}</p>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -137,6 +137,54 @@
 					<el-col :span="24">
 						<el-form-item label="备注说明">
 							<p>{{staff.remark}}</p>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<el-form-item label="头像">
+							<ImageUpload :files="[staff.headPic]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<el-form-item label="身份证正面">
+							<ImageUpload :files="[comStaffPic.idCardFrontUrl]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="身份证反面">
+							<ImageUpload :files="[comStaffPic.idCardBackUrl]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="12">
+						<el-form-item label="驾驶证正面">
+							<ImageUpload :files="[comStaffPic.driverLicFrontUrl]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="驾驶证反面">
+							<ImageUpload :files="[comStaffPic.driverLicBackUrl]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="从业资格证正">
+							<ImageUpload :files="[comStaffPic.qualificationFirstPage]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="从业资格证副">
+							<ImageUpload :files="[comStaffPic.qualificationSecondPage]" :isPreview="true"/>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-form-item label="其他照片">
+							<ImageUpload :files="otherImgs" :limitNum="9" :isPreview="true"/>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -154,10 +202,14 @@
 <script type="text/javascript">
 import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
+import ImageUpload from '../../../CommonComponents/ImageUpload'
 export default {
 	data() {
 		return {
-			staff: {}
+			staff: {},
+			comStaffIdentification:{},
+			comStaffPic:{},
+			otherImgs: []
 		}
 	},
 	created() {
@@ -174,7 +226,16 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 200) {
-					this.PersonDetail = res.data.data
+					let resData= res.data.data
+					this.staff = resData
+					this.comStaffPic = resData.comStaffPic
+					this.comStaffIdentification = resData.comStaffIdentification
+					let resDataComStaffPic = res.data.data.comStaffPic
+					let i = 1
+					while (i < 6) {
+						this.otherImgs.push(resDataComStaffPic['otherStaffPic' + i])
+						i++
+					}
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -183,6 +244,9 @@ export default {
 		back() {
 			this.$router.go(-1)
 		}
+	},
+	components: {
+		ImageUpload
 	}
 }
 

@@ -156,10 +156,10 @@ export default {
 	methods: {
 		getInfo(){
 			let params = {
-				dispatchOrderID: this.$route.query.dispatchOrderID,
+				transporPriceID: this.$route.query.transporPriceID,
 			}
 			requestJava({
-				url: '/admin/bizDispatchOrder/detail',
+				url: '/transportPrice/findById',
 				params
 			}).then(res => {
 				this.dispatchBill = res.data.data

@@ -1132,6 +1132,14 @@ let routerMap = [
 									title: '结算模板'
 								},
 								component: () => import('../components/Tms/SettleManage/settleconfig')
+							},
+							{
+								path: '/viewtmssettleconfig',
+								name: 'viewtmssettleconfig',
+								meta: {
+									title: '结算模板'
+								},
+								component: () => import('../components/Tms/SettleManage/settleconfig/ViewSettleConfig')
 							}
 						]
 					},

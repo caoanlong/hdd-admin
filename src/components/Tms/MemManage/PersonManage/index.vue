@@ -7,16 +7,42 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="姓名">
-						<el-input placeholder="请输入..." v-model="findCode"></el-input>
+						<el-input placeholder="请输入..." v-model="findrealName"></el-input>
 					</el-form-item>
 					<el-form-item label="联系电话">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-input placeholder="请输入..." v-model="findmobile"></el-input>
 					</el-form-item>
 					<el-form-item label="评级">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-select v-model="findintegrityExamineGrade" placeholder="请选择">
+							<el-option label="无" value=""></el-option>
+							<el-option label="A" value="A"></el-option>
+							<el-option label="AA" value="AA"></el-option>
+							<el-option label="AAA" value="AAA"></el-option>
+							<el-option label="AAAA" value="AAAA"></el-option>
+							<el-option label="AAAAA" value="AAAAA"></el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item label="岗位">
-						<el-input placeholder="请输入..." v-model="findName"></el-input>
+						<el-select v-model="findposition" placeholder="请选择">
+							<el-option label="操作员" value="Operator"></el-option>
+							<el-option label="驾驶员" value="Driver"></el-option>
+							<el-option label="押运员" value="Supercargo"></el-option>
+							<el-option label="专职安全员" value="SafetyOfficer"></el-option>
+							<el-option label="装卸管理人员" value="Stevedore"></el-option>
+							<el-option label="其他人员" value="Other"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="创建时间">
+						<el-date-picker 
+							v-model="findRangeDate" 
+							type="daterange" 
+							range-separator="至" 
+							start-placeholder="开始日期" 
+							end-placeholder="结束日期" 
+							
+							:clearable="false" 
+							@change="selectDateRange">
+						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click.native="getPersonList(1)">查询</el-button>
@@ -24,42 +50,75 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="tableControl">
-				<!-- <el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTmsPerson">添加</el-button> -->
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
-			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column type="selection" align="center" width="40"></el-table-column>
+				<el-table :data="tableData" border style="width: 100%" size="mini">
+					
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="姓名" prop="realName"></el-table-column>
-					<el-table-column label="性别" prop="sex"></el-table-column>
+					<el-table-column label="性别" width="60px" align="center">
+						<template slot-scope="scope">
+							<span v-if="scope.row.sex=='M'">男</span>
+							<span v-else>女</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="聘用岗位" prop="position"></el-table-column>
 					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>
 					<el-table-column label="创建人" prop="createName"></el-table-column>
-					<el-table-column label="状态" prop="status"></el-table-column>
+					<el-table-column label="状态" align="center">
+						<template slot-scope="scope">
+							<span v-if="scope.row.status=='Passed'">通过</span>
+							<span v-else-if="scope.row.status=='NotPassed'">未通过</span>
+							<span v-else>其它</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="审核人" prop="auditName"></el-table-column>
-					<el-table-column label="审核日期" prop="auditTime"></el-table-column>
+					<el-table-column label="审核日期" width="90" align="center">
+						<template slot-scope="scope" v-if="scope.row.auditTime">
+							{{scope.row.auditTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
 					<el-table-column label="准驾车型" prop="quasiDrivingType"></el-table-column>
-					<el-table-column label="驾驶证审验有效期至" prop="driverLicExamineEndTime"></el-table-column>
+					<el-table-column label="驾驶证审验有效期至" width="90" align="center">
+						<template slot-scope="scope" v-if="scope.row.driverLicExamineEndTime">
+							{{scope.row.driverLicExamineEndTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
 					<el-table-column label="从业资格证件号" prop="qualificationCode"></el-table-column>
 					<el-table-column label="从业资格类别" prop="qualificationType"></el-table-column>
-					<el-table-column label="从业资格证有效期至" prop="qualificationExpirationTime"></el-table-column>
-					<el-table-column label="初次发证件时间" prop="driverLicenseFirstTime"></el-table-column>
+					<el-table-column label="从业资格证有效期至" width="90" align="center">
+						<template slot-scope="scope" v-if="scope.row.qualificationExpirationTime">
+							{{scope.row.qualificationExpirationTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="初次发证件时间">
+						<template slot-scope="scope" v-if="scope.row.driverLicenseFirstTime">
+							{{scope.row.driverLicenseFirstTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
 					<el-table-column label="诚信考核等级" prop="integrityExamineGrade"></el-table-column>
-					<el-table-column label="诚信考核有效期至" prop="integrityExamineEndTime"></el-table-column>
-					<el-table-column label="合同有效期起" prop="laborContractBeginTime"></el-table-column>
-					<el-table-column label="合同有效期至" prop="laborContractEndTime"></el-table-column>
+					<el-table-column label="诚信考核有效期至">
+						<template slot-scope="scope" v-if="scope.row.integrityExamineEndTime">
+							{{scope.row.integrityExamineEndTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="合同有效期起">
+						<template slot-scope="scope" v-if="scope.row.laborContractBeginTime">
+							{{scope.row.laborContractBeginTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="合同有效期至">
+						<template slot-scope="scope" v-if="scope.row.laborContractEndTime">
+							{{scope.row.laborContractEndTime | getdatefromtimestamp(true)}}
+						</template>
+					</el-table-column>
 					<el-table-column label="职称或技术等级" prop="titleLever"></el-table-column>
 					<el-table-column label="联系电话" prop="mobile"></el-table-column>
 					<el-table-column label="家庭地址" prop="homeAddress"></el-table-column>
 					<el-table-column label="备注说明" prop="remark"></el-table-column>
 					
-					<el-table-column label="操作" width="230" align="center" fixed="right">
+					<el-table-column label="操作" width="100" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewTmsPerson(scope.row.staffID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editTmsPerson(scope.row.staffID)">编辑</el-button>
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.staffID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -97,30 +156,46 @@ export default {
 			pageSize: 10,
 			total: 0,
 			tableData: [],
-			selectedTruckBrands: [],
-			findCode:'',
-			findName: '',
+			findRangeDate: [],
+			createTimeBegin:'',
+			createTimeEnd:'',
+			findrealName:'',
+			findmobile:'',
+			findintegrityExamineGrade:'',
+			findposition:'',
 		}
 	},
 	created() {
 		this.getPersonList()
 	},
 	methods: {
-		pageChange(index) {
-			this.getPersonList(index)
+		reset(){
+			this.findrealName=''
+			this.findmobile=''
+			this.findintegrityExamineGrade=''
+			this.findposition=''
+			this.findRangeDate= []
+			this.createTimeBegin=''
+			this.createTimeEnd=''
+			this.getPersonList()
 		},
-		// 重置搜索表单
-		reset() {
-			this.findCode = ''
-			this.findName = ''
+		pageChange(index) {
+			this.pageIndex = index
+			this.getPersonList()
 		},
 		getPersonList() {
 			let params = {
-				current: this.pageIndex || 1,
-				size: this.pageSize
+				current: this.pageIndex,
+				size: this.pageSize,
+				realName:this.findrealName,
+				mobile:this.findmobile,
+				integrityExamineGrade:this.findintegrityExamineGrade,
+				position:this.findposition,
+				createTimeBegin:this.createTimeBegin,
+				createTimeEnd:this.createTimeEnd
 			}
 			requestJava({
-				url: '/notruckWaybill/list',
+				url: '/staff/findList',
 				method: 'get',
 				params
 			}).then(res => {
@@ -132,71 +207,12 @@ export default {
 				}
 			})
 		},
-		deleteConfirm(id) {
-			let ids = []
-			if (id && typeof id == 'string') {
-				ids = [].concat(id)
-			} else {
-				if (this.selectedTruckBrands.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
-					return
-				}
-				ids = this.selectedTruckBrands
-			}
-			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				this.delTruckBrands(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})
-			})
-		},
-		delTruckBrands(ids) {
-			let data = {
-				ids: ids
-			}
-			request({
-				url: '/base_truckbrand/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getPersonList()
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
-		},
-		addTmsPerson() {
-			this.$router.push({name: 'addtmsperson'})
-		},
-		editTmsPerson(staffID) {
-			this.$router.push({ name: 'edittmsperson', query: {staffID} })
+		selectDateRange(date) {
+			this.createTimeBegin = new Date(date[0]).getTime()
+			this.createTimeEnd = new Date(date[1]).getTime()
 		},
 		viewTmsPerson(staffID) {
 			this.$router.push({ name: 'viewtmsperson', query: {staffID} })
-		},
-		selectionChange(data) {
-			this.selectedTruckBrands = data.map(item => item.staffID)
-		},
-		previewImg(imgUrl) {
-			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-				dangerouslyUseHTMLString: true,
-				showConfirmButton: false,
-				customClass: 'img-preview'
-			})
 		}
 	}
 }
