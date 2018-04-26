@@ -38,7 +38,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="订单状态">
-						<el-select v-model="find.Status" placeholder="订单状态">
+						<el-select v-model="find.status" placeholder="订单状态">
 							<el-option value="" label="全部订单">全部订单</el-option>
 							<el-option value="Committed" label="待执行">待执行</el-option>
 							<el-option value="Running" label="执行中">执行中</el-option>
@@ -48,15 +48,15 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" >搜索</el-button>
-						<el-button type="default" >重置</el-button>
+						<el-button type="primary" @click="getList">搜索</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini" stripe>
-					<el-table-column label="用户"  prop="userName" width="90" align="center"></el-table-column>
-					<el-table-column label="承运单号" prop="carrierOrderNo" width="100" align="center">
+					<!-- <el-table-column label="用户"  prop="userName" width="90" align="center"></el-table-column> -->
+					<el-table-column label="承运单号" prop="carrierOrderNo" width="160">
 						<template slot-scope="scope">
 							<el-popover trigger="hover" placement="top" class="customerTablePop">
 								<p>发货单位：{{ scope.row.shipperCompanyvalue }}</p>
@@ -69,20 +69,47 @@
 							</el-popover>
 						</template>
 					</el-table-column>
-					<el-table-column label="处理状态"  prop="status" width="90" align="center"></el-table-column>
-					<el-table-column label="收货单位" prop="consigneeCompanyvalue"></el-table-column>
-					<el-table-column label="卸货地" prop="consigneeArea"></el-table-column>
-					<el-table-column label="收货人" prop="consigneevalue"></el-table-column>
-					<el-table-column label="到货时间" prop="consigneeDate" width="120" align="center"></el-table-column>
-					<el-table-column label="货物规格/货物名称">
+					<el-table-column label="处理状态" width="90">
 						<template slot-scope="scope">
-							<span>{{scope.row.name}}</span>
+							<span v-if="scope.row.status == 'Committed'">待执行</span>
+							<span v-else-if="scope.row.status == 'Running'">执行中</span>
+							<span v-else-if="scope.row.status == 'Signed'">到达签收</span>
+							<span v-else-if="scope.row.status == 'Closed'">关闭</span>
+							<span v-else-if="scope.row.status == 'Canceled'">作废</span>
+							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column label="货物总量" prop="CargoTotal"></el-table-column>
-					<el-table-column label="发货单位" prop="shipperCompanyvalue"></el-table-column>
-					<el-table-column label="发货时间" prop="shipperDate" width="120" align="center"></el-table-column>
-					<el-table-column label="发货人" prop="shippervalue"></el-table-column>
+					<el-table-column label="收货单位" prop="consigneeCompanyName"></el-table-column>
+					<el-table-column label="卸货地" prop="consigneeArea"></el-table-column>
+					<el-table-column label="收货人" prop="consigneeName"></el-table-column>
+					<el-table-column label="到货时间" width="140" align="center">
+						<template slot-scope="scope">
+							<span>{{scope.row.consigneeDate | getdatefromtimestamp() }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="货物规格/货物名称">
+						<template slot-scope="scope">
+							<span v-if="scope.row.carrierCargo[0]">
+								{{scope.row.carrierCargo[0].cargoType}}
+								/{{scope.row.carrierCargo[0].cargoName}}
+								<span v-if="scope.row.carrierCargo.length > 1">...</span>
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="货物总量">
+						<template slot-scope="scope" >
+							<span v-if="scope.row.carrierCargo[0]">
+								  {{ SumDispatchCargoQuantity(scope.row.carrierCargo) }} 
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
+					<el-table-column label="发货时间" width="140" align="center">
+						<template slot-scope="scope">
+							<span>{{scope.row.shipperDate | getdatefromtimestamp() }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="发货人" prop="shipperName"></el-table-column>
 					<el-table-column label="发货地" prop="shipperArea"></el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
 						<template slot-scope="scope">
@@ -139,6 +166,17 @@ export default {
 		this.getList()
 	},
 	methods: {
+		SumDispatchCargoQuantity(data) {
+			let sumWeight = 0;
+			let sumVolume = 0;
+			let sumNum = 0;
+			data.map(item => {
+				sumWeight += (item.cargoWeight ?item.cargoWeight : 0)
+				sumVolume += (item.cargoVolume ? item.cargoVolume : 0)
+				sumNum += (item.cargoNum ? item.cargoNum : 0)
+			})
+			return (sumWeight + '吨/' + sumVolume + '方/' + sumNum + '件')
+		},
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()

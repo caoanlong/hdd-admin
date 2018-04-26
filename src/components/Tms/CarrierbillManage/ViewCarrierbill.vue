@@ -181,8 +181,8 @@
 					<td>{{item.cargoWeight}}</td>
 				</tr>
 			</table>
-			<div>
-                <el-button @click="back">返回</el-button>
+			<div class="wf-footer clearfix is-center">
+				<el-button type="default" @click="back">返回</el-button>
 			</div>
 		</div>
 	</div>

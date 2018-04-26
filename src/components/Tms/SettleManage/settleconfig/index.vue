@@ -41,14 +41,54 @@
 					<el-table-column label="对外运距" prop="externalMileage" align="center"></el-table-column>
 					<el-table-column label="对外运价" prop="externalPrice" align="center"></el-table-column>
 					<el-table-column label="对外TKM" prop="externalUnitPrice" align="center"></el-table-column>
-					<el-table-column label="对内付款占比" prop="internalAbschlussRate" width="140" align="center">
+					<el-table-column label="对内月结比率" prop="internalAbschlussRate" width="140" align="center">
 						<template slot-scope="scope">
-							<!-- {{(scope.row.internalAbschlussRate)*100+'%'}} -->
+							{{(scope.row.internalAbschlussRate)*100+'%'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="对外收款占比" prop="internalCashRate" width="140" align="center">
+					<el-table-column label="对内现付比率" prop="internalCashRate" width="140" align="center">
 						<template slot-scope="scope">
-							<!-- {{(scope.row.internalCashRate)*100+'%'}} -->
+							{{(scope.row.internalCashRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对内到付比率" prop="internalCodRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.internalCodRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对内收货方到付比率" prop="internalConsigneeCodRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.internalConsigneeCodRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对内回单比率" prop="internalPorRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.internalPorRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对外月结比率" prop="externalAbschlussRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.externalAbschlussRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对外现付比率" prop="externalCashRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.externalCashRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对外到付比率" prop="externalCodRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.externalCodRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对外收货方到付比率" prop="externalConsigneeCodRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.externalConsigneeCodRate)*100+'%'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="对外回单比率" prop="externalPorRate" width="140" align="center">
+						<template slot-scope="scope">
+							{{(scope.row.externalPorRate)*100+'%'}}
 						</template>
 					</el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
@@ -89,7 +129,6 @@ export default {
 			// findRangeDate: [new Date().getTime() - 3600000 * 24 * 30, new Date().getTime()],
 			// findshipperBeginDate: new Date().getTime() - 3600000 * 24 * 30,
 			// findshipperEndDate: new Date().getTime(),
-
 			findRangeDate: [],
 			findshipperBeginDate:'',
 			findshipperEndDate:'',
