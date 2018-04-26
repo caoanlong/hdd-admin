@@ -60,23 +60,21 @@
 					<td>{{index+1}}</td>
 					<td>{{item.carrierOrderNo}}</td>
 					<td>{{item.cargoType}}/{{item.cargoName}}</td>
-					<td>{{item.cargoWeight + '吨'}}/{{item.cargoVolume + '方'}}/{{item.cargoNum + '件'}}</td>
+					<td>{{item.cargoWeight?(item.cargoWeight + '吨'):''}}{{item.cargoVolume?'/':''}}{{item.cargoVolume?(item.cargoVolume + '方'):''}}{{item.cargoNum?'/':''}}{{item.cargoNum?(item.cargoNum + '件'):''}}</td>
 					<td>
-						{{(item.loadWeight ? item.loadWeight : 0) + '吨'}}
-						/{{(item.loadVolume ? item.loadVolume : 0) + '方'}}
-						/{{(item.loadNum ? item.loadNum : 0) + '件'}}
+						{{item.loadWeight?(item.loadWeight + '吨'):''}}{{item.loadVolume?'/':''}}{{item.loadVolume?(item.loadVolume + '方'):''}}{{item.loadNum?'/':''}}{{item.loadNum?(item.loadNum + '件'):''}}
 					</td>
 					<td>
-						{{(item.signWeight ? item.signWeight : 0) + '吨'}}
-						/{{(item.signVolume ? item.signVolume : 0) + '方'}}
-						/{{(item.signNum ? item.signNum : 0) + '件'}}
+						{{item.signWeight?(item.signWeight + '吨'):''}}{{item.signVolume?'/':''}}{{item.signVolume?(item.signVolume + '方'):''}}{{item.signNum?'/':''}}{{item.signNum?(item.signNum + '件'):''}}
 					</td>
 				</tr>
 				<tr>
 					<td colspan="6">
 						<span class="labels">司机：</span>{{dispatchBill.driverName}} {{dispatchBill.driverMobile}}
 						<span class="labels" style="margin-left:40px">载具：</span>
-						{{dispatchBill.plateNo}} {{dispatchBill.length?'dispatchBill.length/1000':''}}{{dispatchBill.length?'米':''}}{{dispatchBill.truckType}} {{dispatchBill.loads?'dispatchBill.loads/1000':''}}{{dispatchBill.loads?'吨':''}}{{dispatchBill.loadVolume?dispatchBill.loadVolume:''}}{{dispatchBill.loadVolume?'方':''}}
+						{{dispatchBill.plateNo}} 
+						{{dispatchBill.length?(dispatchBill.length/1000):''}}{{dispatchBill.length?'米':''}}
+						{{dispatchBill.truckType}} {{dispatchBill.loads?dispatchBill.loads/1000:''}}{{dispatchBill.loads?'吨':''}}{{dispatchBill.loadVolume?'/':''}}{{dispatchBill.loadVolume?(dispatchBill.loadVolume+'方'):''}}
 						<span class="labels" style="margin-left:40px">随车人员：</span>{{dispatchBill.superCargoName}} {{dispatchBill.superCargoMobile}}
 					</td>
 				</tr>
@@ -156,10 +154,10 @@ export default {
 	methods: {
 		getInfo(){
 			let params = {
-				transporPriceID: this.$route.query.transporPriceID,
+				dispatchOrderID: this.$route.query.dispatchOrderID,
 			}
 			requestJava({
-				url: '/transportPrice/findById',
+				url: '/admin/bizDispatchOrder/detail',
 				params
 			}).then(res => {
 				this.dispatchBill = res.data.data
@@ -198,6 +196,7 @@ export default {
 	background #ebebeb
 	padding-top 20px
 	.header
+		position relative
 		span
 			font-size 12px
 			margin-left 40px
@@ -205,11 +204,11 @@ export default {
 				position absolute
 				margin-right 0
 				right 20px
-				top 15px
-				height 24px
-				line-height 24px
+				top 0
+				height 18px
+				line-height 18px
 				color #fff
-				padding 0 15px
+				padding 0 10px
 				font-size 12px
 				-moz-border-radius 4px
 				     border-radius 4px

@@ -93,7 +93,7 @@
 					</el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.transporPriceID)">查看</el-button>
+							<el-button size="mini"  icon="el-icon-view" @click="view(scope.row.transporPriceID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
