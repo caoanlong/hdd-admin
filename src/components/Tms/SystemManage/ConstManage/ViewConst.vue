@@ -17,7 +17,7 @@
                             <p>{{info.value}}</p>
 						</el-form-item>
                         <el-form-item label="序号">
-                            <p>{{info.SortNumber}}</p>
+                            <p>{{info.sortNumber}}</p>
 						</el-form-item>
 						<el-form-item label="常量类型">
                             <p>{{info.type}}</p>
@@ -63,7 +63,7 @@
 					constStdID: this.$route.query.constStdID
 				}
 				requestJava({
-					url: '/customer/findById',
+					url: '/admin/baseConst/detail',
 					params
 				}).then(res => {
                     this.info = res.data.data

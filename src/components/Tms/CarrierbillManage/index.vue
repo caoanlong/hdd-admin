@@ -155,6 +155,8 @@ export default {
 				"createTimeEnd": '',
 				"shipperBeginDate": '',
 				"shipperEndDate": '',
+				"consigneeBeginDate": '',
+				"consigneeEndDate": '',
 			},
 			findCreateTimeRangeDate: [],
 			findShipperRangeDate: [],
@@ -193,8 +195,8 @@ export default {
 		},
 		// 到货时间选择回调
 		selectArriveDateRange(date) {
-			// this.find.arriveBeginDate = new Date(date[0]).getTime()
-			// this.find.arriveEndDate = new Date(date[1]).getTime()
+			this.find.consigneeBeginDate = new Date(date[0]).getTime()
+			this.find.consigneeEndDate = new Date(date[1]).getTime()
 		},
 		// 重置搜索表单
 		reset() {
@@ -205,6 +207,8 @@ export default {
 			this.find.findShipperRangeDate = []
 			this.find.shipperBeginDate = ''
 			this.find.shipperEndDate = ''
+			this.find.consigneeBeginDate = ''
+			this.find.consigneeEndDate = ''
 			this.find.status = ''
 			this.getList()
 		},
@@ -217,6 +221,8 @@ export default {
 				"createTimeEnd": this.find.createTimeEnd,
 				"shipperBeginDate": this.find.shipperBeginDate,
 				"shipperEndDate": this.find.shipperEndDate,
+				"consigneeBeginDate": this.find.consigneeBeginDate,
+				"consigneeEndDate": this.find.consigneeEndDate,
 				"status": this.find.status,
 			}
 			requestJava({

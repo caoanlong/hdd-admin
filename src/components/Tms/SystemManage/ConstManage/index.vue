@@ -4,30 +4,29 @@
 			<div slot="header" class="clearfix">
 				<span>常量列表</span>
 			</div>
-			<!-- <div class="search">
+			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="常量类型" >
-						<el-select placeholder="请选择" v-model="findType" class="constantSelect">
-							<el-option v-for="item in constTypeList" :key="item.VALUE" :label="item.VALUE" :value="item.VALUE">
-							</el-option>
+						<el-select placeholder="请选择" v-model="find.type" class="constantSelect">
+							<el-option v-for="item in constTypeList" :key="item.constStdID" :label="item.type" :value="item.type"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="名称">
-						<el-input placeholder="名称" v-model="findName"></el-input>
+						<el-input placeholder="名称" v-model="find.name"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
-			</div> -->
+			</div>
             <div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
+					<el-table-column label="Id" type="selection" align="center" width="40" fixed></el-table-column>
 					<el-table-column label="常量类型" prop="type" width="150"></el-table-column>
 					<el-table-column label="代码" prop="code"></el-table-column>
 					<el-table-column label="名称" prop="value"></el-table-column>
@@ -40,7 +39,7 @@
 							<span v-if="scope.row.updateTime">{{scope.row.updateTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="230" align="center">
+					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.constStdID)">查看</el-button>
 							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.constStdID)">编辑</el-button>
@@ -83,12 +82,15 @@ export default {
 			tableData: [],
 			selectedList: [],
 			constTypeList: [],
-			findType: '',
-			findName: ''
+			find: {
+				'type': '',
+				'name': ''
+			}
 		}
 	},
 	created() {
 		this.getList()
+		this.getConstTypes()
 	},
 	methods: {
 		selectionChange(data) {
@@ -98,13 +100,17 @@ export default {
 			this.pageIndex = index
 			this.getList()
 		},
+		reset() {
+			this.find.type = ''
+			this.find.name = ''
+			this.getList()
+		},
 		getList() {
 			let params = {
 				current: this.pageIndex || 1,
                 size: this.pageSize,
-                name: '',
-                type: '',
-                value: ''
+                name: this.find.name,
+                type: this.find.type
 			}
 			requestJava({
 				url: '/admin/baseConst/list',
@@ -117,9 +123,9 @@ export default {
 		},
 		getConstTypes() {
 			requestJava({
-				url: '/admin/baseConst/type',
+				url: '/admin/baseConst/selectType',
 			}).then(res => {
-				this.constTypeList = res.data.data.list
+				this.constTypeList = res.data.data
 			})
 		},
         add() {
@@ -133,7 +139,7 @@ export default {
         },
         deleteConfirm(id) {
 			let ids = []
-			if (id && typeof id == 'string') {
+			if (id && (typeof id == 'string' || typeof id == 'number')) {
 				ids = [id]
 			} else {
 				if (this.selectedList.length == 0) {
@@ -151,10 +157,6 @@ export default {
 				type: 'warning'
 			}).then(() => {
 				this.del(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -164,17 +166,16 @@ export default {
 		},
 		del(ids) {
 			let data = {
-				ids: ids
+				constStdIDs: ids.join(',')
 			}
 			requestJava({
 				url: '/admin/baseConst/delete',
 				method: 'post',
 				data
 			}).then(res => {
-				if (res.data.code == 0) {
-					this.getTruckBrands()
-				} else {
-					Message.error(res.data.msg)
+				if (res.data.code == 200) {
+					Message.success('删除成功!')
+					this.getList()
 				}
 			})
 		},

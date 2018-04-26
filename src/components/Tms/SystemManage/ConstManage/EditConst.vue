@@ -64,7 +64,7 @@
 					],
 					value: [
 						{required: true, message: '请输入值'},
-						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+						{min: 1, max: 10, message: '长度在 1 到 10 个字符'}
 					],
 					type: [
 						{required: true, message: '请输入类型'},
@@ -92,6 +92,7 @@
 							data
 						}).then(res => {
 							Message.success('成功！')
+							this.$router.push({name: 'tmsconstmanage'})
 						}).catch(err => {})
 					}
 				})
@@ -101,7 +102,7 @@
 					constStdID: this.$route.query.constStdID
 				}
 				requestJava({
-					url: '/customer/findById',
+					url: '/admin/baseConst/detail',
 					params
 				}).then(res => {
                     this.info = res.data.data

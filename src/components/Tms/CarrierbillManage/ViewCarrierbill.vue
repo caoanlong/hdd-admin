@@ -238,10 +238,10 @@ export default {
 				carrierOrderID: this.$route.query.carrierOrderID
 			}
 			requestJava({
-				url: '/biz/carrierOrder/findDispatchCargos',
+				url: '/admin/bizCarrierOrder/findDispatchCargos',
 				params
 			}).then(res => {
-				this.dispatchbills = res.data.data.records
+				this.dispatchbills = res.data.data.list
 				let arr = []
 				let flags = 0
 				for (let i = 0; i < this.dispatchbills.length; i++) {
