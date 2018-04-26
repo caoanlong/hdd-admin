@@ -36,9 +36,9 @@
 					<el-table-column label="配载量" width="180" align="center">
 						<template slot-scope="scope">
 							<span>
-								{{(scope.row.loadWeightSum ? scope.row.loadWeightSum : 0) + '吨'}}
-								/{{(scope.row.loadVolumeSum ? scope.row.loadVolumeSum : 0) + '方'}}
-								/{{(scope.row.loadNumSum ? scope.row.loadNumSum : 0) + '件'}}
+								{{scope.row.loadWeightSum ?( scope.row.loadWeightSum + '吨'): ''}}{{scope.row.loadVolumeSum?'/':''}}
+								{{scope.row.loadVolumeSum ?(scope.row.loadVolumeSum+ '方') : '' }}{{scope.row.loadNumSum?'/':''}}
+								{{scope.row.loadNumSum ? (scope.row.loadNumSum + '件'): ''}}
 							</span>
 						</template>
 					</el-table-column>
@@ -70,9 +70,9 @@
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="60" align="center" fixed="right">
+					<el-table-column label="操作" width="80" align="center" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="primary" size="mini" @click="viewDispatchBill(scope.row.dispatchOrderID)">查看</el-button>
+							<el-button size="mini"  icon="el-icon-view" @click="view(scope.row.dispatchOrderID)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -144,12 +144,12 @@ export default {
 				url: '/admin/bizDispatchOrder/list',
 				params
 			}).then(res => {
-				this.tableData = res.data.data.records
+				this.tableData = res.data.data.list
 				this.total = res.data.data.total
 			})
 		},
-		ViewDispatchBill(ControlsNum) {
-			this.$router.push({ name: 'viewdispatchbill' , query: { ControlsNum} })
+		view(dispatchOrderID) {
+			this.$router.push({ name: 'viewtmsdispatchbill' , query: { dispatchOrderID} })
 		}
 	}
 }
