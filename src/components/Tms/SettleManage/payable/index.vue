@@ -4,11 +4,14 @@
 			<div class="header clearfix">应付列表</div>
 			<el-tabs v-model="tabSelected" type="card" @tab-click="handleTabSelected">
 				<el-tab-pane label="司机" name="driver"></el-tab-pane>
-				<el-tab-pane label="随车人员" name="follower"></el-tab-pane>
+				<el-tab-pane label="随车人员" name="superCargo"></el-tab-pane>
 			</el-tabs>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
-					<el-form-item label="司机/随车人员">
+					<el-form-item label="司机" v-if="tabSelected=='driver'">
+						<el-input placeholder="请输入..." v-model="findName"></el-input>
+					</el-form-item>
+					<el-form-item label="随车人员" v-if="tabSelected=='superCargo'">
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item label="车辆编号">
@@ -89,32 +92,21 @@
 					</el-table-column>
 					<el-table-column label="车辆编号" prop="code"></el-table-column>
 					<el-table-column label="车牌号码" prop="plateNo" align="center" width="90"></el-table-column>
-					<el-table-column label="司机姓名" prop="realName" align="center"></el-table-column>
-					<el-table-column label="随车人员" prop="followerRealName" align="center"></el-table-column>
-					<el-table-column label="核载吨位" align="center">
-						<template slot-scope="scope">
-							{{scope.row.loads?(scope.row.loads +''):''}}
-						</template>
-					</el-table-column>
+					<el-table-column label="司机姓名" prop="realName" align="center" v-if="tabSelected=='superCargo'"></el-table-column>
+					<el-table-column label="随车人员" prop="realName" align="center" v-if="tabSelected=='driver'"></el-table-column>
 					<el-table-column label="收货地区" prop="consigneeArea"></el-table-column>
 					<el-table-column label="收货详细地址" prop="consigneeDetailAddress"></el-table-column>
-					<el-table-column label="签收货量">
-						<template slot-scope="scope">
-							{{scope.row.cargoWeight?scope.row.cargoWeight+'吨/':''}}{{scope.row.cargoVolume?scope.row.cargoVolume+'方/':''}}{{scope.row.cargoNum?scope.row.cargoNum+'件':''}}
-						</template>
-					</el-table-column>
-					<el-table-column label="运费" prop="freight" align="center">
-					</el-table-column>
+					<el-table-column label="运费" prop="freight" align="center"></el-table-column>
 					<el-table-column label="绕路里程" align="center">
 						<template slot-scope="scope">
-							{{scope.row.driverDetoursMileage?(scope.row.driverDetoursMileage +''):''}}
+							{{scope.row.detoursMileage?(scope.row.detoursMileage +''):'0'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="绕路费用" prop="DriverDetoursAmount" align="center">
+					<el-table-column label="绕路费用" prop="detoursAmount" align="center">
 					</el-table-column>
-					<el-table-column label="其他" prop="DriverOtherAmount" align="center">
+					<el-table-column label="其他" prop="otherAmount" align="center">
 					</el-table-column>
-					<el-table-column label="备注"></el-table-column>
+					<el-table-column label="备注" prop="remark"></el-table-column>
 					<el-table-column label="总计" prop="allMoney" align="center" width="120"></el-table-column>
 				</el-table>
 				<el-row type="flex">

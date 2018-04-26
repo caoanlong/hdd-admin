@@ -54,11 +54,6 @@
 					</el-table-column>
 					<el-table-column label="车辆编号" prop="code"></el-table-column>
 					<el-table-column label="车牌号码" prop="plateNo"></el-table-column>
-					<el-table-column label="荷载吨位">
-						<template slot-scope="scope">
-							{{scope.row.loads?(scope.row.loads+''):''}}
-						</template>
-					</el-table-column>
 					<el-table-column label="驾驶员" prop="realName"></el-table-column>
 					<el-table-column label="收货地区" prop="consigneeArea" width="120"></el-table-column>
 					<el-table-column label="收货详细地址" prop="consigneeDetailAddress"></el-table-column>
