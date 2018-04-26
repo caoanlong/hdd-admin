@@ -16,6 +16,9 @@
 						<el-form-item label="单笔限额" prop="perLimit">
 							<el-input v-model="bankInfo.perLimit"></el-input>
 						</el-form-item>
+						<el-form-item label="单日限额" prop="DailyLimit">
+							<el-input v-model="bankInfo.DailyLimit"></el-input>
+						</el-form-item>
 						<el-form-item label="logo" prop="logoUrl">
 							<ImageUpload 
 								:files="[bankInfo.logoUrl]" 
@@ -55,6 +58,7 @@
                     supportBankCode: '',
 					bankName: '',
 					perLimit: '',
+					DailyLimit: '',
 					logoUrl: '',
 					logoName: '',
 					bgUrl: '',
@@ -70,6 +74,10 @@
 					],
 					perLimit: [
 						{required: true, message: '请输入单笔限额'},
+						{validator: checkFloat2}
+					],
+					DailyLimit: [
+						{required: true, message: '请输入单日限额'},
 						{validator: checkFloat2}
 					],
 					logoUrl: [
@@ -111,14 +119,15 @@
 			// 更新银行
 			updateBank() {
 				let data= {
-					supportBankCode: this.bankInfo.supportBankCode,
-					bankName: this.bankInfo.bankName,
-					perLimit: this.bankInfo.perLimit,
-					logoUrl: this.bankInfo.logoUrl,
-					logoName: this.bankInfo.logoName,
-					bgUrl: this.bankInfo.bgUrl,
-                    bgName: this.bankInfo.bgName,
-                    oldSupportBankCode: this.$route.query.supportBankCode
+					'supportBankCode': this.bankInfo.supportBankCode,
+					'bankName': this.bankInfo.bankName,
+					'perLimit': this.bankInfo.perLimit,
+					'DailyLimit': this.bankInfo.DailyLimit,
+					'logoUrl': this.bankInfo.logoUrl,
+					'logoName': this.bankInfo.logoName,
+					'bgUrl': this.bankInfo.bgUrl,
+                    'bgName': this.bankInfo.bgName,
+                    'oldSupportBankCode': this.$route.query.supportBankCode
 				}
 				this.$refs['ruleForm'].validate(valid => {
 					if (valid) {
