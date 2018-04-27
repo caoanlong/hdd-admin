@@ -231,4 +231,7 @@
 				width 100%
 				height 100%
 				opacity 0
+.userFace
+	.imgLi
+		margin 0
 </style>
