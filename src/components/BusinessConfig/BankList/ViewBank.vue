@@ -16,30 +16,17 @@
 						<el-form-item label="单笔限额">
 							<p>{{bankInfo.perLimit}}</p>
 						</el-form-item>
-						<el-form-item label="logo">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								@click.native="previewImg(bankInfo.logoUrl)" 
-								:disabled="true" 
-								:show-file-list="false">
-								<img v-if="bankInfo.logoUrl" :src="bankInfo.logoUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+						<el-form-item label="单日限额">
+							<p>{{bankInfo.dailyLimit}}</p>
+						</el-form-item>
+						<el-form-item label="logo" prop="logoUrl">
+							<ImageUpload :files="[bankInfo.logoUrl]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="logo名称">
 							<p>{{bankInfo.logoName}}</p>
 						</el-form-item>
 						<el-form-item label="背景图片">
-                            <el-upload 
-								class="avatar-uploader"
-								action="http://39.108.245.177:3001/uploadImg" 
-								@click.native="previewImg(bankInfo.bgUrl)" 
-								:disabled="true"  
-								:show-file-list="false">
-								<img v-if="bankInfo.bgUrl" :src="bankInfo.bgUrl" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
+							<ImageUpload :files="[bankInfo.bgUrl]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="背景名称">
 							<p>{{bankInfo.bgName}}</p>
@@ -51,14 +38,12 @@
 				</el-col>
 			</el-row>
 		</el-card>
-		<!-- <el-dialog title="图片预览">
-			<img src=""/>
-		</el-dialog> -->
 	</div>
 </template>
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import ImageUpload from '../../CommonComponents/ImageUpload'
 	export default {
 		data() {
 			return {
@@ -85,16 +70,12 @@
 					}
 				})
 			},
-			previewImg(imgUrl) {
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-					dangerouslyUseHTMLString: true,
-					showConfirmButton: false,
-					customClass: 'img-preview'
-				})
-			},
 			back() {
 				this.$router.go(-1)
 			}
+		},
+		components: {
+			ImageUpload
 		}
 	}
 </script>

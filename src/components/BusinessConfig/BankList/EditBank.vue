@@ -8,7 +8,17 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="bankInfo" :rules="rules" ref="ruleForm">
 						<el-form-item label="银行代码" prop="supportBankCode">
-							<el-input v-model="bankInfo.supportBankCode"></el-input>
+							<el-autocomplete style="width:100%"
+								value-key="bankName" 
+								v-model="bankInfo.supportBankCode"
+								:fetch-suggestions="getBanks"
+								placeholder="请输入内容"
+								@select="handSelectBank">
+								<template slot-scope="{ item }">
+									<span>{{ item.bankName }}</span>
+									<span>{{ item.supportBankCode }}</span>
+								</template>
+							</el-autocomplete>
 						</el-form-item>
 						<el-form-item label="银行名称" prop="bankName">
 							<el-input v-model="bankInfo.bankName"></el-input>
@@ -16,8 +26,8 @@
 						<el-form-item label="单笔限额" prop="perLimit">
 							<el-input v-model="bankInfo.perLimit"></el-input>
 						</el-form-item>
-						<el-form-item label="单日限额" prop="DailyLimit">
-							<el-input v-model="bankInfo.DailyLimit"></el-input>
+						<el-form-item label="单日限额" prop="dailyLimit">
+							<el-input v-model="bankInfo.dailyLimit"></el-input>
 						</el-form-item>
 						<el-form-item label="logo" prop="logoUrl">
 							<ImageUpload 
@@ -37,7 +47,7 @@
 							<el-input v-model="bankInfo.bgName"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="addBank">立即保存</el-button>
+							<el-button type="primary" @click="updateBank">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -47,7 +57,8 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../common/requestJava'
+	import requestJava, { javaUrl } from '../../../common/requestJava'
+	import axios from 'axios'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../CommonComponents/ImageUpload'
 	import { checkFloat2 } from '../../../common/validator'
@@ -58,7 +69,7 @@
                     supportBankCode: '',
 					bankName: '',
 					perLimit: '',
-					DailyLimit: '',
+					dailyLimit: '',
 					logoUrl: '',
 					logoName: '',
 					bgUrl: '',
@@ -76,7 +87,7 @@
 						{required: true, message: '请输入单笔限额'},
 						{validator: checkFloat2}
 					],
-					DailyLimit: [
+					dailyLimit: [
 						{required: true, message: '请输入单日限额'},
 						{validator: checkFloat2}
 					],
@@ -99,6 +110,22 @@
             this.getBank()
         },
 		methods: {
+			// 获取所有可以添加的银行code
+			getBanks(queryString, cb) {
+				let params = { bankname: queryString }
+				let url = javaUrl + '/paySupportBank/supportBankCode'
+				let headers = {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': localStorage.getItem('token')
+				}
+				axios({ url, params, headers }).then(res => {
+					cb(res.data)
+				})
+			},
+			handSelectBank(data) {
+				this.bankInfo.supportBankCode = data.supportBankCode
+				this.bankInfo.bankName = data.bankName
+			},
 			// 获取当前银行的详情
             getBank() {
                 let params= {
@@ -122,7 +149,7 @@
 					'supportBankCode': this.bankInfo.supportBankCode,
 					'bankName': this.bankInfo.bankName,
 					'perLimit': this.bankInfo.perLimit,
-					'DailyLimit': this.bankInfo.DailyLimit,
+					'DailyLimit': this.bankInfo.dailyLimit,
 					'logoUrl': this.bankInfo.logoUrl,
 					'logoName': this.bankInfo.logoName,
 					'bgUrl': this.bankInfo.bgUrl,
@@ -147,10 +174,10 @@
 				})
             },
             handleLogoUrlSuccess(res) {
-				this.bankInfo.logoUrl = res
+				this.bankInfo.logoUrl = res[0]
 			},
 			handleBgUrlSuccess(res) {
-				this.bankInfo.bgUrl = res
+				this.bankInfo.bgUrl = res[0]
 			},
 			back() {
 				this.$router.go(-1)

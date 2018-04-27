@@ -16,7 +16,8 @@
 				</span>
 				<el-input name="Password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.Password" autoComplete="on" placeholder="请输入密码"/>
 				<span class="show-pwd" @click="showPwd">
-					<svg-icon icon-class="eye"/>
+					<svg-icon icon-class="eye-open" v-show="passwordType == 'text'"/>
+					<svg-icon icon-class="eye" v-show="passwordType == 'password'"/>
 				</span>
 			</el-form-item>
 			<el-button type="primary" style="width:100%; margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
@@ -58,7 +59,7 @@
 		methods: {
 			showPwd() {
 				if (this.passwordType === 'password') {
-					this.passwordType = ''
+					this.passwordType = 'text'
 				} else {
 					this.passwordType = 'password'
 				}
@@ -86,7 +87,7 @@
 		}
 	}
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 	.login-container
 		.el-input
 			display inline-block

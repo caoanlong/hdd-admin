@@ -16,13 +16,13 @@
 					<el-table-column label="单日限额" prop="dailyLimit"></el-table-column>
 					<el-table-column label="logo" align="center">
 						<template slot-scope="scope">
-							<img class="imgBank" :src="scope.row.logoUrl" @click="previewImg(scope.row.logoUrl)">
+							<img class="imgBank" :src="(scope.row.logoUrl && (scope.row.logoUrl.indexOf('http') == -1)) ? (imgUrl + scope.row.logoUrl) : defaultImg">
 						</template>
 					</el-table-column>
 					<el-table-column label="logo图标名称" align="center" prop="logoName" width="100"></el-table-column>
 					<el-table-column label="背景图片">
 						<template slot-scope="scope">
-							<img class="imgBank" :src="scope.row.bgUrl" @click="previewImg(scope.row.bgUrl)">
+							<img class="imgBank" :src="(scope.row.bgUrl && (scope.row.bgUrl.indexOf('http') == -1)) ? (imgUrl + scope.row.bgUrl) : defaultImg">
 						</template>
 					</el-table-column>
 					<el-table-column label="背景名称" prop="bgName"></el-table-column>
@@ -65,6 +65,7 @@
 <script type="text/javascript">
 	import requestJava from '../../../common/requestJava'
 	import { Message } from 'element-ui'
+	import { defaultImg } from '../../../assets/icons/icons'
 	export default {
 		data() {
 			return {
@@ -74,6 +75,9 @@
 				tableData: [],
 				selectedBanks: []
 			}
+		},
+		computed: {
+			defaultImg: () => defaultImg
 		},
 		created() {
 			this.getList()
@@ -164,14 +168,7 @@
 						Message.error(res.data.message)
 					}
 				})
-			},
-			previewImg(imgUrl) {
-				this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-					dangerouslyUseHTMLString: true,
-					showConfirmButton: false,
-					customClass: 'img-preview'
-				})
-			},
+			}
 		}
 	}
 </script>
@@ -181,6 +178,5 @@
 		margin 0
 		padding 0
 .imgBank
-	width 30px
-	cursor pointer
+	width 20px
 </style>
