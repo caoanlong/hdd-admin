@@ -46,15 +46,15 @@
 					</el-table-column>
 					<el-table-column label="手机号" align="center" prop="mobile" width="100">
 					</el-table-column>
-					<el-table-column label="姓名" prop="name">
+					<el-table-column label="姓名" prop="name" align="center">
 					</el-table-column>
 					<el-table-column label="提现金额" align="center" prop="money">
 					</el-table-column>
 					<el-table-column label="手续费" align="center" prop="fee" width="140">
 					</el-table-column>
-					<el-table-column label="卡号" prop="bankCardNum" width="180">
+					<el-table-column label="卡号" prop="bankCardNum" width="180" align="center">
 					</el-table-column>
-					<el-table-column label="状态" align="center" width="140">
+					<el-table-column label="状态" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status=='Draft'" style="color:#C0C4CC">草稿</span>
 							<span v-else-if="scope.row.status=='ForAudit'" style="color:#409EFF">待审核</span>
@@ -71,7 +71,7 @@
 					</el-table-column>
 					<el-table-column label="审批人" align="center" prop="auditBy" width="100">
 					</el-table-column>
-					<el-table-column label="操作" width="150" fixed="right">
+					<el-table-column label="操作" width="160" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.mobile,scope.row.cashID)">查看</el-button>
 							<el-button size="mini" @click="EditWithDraw(scope.row.mobile,scope.row.cashID)" v-if="scope.row.status=='ForAudit'">
@@ -115,9 +115,9 @@ export default {
 			tableData: [],
 			findMobile:'',
 			findStatus:'',
-			findDataRange: '',
-			startDate: 0,
-			endDate: 0
+			findDataRange: [],
+			startDate: '',
+			endDate: ''
 		}
 	},
 	created() {
@@ -125,8 +125,8 @@ export default {
 	},
 	methods: {
 		selectDateRange(date) {
-			this.startDate = new Date(date[0]).getTime()
-			this.endDate = new Date(date[1]).getTime()
+			this.startDate = date[0]
+			this.endDate = date[1]
 		},
 		pageChange(index) {
 			this.pageIndex = index
@@ -135,12 +135,12 @@ export default {
 		reset() {
 			this.findMobile = ''
 			this.findStatus = ''
-			this.findDataRange = ''
+			this.findDataRange = []
 			this.getList()
 		},
 		getList() {
 			let params = {
-				pageNum: this.pageIndex || 1,
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				mobile: this.findMobile,
 				status: this.findStatus,
