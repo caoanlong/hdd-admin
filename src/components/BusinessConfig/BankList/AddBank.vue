@@ -8,13 +8,26 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="bankInfo" :rules="rules" ref="ruleForm">
 						<el-form-item label="银行代码" prop="supportBankCode">
-							<el-input v-model="bankInfo.supportBankCode"></el-input>
+							<el-autocomplete style="width:100%"
+								value-key="bankName" 
+								v-model="bankInfo.supportBankCode"
+								:fetch-suggestions="getBanks"
+								placeholder="请输入内容"
+								@select="handSelectBank">
+								<template slot-scope="{ item }">
+									<span>{{ item.bankName }}</span>
+									<span>{{ item.supportBankCode }}</span>
+								</template>
+							</el-autocomplete>
 						</el-form-item>
 						<el-form-item label="银行名称" prop="bankName">
 							<el-input v-model="bankInfo.bankName"></el-input>
 						</el-form-item>
 						<el-form-item label="单笔限额" prop="perLimit">
 							<el-input v-model="bankInfo.perLimit"></el-input>
+						</el-form-item>
+						<el-form-item label="单日限额" prop="dailyLimit">
+							<el-input v-model="bankInfo.dailyLimit"></el-input>
 						</el-form-item>
 						<el-form-item label="logo" prop="logoUrl">
 							<ImageUpload 
@@ -44,7 +57,8 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../common/requestJava'
+	import requestJava, { javaUrl } from '../../../common/requestJava'
+	import axios from 'axios'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../CommonComponents/ImageUpload'
 	import { checkFloat2 } from '../../../common/validator'
@@ -56,6 +70,7 @@
 					supportBankCode: '',
 					bankName: '',
 					perLimit: '',
+					dailyLimit: '',
 					logoUrl: '',
 					logoName: '',
 					bgUrl: '',
@@ -71,6 +86,10 @@
 					],
 					perLimit: [
 						{required: true, message: '请输入单笔限额'},
+						{validator: checkFloat2}
+					],
+					dailyLimit: [
+						{required: true, message: '请输入单日限额'},
 						{validator: checkFloat2}
 					],
 					logoUrl: [
@@ -90,25 +109,32 @@
 		},
 		methods: {
 			// 获取所有可以添加的银行code
-			getBanks() {
-				let params = {}
-				requestJava({
-					url: '/',
-					params
-				}).then(res => {
-					console.log(res)
+			getBanks(queryString, cb) {
+				let params = { bankname: queryString }
+				let url = javaUrl + '/paySupportBank/supportBankCode'
+				let headers = {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': localStorage.getItem('token')
+				}
+				axios({ url, params, headers }).then(res => {
+					cb(res.data)
 				})
+			},
+			handSelectBank(data) {
+				this.bankInfo.supportBankCode = data.supportBankCode
+				this.bankInfo.bankName = data.bankName
 			},
 			// 添加银行
 			addBank() {
 				let data= {
-					supportBankCode: this.bankInfo.supportBankCode,
-					bankName: this.bankInfo.bankName,
-					perLimit: this.bankInfo.perLimit,
-					logoUrl: this.bankInfo.logoUrl,
-					logoName: this.bankInfo.logoName,
-					bgUrl: this.bankInfo.bgUrl,
-					bgName: this.bankInfo.bgName
+					'supportBankCode': this.bankInfo.supportBankCode,
+					'bankName': this.bankInfo.bankName,
+					'perLimit': this.bankInfo.perLimit,
+					'DailyLimit': this.bankInfo.dailyLimit,
+					'logoUrl': this.bankInfo.logoUrl,
+					'logoName': this.bankInfo.logoName,
+					'bgUrl': this.bankInfo.bgUrl,
+					'bgName': this.bankInfo.bgName
 				}
 				this.$refs['ruleForm'].validate(valid => {
 					if (valid) {

@@ -75,3 +75,21 @@ code a:hover{color:#20a0ff;}
 .wf-table th,.wf-table .total td{background:#f3f7fa;color:#7eaad7;}
 .is-center{text-align:center;}
 .wf-footer{margin-top:10px;}
+
+input::-webkit-input-placeholder{
+	color:#C0C4CC;
+}
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+	color:#C0C4CC;
+}
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+	color:#C0C4CC;
+}
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+	color:#C0C4CC;
+}
+
+
+input:-webkit-autofill {
+    -webkit-animation: autofill-fix 1s infinite;
+}

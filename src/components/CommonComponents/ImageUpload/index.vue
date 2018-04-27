@@ -3,8 +3,9 @@
 		<div class="imgLi" 
 		:style="{'width': width+'px','height': height+'px'}" 
 		v-for="(file,i) in fileUrl"
-		:key="i" v-if="file">
-			<img v-if="file" :src="imgUrl + file">
+		:key="i">
+			<img v-if="file && (file.indexOf('http') == -1)" :src="imgUrl + file">
+			<img v-else :src="defaultImg">
 			<div class="controller">
 				<div class="controllerBtn">
 					<div class="perviewBtn" @click.stop="showImgModal(file)"></div>
@@ -42,6 +43,7 @@
 	import { javaUrl } from '../../../common/requestJava'
 	import { formDataReq } from '../../../common/utils'
 	import VueCropper from 'vue-cropper'
+	import { defaultImg } from '../../../assets/icons/icons'
 	export default {
 		props: {
 			width: {
@@ -88,7 +90,8 @@
 				}else {
 					return true
 				}
-			}
+			},
+			defaultImg: () => defaultImg
 		},
 		watch: {
 			files(newval) {
