@@ -109,6 +109,7 @@ export default {
 				.el-icon-caret-bottom
 					position absolute
 					right -20px
-					top 15px
+					top 50%
 					font-size 12px
+					transform translateY(-50%)
 </style>

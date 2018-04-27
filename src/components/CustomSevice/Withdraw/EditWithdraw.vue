@@ -8,7 +8,7 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="个人头像">
-							<ImageUpload :files="[memMember.headPicture]" :isPreview="true"/>
+							<ImageUpload :files="[memMember.headPicture]" :isPreview="true" class="userFace"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -32,6 +32,8 @@
 						</el-form-item>
 					</el-form>
 				</el-col>
+				</el-row>
+				<el-row>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="提现金额">
@@ -78,6 +80,36 @@
 			<div slot="header" class="clearfix">
 				<span>近期流水</span>
 			</div>
+			<div class="search">
+				<el-form :inline="true" class="form-inline" size="small">
+					<el-form-item label="款项名称">
+						<el-select placeholder="请选择" v-model="findName">
+							<el-option v-for="billType in billTypes" :key="billType.Dict_ID" :label="billType.NAME" :value="billType.Dict_ID"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="收支类型" >
+						<el-select placeholder="请选择" v-model="findType" style="width:120px">
+							<el-option label="收款" value="Receive"></el-option>
+							<el-option label="付款" value="Pay"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="流水日期">
+						<el-date-picker 
+							v-model="findDataRange"
+							type="daterange" 
+							range-separator="至" 
+
+							start-placeholder="开始日期" 
+							end-placeholder="结束日期" 
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>			
+					<el-form-item>
+						<el-button type="primary" @click.native="auditPage">查询</el-button>
+						<el-button type="default" @click.native="reset">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
 			<div class="table">
 				<el-table :data="auditPageList" border style="width: 100%" size="mini">
 					<el-table-column label="日期" align="center" width="140">
@@ -90,7 +122,7 @@
 							<span v-for="billType in billTypes" :key="billType.Dict_ID" v-if="billType.VALUE == scope.row.billType">{{billType.NAME}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="收支类型" prop="type">
+					<el-table-column label="收支类型" prop="type" align="center">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type == 'Receive'">收款</span>
 							<span v-if="scope.row.type == 'Pay'">付款</span>
@@ -100,7 +132,7 @@
 					</el-table-column>
 					<el-table-column label="对方姓名" align="center" prop="oppositeName" width="140">
 					</el-table-column>
-					<el-table-column label="金额" prop="amount" width="180">
+					<el-table-column label="金额" prop="amount" width="180" align="center">
 					</el-table-column>
 				</el-table>
 				<el-row type="flex">
@@ -160,7 +192,13 @@
 				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
-				billTypes: []
+				billTypes: [],
+				findName:'',
+				findType:'',
+				findDataRange: '',
+				startDate: '',
+				endDate: ''
+
 			}
 		},
 		created() {
@@ -168,6 +206,13 @@
 			this.getBillType()
 		},
 		methods: {
+			reset() {
+				this.findName=''
+				this.findType=''
+				this.findDataRange =[]
+				this.startDate=''
+				this.endDate= ''
+			},
 			pageChange(index) {
 				this.pageIndex = index
 				this.auditPage()
@@ -207,7 +252,11 @@
 					pageNum: this.pageIndex,
 					pageSize: this.pageSize,
 					mobile: this.$route.query.mobile,
-					id: this.$route.query.cashID
+					id: this.$route.query.cashID,
+					billType:this.findName,
+					type:this.findType,
+					beginTime:this.startDate,
+					endTime:this.endDate
 				}
 				requestJava({
 					url: '/payCash/auditPage',
@@ -224,6 +273,10 @@
 						Message.error(res.data.msg)
 					}
 				})
+			},
+			selectDateRange(date) {
+				this.startDate = date[0]
+				this.endDate = date[1]
 			},
 			audit(auditStatus) {
 				let data = {
@@ -254,34 +307,13 @@
 	}
 </script>
 <style lang="stylus" scoped >
-.avatar-uploader 
-	.el-upload 
-		border 1px dashed #d9d9d9
-		border-radius 6px
-		cursor pointer
-		position relative
-		overflow hidden
-		vertical-align top
-		&:hover 
-			border-color #409eff
-.avatar-uploader-icon 
-	font-size 28px
-	color #8c939d
-	width 98px
-	height 98px
-	line-height 98px
-	text-align center
-.avatar 
-	width 98px
-	height 98px
-	display block
 .el-form-item__content
 	p
 		margin 0
 		border 1px solid #fff
 		border-bottom-color #dcdfe6
 		padding 0 15px
-		height 40px
+		min-height 40px
 		font-family 'sans-serif'
 		line-height 40px
 		color #999
