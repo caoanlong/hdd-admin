@@ -75,7 +75,7 @@
 							Message.success('登录成功')
 							this.$router.push({ path: '/' })
 						}).catch((err) => {
-							Message.error(err)
+							Message.error(err.msg)
 							this.loading = false
 						})
 					} else {
