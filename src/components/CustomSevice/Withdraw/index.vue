@@ -144,8 +144,8 @@ export default {
 				pageSize: this.pageSize,
 				mobile: this.findMobile,
 				status: this.findStatus,
-				startDate: this.startDate,
-				endDate: this.endDate
+				cashBeginTime: this.startDate,
+				cashEndTime: this.endDate
 			}
 			requestJava({
 				url: '/payCash/list',
