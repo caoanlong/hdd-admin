@@ -22,7 +22,11 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容">
-							<div id="editor" type="text/plain"  class="customerEditor"></div>
+							<quill-editor v-model="content.Content"
+								class="customerEditor" 
+								ref="myQuillEditor"
+								:options="editorOption">
+							</quill-editor>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<ImageUpload 
@@ -58,6 +62,7 @@
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../../CommonComponents/ImageUpload'
+	import { quillEditor } from 'vue-quill-editor'
 	export default {
 		data() {
 			return {
@@ -74,11 +79,7 @@
 					isEnable: true,
 					Tips: ''
 				},
-				editor: null,
-				editorConfig: {
-					initialFrameWidth: null,
-					initialFrameHeight: 350
-				}
+				editorOption: {}
 			}
         },
         created() {
@@ -86,32 +87,30 @@
         },
 		methods: {
             editContent() {
-				this.getUEContent().then(content => {
-					let data= {
-						Content_ID: this.$route.query.Content_ID,
-						ContentTopic_ID: this.content.ContentTopic_ID,
-						Code: this.content.Code,
-						Name: this.content.Name,
-						Title: this.content.Title,
-						Content: content,
-						PictureURL: this.content.PictureURL,
-						URL: this.content.URL,
-						Sort: this.content.Sort,
-						isEnable: this.content.isEnable ? 'Y' : 'N',
-						Tips: this.content.Tips
+				let data= {
+					Content_ID: this.$route.query.Content_ID,
+					ContentTopic_ID: this.content.ContentTopic_ID,
+					Code: this.content.Code,
+					Name: this.content.Name,
+					Title: this.content.Title,
+					Content: this.content.Content,
+					PictureURL: this.content.PictureURL,
+					URL: this.content.URL,
+					Sort: this.content.Sort,
+					isEnable: this.content.isEnable ? 'Y' : 'N',
+					Tips: this.content.Tips
+				}
+				request({
+					url: '/set_content/update',
+					method: 'post',
+					data
+				}).then(res => {
+					if (res.data.code == 0) {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'setcontent'})
+					} else {
+						Message.error(res.data.msg)
 					}
-					request({
-						url: '/set_content/update',
-						method: 'post',
-						data
-					}).then(res => {
-						if (res.data.code == 0) {
-							Message.success(res.data.msg)
-							this.$router.push({name: 'setcontent'})
-						} else {
-							Message.error(res.data.msg)
-						}
-					})
 				})
 			},
             getContentTopics() {
@@ -138,12 +137,6 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.content = res.data.data
-						// 初始化UE
-						this.editor = UE.getEditor('editor', this.editorConfig)
-						this.editor.addListener('ready', () => {
-							// 确保UE加载完成后，放入内容
-							this.editor.setContent(res.data.data.Content)
-						})
 					} else {
 						Message.error(res.data.msg)
 					}
@@ -152,21 +145,13 @@
 			handleAvatarSuccess(res) {
 				this.content.PictureURL = res[0]
 			},
-			getUEContent() {
-				return new Promise((resolve, reject) => {
-					let content = this.editor.getContent()
-					resolve(content)
-				})
-			},
 			back() {
 				this.$router.go(-1)
 			}
 		},
-		destroyed() {
-			this.editor.destroy()
-		},
 		components: {
-			ImageUpload
+			ImageUpload,
+			quillEditor
 		}
 	}
 </script>

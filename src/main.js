@@ -20,10 +20,10 @@ import './assets/icons'
  // permission control 判断是否登录
 import { permissions } from './permission'
 
-import '../static/plugins/UE/ueditor.config'
-import '../static/plugins/UE/ueditor.all.min'
-import '../static/plugins/UE/lang/zh-cn/zh-cn'
-import '../static/plugins/UE/ueditor.parse.min'
+// 富文本样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

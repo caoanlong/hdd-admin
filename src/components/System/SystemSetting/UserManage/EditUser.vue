@@ -39,7 +39,7 @@
 								:value="department.Organization_ID"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="密码" prop="Password">
+						<el-form-item label="密码">
 							<el-input auto-complete="off" v-model="user.Password"></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱" prop="Email">
@@ -59,9 +59,9 @@
 						<el-form-item label="姓名" prop="Name">
 							<el-input auto-complete="off" v-model="user.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="确认密码" prop="Password2">
+						<!-- <el-form-item label="确认密码" prop="Password2">
 							<el-input auto-complete="off" v-model="user.Password2"></el-input>
-						</el-form-item>
+						</el-form-item> -->
 						<el-form-item label="电话" prop="Phone">
 							<el-input auto-complete="off" v-model="user.Phone"></el-input>
 						</el-form-item>
@@ -100,25 +100,25 @@ import ImageUpload from '../../../CommonComponents/ImageUpload'
 import { checkMobile, checkTel } from '../../../../common/validator'
 export default {
 	data() {
-		var validatePass = (rule, value, callback) => {
-			if (value === '') {
-				callback(new Error('请输入密码'))
-			} else {
-			if (this.user.Password2 !== '') {
-				this.$refs.ruleForm.validateField('Password2')
-			}
-				callback()
-			}
-		}
-		var validatePass2 = (rule, value, callback) => {
-			if (value === '') {
-				callback(new Error('请再次输入密码'))
-			} else if (value !== this.user.Password) {
-				callback(new Error('两次输入密码不一致!'))
-			} else {
-				callback()
-			}
-		}
+		// var validatePass = (rule, value, callback) => {
+		// 	if (value === '') {
+		// 		callback(new Error('请输入密码'))
+		// 	} else {
+		// 		if (this.user.Password2 !== '') {
+		// 			this.$refs.ruleForm.validateField('Password2')
+		// 		}
+		// 		callback()
+		// 	}
+		// }
+		// var validatePass2 = (rule, value, callback) => {
+		// 	if (value === '') {
+		// 		callback(new Error('请再次输入密码'))
+		// 	} else if (value !== this.user.Password) {
+		// 		callback(new Error('两次输入密码不一致!'))
+		// 	} else {
+		// 		callback()
+		// 	}
+		// }
 		return {
 			user: {
 				Company_ID:'',
@@ -166,7 +166,7 @@ export default {
 					{required: true, message: '请选择部门'}
 				],
 				Password: [
-					{required: true, validator: validatePass},
+					// {required: true, validator: validatePass},
 					{ min: 6, max: 8, message: '长度在 6 到 8 个字符'}
 				],
 				Email: [
@@ -180,9 +180,9 @@ export default {
 					{required: true, message: '请输入姓名'},
 					{ min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				],
-				Password2: [
-					{required: true, validator: validatePass2}
-				],
+				// Password2: [
+				// 	{required: true, validator: validatePass2}
+				// ],
 				Phone: [
 					{validator: checkTel}
 				],
