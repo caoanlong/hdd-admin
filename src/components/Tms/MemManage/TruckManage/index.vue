@@ -43,8 +43,14 @@
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+					<el-table-column label="用户" prop="companyName" width="100px"></el-table-column>
+					<el-table-column label="创建时间" width="140px">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="所属地区" prop="area"></el-table-column>
-					<el-table-column label="所属企业" prop="companyName"></el-table-column>
+					<el-table-column label="所属企业" prop="carOwnerName" width="100px"></el-table-column>
 					<el-table-column label="自编号" prop="code"></el-table-column>
 					<el-table-column label="车牌号" prop="plateNo"></el-table-column>
 					<el-table-column label="车牌颜色" prop="plateNoColor"></el-table-column>
