@@ -963,22 +963,6 @@ let routerMap = [
 								component: () => import('../components/Tms/MemManage/PersonManage/ViewTmsPerson')
 							},
 							{
-								path: '/edittmsperson',
-								name: 'edittmsperson',
-								meta: {
-									title: '编辑人员'
-								},
-								component: () => import('../components/Tms/MemManage/PersonManage/EditTmsPerson')
-							},
-							{
-								path: '/addtmsperson',
-								name: 'addtmsperson',
-								meta: {
-									title: '添加人员'
-								},
-								component: () => import('../components/Tms/MemManage/PersonManage/AddTmsPerson')
-							},
-							{
 								path: '/tmsshippermanage',
 								name: 'tmsshippermanage',
 								meta: {

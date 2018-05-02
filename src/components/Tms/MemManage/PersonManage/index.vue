@@ -52,7 +52,6 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
-					
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
 					<el-table-column label="姓名" prop="realName"></el-table-column>
 					<el-table-column label="性别" width="60px" align="center">
@@ -115,7 +114,6 @@
 					<el-table-column label="联系电话" prop="mobile"></el-table-column>
 					<el-table-column label="家庭地址" prop="homeAddress"></el-table-column>
 					<el-table-column label="备注说明" prop="remark"></el-table-column>
-					
 					<el-table-column label="操作" width="100" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewTmsPerson(scope.row.staffID)">查看</el-button>
