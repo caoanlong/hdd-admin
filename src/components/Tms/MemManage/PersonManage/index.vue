@@ -53,6 +53,12 @@
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+					<el-table-column label="用户" prop="companyName" width="100px"></el-table-column>
+					<el-table-column label="创建时间" width="140px">
+						<template slot-scope="scope">
+							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="姓名" prop="realName"></el-table-column>
 					<el-table-column label="性别" width="60px" align="center">
 						<template slot-scope="scope">
@@ -60,7 +66,11 @@
 							<span v-else>女</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="聘用岗位" prop="position"></el-table-column>
+					<el-table-column label="聘用岗位" prop="position">
+						<template slot-scope="scope">
+							<span v-for="post in scope.row.position.split(',')" :key="post">{{postMap[post] + '，'}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>
 					<el-table-column label="创建人" prop="createName"></el-table-column>
 					<el-table-column label="状态" align="center">
@@ -146,6 +156,14 @@
 <script type="text/javascript">
 import requestJava, { javaUrl } from '../../../../common/requestJava'
 import { Message } from 'element-ui'
+const postMap = {
+	'Operator': '操作员',
+	'Driver': '驾驶员',
+	'Supercargo': '押运员',
+	'SafetyOfficer': '专职安全员',
+	'Stevedore': '装卸管理人员',
+	'Other': '其他人员'
+}
 export default {
 	data() {
 		return {
@@ -161,7 +179,11 @@ export default {
 			findmobile:'',
 			findintegrityExamineGrade:'',
 			findposition:'',
+			
 		}
+	},
+	computed: {
+		postMap: () => postMap
 	},
 	created() {
 		this.getPersonList()
