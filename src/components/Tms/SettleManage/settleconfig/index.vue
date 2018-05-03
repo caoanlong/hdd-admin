@@ -6,16 +6,17 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="mini">
-					<el-form-item label="发货时间">
-						<el-date-picker 
-							v-model="findRangeDate" 
-							type="daterange" 
-							range-separator="至" 
-							start-placeholder="开始日期" 
-							end-placeholder="结束日期" 
-							:clearable="false" 
-							@change="selectDateRange">
-						</el-date-picker>
+					<el-form-item label="发货单位">
+						<el-input placeholder="请输入..." v-model="findShipperCompanyName"></el-input>
+					</el-form-item>
+					<el-form-item label="发货地">
+						<el-input placeholder="请输入..." v-model="findShipperArea"></el-input>
+					</el-form-item>
+					<el-form-item label="收货单位">
+						<el-input placeholder="请输入..." v-model="findConsigneeCompanyName"></el-input>
+					</el-form-item>
+					<el-form-item label="收货地">
+						<el-input placeholder="请输入..." v-model="findConsigneeArea"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList">查询</el-button>
@@ -29,6 +30,7 @@
 					:data="tableData" 
 					border style="width: 100%" size="mini" stripe>
 					<el-table-column label="序号" type="index" align="center" fixed width="60"></el-table-column>
+					<el-table-column label="用户" prop="userName"></el-table-column>
 					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
 					<el-table-column label="发货地" prop="shipperArea" width="140"></el-table-column>
 					<el-table-column label="发货详细地址" prop="shipperDetailAddress" width="140"></el-table-column>
@@ -126,12 +128,10 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			// findRangeDate: [new Date().getTime() - 3600000 * 24 * 30, new Date().getTime()],
-			// findshipperBeginDate: new Date().getTime() - 3600000 * 24 * 30,
-			// findshipperEndDate: new Date().getTime(),
-			findRangeDate: [],
-			findshipperBeginDate:'',
-			findshipperEndDate:'',
+			findConsigneeArea: '',
+			findConsigneeCompanyName: '',
+			findShipperArea: '',
+			findShipperCompanyName: '',
 			pageIndex: 1,
 			pageSize: 10,
 			total: 0,
@@ -143,35 +143,32 @@ export default {
 	},
 	methods: {
 		reset() {
-			this.findRangeDate = []
-			this.findshipperBeginDate = ''
-			this.findshipperEndDate = ''
+			this.findConsigneeArea = ''
+			this.findConsigneeCompanyName = ''
+			this.findShipperArea = ''
+			this.findShipperCompanyName = ''
 			this.getList()
 		},
 		getList() {
-				let params = {
-					current: this.pageIndex,
-					size: this.pageSize,
-					consigneeArea: this.findConsigneeArea,
-					consigneeCompanyName: this.findConsigneeCompanyName,
-					shipperArea: this.findShipperArea,
-					shipperCompanyName: this.findShipperCompanyName
-				}
-				requestJava({
-					url: '/transportPrice/findList',
-					params
-				}).then(res => {
-					this.tableData = res.data.data.list
-					this.total = res.data.data.total
-				})
-			},
+			let params = {
+				current: this.pageIndex,
+				size: this.pageSize,
+				consigneeArea: this.findConsigneeArea,
+				consigneeCompanyName: this.findConsigneeCompanyName,
+				shipperArea: this.findShipperArea,
+				shipperCompanyName: this.findShipperCompanyName
+			}
+			requestJava({
+				url: '/transportPrice/findList',
+				params
+			}).then(res => {
+				this.tableData = res.data.data.list
+				this.total = res.data.data.total
+			})
+		},
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
-		},
-		selectDateRange(date) {
-			this.findshipperBeginDate = new Date(date[0]).getTime()
-			this.findshipperEndDate = new Date(date[1]).getTime()
 		},
 		view(transporPriceID){
 			this.$router.push({ name: 'viewtmssettleconfig' , query: { transporPriceID} })

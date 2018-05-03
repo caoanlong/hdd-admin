@@ -117,7 +117,7 @@
 				}).then(res => {
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
-						this.tableData = res.data.data.records
+						this.tableData = res.data.data.list
 					} else {
 						Message.error(res.data.message)
 					}
