@@ -6,16 +6,17 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="mini">
-					<el-form-item label="发货时间">
-						<el-date-picker 
-							v-model="findRangeDate" 
-							type="daterange" 
-							range-separator="至" 
-							start-placeholder="开始日期" 
-							end-placeholder="结束日期" 
-							:clearable="false" 
-							@change="selectDateRange">
-						</el-date-picker>
+					<el-form-item label="发货单位">
+						<el-input placeholder="请输入..." v-model="findShipperCompanyName"></el-input>
+					</el-form-item>
+					<el-form-item label="发货地">
+						<el-input placeholder="请输入..." v-model="findShipperArea"></el-input>
+					</el-form-item>
+					<el-form-item label="收货单位">
+						<el-input placeholder="请输入..." v-model="findConsigneeCompanyName"></el-input>
+					</el-form-item>
+					<el-form-item label="收货地">
+						<el-input placeholder="请输入..." v-model="findConsigneeArea"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList">查询</el-button>
@@ -41,55 +42,66 @@
 					<el-table-column label="对外运距" prop="externalMileage" align="center"></el-table-column>
 					<el-table-column label="对外运价" prop="externalPrice" align="center"></el-table-column>
 					<el-table-column label="对外TKM" prop="externalUnitPrice" align="center"></el-table-column>
-					<el-table-column label="对内月结比率" prop="internalAbschlussRate" width="140" align="center">
+					<el-table-column label="对内月结比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.internalAbschlussRate)*100+'%'}}
+							<span v-if="scope.row.internalAbschlussRate">{{(scope.row.internalAbschlussRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对内现付比率" prop="internalCashRate" width="140" align="center">
+					<el-table-column label="对内现付比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.internalCashRate)*100+'%'}}
+							<span v-if="scope.row.internalCashRate">{{(scope.row.internalCashRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对内到付比率" prop="internalCodRate" width="140" align="center">
+					<el-table-column label="对内到付比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.internalCodRate)*100+'%'}}
+							<span v-if="scope.row.internalCodRate">{{(scope.row.internalCodRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对内收货方到付比率" prop="internalConsigneeCodRate" width="140" align="center">
+					<el-table-column label="对内收货方到付比率"  width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.internalConsigneeCodRate)*100+'%'}}
+							<span v-if="scope.row.internalConsigneeCodRate">{{(scope.row.internalConsigneeCodRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对内回单比率" prop="internalPorRate" width="140" align="center">
+					<el-table-column label="对内回单比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.internalPorRate)*100+'%'}}
+							<span v-if="scope.row.internalPorRate">{{(scope.row.internalPorRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对外月结比率" prop="externalAbschlussRate" width="140" align="center">
+					<el-table-column label="对外月结比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.externalAbschlussRate)*100+'%'}}
+							<span v-if="scope.row.externalAbschlussRate">{{(scope.row.externalAbschlussRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对外现付比率" prop="externalCashRate" width="140" align="center">
+					<el-table-column label="对外现付比率"  width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.externalCashRate)*100+'%'}}
+							<span v-if="scope.row.externalCashRate">{{(scope.row.externalCashRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对外到付比率" prop="externalCodRate" width="140" align="center">
+					<el-table-column label="对外到付比率"  width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.externalCodRate)*100+'%'}}
+							<span v-if="scope.row.externalCodRate">{{(scope.row.externalCodRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对外收货方到付比率" prop="externalConsigneeCodRate" width="140" align="center">
+					<el-table-column label="对外收货方到付比率"  width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.externalConsigneeCodRate)*100+'%'}}
+							<span v-if="scope.row.externalConsigneeCodRate">{{(scope.row.externalConsigneeCodRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="对外回单比率" prop="externalPorRate" width="140" align="center">
+					<el-table-column label="对外回单比率" width="140" align="center">
 						<template slot-scope="scope">
-							{{(scope.row.externalPorRate)*100+'%'}}
+							<span v-if="scope.row.externalPorRate">{{(scope.row.externalPorRate)*100+'%'}}</span>
+							<span v-else>0</span>
 						</template>
+
 					</el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
 						<template slot-scope="scope">
@@ -129,9 +141,10 @@ export default {
 			// findRangeDate: [new Date().getTime() - 3600000 * 24 * 30, new Date().getTime()],
 			// findshipperBeginDate: new Date().getTime() - 3600000 * 24 * 30,
 			// findshipperEndDate: new Date().getTime(),
-			findRangeDate: [],
-			findshipperBeginDate:'',
-			findshipperEndDate:'',
+			findConsigneeArea: '',
+			findConsigneeCompanyName: '',
+			findShipperArea: '',
+			findShipperCompanyName: '',
 			pageIndex: 1,
 			pageSize: 10,
 			total: 0,
@@ -143,9 +156,10 @@ export default {
 	},
 	methods: {
 		reset() {
-			this.findRangeDate = []
-			this.findshipperBeginDate = ''
-			this.findshipperEndDate = ''
+			this.findConsigneeArea = ''
+			this.findConsigneeCompanyName = ''
+			this.findShipperArea = ''
+			this.findShipperCompanyName = ''
 			this.getList()
 		},
 		getList() {
@@ -168,10 +182,6 @@ export default {
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
-		},
-		selectDateRange(date) {
-			this.findshipperBeginDate = new Date(date[0]).getTime()
-			this.findshipperEndDate = new Date(date[1]).getTime()
 		},
 		view(transporPriceID){
 			this.$router.push({ name: 'viewtmssettleconfig' , query: { transporPriceID} })
