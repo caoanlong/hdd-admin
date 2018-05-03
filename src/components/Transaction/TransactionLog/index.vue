@@ -21,7 +21,11 @@
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="钱包ID" prop="walletID"></el-table-column>
-					<el-table-column label="收支类型" prop="type" width="100"></el-table-column>
+					<el-table-column label="收支类型" prop="type" width="100" align="center">
+						<template slot-scope="scope">
+							<span v-if="scope.row.type">{{scope.row.type == 'Receive' ? '收入' : '支出'}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="交易前余额" align="center" prop="beforeBalance" width="100"></el-table-column>
 					<el-table-column label="金额" align="center" prop="amount" width="100"></el-table-column>
 					<el-table-column label="余额" align="center" prop="afterBalance" width="100"></el-table-column>
@@ -39,7 +43,7 @@
 					</el-table-column>
 					<el-table-column label="创建时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
+							<span v-if="scope.row.createTime">{{scope.row.createTime}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="费用流水类型" prop="billType" width="110"></el-table-column>
