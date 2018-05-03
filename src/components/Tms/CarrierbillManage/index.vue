@@ -55,7 +55,7 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini" stripe>
-					<!-- <el-table-column label="用户"  prop="userName" width="90" align="center"></el-table-column> -->
+					<el-table-column label="用户"  prop="userName" width="90" align="center"></el-table-column>
 					<el-table-column label="承运单号" prop="carrierOrderNo" width="160">
 						<template slot-scope="scope">
 							<el-popover trigger="hover" placement="top" class="customerTablePop">
@@ -80,7 +80,11 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="收货单位" prop="consigneeCompanyName"></el-table-column>
-					<el-table-column label="卸货地" prop="consigneeArea"></el-table-column>
+					<el-table-column label="卸货地" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.consigneeArea}}{{scope.row.consigneeDetailAddress}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column label="收货人" prop="consigneeName"></el-table-column>
 					<el-table-column label="到货时间" width="140" align="center">
 						<template slot-scope="scope">
@@ -110,7 +114,16 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="发货人" prop="shipperName"></el-table-column>
-					<el-table-column label="发货地" prop="shipperArea"></el-table-column>
+					<el-table-column label="发货地" width="140">
+						<template slot-scope="scope">
+							<span>{{scope.row.shipperArea}}{{scope.row.shipperDetailAddress}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="创建时间" width="140" align="center">
+						<template slot-scope="scope">
+							<span>{{scope.row.createTime | getdatefromtimestamp() }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column width="80" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.carrierOrderID)">查看</el-button>
@@ -201,12 +214,13 @@ export default {
 		// 重置搜索表单
 		reset() {
 			this.find.searchInfo = ''
-			this.find.findCreateTimeRangeDate = []
+			this.findCreateTimeRangeDate = []
 			this.find.createTimeBegin = ''
 			this.find.createTimeEnd = ''
-			this.find.findShipperRangeDate = []
+			this.findShipperRangeDate = []
 			this.find.shipperBeginDate = ''
 			this.find.shipperEndDate = ''
+			this.findArriveRangeDate = []
 			this.find.consigneeBeginDate = ''
 			this.find.consigneeEndDate = ''
 			this.find.status = ''

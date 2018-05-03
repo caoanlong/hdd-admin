@@ -35,7 +35,7 @@
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="聘用岗位">
-							<p>{{staff.position}}</p>
+							<p><span v-for="post in positions" :key="post">{{postMap[post] + '，'}}</span></p>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -203,14 +203,26 @@
 import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
 import ImageUpload from '../../../CommonComponents/ImageUpload'
+const postMap = {
+	'Operator': '操作员',
+	'Driver': '驾驶员',
+	'Supercargo': '押运员',
+	'SafetyOfficer': '专职安全员',
+	'Stevedore': '装卸管理人员',
+	'Other': '其他人员'
+}
 export default {
 	data() {
 		return {
 			staff: {},
 			comStaffIdentification:{},
 			comStaffPic:{},
-			otherImgs: []
+			otherImgs: [],
+			positions: []
 		}
+	},
+	computed: {
+		postMap: () => postMap
 	},
 	created() {
 		this.getInfo()
@@ -230,6 +242,7 @@ export default {
 					this.staff = resData
 					this.comStaffPic = resData.comStaffPic
 					this.comStaffIdentification = resData.comStaffIdentification
+					this.positions = resData.position.split(',')
 					let resDataComStaffPic = res.data.data.comStaffPic
 					let i = 1
 					while (i < 6) {

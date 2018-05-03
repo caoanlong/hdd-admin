@@ -52,6 +52,7 @@
 				border style="width: 100%" 
 				size="mini" stripe>
 					<el-table-column label="序号" type="index" align="center" width="60" fixed></el-table-column>
+					<el-table-column label="用户" align="center" prop="userName"></el-table-column>
 					<el-table-column label="发货日期" align="center" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.shipperDate">{{scope.row.shipperDate  | getdatefromtimestamp()}}</span>
@@ -92,8 +93,8 @@
 					</el-table-column>
 					<el-table-column label="车辆编号" prop="code"></el-table-column>
 					<el-table-column label="车牌号码" prop="plateNo" align="center" width="90"></el-table-column>
-					<el-table-column label="司机姓名" prop="realName" align="center" v-if="tabSelected=='superCargo'"></el-table-column>
-					<el-table-column label="随车人员" prop="realName" align="center" v-if="tabSelected=='driver'"></el-table-column>
+					<el-table-column label="司机姓名" prop="realName" align="center" v-if="tabSelected=='driver'"></el-table-column>
+					<el-table-column label="随车人员" prop="realName" align="center" v-if="tabSelected=='superCargo'"></el-table-column>
 					<el-table-column label="收货地区" prop="consigneeArea"></el-table-column>
 					<el-table-column label="收货详细地址" prop="consigneeDetailAddress"></el-table-column>
 					<el-table-column label="运费" prop="freight" align="center"></el-table-column>

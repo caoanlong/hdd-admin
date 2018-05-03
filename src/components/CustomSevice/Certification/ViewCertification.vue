@@ -11,17 +11,17 @@
 							<ImageUpload :files="[memMember.headPicture]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="身份证编号">
-							<p v-text="payRealNameApply.idcardNum"></p>
+							<p v-text="payRealNameApply.IDCardNum"></p>
 						</el-form-item>
 						<el-form-item label="身份证正面">
-							<ImageUpload :files="[payRealNameApply.idcardFrontPic]" :isPreview="true"/>
+							<ImageUpload :files="[payRealNameApply.IDCardFrontPic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="姓名">
-							<p v-text="payRealNameApply.realName"></p>
+							<p v-text="memMember.realName"></p>
 						</el-form-item>
 						<el-form-item label="单位">
 							<p v-text="memMember.plateNoOrCompanyName"></p>
@@ -30,7 +30,7 @@
 							<p v-text="payRealNameApply.createTime"></p>
 						</el-form-item>
 						<el-form-item label="身份证背面">
-							<ImageUpload :files="[payRealNameApply.idcardBackPic]" :isPreview="true"/>
+							<ImageUpload :files="[payRealNameApply.IDCardBackPic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>

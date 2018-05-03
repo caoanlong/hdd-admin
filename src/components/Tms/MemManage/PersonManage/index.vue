@@ -39,21 +39,20 @@
 							range-separator="至" 
 							start-placeholder="开始日期" 
 							end-placeholder="结束日期" 
-							
 							:clearable="false" 
 							@change="selectDateRange">
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getPersonList(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getPersonList()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
-					<el-table-column label="用户" prop="companyName" width="100px"></el-table-column>
+					<el-table-column label="用户" prop="memberCompany" width="100px"></el-table-column>
 					<el-table-column label="创建时间" width="140px">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
