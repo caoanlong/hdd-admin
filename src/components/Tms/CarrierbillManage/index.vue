@@ -55,7 +55,7 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini" stripe>
-					<el-table-column label="用户"  prop="userName" width="90" align="center"></el-table-column>
+					<el-table-column label="用户"  prop="memberCompany" width="90" align="center"></el-table-column>
 					<el-table-column label="承运单号" prop="carrierOrderNo" width="160">
 						<template slot-scope="scope">
 							<el-popover trigger="hover" placement="top" class="customerTablePop">

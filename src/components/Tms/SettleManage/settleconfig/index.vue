@@ -30,7 +30,7 @@
 					:data="tableData" 
 					border style="width: 100%" size="mini" stripe>
 					<el-table-column label="序号" type="index" align="center" fixed width="60"></el-table-column>
-					<el-table-column label="用户" prop="userName"></el-table-column>
+					<el-table-column label="用户" prop="memberCompany"></el-table-column>
 					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
 					<el-table-column label="发货地" prop="shipperArea" width="140"></el-table-column>
 					<el-table-column label="发货详细地址" prop="shipperDetailAddress" width="140"></el-table-column>

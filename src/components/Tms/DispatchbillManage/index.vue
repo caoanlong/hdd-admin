@@ -24,8 +24,8 @@
 			</div>
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini" stripe>
-					<el-table-column label="调度单号" prop="dispatchOrderNo" width="180" align="center">
-					</el-table-column>
+					<el-table-column label="用户" prop="memberCompany" align="center"></el-table-column>
+					<el-table-column label="调度单号" prop="dispatchOrderNo" width="180" align="center"></el-table-column>
 					<el-table-column label="车辆号牌" prop="plateNo" width="110" align="center">
 					</el-table-column>
 					<el-table-column label="货物规格/名称">

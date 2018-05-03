@@ -52,7 +52,7 @@
 				border style="width: 100%" 
 				size="mini" stripe>
 					<el-table-column label="序号" type="index" align="center" width="60" fixed></el-table-column>
-					<el-table-column label="用户" align="center" prop="userName"></el-table-column>
+					<el-table-column label="用户" align="center" prop="memberCompany"></el-table-column>
 					<el-table-column label="发货日期" align="center" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.shipperDate">{{scope.row.shipperDate  | getdatefromtimestamp()}}</span>
