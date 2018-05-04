@@ -18,7 +18,7 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="所在区域">
-							<p></p>
+							<p>{{certifyEnterprice.FullName}}</p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证编号">
 							<p>{{certifyEnterprice.TransportationLicenseCode}}</p>
@@ -38,7 +38,7 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="无车承运平台接入码">
-							<p>55786</p>
+							<p>{{certifyEnterprice.AccessCode}}</p>
 						</el-form-item>
 						<el-form-item label="营业执照图片">
 							<ImageUpload :files="[certifyEnterprice.BusinessLicensePic]" :isPreview="true"/>
@@ -48,7 +48,7 @@
 				<el-col :span="8">
 					<el-form label-width="160px">
 						<el-form-item label="无车承运平台AppKey">
-							<p></p>
+							<p>{{certifyEnterprice.AppKey}}</p>
 						</el-form-item>
 						<el-form-item label="道路运输许可证照片">
 							<ImageUpload :files="[certifyEnterprice.TransportationLicensePic]" :isPreview="true"/>

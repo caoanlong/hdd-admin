@@ -79,7 +79,7 @@
 								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memCertifyPerson && (scope.row.memCertifyPerson.certifyStatus == cerStatus.VALUE)">{{cerStatus.NAME}}</span>
 							</span>
 							<span v-if="(scope.row.memCertifyPerson && scope.row.memCertifyPerson.certifyStatus) && (scope.row.memTruckCertify && scope.row.memTruckCertify.certifyStatus)">/</span>
-							<span>
+							<span v-if="scope.row.type != 'IndShipper'">
 								<span v-for="cerStatus in certifyStatus" :key="cerStatus.Dict_ID" v-if="scope.row.memTruckCertify && (scope.row.memTruckCertify.certifyStatus == cerStatus.VALUE)">{{cerStatus.NAME}}</span>
 							</span>
 						</template>
