@@ -61,9 +61,11 @@
 							<el-input type="textarea" v-model="remark"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" v-if="certifyEnterprice.CertifyStatus != 'Success'" @click="enterpriceCertify('Success')">通过</el-button>
-                            <el-button type="danger" v-if="certifyEnterprice.CertifyStatus != 'Success'" @click="enterpriceCertify('Failed')">拒绝</el-button>
-							<el-button @click.native="back">返回</el-button>
+							<span v-if="certifyEnterprice.CertifyStatus != 'Success' && certifyEnterprice.CertifyStatus != 'Draft'">
+								<el-button type="success" @click="enterpriceCertify('Success')">通过</el-button>
+                            	<el-button type="danger" @click="enterpriceCertify('Failed')">拒绝</el-button>
+							</span>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>

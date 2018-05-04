@@ -56,8 +56,10 @@
 								v-if="certifyPerson.realNameStatus == 'Failed' || certifyPerson.realNameStatus == 'Rejected' || certifyPerson.realNameStatus == 'Draft'">实名认证</el-button>
 							</span>
 							<span v-else>
-								<el-button type="success" @click="persionCertify('Success')">激活</el-button>
-                            	<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
+								<span v-if="certifyPerson.CertifyStatus != 'Draft'">
+									<el-button type="success" @click="persionCertify('Success')">激活</el-button>
+                            		<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
+								</span>
 							</span>
 							<span style="margin-left:10px">
 								<el-button @click="back">返回</el-button>
