@@ -32,6 +32,7 @@
 			<div class="table">
 				<el-table ref="recTable" :data="tableData" show-summary :summary-method="getSummaries" border style="width: 100%" size="mini" stripe>
 					<el-table-column label="序号" type="index" align="center" fixed width="60"></el-table-column>
+					<el-table-column label="用户" prop="memberCompany"></el-table-column>
 					<el-table-column label="发货日期" width="90" align="center">
 						<template slot-scope="scope" v-if="scope.row.shipperDate">
 							{{scope.row.shipperDate | getdatefromtimestamp(true)}}

@@ -72,7 +72,7 @@
 						<p v-text="payCash.auditFailedReason"></p>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click.native="back">返回</el-button>
+						<el-button @click="back">返回</el-button>
 					</el-form-item>
 				</el-col>
 			</el-row>

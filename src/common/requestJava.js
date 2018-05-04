@@ -34,11 +34,19 @@ response => {
 	if (response.data.code != 200) {
 		if (response.data.code == 10016) {
 			localStorage.clear()
-			Message.error(response.data.msg)
+			if (response.data.msg) {
+				Message.error(response.data.msg)
+			} else {
+				Message.error(response.data.message)
+			}
 			window.location.href = '/#/login'
 			return Promise.reject('error')
 		}
-		Message.error(response.data.msg)
+		if (response.data.msg) {
+			Message.error(response.data.msg)
+		} else {
+			Message.error(response.data.message)
+		}
 		return Promise.reject('error')
 	}
 	return response

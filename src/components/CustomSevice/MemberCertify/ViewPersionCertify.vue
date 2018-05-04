@@ -119,7 +119,7 @@
 					}
 				})
 			},
-			// 个人认证(激活)
+			// 个人认证
 			persionCertify(status) {
 				let data = {
 					memId: this.$route.query.memId,

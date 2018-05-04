@@ -101,7 +101,7 @@
 							<span v-else>公司账户</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="220" >
+					<el-table-column label="操作" width="220" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" @click="viewPersionCertify(scope.row.certifyPersonId, scope.row.memId)" 
 							v-if="scope.row.type != 'Tourist'">
