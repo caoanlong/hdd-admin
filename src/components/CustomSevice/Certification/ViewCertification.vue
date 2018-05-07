@@ -11,10 +11,10 @@
 							<ImageUpload :files="[memMember.headPicture]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="身份证编号">
-							<p v-text="payRealNameApply.IDCardNum"></p>
+							<p v-text="payRealNameApply.iDCardNum"></p>
 						</el-form-item>
 						<el-form-item label="身份证正面">
-							<ImageUpload :files="[payRealNameApply.IDCardFrontPic]" :isPreview="true"/>
+							<ImageUpload :files="[payRealNameApply.iDCardFrontPic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -27,10 +27,11 @@
 							<p v-text="memMember.plateNoOrCompanyName"></p>
 						</el-form-item>
 						<el-form-item label="申请时间">
-							<p v-text="payRealNameApply.createTime"></p>
+							<p v-if="payRealNameApply.createTime">{{payRealNameApply.createTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 						<el-form-item label="身份证背面">
-							<ImageUpload :files="[payRealNameApply.IDCardBackPic]" :isPreview="true"/>
+							<ImageUpload :files="[payRealNameApply.iDCardBackPic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>
 				</el-col>

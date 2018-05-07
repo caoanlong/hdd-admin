@@ -20,7 +20,7 @@
 						<el-form-item label="所在区域">
 							<p>{{certifyEnterprice.FullName}}</p>
 						</el-form-item>
-						<el-form-item label="道路运输许可证编号">
+						<el-form-item label="道路运输许可证编号" v-if="$route.query.type != 'InfoDept'">
 							<p>{{certifyEnterprice.TransportationLicenseCode}}</p>
 						</el-form-item>
 					</el-form>
@@ -37,7 +37,7 @@
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="160px">
-						<el-form-item label="无车承运平台接入码">
+						<el-form-item label="无车承运平台接入码" v-if="$route.query.type != '3PL' && $route.query.type != 'InfoDept'">
 							<p>{{certifyEnterprice.AccessCode}}</p>
 						</el-form-item>
 						<el-form-item label="营业执照图片">
@@ -47,10 +47,10 @@
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="160px">
-						<el-form-item label="无车承运平台AppKey">
+						<el-form-item label="无车承运平台AppKey" v-if="$route.query.type != '3PL' && $route.query.type != 'InfoDept'">
 							<p>{{certifyEnterprice.AppKey}}</p>
 						</el-form-item>
-						<el-form-item label="道路运输许可证照片">
+						<el-form-item label="道路运输许可证照片" v-if="$route.query.type != 'InfoDept'">
 							<ImageUpload :files="[certifyEnterprice.TransportationLicensePic]" :isPreview="true"/>
 						</el-form-item>
 					</el-form>

@@ -19,6 +19,9 @@
 						<el-form-item label="身份证正面">
 							<ImageUpload :files="[certifyPerson.IDCardFrontPic]" :isPreview="true"/>
 						</el-form-item>
+						<el-form-item label="驾驶证正面" v-if="$route.query.type == 'Driver'">
+							<ImageUpload :files="[certifyPerson.DriverLicensePic]" :isPreview="true"/>
+						</el-form-item>
 						<el-form-item label="钱包状态">
 							<p v-if="certifyPerson.walletStatus == 'Y'">已激活</p>
 							<p v-else>未激活</p>
@@ -39,6 +42,9 @@
 						<el-form-item label="身份证背面">
 							<ImageUpload :files="[certifyPerson.IDCardBackPic]" :isPreview="true"/>
 						</el-form-item>
+						<el-form-item label="驾驶证副本" v-if="$route.query.type == 'Driver'">
+							<ImageUpload :files="[certifyPerson.DriverLicenseCopyPic]" :isPreview="true"/>
+						</el-form-item>
 						<el-form-item label="实名状态">
 							<p v-for="realStatus in realNameStatus" :key="realStatus.Dict_ID" v-if="certifyPerson.realNameStatus == realStatus.VALUE">{{realStatus.NAME}}</p>
 						</el-form-item>
@@ -46,20 +52,21 @@
 				</el-col>
 				<el-col :span="24">
 					<el-form label-width="120px">
-                        <el-form-item label="审核说明" v-if="certifyPerson.walletStatus == 'N'">
+                        <el-form-item label="审核说明" v-if="certifyPerson.CertifyStatus != 'Draft'">
 							<el-input type="textarea" v-model="remark"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<span v-if="certifyPerson.walletStatus == 'Y'">
+							<span>
 								<el-button type="primary" 
 								@click="realNameCertify" 
-								v-if="certifyPerson.realNameStatus == 'Failed' || certifyPerson.realNameStatus == 'Rejected' || certifyPerson.realNameStatus == 'Draft'">实名认证</el-button>
+								v-if="certifyPerson.realNameStatus == 'Failed' 
+								|| certifyPerson.realNameStatus == 'Rejected' 
+								|| certifyPerson.realNameStatus == 'Draft' 
+								&& certifyPerson.CertifyStatus == 'Success'">实名认证</el-button>
 							</span>
-							<span v-else>
-								<span v-if="certifyPerson.CertifyStatus != 'Draft'">
-									<el-button type="success" @click="persionCertify('Success')">激活</el-button>
-                            		<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
-								</span>
+							<span v-if="certifyPerson.CertifyStatus != 'Draft'">
+								<el-button type="success" @click="persionCertify('Success')">激活</el-button>
+								<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
 							</span>
 							<span style="margin-left:10px">
 								<el-button @click="back">返回</el-button>

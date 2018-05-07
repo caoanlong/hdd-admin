@@ -98,21 +98,24 @@
 						<template slot-scope="scope">
 							<span v-if="scope.row.accountType == 'CompanyAccount'">公司账户</span>
 							<span v-else-if="scope.row.accountType == 'PersonalAccount'">个人账户</span>
-							<span v-else>公司账户</span>
+							<span v-else>个人账户</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="220" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" @click="viewPersionCertify(scope.row.certifyPersonId, scope.row.memId)" 
-							v-if="scope.row.type != 'Tourist'">
+							<el-button type="default" size="mini" 
+								@click="viewPersionCertify(scope.row.certifyPersonId, scope.row.memId, scope.row.type)" 
+								v-if="scope.row.type != 'Tourist' && scope.row.memCertifyPerson">
 								<svg-icon icon-class="file-icon"></svg-icon> 个人
 							</el-button>
-							<el-button type="default" size="mini" @click="viewCompanyCertify(scope.row.certifyEnterpriceId, scope.row.memId)" 
-							v-if="scope.row.type == 'NoTruck' || scope.row.type == '3PL' || scope.row.type == 'InfoDept'">
+							<el-button type="default" size="mini" 
+								@click="viewCompanyCertify(scope.row.certifyEnterpriceId, scope.row.memId, scope.row.type)" 
+								v-if="(scope.row.type == 'NoTruck' || scope.row.type == '3PL' || scope.row.type == 'InfoDept') && scope.row.memTruckCertify">
 								<svg-icon icon-class="file-icon"></svg-icon> 企业
 							</el-button>
-							<el-button type="default" size="mini" @click="viewTruckCertify(scope.row.truckCertifyId, scope.row.memId)" 
-							v-if="scope.row.type == 'Driver'">
+							<el-button type="default" size="mini" 
+								@click="viewTruckCertify(scope.row.truckCertifyId, scope.row.memId)" 
+								v-if="scope.row.type == 'Driver' && scope.row.memTruckCertify">
 								<svg-icon icon-class="file-icon"></svg-icon> 车辆
 							</el-button>
 							<el-button type="default" size="mini" v-if="scope.row.status=='N'" @click="updateStatus(scope.row.memId, 'Y')">
@@ -283,11 +286,11 @@ export default {
 				}
 			})
 		},
-		viewPersionCertify(certifyPersonId, memId) {
-			this.$router.push({name: 'viewpersioncertify', query: {certifyPersonId, memId}})
+		viewPersionCertify(certifyPersonId, memId, type) {
+			this.$router.push({name: 'viewpersioncertify', query: {certifyPersonId, memId, type}})
 		},
-		viewCompanyCertify(certifyEnterpriceId, memId) {
-			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId, memId}})
+		viewCompanyCertify(certifyEnterpriceId, memId, type) {
+			this.$router.push({name: 'viewcompanycertify', query: {certifyEnterpriceId, memId, type}})
 		},
 		viewTruckCertify(truckCertifyId, memId) {
 			this.$router.push({name: 'viewtruckcertify', query: {truckCertifyId, memId}})

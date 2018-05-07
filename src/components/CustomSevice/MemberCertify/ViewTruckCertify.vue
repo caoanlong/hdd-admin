@@ -43,7 +43,7 @@
 							<p>{{certifyTruck.Type}}</p>
 						</el-form-item>
 						<el-form-item label="车主">
-							<p></p>
+							<p>{{certifyTruck.Mem_OwnerIDName}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
