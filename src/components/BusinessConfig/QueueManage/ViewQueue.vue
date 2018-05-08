@@ -27,7 +27,8 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="业务时间">
-							<p>{{queue.opTime | getdatefromtimestamp()}}</p>
+							<p v-if="queue.opTime">{{queue.opTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
 						<el-form-item label="是否暂停推送">
 							<p>{{queue.isPausePush=='Y'?'是':'否'}}</p>
@@ -39,7 +40,7 @@
 							<p>{{queue.isFinish=='Y'?'是':'否'}}</p>
 						</el-form-item>
 						<el-form-item label="修改时间">
-							<p v-if="queue.updateTime">{{queue.updateTime | getdatefromtimestamp()}}</p>
+							<p v-if="queue.updateTime">{{queue.updateTime}}</p>
 							<p v-else></p>
 						</el-form-item>
 					</el-form>
@@ -56,7 +57,8 @@
 							<p>{{queue.createBy}}</p>
 						</el-form-item>
 						<el-form-item label="创建时间">
-							<p>{{queue.createTime | getdatefromtimestamp()}}</p>
+							<p v-if="queue.createTime">{{queue.createTime}}</p>
+							<p v-else></p>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -100,7 +102,6 @@
 					params
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.message)
 						this.queue = res.data.data
 					} else {
 						Message.error(res.data.message)

@@ -49,12 +49,17 @@
 				</el-col>
 				<el-col :span="24">
 					<el-form label-width="120px">
-						<el-form-item label="审核说明">
+						<el-form-item label="审核说明" 
+							v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'">
 							<el-input type="textarea" v-model="remark" resize="none"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" v-if="certifyTruck.CertifyStatus != 'Success'" @click="truckCertify('Success')">通过</el-button>
-							<el-button type="danger" v-if="certifyTruck.CertifyStatus != 'Success'" @click="truckCertify('Failed')">拒绝</el-button>
+							<el-button type="success" 
+								v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'"
+								@click="truckCertify('Success')">通过</el-button>
+							<el-button type="danger" 
+								v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'" 
+								@click="truckCertify('Failed')">拒绝</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-form>
@@ -115,6 +120,10 @@ export default {
 		},
 		// 车辆认证
 		truckCertify(status) {
+			if (!this.remark.trim()) {
+				Message.error('审核说明不能为空！')
+				return
+			}
 			let data = {
 				memId: this.$route.query.memId,
 				status: status,

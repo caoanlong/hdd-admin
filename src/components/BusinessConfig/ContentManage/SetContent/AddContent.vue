@@ -6,22 +6,22 @@
 			</div>
 			<el-row>
 				<el-col :span="18" :offset="2">
-					<el-form label-width="120px">
-						<el-form-item label="所属栏目">
+					<el-form label-width="120px" :model="content" :rules="rules" ref="ruleForm">
+						<el-form-item label="所属栏目" prop="ContentTopic_ID">
 							<el-select style="width: 100%" placeholder="请选择" v-model="content.ContentTopic_ID">
 								<el-option v-for="contentTopic in contentTopics" :key="contentTopic.ContentTopic_ID" :label="contentTopic.Name" :value="contentTopic.ContentTopic_ID"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="代码">
+						<el-form-item label="代码" prop="Code">
 							<el-input v-model="content.Code"></el-input>
 						</el-form-item>
-						<el-form-item label="名称">
+						<el-form-item label="名称" prop="Name">
 							<el-input v-model="content.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="标题">
+						<el-form-item label="标题" prop="Title">
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
-                        <el-form-item label="内容">
+                        <el-form-item label="内容" prop="Content">
 							<quill-editor v-model="content.Content"
 								class="customerEditor" 
 								ref="myQuillEditor"
@@ -34,7 +34,7 @@
 						<el-form-item label="图片URL">
 							<el-input v-model="content.PictureURL"></el-input>
 						</el-form-item>
-                        <el-form-item label="URL">
+                        <el-form-item label="URL" prop="URL">
 							<el-input v-model="content.URL"></el-input>
 						</el-form-item>
                         <el-form-item label="是否启用">
@@ -47,7 +47,7 @@
 							<el-input type="textarea" v-model="content.Tips"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="addContent">立即保存</el-button>
+							<el-button type="primary" @click="addContent">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -61,6 +61,7 @@
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	import { quillEditor } from 'vue-quill-editor'
+	import { checkURL } from '../../../../common/validator'
 	export default {
 		data() {
 			return {
@@ -77,7 +78,31 @@
 					isEnable: true,
 					Tips: ''
 				},
-				editorOption: {}
+				editorOption: {},
+				rules: {
+					ContentTopic_ID: [
+						{required: true, message: '请选择所属栏目'}
+					],
+					Code: [
+						{required: true, message: '请输入代码'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					Name: [
+						{required: true, message: '请输入名称'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					Title: [
+						{required: true, message: '请输入标题'},
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
+					],
+					Content: [
+						{required: true, message: '请输入内容'}
+					],
+					URL: [
+						{required: true, message: '请输入URL'},
+						{validator: checkURL}
+					]
+				}
 			}
         },
         created() {
@@ -109,16 +134,20 @@
 					isEnable: this.content.isEnable ? 'Y' : 'N',
 					Tips: this.content.Tips
 				}
-				request({
-					url: '/set_content/add',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'setcontent'})
-					} else {
-						Message.error(res.data.msg)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						request({
+							url: '/set_content/add',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 0) {
+								Message.success(res.data.msg)
+								this.$router.push({name: 'setcontent'})
+							} else {
+								Message.error(res.data.msg)
+							}
+						})
 					}
 				})
 			},

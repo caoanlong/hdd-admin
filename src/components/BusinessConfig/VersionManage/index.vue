@@ -7,7 +7,6 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="addVersion">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -48,7 +47,7 @@
 					</el-table-column>
 					<el-table-column label="版本说明" prop="content">
 					</el-table-column>
-					<el-table-column label="操作" width="300" align="center">
+					<el-table-column label="操作" width="300" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" @click="viewVersion(scope.row.appVersionID)" icon="el-icon-view">查看</el-button>
 							<el-button type="default" size="mini" @click="editVersion(scope.row.appVersionID)" icon="el-icon-edit" title>编辑</el-button>
@@ -87,10 +86,9 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
-			refreshing: false,
 			tableData: [],
 			selectedVersions: []
 		}
@@ -100,11 +98,12 @@ export default {
 	},
 	methods: {
 		pageChange(index) {
-			this.getVersionList(index)
+			this.pageIndex = index
+			this.getVersionList()
 		},
-		getVersionList(pageNum) {
+		getVersionList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize
 			}
 			requestJava({
@@ -131,13 +130,6 @@ export default {
 		},
 		viewVersion(appVersionID) {
 			this.$router.push({ name: 'viewversion', query: {appVersionID} })
-		},
-		refresh() {
-			this.refreshing = true
-			this.getVersionList()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
 		},
 		deleteConfirm(id) {
 			let ids = ''

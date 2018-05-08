@@ -4,10 +4,10 @@
 			<div slot="header" class="clearfix">
 				<span>个人认证</span>
 			</div>
-			<el-row>
-				<el-col :span="12">
-					<el-form label-width="120px">
-                        <el-form-item label="姓名">
+			<el-form label-width="120px">
+				<el-row>
+					<el-col :span="12">
+						<el-form-item label="姓名">
 							<p>{{certifyPerson.RealName}}</p>
 						</el-form-item>
 						<el-form-item label="身份证编号">
@@ -26,11 +26,9 @@
 							<p v-if="certifyPerson.walletStatus == 'Y'">已激活</p>
 							<p v-else>未激活</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="12">
-					<el-form label-width="120px">
-                        <el-form-item label="联系电话">
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="联系电话">
 							<p>{{certifyPerson.mobile}}</p>
 						</el-form-item>
 						<el-form-item label="账户编号">
@@ -48,33 +46,38 @@
 						<el-form-item label="实名状态">
 							<p v-for="realStatus in realNameStatus" :key="realStatus.Dict_ID" v-if="certifyPerson.realNameStatus == realStatus.VALUE">{{realStatus.NAME}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="24">
-					<el-form label-width="120px">
-                        <el-form-item label="审核说明" v-if="certifyPerson.CertifyStatus != 'Draft'">
-							<el-input type="textarea" v-model="remark"></el-input>
-						</el-form-item>
-						<el-form-item>
-							<span>
-								<el-button type="primary" 
-								@click="realNameCertify" 
-								v-if="certifyPerson.realNameStatus == 'Failed' 
-								|| certifyPerson.realNameStatus == 'Rejected' 
-								|| certifyPerson.realNameStatus == 'Draft' 
-								&& certifyPerson.CertifyStatus == 'Success'">实名认证</el-button>
-							</span>
-							<span v-if="certifyPerson.CertifyStatus != 'Draft'">
-								<el-button type="success" @click="persionCertify('Success')">激活</el-button>
-								<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
-							</span>
-							<span style="margin-left:10px">
-								<el-button @click="back">返回</el-button>
-							</span>
-						</el-form-item>
-					</el-form>
-				</el-col>
-			</el-row>
+					</el-col>
+				</el-row>
+				<el-form-item label="企业审批状态" v-if="$route.query.type == 'Staff'">
+					<p>{{certifyPerson.approvalStatus}}</p>
+				</el-form-item>
+				<el-form-item label="所在区域" v-if="$route.query.type == 'IndShipper'">
+					<p>{{certifyPerson.areaName}}</p>
+				</el-form-item>
+				<el-form-item label="详细地址" v-if="$route.query.type == 'IndShipper'">
+					<p>{{certifyPerson.detailAddress}}</p>
+				</el-form-item>
+				<el-form-item label="审核说明" v-if="certifyPerson.CertifyStatus != 'Draft'">
+					<el-input type="textarea" v-model="remark"></el-input>
+				</el-form-item>
+				<el-form-item>
+					<span>
+						<el-button type="primary" 
+						@click="realNameCertify" 
+						v-if="certifyPerson.realNameStatus == 'Failed' 
+						|| certifyPerson.realNameStatus == 'Rejected' 
+						|| certifyPerson.realNameStatus == 'Draft' 
+						&& certifyPerson.CertifyStatus == 'Success'">实名认证</el-button>
+					</span>
+					<span v-if="certifyPerson.CertifyStatus != 'Draft'">
+						<el-button type="success" @click="persionCertify('Success')">激活</el-button>
+						<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
+					</span>
+					<span style="margin-left:10px">
+						<el-button @click="back">返回</el-button>
+					</span>
+				</el-form-item>
+			</el-form>
 		</el-card>
 	</div>
 </template>

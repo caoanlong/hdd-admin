@@ -13,14 +13,9 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getMessages(1)">查询</el-button>
+						<el-button type="primary" @click="getMessages()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
-				</el-form>
-			</div>
-			<div class="tableControl">
-				<el-form :inline="true" class="form-inline">
-					<el-button type="default" size="mini" icon="el-icon-refresh">刷新</el-button>
 				</el-form>
 			</div>
 			<div class="table">
@@ -56,7 +51,7 @@
 					<el-table-column label="App类型" prop="AppType"></el-table-column>
 					<el-table-column label="手机类型" prop="PhoneType"></el-table-column>
 					<el-table-column label="推送消息标题" prop="Title"></el-table-column>
-					<el-table-column label="操作" width="180" align="center">
+					<el-table-column label="操作" width="180" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewMessage(scope.row.Msg_ID)">查看</el-button>
 							<el-button type="default" size="mini">再次发送</el-button>
@@ -67,12 +62,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getMessages()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -105,15 +100,17 @@ export default {
 	},
 	methods: {
 		pageChange(index) {
-			this.getMessages(index)
+			this.pageIndex = index
+			this.getMessages()
 		},
 		// 重置搜索表单
 		reset() {
 			this.findPushStatus = ''
+			this.getMessages()
 		},
 		getMessages(pageIndex) {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				PushStatus: this.findPushStatus,
 			}

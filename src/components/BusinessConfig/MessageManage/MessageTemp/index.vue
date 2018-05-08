@@ -9,8 +9,7 @@
                     <el-button type="default" size="mini" icon="el-icon-plus" @click="addMessagetemplate">添加</el-button>
                     <el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
                     <upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
-				    <el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
-                    <el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
+				    <el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click="exportExcel">导出</el-button>
                 </el-form>
 		    </div>
 		    <div class="table">
@@ -34,7 +33,7 @@
                         </template>
                     </el-table-column>
                     <!-- <el-table-column label="创建人" prop="createBy.Name" width="80"></el-table-column> -->
-                    <el-table-column label="操作" width="230" align="center">
+                    <el-table-column label="操作" width="230" align="center" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="default" size="mini" @click="viewMessagetemplate(scope.row.MessageTemplate_ID)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="editMessagetemplate(scope.row.MessageTemplate_ID)">编辑</el-button>
@@ -46,12 +45,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getMessagetemplates()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -169,13 +168,6 @@
             },
             pageChange(index) {
                 this.getMessagetemplates(index)
-            },
-            refresh() {
-                this.refreshing = true
-                this.getMessagetemplates()
-                setTimeout(() => {
-                    this.refreshing = false
-                }, 500)
             },
 			viewMessagetemplate(id) {
                 this.$router.push({ name: 'viewmessagetemp', query: { MessageTemplate_ID: id} })

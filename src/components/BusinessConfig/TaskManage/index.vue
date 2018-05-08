@@ -25,7 +25,7 @@
 					</el-table-column>
 					<el-table-column label="任务执行url" prop="url"></el-table-column>
 					<el-table-column label="任务描述" prop="description"></el-table-column>
-					<el-table-column label="操作" width="360" align="center">
+					<el-table-column label="操作" width="360" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" @click="pause(scope.row.jobIdStr)">暂停</el-button>
 							<el-button type="default" size="mini" @click="recovery(scope.row.jobIdStr)">恢复</el-button>

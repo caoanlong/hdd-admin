@@ -22,17 +22,17 @@
 			<div slot="header" class="clearfix">
 				<span>{{title}}</span>
 			</div>
-			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-form-item label="名称">
+			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
+				<el-form-item label="名称" prop="name">
 					<el-input v-model="currentNode.name"></el-input>
 				</el-form-item>
-				<el-form-item label="APP类型">
+				<el-form-item label="APP类型" prop="type">
 					<el-select style="width: 100%" placeholder="请选择" v-model="currentNode.type">
 						<el-option label="司机端" value="Driver"></el-option>
 						<el-option label="货主端" value="Shipper"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="代码">
+				<el-form-item label="代码" prop="code">
 					<el-input v-model="currentNode.code"></el-input>
 				</el-form-item>
 				<el-form-item label="描述">
@@ -74,6 +74,19 @@ export default {
 			},
 			title: '添加顶级节点',
 			button: '立即创建',
+			rules: {
+				name: [
+					{required: true, message: '请输入名称'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				type: [
+					{required: true, message: '请选择类型'}
+				],
+				code: [
+					{required: true, message: '请输入代码'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+			}
 		}
     },
 	created() {
@@ -137,18 +150,6 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.name) {
-				this.$message.error('名称不能为空！')
-				return
-			}
-			if (!this.currentNode.type) {
-				this.$message.error('App类型不能为空！')
-				return
-			}
-			if (!this.currentNode.code) {
-				this.$message.error('代码不能为空！')
-				return
-			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
@@ -158,7 +159,11 @@ export default {
 					content: this.currentNode.content,
 					appPagePID: this.currentNode.appPagePID,
 				}
-				this.addAppPage(params)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.addAppPage(params)
+					}
+				})
 			// 编辑
 			} else {
 				let params = {
@@ -169,7 +174,11 @@ export default {
 					content: this.currentNode.content,
 					appPagePID: this.currentNode.appPagePID,
 				}
-				this.updatetAppPage(params)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.updatetAppPage(params)
+					}
+				})
 			}
 		},
 		getAppPages() {

@@ -6,8 +6,8 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="任务类型">
+					<el-form label-width="120px" :model="smsTemp" :rules="rules" ref="ruleForm">
+						<el-form-item label="任务类型" prop="businessType">
 							<el-select style="width: 100%" placeholder="请选择" v-model="smsTemp.businessType">
 								<el-option label="注册" value="VERFIFY_CODE_REGISTER"></el-option>
                                 <el-option label="登录" value="VERFIFY_CODE_SINGIN"></el-option>
@@ -18,7 +18,7 @@
 						<el-form-item label="模板代码">
 							<p>{{smsTemp.businessType}}</p>
 						</el-form-item>
-						<el-form-item label="模板内容">
+						<el-form-item label="模板内容" prop="templateContent">
 							<el-input type="textarea" v-model="smsTemp.templateContent"></el-input>
 						</el-form-item>
 						<el-form-item>
@@ -42,7 +42,16 @@
                     code: '',
                     templateContent: ''
                 },
-				appPages: []
+				appPages: [],
+				rules: {
+					businessType: [
+						{required: true, message: '请选择任务类型'}
+					],
+					templateContent: [
+						{required: true, message: '请输入模板内容'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					]
+				}
 			}
 		},
 		methods: {
@@ -52,17 +61,20 @@
 					code: this.smsTemp.businessType,
 					templateContent: this.smsTemp.templateContent,
 				}
-				console.log(data)
-				requestJava({
-					url: '/sysSmsTemplate/save',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 200) {
-						Message.success(res.data.message)
-						this.$router.push({name: 'messagetemp'})
-					} else {
-						Message.error(res.data.message)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						requestJava({
+							url: '/sysSmsTemplate/save',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 200) {
+								Message.success(res.data.message)
+								this.$router.push({name: 'messagetemp'})
+							} else {
+								Message.error(res.data.message)
+							}
+						})
 					}
 				})
 			},

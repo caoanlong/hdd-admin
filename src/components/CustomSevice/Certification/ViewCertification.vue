@@ -63,9 +63,9 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="approve('')">审核通过</el-button>
-							<el-button type="danger" @click.native="approve('Rejected')">驳回</el-button>
-							<el-button @click.native="back">返回</el-button>
+							<el-button type="primary" v-if="payRealNameApply.auditStatus == 'Commited'" @click="approve('')">审核通过</el-button>
+							<el-button type="danger" v-if="payRealNameApply.auditStatus == 'Commited'" @click="approve('Rejected')">驳回</el-button>
+							<el-button @click="back">返回</el-button>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -80,8 +80,10 @@
 	export default {
 		data() {
 			return {
-				payRealNameApply:[],
-				memMember:[],
+				payRealNameApply: {
+					auditFailedReason: ''
+				},
+				memMember: {},
 				findAuditStatus:'',
 				flag:''
 			}
@@ -112,6 +114,13 @@
 				let data = {
 					realNameApplyID: this.$route.query.realNameApplyID,
 					flag
+				}
+				if (flag == 'Rejected') {
+					if (!this.payRealNameApply.auditFailedReason) {
+						Message.error('驳回原因不能为空！')
+						return
+					}
+					data.auditFailedReason = this.payRealNameApply.auditFailedReason
 				}
 				requestJava({
 					url: '/customerservice/payRealNameApply/approve',
