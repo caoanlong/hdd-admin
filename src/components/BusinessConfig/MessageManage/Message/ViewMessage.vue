@@ -11,10 +11,10 @@
 							<p>{{setMessage.msgTemplate.AppPage.Name}}</p>
 						</el-form-item>
 						<el-form-item label="接收人">
-							<p>{{setMessage.mem_rec.RealName}}</p>
+							<p>{{setMessage.mem_rec ? setMessage.mem_rec.RealName : ''}}</p>
 						</el-form-item>
 						<el-form-item label="发送人">
-							<p>{{setMessage.mem_send.RealName}}</p>
+							<p>{{setMessage.mem_send ? setMessage.mem_send.RealName : ''}}</p>
 						</el-form-item>
 						<el-form-item label="内容">
 							<p>{{setMessage.Content}}</p>

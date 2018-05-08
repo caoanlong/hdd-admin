@@ -6,34 +6,34 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="APP页面">
+					<el-form label-width="120px" :model="messagetemplate" :rules="rules" ref="ruleForm">
+						<el-form-item label="APP页面" prop="AppPage_ID">
 							<el-select style="width: 100%" placeholder="请选择" v-model="messagetemplate.AppPage_ID">
 								<el-option v-for="appPage in appPages" :key="appPage.AppPage_ID" :label="appPage.Name" :value="appPage.AppPage_ID"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="跳转URL">
+						<el-form-item label="跳转URL" prop="ForwardURL">
 							<el-input v-model="messagetemplate.ForwardURL"></el-input>
 						</el-form-item>
-						<el-form-item label="JSON跳转样例">
+						<el-form-item label="JSON跳转样例" prop="JSONForward">
 							<el-input v-model="messagetemplate.JSONForward"></el-input>
 						</el-form-item>
-						<el-form-item label="代码">
+						<el-form-item label="代码" prop="Code">
 							<el-input v-model="messagetemplate.Code"></el-input>
 						</el-form-item>
-						<el-form-item label="名称">
+						<el-form-item label="名称" prop="Name">
 							<el-input v-model="messagetemplate.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="标题">
+						<el-form-item label="标题" prop="Title">
 							<el-input v-model="messagetemplate.Title"></el-input>
 						</el-form-item>
 						<el-form-item label="图标">
 							<el-input v-model="messagetemplate.IconURL"></el-input>
 						</el-form-item>
-						<el-form-item label="格式">
+						<el-form-item label="格式" prop="Content">
 							<el-input v-model="messagetemplate.Content"></el-input>
 						</el-form-item>
-						<el-form-item label="JSON样例">
+						<el-form-item label="JSON样例" prop="JSONSample">
 							<el-input v-model="messagetemplate.JSONSample"></el-input>
 						</el-form-item>
 						<el-form-item label="是否有效">
@@ -55,13 +55,45 @@
 <script type="text/javascript">
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
+	import { checkURL } from '../../../../common/validator'
 	export default {
 		data() {
 			return {
 				messagetemplate: {
 					IsEnable: false
 				},
-				appPages: []
+				appPages: [],
+				rules: {
+					AppPage_ID: [
+						{required: true, message: '请选择APP页面'}
+					],
+					ForwardURL: [
+						{required: true, message: '请输入跳转URL'},
+						{validator: checkURL}
+					],
+					JSONForward: [
+						{required: true, message: '请输入JSON跳转样例'}
+					],
+					Code: [
+						{required: true, message: '请输入代码'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					Name: [
+						{required: true, message: '请输入名称'},
+						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+					],
+					Title: [
+						{required: true, message: '请输入标题'},
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
+					],
+					Content: [
+						{required: true, message: '请输入格式'},
+						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
+					],
+					JSONSample: [
+						{required: true, message: '请输入JSON样例'}
+					]
+				}
 			}
 		},
 		created() {
@@ -83,17 +115,20 @@
 					IsEnable: this.messagetemplate.IsEnable ? 'Y' : 'N',
 					PushType: this.messagetemplate.PushType
 				}
-				console.log(data)
-				request({
-					url: '/set_messagetemplate/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'messagetemp'})
-					} else {
-						Message.error(res.data.msg)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						request({
+							url: '/set_messagetemplate/update',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 0) {
+								Message.success(res.data.msg)
+								this.$router.push({name: 'messagetemp'})
+							} else {
+								Message.error(res.data.msg)
+							}
+						})
 					}
 				})
 			},

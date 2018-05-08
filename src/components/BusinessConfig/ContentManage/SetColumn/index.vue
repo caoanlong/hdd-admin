@@ -22,21 +22,21 @@
 			<div slot="header" class="clearfix">
 				<span>{{title}}</span>
 			</div>
-			<el-form ref="form" :model="currentNode" label-width="80px">
-				<el-form-item label="栏目名称">
+			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
+				<el-form-item label="栏目名称" prop="Name">
 					<el-input v-model="currentNode.Name"></el-input>
 				</el-form-item>
-				<el-form-item label="代码">
+				<el-form-item label="代码" prop="Code">
 					<el-input v-model="currentNode.Code"></el-input>
 				</el-form-item>
-				<el-form-item label="类型">
+				<el-form-item label="类型" prop="Type">
 					<el-input v-model="currentNode.Type"></el-input>
 				</el-form-item>
 				<el-form-item label="是否启用">
 					<el-switch v-model="currentNode.isEnable"></el-switch>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click.native="submitForm(button)">{{button}}</el-button>
+					<el-button type="primary" @click="submitForm(button)">{{button}}</el-button>
 					<el-button>取消</el-button>
 				</el-form-item>
 			</el-form>
@@ -58,12 +58,22 @@ export default {
 			currentNode: {
 				Name: '',
 				Code: '',
-				Type: 'Public',
+				Type: 'public',
 				isEnable: true
 			},
 			title: '添加顶级节点',
 			button: '立即创建',
-	        selectedColumns: []
+			selectedColumns: [],
+			rules: {
+				Name: [
+					{required: true, message: '请输入名称'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				],
+				Code: [
+					{required: true, message: '请输入代码'},
+					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+				]
+			}
 		}
     },
 	created() {
@@ -76,7 +86,7 @@ export default {
 			this.currentNode = {
 				Name: '',
 				Code: '',
-				Type: 'Public',
+				Type: 'public',
 				isEnable: true
 			}
 		},
@@ -107,7 +117,7 @@ export default {
 				ContentTopic_PID: this.currentNode.ContentTopic_ID,
 				Name: '',
 				Code: '',
-				Type: 'Public',
+				Type: 'public',
 				isEnable: true
 			}
 			this.iconTxt='添加图标'
@@ -127,14 +137,6 @@ export default {
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.Name) {
-				this.$message.error('栏目名称不能为空！')
-				return
-			}
-			if (!this.currentNode.Code) {
-				this.$message.error('代码不能为空！')
-				return
-			}
 			// 创建
 			if (type == '立即创建') {
 				let params = {
@@ -144,7 +146,11 @@ export default {
 					ContentTopic_PID: this.currentNode.ContentTopic_PID,
 					isEnable: this.isShow ? 'Y' : 'N'
 				}
-				this.addColumn(params)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.addColumn(params)
+					}
+				})
 			// 编辑
 			} else {
 				let params = {
@@ -155,7 +161,11 @@ export default {
 					ContentTopic_PID: this.currentNode.ContentTopic_PID,
 					isEnable: this.isShow ? 'Y' : 'N'
 				}
-				this.updatetColumn(params)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						this.updatetColumn(params)
+					}
+				})
 			}
 		},
 		getColumns() {

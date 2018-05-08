@@ -43,12 +43,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -69,7 +69,7 @@
 	export default {
 		data() {
 			return {
-				pageNum: 1,
+				pageIndex: 1,
 				pageSize: 10,
 				count: 0,
 				tableData: [],
@@ -84,7 +84,8 @@
 		},
 		methods: {
 			pageChange(index) {
-				this.getList(index)
+				this.pageIndex = index
+				this.getList()
 			},
 			reset() {
 				this.findType = '',
@@ -93,9 +94,9 @@
 			selectionChange(data) {
                 this.selectedBanks = data.map(item => item.supportBankCode)
             },
-			getList(pageNum) {
+			getList() {
 				let params = {
-					pageNum: pageNum || 1,
+					pageNum: this.pageIndex || 1,
 					pageSize: this.pageSize
 				}
 				requestJava({
@@ -106,7 +107,6 @@
 					if (res.data.code == 200) {
 						this.count = res.data.data.total
 						this.tableData = res.data.data.list
-						console.log(res.data.data)
 					} else {
 						Message.error(res.data.message)
 					}
