@@ -29,13 +29,10 @@
 						<el-switch v-model="findIsException"></el-switch>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getLogs(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getLogs()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
-			</div>
-			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="logs" border style="width: 100%" size="mini">
@@ -56,12 +53,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getLogs()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -102,11 +99,10 @@
 			selectDateRange(date) {
 				this.startDate = date[0]
 				this.endDate = date[1]
-				console.log(date)
 			},
-			getLogs(pageIndex) {
+			getLogs() {
 				let params = {
-					pageIndex: pageIndex || 1,
+					pageIndex: this.pageIndex || 1,
 					pageSize: this.pageSize,
 					Title: this.findTitle,
 					CreateBy: this.findCreateBy,
@@ -129,7 +125,8 @@
 				})
 			},
 			pageChange(index) {
-				this.getLogs(index)
+				this.pageIndex = index
+				this.getLogs()
 			},
 			// 重置搜索表单
 			reset() {
@@ -138,13 +135,7 @@
 				this.findRequestUri = ''
 				this.findDataRange = ''
 				this.findIsException = false
-			},
-			refresh() {
-				this.refreshing = true
 				this.getLogs()
-				setTimeout(() => {
-					this.refreshing = false
-				}, 500)
 			}
 		}
 	}
