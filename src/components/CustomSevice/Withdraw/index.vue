@@ -50,7 +50,7 @@
 					</el-table-column>
 					<el-table-column label="提现金额" align="center" prop="money">
 					</el-table-column>
-					<el-table-column label="手续费" align="center" prop="fee" width="140">
+					<el-table-column label="手续费" align="center" prop="fee">
 					</el-table-column>
 					<el-table-column label="卡号" prop="bankCardNum" width="180" align="center">
 					</el-table-column>
