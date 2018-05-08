@@ -6,27 +6,27 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="常量类型" >
+					<el-form label-width="120px" :model="constant" :rules="rules" ref="ruleForm">
+						<el-form-item label="常量类型" prop="Type">
 							<el-input auto-complete="off" v-model="constant.Type"></el-input>
 						</el-form-item>
-						<el-form-item label="代码" >
+						<el-form-item label="代码" prop="Code">
 							<el-input auto-complete="off" v-model="constant.Code"></el-input>
 						</el-form-item>
-						<el-form-item label="名称" >
+						<el-form-item label="名称" prop="Name">
 							<el-input auto-complete="off" v-model="constant.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="值" >
+						<el-form-item label="值" prop="Value">
 							<el-input auto-complete="off" v-model="constant.Value"></el-input>
 						</el-form-item>
-						<el-form-item label="排序" >
+						<el-form-item label="排序">
 							<el-input-number v-model="constant.SortNumber" :min="1"></el-input-number>
 						</el-form-item>
-						<el-form-item label="描述" >
+						<el-form-item label="描述">
 							<el-input auto-complete="off" type="textarea" v-model="constant.Description"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="addConfig">立即保存</el-button>
+							<el-button type="primary" @click="addConfig">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -42,12 +42,30 @@
 		data() {
 			return {
 				constant: {
-					Type:'',
-					Code:'',
-					Name:'',
-					Value:'',
-					Description:'',
-					SortNumber:''
+					Type: '',
+					Code: '',
+					Name: '',
+					Value: '',
+					Description: '',
+					SortNumber: ''
+				},
+				rules: {
+					Type: [
+						{required: true, message: '请输入常量类型'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					],
+					Code: [
+						{required: true, message: '请输入代码'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					],
+					Name: [
+						{required: true, message: '请输入名称'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					],
+					Value: [
+						{required: true, message: '请输入值'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					]
 				}
 			}
 		},
@@ -61,16 +79,20 @@
 					Description:this.constant.Description,
 					SortNumber:this.constant.SortNumber
 				}
-				request({
-					url: '/base_conststand/add',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'constmanage'})
-					} else {
-						Message.error(res.data.msg)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						request({
+							url: '/base_conststand/add',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 0) {
+								Message.success(res.data.msg)
+								this.$router.push({name: 'constmanage'})
+							} else {
+								Message.error(res.data.msg)
+							}
+						})
 					}
 				})
 			},

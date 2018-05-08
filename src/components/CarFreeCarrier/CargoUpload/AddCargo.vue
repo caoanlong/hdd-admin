@@ -107,7 +107,6 @@ export default {
 			TruckType: [],
 			CargoType: [],
 			CargoInfo:{
-				
 				countrySubdivisionCode:'',
 				destinationCountrySubdivisionCode:'',
 				descriptionOfGoods:'',
@@ -158,25 +157,25 @@ export default {
 		},
 		SaveCargo() {
 			let data= {
-				messageReferenceNumber:this.apkInfo.messageReferenceNumber,
-				senderCode:this.apkInfo.senderCode,
-				messageFunctionCode:this.apkInfo.messageFunctionCode,
-				documentName:this.apkInfo.documentName,
-				recipientCode:this.apkInfo.recipientCode,
-				documentVersionNumber:this.apkInfo.documentVersionNumber,
-				messageSendingDateTime:this.apkInfo.messageSendingDateTime,
-				notruckuserId:this.apkInfo.notruckuserId,
-				countrySubdivisionCode:this.CargoInfo.countrySubdivisionCode,
-				destinationCountrySubdivisionCode:this.CargoInfo.destinationCountrySubdivisionCode,
-				descriptionOfGoods:this.CargoInfo.descriptionOfGoods,
-				consignor:this.CargoInfo.consignor,
-				consignee:this.CargoInfo.consignee,
-				totalMonetaryAmount:this.CargoInfo.totalMonetaryAmount,
-				cargoTypeClassificationCode:this.CargoInfo.cargoTypeClassificationCode,
-				placeOfLoading:this.CargoInfo.placeOfLoading,
-				goodsReceiptPlace:this.CargoInfo.goodsReceiptPlace,
-				vehicleClassificationCode:this.CargoInfo.vehicleClassificationCode,
-				goodsItemGrossWeight:this.CargoInfo.goodsItemGrossWeight	
+				messageReferenceNumber: this.apkInfo.messageReferenceNumber,
+				senderCode: this.apkInfo.senderCode,
+				messageFunctionCode: this.apkInfo.messageFunctionCode,
+				documentName: this.apkInfo.documentName,
+				recipientCode: this.apkInfo.recipientCode,
+				documentVersionNumber: this.apkInfo.documentVersionNumber,
+				messageSendingDateTime: this.apkInfo.messageSendingDateTime,
+				notruckuserId: this.apkInfo.notruckuserId,
+				countrySubdivisionCode: this.CargoInfo.countrySubdivisionCode,
+				destinationCountrySubdivisionCode: this.CargoInfo.destinationCountrySubdivisionCode,
+				descriptionOfGoods: this.CargoInfo.descriptionOfGoods,
+				consignor: this.CargoInfo.consignor,
+				consignee: this.CargoInfo.consignee,
+				totalMonetaryAmount: this.CargoInfo.totalMonetaryAmount,
+				cargoTypeClassificationCode: this.CargoInfo.cargoTypeClassificationCode,
+				placeOfLoading: this.CargoInfo.placeOfLoading,
+				goodsReceiptPlace: this.CargoInfo.goodsReceiptPlace,
+				vehicleClassificationCode: this.CargoInfo.vehicleClassificationCode,
+				goodsItemGrossWeight: this.CargoInfo.goodsItemGrossWeight	
 			}
 			requestJava({
 				url: '/notruckCargosource/save',

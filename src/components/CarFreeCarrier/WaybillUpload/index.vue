@@ -118,7 +118,7 @@ export default {
 	methods: {
 		reset() {
 			this.findShippingNoteNumber = ''
-			this.findCarrier=''
+			this.findCarrier = ''
 		},
 		pageChange(index) {
 			this.pageIndex = index
@@ -128,8 +128,8 @@ export default {
 			let params = {
 				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
-				shippingNoteNumber:this.findShippingNoteNumber,
-				carrier:this.findCarrier
+				shippingNoteNumber: this.findShippingNoteNumber,
+				carrier: this.findCarrier
 			}
 			requestJava({
 				url: '/notruckWaybill/list',
@@ -139,7 +139,6 @@ export default {
 				if (res.data.code == 200) {
 					this.count = res.data.data.total
 					this.tableData = res.data.data.list
-					console.log(res.data)
 				} else {
 					Message.error(res.data.message)
 				}
@@ -149,10 +148,10 @@ export default {
 			this.$router.push({ name: 'addwaybill'})
 		},
 		EditWaybill(wayId) {
-			this.$router.push({ name: 'editwaybill', query: { wayId} })
+			this.$router.push({ name: 'editwaybill', query: { wayId }})
 		},
 		ViewWaybill(wayId) {
-			this.$router.push({ name: 'viewwaybill', query: { wayId} })
+			this.$router.push({ name: 'viewwaybill', query: { wayId }})
 		},
 		// 导入成功
 		uploadSuccess (response) {

@@ -13,14 +13,14 @@
 						<el-input placeholder="请输入..." v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getTruckBrands(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getTruckBrands()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addTruckBrand">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addTruckBrand">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="truckBrands" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -29,7 +29,7 @@
 					<el-table-column label="名称" prop="Name"></el-table-column>
 					<el-table-column label="图片" prop="PictureURL">
 						<template slot-scope="scope">
-							<img class="table-img" :src="imgUrl + scope.row.PictureURL" @click="previewImg(scope.row.PictureURL)">
+							<img class="table-img" :src="imgUrl + scope.row.PictureURL">
 						</template>
 					</el-table-column>
 					<el-table-column label="是否生效" prop="Enable">
@@ -49,12 +49,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckBrands()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -74,7 +74,6 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
@@ -89,16 +88,18 @@ export default {
 	},
 	methods: {
 		pageChange(index) {
-			this.getTruckBrands(index)
+			this.pageIndex = index
+			this.getTruckBrands()
 		},
 		// 重置搜索表单
 		reset() {
 			this.findCode = ''
 			this.findName = ''
+			this.getTruckBrands()
 		},
-		getTruckBrands(pageIndex) {
+		getTruckBrands() {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				Code: this.findCode,
 				Name: this.findName
@@ -174,13 +175,6 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedTruckBrands = data.map(item => item.TruckBrand_ID)
-		},
-		previewImg(imgUrl) {
-			this.$alert(`<img style="width: 100%" src=${imgUrl} />`, '图片预览', {
-				dangerouslyUseHTMLString: true,
-				showConfirmButton: false,
-				customClass: 'img-preview'
-			})
 		}
 	}
 }

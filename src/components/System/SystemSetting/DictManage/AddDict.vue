@@ -49,18 +49,18 @@
 				rules: {
 					VALUE: [
 						{required: true, message: '请输入键值'},
-						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+						{min: 1, max: 10, message: '长度在 1 到 10 个字符'}
 					],
 					NAME: [
 						{required: true, message: '请输入标签'},
-						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
 					],
 					TYPE: [
 						{required: true, message: '请输入类型'},
-						{min: 2, max: 10, message: '长度在 2 到 10 个字符'}
+						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
 					],
 					Description: [
-						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
 					],
 				}
 			}

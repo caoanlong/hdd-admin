@@ -13,15 +13,14 @@
 						<el-input placeholder="名称" v-model="findName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getConfig(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getConfig()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addConfig">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addConfig">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="config" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -49,12 +48,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getConfig()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -76,7 +75,6 @@ export default {
 		return {
 			config:[],
 			count:0,
-			refreshing: false,
 			pageIndex: 1,
 			pageSize: 10,
 			selectedConfig: [],
@@ -89,16 +87,18 @@ export default {
 	},
 	methods: {
 		pageChange(index) {
-			this.getConfig(index)
+			this.pageIndex = index
+			this.getConfig()
 		},
 		// 重置搜索表单
 		reset() {
 			this.findCode = ''
 			this.findName = ''
+			this.getConfig()
 		},
-		getConfig(pageIndex) {
+		getConfig() {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				Code: this.findCode,
 				Name: this.findName
@@ -166,7 +166,6 @@ export default {
 				}
 			})
 		},
-
 		editConfig(id) {
 			this.$router.push({ name: 'editsysconfig', query: { Setting_ID: id} })
 		},
@@ -176,17 +175,7 @@ export default {
 		selectionChange(data) {
 			this.selectedConfig = data.map(item => item.Setting_ID)
 			console.log(this.selectedConfig)
-		},
-		refresh() {
-			this.refreshing = true
-			this.getConfig()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
 		}
-	},
-	components: {
-		
 	}
 }
 

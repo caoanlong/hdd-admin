@@ -6,24 +6,24 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
-						<el-form-item label="名称">
+					<el-form label-width="120px" :model="truckBrand" :rules="rules" ref="ruleForm">
+						<el-form-item label="名称" prop="Name">
 							<el-input v-model="truckBrand.Name"></el-input>
 						</el-form-item>
-						<el-form-item label="代码">
+						<el-form-item label="代码" prop="Code">
 							<el-input v-model="truckBrand.Code"></el-input>
 						</el-form-item>
 						<el-form-item label="是否生效">
 							<el-switch v-model="truckBrand.Enable"></el-switch>
 						</el-form-item>
-						<el-form-item label="图片">
+						<el-form-item label="图片" prop="PictureURL">
 							<ImageUpload 
 								:files="[truckBrand.PictureURL]" 
 								@imgUrlBack="handleAvatarSuccess"
 								:fixed="true"/>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click.native="updateTruckBrand">立即保存</el-button>
+							<el-button type="primary" @click="updateTruckBrand">立即保存</el-button>
 							<el-button @click="back">取消</el-button>
 						</el-form-item>
 					</el-form>
@@ -44,6 +44,19 @@
 					Code: '',
 					Enable: true,
 					PictureURL: ''
+				},
+				rules: {
+					Name: [
+						{required: true, message: '请输入名称'},
+						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
+					],
+					Code: [
+						{required: true, message: '请输入代码'},
+						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+					],
+					PictureURL: [
+						{required: true, message: '请添加图片'}
+					]
 				}
 			}
 		},
@@ -59,16 +72,20 @@
 					Enable: this.truckBrand.Enable ? 'Y' : 'N',
 					PictureURL: this.truckBrand.PictureURL,
 				}
-				request({
-					url: '/base_truckbrand/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'truckbrand'})
-					} else {
-						Message.error(res.data.msg)
+				this.$refs['ruleForm'].validate(valid => {
+					if (valid) {
+						request({
+							url: '/base_truckbrand/update',
+							method: 'post',
+							data
+						}).then(res => {
+							if (res.data.code == 0) {
+								Message.success(res.data.msg)
+								this.$router.push({name: 'truckbrand'})
+							} else {
+								Message.error(res.data.msg)
+							}
+						})
 					}
 				})
 			},

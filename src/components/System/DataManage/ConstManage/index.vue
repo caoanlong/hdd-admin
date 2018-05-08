@@ -27,7 +27,6 @@
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
 				<a href="../../../../../static/constant_template.xlsx" download="constant_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
 			</div>
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -92,7 +91,6 @@ export default {
 	data() {
 		return {
 			downloadLoading: false,
-			refreshing: false,
 			filename: '基础常量',
 			constants: [],
 			pageIndex: 1,
@@ -165,6 +163,7 @@ export default {
 		reset() {
 			this.findType = ''
 			this.findName = ''
+			this.getConstants()
 		},
 		getConstantType() {
 			let params = {
@@ -261,14 +260,6 @@ export default {
 		},
 		selectionChange(data) {
 			this.selectedConstants = data.map(item => item.ConstStd_ID)
-			console.log(this.selectedConstants)
-		},
-		refresh() {
-			this.refreshing = true
-			this.getConstants()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
 		}
 	},
 	components: {
