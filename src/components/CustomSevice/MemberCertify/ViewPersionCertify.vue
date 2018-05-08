@@ -64,12 +64,10 @@
 					<span>
 						<el-button type="primary" 
 						@click="realNameCertify" 
-						v-if="certifyPerson.realNameStatus == 'Failed' 
-						|| certifyPerson.realNameStatus == 'Rejected' 
-						|| certifyPerson.realNameStatus == 'Draft' 
+						v-if="certifyPerson.realNameStatus == 'Draft' 
 						&& certifyPerson.CertifyStatus == 'Success'">实名认证</el-button>
 					</span>
-					<span v-if="certifyPerson.CertifyStatus != 'Draft'">
+					<span v-if="certifyPerson.CertifyStatus == 'Commit'">
 						<el-button type="success" @click="persionCertify('Success')">激活</el-button>
 						<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
 					</span>

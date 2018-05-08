@@ -23,19 +23,17 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getUsers(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getUsers()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="addUser">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="addUser">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
-				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
+				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click="exportExcel">导出</el-button>
 				<a href="../../../../../static/user_template.xlsx" download="user_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
-				<el-button type="default" size="mini" icon="el-icon-refresh" :loading="refreshing" @click.native="refresh">刷新</el-button>
-				
 			</div>
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
@@ -58,12 +56,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getUsers()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -94,7 +92,6 @@ export default {
 	data() {
 		return {
 			downloadLoading: false,
-			refreshing: false,
 			filename: '用户数据',
 			users: [],
 			pageIndex: 1,
@@ -162,7 +159,8 @@ export default {
 			})
 		},
 		pageChange(index) {
-			this.getUsers(index)
+			this.pageIndex = index
+			this.getUsers()
 		},
 		// 重置搜索表单
 		reset() {
@@ -170,17 +168,17 @@ export default {
 			this.findLoginName = ''
 			this.findCompany = ''
 			this.findDepartment = ''
+			this.getUsers()
 		},
-		getUsers(pageIndex) {
+		getUsers() {
 			let params = {
-				pageIndex: pageIndex || 1,
+				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				LoginName: this.findLoginName,
 				Name: this.findName,
 				Company_ID: this.findCompany,
 				Organization_ID: this.findDepartment
 			}
-			console.log(params)
 			request({
 				url: '/sys_user/list',
 				method: 'get',
@@ -277,13 +275,6 @@ export default {
 		selectionChange(data) {
 			this.selectedUsers = data.map(item => item.User_ID)
 			console.log(this.selectedUsers )
-		},
-		refresh() {
-			this.refreshing = true
-			this.getUsers()
-			setTimeout(() => {
-				this.refreshing = false
-			}, 500)
 		}
 	},
 	components: {
