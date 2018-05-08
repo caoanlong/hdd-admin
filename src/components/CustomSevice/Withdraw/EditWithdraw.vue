@@ -291,7 +291,7 @@
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.msg)
+						Message.success(res.data.message)
 						this.$router.push({name:'withdraw'})
 					} else {
 						Message.error(res.data.message)
