@@ -61,7 +61,9 @@
 							<el-input type="textarea" v-model="remark"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<span v-if="certifyEnterprice.CertifyStatus != 'Success' && certifyEnterprice.CertifyStatus != 'Draft'">
+							<span v-if="certifyEnterprice.CertifyStatus != 'Success' 
+							&& certifyEnterprice.CertifyStatus != 'Draft' 
+							&& certifyEnterprice.CertifyStatus != 'Failed'">
 								<el-button type="success" @click="enterpriceCertify('Success')">通过</el-button>
                             	<el-button type="danger" @click="enterpriceCertify('Failed')">拒绝</el-button>
 							</span>
@@ -69,7 +71,6 @@
 						</el-form-item>
 					</el-form>
 				</el-col>
-
 			</el-row>
 		</el-card>
 	</div>

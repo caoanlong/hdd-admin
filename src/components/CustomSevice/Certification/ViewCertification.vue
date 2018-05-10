@@ -55,11 +55,12 @@
 						</el-form-item>
 						<el-form-item label="驳回原因" v-else>
 							<el-select style="width: 100%" placeholder="如驳回，请选择驳回原因" v-model="payRealNameApply.auditFailedReason" >
-								<el-option label="草稿" value="Draft"></el-option>
+								<el-option label="身份证照片不清晰" value="身份证照片不清晰"></el-option>
+								<!-- <el-option label="草稿" value="Draft"></el-option>
 								<el-option label="已提交" value="Commited"></el-option>
 								<el-option label="成功" value="Success"></el-option>
 								<el-option label="失败" value="Failed"></el-option>
-								<el-option label="已拒绝" value="Rejected"></el-option>
+								<el-option label="已拒绝" value="Rejected"></el-option> -->
 							</el-select>
 						</el-form-item>
 						<el-form-item>
@@ -106,7 +107,7 @@
 						this.payRealNameApply = res.data.data.payRealNameApply
 						this.memMember = res.data.data.memMember
 					} else {
-						Message.error(res.data.msg)
+						Message.error(res.data.message)
 					}
 				})
 			},
@@ -128,7 +129,7 @@
 					data
 				}).then(res => {
 					if (res.data.code == 200) {
-						Message.success(res.data.msg)
+						Message.success(res.data.message)
 						this.$router.push({name: 'certification'})
 					} else {
 						Message.error(res.data.message)
