@@ -8,7 +8,7 @@
 			<img v-else :src="defaultImg">
 			<div class="controller">
 				<div class="controllerBtn">
-					<div class="perviewBtn" @click.stop="showImgModal(file)"></div>
+					<div class="perviewBtn" @click.stop="showImgModal($event, file)"></div>
 					<div class="delBtn" v-show="!isPreview" @click.stop="delImg(i)"></div>
 				</div>
 			</div>
@@ -66,6 +66,10 @@
 				type: Boolean,
 				default: false
 			},
+			isUseCropper: {
+				type: Boolean,
+				default: true
+			},
 			fixed: {
 				type: Boolean,
 				default: false
@@ -109,8 +113,12 @@
 						Message.error('图片格式只支持jpg、png和gif！')
 						return
 					}
-					this.localImgUrl = window.URL.createObjectURL(this.$refs.uploadFile.files[0])
-					this.isShowCropper = true
+					if (this.isUseCropper) {
+						this.localImgUrl = window.URL.createObjectURL(this.$refs.uploadFile.files[0])
+						this.isShowCropper = true
+					} else {
+						this.uploadFile(this.$refs.uploadFile.files[0])
+					}
 					this.$refs.uploadFile.value = ''
 				}
 			},
@@ -124,31 +132,38 @@
 				}
 				this.isUploaded = true
 				this.$refs.cropper.getCropBlob((data) => {
-					let url = javaUrl + "/sys/picture/upload"
-					let headers = {'Content-type':'multipart/form-data;charset=UTF-8'}
-					let params = formDataReq({
-						"file": data
-					})
-					axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
-					axios.post(url, params, headers).then(res => {
-						this.fileUrl.push(res.data.data)
-						this.$emit('imgUrlBack', this.fileUrl)
+					this.uploadFile(data, () => {
 						this.isShowCropper = false
-						this.isUploaded = false
-					}).catch(err => {
-						console.log('服务器异常' + err)
 					})
+				})
+			},
+			uploadFile(data, cb) {
+				let url = javaUrl + "/sys/picture/upload"
+				let headers = {'Content-type':'multipart/form-data;charset=UTF-8'}
+				let params = formDataReq({
+					"file": data
+				})
+				axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+				axios.post(url, params, headers).then(res => {
+					this.fileUrl.push(res.data.data)
+					this.$emit('imgUrlBack', this.fileUrl)
+					this.isUploaded = false
+					cb && cb()
+				}).catch(err => {
+					console.log('服务器异常' + err)
 				})
 			},
 			delImg(i) {
 				this.fileUrl.splice(i, 1)
 				this.$emit('imgUrlBack', this.fileUrl)
 			},
-			showImgModal(url) {
+			showImgModal(e, url) {
+				console.log(e)
 				this.$alert(`<img style="width: 100%" src=${this.imgUrl + url} />`, '图片预览', {
 					dangerouslyUseHTMLString: true,
 					showConfirmButton: false,
-					customClass: 'img-preview'
+					customClass: 'img-preview',
+					callback: () => {}
 				})
 			}
 		},

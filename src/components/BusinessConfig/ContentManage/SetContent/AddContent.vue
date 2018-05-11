@@ -100,7 +100,7 @@
 					],
 					URL: [
 						{required: true, message: '请输入URL'},
-						{validator: checkURL}
+						// {validator: checkURL}
 					]
 				}
 			}

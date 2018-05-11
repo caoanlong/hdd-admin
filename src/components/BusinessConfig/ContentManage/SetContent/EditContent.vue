@@ -102,7 +102,7 @@
 					],
 					URL: [
 						{required: true, message: '请输入URL'},
-						{validator: checkURL}
+						// {validator: checkURL}
 					]
 				}
 			}
@@ -166,6 +166,7 @@
 				}).then(res => {
 					if (res.data.code == 0) {
 						this.content = res.data.data
+						this.content.isEnable = res.data.data.isEnable == 'Y' ? true : false
 					} else {
 						Message.error(res.data.msg)
 					}

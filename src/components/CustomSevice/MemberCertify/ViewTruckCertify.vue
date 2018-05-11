@@ -4,51 +4,65 @@
 			<div slot="header" class="clearfix">
 				<span>车辆认证</span>
 			</div>
-			<el-row>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="车辆照片(前)">
-							<ImageUpload :files="[certifyTruck.FrontPic]" :isPreview="true"/>
-						</el-form-item>
+			<el-form label-width="120px">
+				<el-row>
+					<div class="tit">
+						<div style="margin-left: 0">车辆照片(前)</div>
+						<div>车辆照片(侧)</div>
+						<div>车辆照片(后)</div>
+						<div>行驶照片</div>
+					</div>
+					<div class="gridly">
+						<div class="brick" data-attribute="FrontPic">
+							<ImageUpload :files="[certifyTruck.FrontPic]" :isUseCropper="false" @imgUrlBack="handleFrontPicSuccess"/>
+						</div>
+						<div class="brick" data-attribute="SidePic">
+							<ImageUpload :files="[certifyTruck.SidePic]" :isUseCropper="false" @imgUrlBack="handleSidePicSuccess"/>
+						</div>
+						<div class="brick" data-attribute="BackPic">
+							<ImageUpload :files="[certifyTruck.BackPic]" :isUseCropper="false" @imgUrlBack="handleBackPicSuccess"/>
+						</div>
+						<div class="brick" data-attribute="DrivingLicensePic">
+							<ImageUpload :files="[certifyTruck.DrivingLicensePic]" :isUseCropper="false" @imgUrlBack="handleDrivingLicensePicSuccess"/>
+						</div>
+					</div>
+				</el-row>
+				<el-row>
+					<el-col :span="8">
 						<el-form-item label="车牌号码">
 							<p>{{certifyTruck.PlateNo}}</p>
 						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="车长">
-							<p>{{certifyTruck.Length}}</p>
+							<p>{{certifyTruck.mobile}}</p>
 						</el-form-item>
-						<el-form-item label="行驶照片">
-							<ImageUpload :files="[certifyTruck.DrivingLicensePic]" :isPreview="true"/>
-						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="车辆照片(侧)">
-							<ImageUpload :files="[certifyTruck.SidePic]" :isPreview="true"/>
-						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="车牌类型">
 							<p>{{certifyTruck.PlateNoType}}</p>
 						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="8">
 						<el-form-item label="载重">
 							<p>{{certifyTruck.Loads}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="车辆照片(后)">
-							<ImageUpload :files="[certifyTruck.BackPic]" :isPreview="true"/>
-						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="车型">
 							<p>{{certifyTruck.Type}}</p>
 						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="车主">
 							<p>{{certifyTruck.Mem_OwnerIDName}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="24">
-					<el-form label-width="120px">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
 						<el-form-item label="审核说明" 
 							v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'">
 							<el-input type="textarea" v-model="remark" resize="none"></el-input>
@@ -60,11 +74,12 @@
 							<el-button type="danger" 
 								v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'" 
 								@click="truckCertify('Failed')">拒绝</el-button>
+							<el-button type="primary" @click="update()">保存</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
-					</el-form>
-				</el-col>
-			</el-row>
+					</el-col>
+				</el-row>
+			</el-form>
 		</el-card>
 	</div>
 </template>
@@ -78,13 +93,50 @@ export default {
 		return {
 			certifyTruck: {},
 			truckTypes: [],
-			remark: ''
+			remark: '',
+			updateImgs: {}
 		}
 	},
 	created() {
 		this.getTruckType()
 	},
+	mounted() {
+		this._initImage()
+	},
 	methods: {
+		_initImage() {
+			var _this = this
+			$(function() {
+				var before = []
+				var after = []
+				var reordering = function($elements) {
+					before = $elements
+				}
+				var reordered = function($elements) {
+					after = $elements
+					for (let i = 0; i < before.length; i++) {
+						let $img1 = $(before[i]).find('img')
+						let $img2 = $(after[i]).find('img')
+						_this.updateImgs[$img1.context.dataset.attribute] = $img2.attr('src').split(_this.imgUrl)[1]
+					}
+				}
+				$('.gridly').gridly({
+					callbacks: { reordering: reordering , reordered: reordered }
+				})
+			})
+		},
+		handleFrontPicSuccess(res) {
+			this.updateImgs['FrontPic'] = res[0]
+		},
+		handleSidePicSuccess(res) {
+			this.updateImgs['SidePic'] = res[0]
+		},
+		handleBackPicSuccess(res) {
+			this.updateImgs['BackPic'] = res[0]
+		},
+		handleDrivingLicensePicSuccess(res) {
+			this.updateImgs['DrivingLicensePic'] = res[0]
+		},
 		getInfo() {
 			let params = {
 				truckCertifyId: this.$route.query.truckCertifyId
@@ -96,6 +148,10 @@ export default {
 			}).then(res => {
 				if (res.data.code == 200) {
 					this.certifyTruck = res.data.data
+					this.updateImgs['FrontPic'] = res.data.data.FrontPic
+					this.updateImgs['SidePic'] = res.data.data.SidePic
+					this.updateImgs['BackPic'] = res.data.data.BackPic
+					this.updateImgs['DrivingLicensePic'] = res.data.data.DrivingLicensePic
 				} else {
 					Message.error(res.data.message)
 				}
@@ -120,7 +176,7 @@ export default {
 		},
 		// 车辆认证
 		truckCertify(status) {
-			if (!this.remark.trim()) {
+			if (status == 'Failed' && !this.remark.trim()) {
 				Message.error('审核说明不能为空！')
 				return
 			}
@@ -143,6 +199,28 @@ export default {
 				}
 			})
 		},
+		update() {
+			let data = {
+				truckCertifyID: this.$route.query.truckCertifyId,
+				backPic: this.updateImgs['BackPic'],
+				drivingLicensePic: this.updateImgs['DrivingLicensePic'],
+				frontPic: this.updateImgs['FrontPic'],
+				sidePic: this.updateImgs['SidePic'],
+				// transportLicencePic: this.updateImgs['TransportLicencePic']
+			}
+			requestJava({
+				url: '/mem/memMember/updateTruckCertify',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
+					this.$router.push({name: 'membercertify'})
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
 		back() {
 			this.$router.go(-1)
 		}
@@ -154,27 +232,6 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
-.avatar-uploader
-	line-height 1
-	width 100px
-	height 100px
-	overflow hidden
-	border 1px dashed #d9d9d9
-	border-radius 6px
-	&:hover 
-		border-color #409eff
-	.avatar-uploader-icon
-		font-size 28px
-		color #8c939d
-		width 98px
-		height 98px
-		line-height 98px
-		text-align center
-	.avatar
-		width 98px
-		height 98px
-		display block
-		vertical-align top
 .el-form-item__content
 	p
 		margin 0
@@ -187,5 +244,34 @@ export default {
 		color #999
 	.el-input__inner
 		vertical-align top
-
+</style>
+<style lang="stylus" scoped>
+	.gridly, .gridly > :not(.dragging)
+		-webkit-transition all 0.4s ease-in-out
+		-moz-transition all 0.4s ease-in-out
+		transition all 0.4s ease-in-out
+	.gridly
+		position relative
+		width 960px
+		margin 0 auto
+		.dragging
+			z-index 800
+		.brick
+			width 100px
+			height 100px
+	.tit
+		display flex
+		position relative
+		width 960px
+		margin 0 auto
+		div
+			flex 0 0 100px
+			margin-left 60px
+			width 100px
+			text-align center
+			height 40px
+			line-height 40px
+			font-size 13px
+			font-weight 700
+			color #606266
 </style>

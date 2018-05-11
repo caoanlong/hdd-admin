@@ -108,6 +108,10 @@
 			},
 			// 企业认证
 			enterpriceCertify(status) {
+				if (status == 'Failed' && !this.remark.trim()) {
+					Message.error('审核说明不能为空！')
+					return
+				}
 				let data = {
 					memId: this.$route.query.memId,
 					status: status,

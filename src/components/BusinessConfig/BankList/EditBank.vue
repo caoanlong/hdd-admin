@@ -30,18 +30,13 @@
 							<el-input v-model="bankInfo.dailyLimit"></el-input>
 						</el-form-item>
 						<el-form-item label="logo" prop="logoUrl">
-							<ImageUpload 
-								:files="[bankInfo.logoUrl]" 
-								@imgUrlBack="handleLogoUrlSuccess"
-								:fixed="true"/>
+							<ImageUpload :files="[bankInfo.logoUrl]" @imgUrlBack="handleLogoUrlSuccess" :isUseCropper="false"/>
 						</el-form-item>
 						<el-form-item label="logo名称" prop="logoName">
 							<el-input v-model="bankInfo.logoName"></el-input>
 						</el-form-item>
 						<el-form-item label="背景图片" prop="bgUrl">
-							<ImageUpload 
-								:files="[bankInfo.bgUrl]" 
-								@imgUrlBack="handleBgUrlSuccess"/>
+							<ImageUpload :files="[bankInfo.bgUrl]" @imgUrlBack="handleBgUrlSuccess" :isUseCropper="false"/>
 						</el-form-item>
 						<el-form-item label="背景名称" prop="bgName">
 							<el-input v-model="bankInfo.bgName"></el-input>
@@ -61,7 +56,6 @@
 	import axios from 'axios'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../CommonComponents/ImageUpload'
-	import { checkFloat2 } from '../../../common/validator'
 	export default {
 		data() {
 			return {
@@ -84,12 +78,10 @@
 						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 					],
 					perLimit: [
-						{required: true, message: '请输入单笔限额'},
-						{validator: checkFloat2}
+						{required: true, message: '请输入单笔限额'}
 					],
 					dailyLimit: [
-						{required: true, message: '请输入单日限额'},
-						{validator: checkFloat2}
+						{required: true, message: '请输入单日限额'}
 					],
 					logoUrl: [
 						{required: true, message: '请上传logo'},

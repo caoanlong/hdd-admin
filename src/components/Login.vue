@@ -26,16 +26,9 @@
 </template>
 <script type="text/javascript">
 	import { Message } from 'element-ui'
-	import {isvalidUsername} from '../common/validator'
+	import { isvalidUsername } from '../common/validator'
 	export default {
 		data () {
-			// const validateUsername = (rule, value, callback) => {
-			// 	if (!isvalidUsername(value)) {
-			// 		callback(new Error('请输入正确的用户名！'))
-			// 	} else {
-			// 		callback()
-			// 	}
-			// }
 			const validatePassword = (rule, value, callback) => {
 				if (value.length < 5) {
 					callback(new Error('密码不能少于5位！'))
