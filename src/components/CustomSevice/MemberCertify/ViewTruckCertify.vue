@@ -117,7 +117,7 @@ export default {
 					for (let i = 0; i < before.length; i++) {
 						let $img1 = $(before[i]).find('img')
 						let $img2 = $(after[i]).find('img')
-						_this.updateImgs[$img1.context.dataset.attribute] = $img2.attr('src').split(_this.imgUrl)[1]
+						_this.updateImgs[$img1.context.dataset.attribute] =  $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
 					}
 				}
 				$('.gridly').gridly({

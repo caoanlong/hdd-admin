@@ -142,7 +142,7 @@
 						for (let i = 0; i < before.length; i++) {
 							let $img1 = $(before[i]).find('img')
 							let $img2 = $(after[i]).find('img')
-							_this.updateImgs[$img1.context.dataset.attribute] = $img2.attr('src').split(_this.imgUrl)[1]
+							_this.updateImgs[$img1.context.dataset.attribute] = $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
 						}
 					}
 					$('.gridly').gridly({
@@ -248,12 +248,12 @@
 			update() {
 				let data = {
 					certifyPersonID: this.$route.query.certifyPersonId,
-					driverLicenseCopyPic: this.updateImgs['DriverLicenseCopyPic'],
-					driverLicensePic: this.updateImgs['DriverLicensePic'],
-					iDCardBackPic: this.updateImgs['IDCardBackPic'],
-					iDCardFrontPic: this.updateImgs['IDCardFrontPic'],
-					iDHandheldPic: this.updateImgs['IDHandheldPic'],
-					pictureFront: this.updateImgs['Picture_Front']
+					driverLicenseCopyPic: this.updateImgs['DriverLicenseCopyPic'] || '',
+					driverLicensePic: this.updateImgs['DriverLicensePic'] || '',
+					iDCardBackPic: this.updateImgs['IDCardBackPic'] || '',
+					iDCardFrontPic: this.updateImgs['IDCardFrontPic'] || '',
+					iDHandheldPic: this.updateImgs['IDHandheldPic'] || '',
+					pictureFront: this.updateImgs['Picture_Front'] || ''
 				}
 				requestJava({
 					url: '/mem/memMember/updateCertifyPerson',
