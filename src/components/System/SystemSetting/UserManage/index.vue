@@ -31,9 +31,9 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="addUser">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
-				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
+				<!-- <upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/> -->
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click="exportExcel">导出</el-button>
-				<a href="../../../../../static/user_template.xlsx" download="user_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				<!-- <a href="../../../../../static/user_template.xlsx" download="user_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a> -->
 			</div>
 			<div class="table">
 				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">

@@ -24,9 +24,9 @@
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click.native="AddConstant">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click.native="deleteConfirm">批量删除</el-button>
-				<upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/>
+				<!-- <upload-excel btnType="default" btnTxt="导入" @on-selected-file="onSelectedFile"/> -->
 				<el-button type="default" size="mini" icon="el-icon-download" :loading="downloadLoading" @click.native="exportExcel">导出</el-button>
-				<a href="../../../../../static/constant_template.xlsx" download="constant_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a>
+				<!-- <a href="../../../../../static/constant_template.xlsx" download="constant_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a> -->
 			</div>
 			<div class="table">
 				<el-table :data="constants" @selection-change="selectionChange" border style="width: 100%" size="mini">
