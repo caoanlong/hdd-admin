@@ -97,7 +97,7 @@
 					<span v-if="certifyPerson.CertifyStatus == 'Commit'">
 						<el-button type="danger" @click="persionCertify('Failed')">拒绝</el-button>
 					</span>
-					<span>
+					<span v-if="certifyPerson.CertifyStatus == 'Commit'">
 						<el-button type="primary" @click="update()">保存</el-button>
 					</span>
 					<span style="margin-left:10px">
@@ -119,7 +119,8 @@
 				certifyPerson: {},
 				realNameStatus: [],
 				remark: '',
-				updateImgs: {}
+				updateImgs: {},
+				isFirst: true
 			}
 		},
 		created() {
@@ -135,14 +136,17 @@
 					var before = []
 					var after = []
 					var reordering = function($elements) {
-						before = $elements
+						if (_this.isFirst) {
+							before = $elements
+						}
+						_this.isFirst = false
 					}
 					var reordered = function($elements) {
 						after = $elements
 						for (let i = 0; i < before.length; i++) {
-							let $img1 = $(before[i]).find('img')
+							let $img1Div = $(before[i])[0]
 							let $img2 = $(after[i]).find('img')
-							_this.updateImgs[$img1.context.dataset.attribute] = $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
+							_this.updateImgs[$img1Div.dataset.attribute] = $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
 						}
 					}
 					$('.gridly').gridly({
@@ -290,34 +294,4 @@
 		color #999
 	.el-input__inner
 		vertical-align top
-</style>
-<style lang="stylus" scoped>
-	.gridly, .gridly > :not(.dragging)
-		-webkit-transition all 0.4s ease-in-out
-		-moz-transition all 0.4s ease-in-out
-		transition all 0.4s ease-in-out
-	.gridly
-		position relative
-		width 960px
-		margin 0 auto
-		.dragging
-			z-index 800
-		.brick
-			width 100px
-			height 100px
-	.tit
-		display flex
-		position relative
-		width 960px
-		margin 0 auto
-		div
-			flex 0 0 100px
-			margin-left 60px
-			width 100px
-			text-align center
-			height 40px
-			line-height 40px
-			font-size 13px
-			font-weight 700
-			color #606266
 </style>

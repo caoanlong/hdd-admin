@@ -22,11 +22,11 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容" prop="Content">
-							<quill-editor v-model="content.Content"
+							<froala v-model="content.Content"
 								class="customerEditor" 
-								ref="myQuillEditor"
-								:options="editorOption">
-							</quill-editor>
+								:tag="'textarea'"
+								:config="editorOption">
+							</froala>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<ImageUpload 
@@ -62,7 +62,6 @@
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../../CommonComponents/ImageUpload'
-	import { quillEditor } from 'vue-quill-editor'
 	import { checkURL } from '../../../../common/validator'
 	export default {
 		data() {
@@ -80,7 +79,14 @@
 					isEnable: true,
 					Tips: ''
 				},
-				editorOption: {},
+				editorOption: {
+					events: {
+						'froalaEditor.initialized': function () {
+							console.log('initialized')
+						}
+					},
+					placeholderText: '请输入...'
+				},
 				rules: {
 					ContentTopic_ID: [
 						{required: true, message: '请选择所属栏目'}
@@ -109,7 +115,13 @@
         },
         created() {
 			this.getContentTopics()
-        },
+		},
+		mounted() {
+			$(function() {
+				console.log($('.fr-wrapper:first-child'))
+				$('.fr-wrapper:first-child').hide()
+			})
+		},
 		methods: {
             editContent() {
 				let data= {
@@ -180,8 +192,7 @@
 			}
 		},
 		components: {
-			ImageUpload,
-			quillEditor
+			ImageUpload
 		}
 	}
 </script>

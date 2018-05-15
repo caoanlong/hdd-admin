@@ -35,7 +35,7 @@
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="车长">
-							<p>{{certifyTruck.mobile}}</p>
+							<p>{{certifyTruck.Length}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
@@ -74,7 +74,7 @@
 							<el-button type="danger" 
 								v-if="certifyTruck.CertifyStatus != 'Success' && certifyTruck.CertifyStatus != 'Draft' && certifyTruck.CertifyStatus != 'Failed'" 
 								@click="truckCertify('Failed')">拒绝</el-button>
-							<el-button type="primary" @click="update()">保存</el-button>
+							<el-button type="primary" v-if="certifyTruck.CertifyStatus == 'Commit'" @click="update()">保存</el-button>
 							<el-button @click.native="back">返回</el-button>
 						</el-form-item>
 					</el-col>
@@ -94,7 +94,8 @@ export default {
 			certifyTruck: {},
 			truckTypes: [],
 			remark: '',
-			updateImgs: {}
+			updateImgs: {},
+			isFirst: true
 		}
 	},
 	created() {
@@ -110,14 +111,17 @@ export default {
 				var before = []
 				var after = []
 				var reordering = function($elements) {
-					before = $elements
+					if (_this.isFirst) {
+						before = $elements
+					}
+					_this.isFirst = false
 				}
 				var reordered = function($elements) {
 					after = $elements
 					for (let i = 0; i < before.length; i++) {
-						let $img1 = $(before[i]).find('img')
+						let $img1Div = $(before[i])[0]
 						let $img2 = $(after[i]).find('img')
-						_this.updateImgs[$img1.context.dataset.attribute] =  $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
+						_this.updateImgs[$img1Div.dataset.attribute] = $img2.attr('src') ? $img2.attr('src').split(_this.imgUrl)[1] : ''
 					}
 				}
 				$('.gridly').gridly({
@@ -244,34 +248,4 @@ export default {
 		color #999
 	.el-input__inner
 		vertical-align top
-</style>
-<style lang="stylus" scoped>
-	.gridly, .gridly > :not(.dragging)
-		-webkit-transition all 0.4s ease-in-out
-		-moz-transition all 0.4s ease-in-out
-		transition all 0.4s ease-in-out
-	.gridly
-		position relative
-		width 960px
-		margin 0 auto
-		.dragging
-			z-index 800
-		.brick
-			width 100px
-			height 100px
-	.tit
-		display flex
-		position relative
-		width 960px
-		margin 0 auto
-		div
-			flex 0 0 100px
-			margin-left 60px
-			width 100px
-			text-align center
-			height 40px
-			line-height 40px
-			font-size 13px
-			font-weight 700
-			color #606266
 </style>
