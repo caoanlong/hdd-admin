@@ -22,11 +22,11 @@
 							<el-input v-model="content.Title"></el-input>
 						</el-form-item>
                         <el-form-item label="内容" prop="Content">
-							<froala v-model="content.Content"
+							<quill-editor v-model="content.Content"
 								class="customerEditor" 
-								:tag="'textarea'"
-								:config="editorOption">
-							</froala>
+								ref="myQuillEditor"
+								:options="editorOption">
+							</quill-editor>
 						</el-form-item>
 						<el-form-item label="图片上传">
 							<ImageUpload 
@@ -63,6 +63,7 @@
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../../CommonComponents/ImageUpload'
 	import { checkURL } from '../../../../common/validator'
+	import { quillEditor } from 'vue-quill-editor'
 	export default {
 		data() {
 			return {
@@ -80,12 +81,7 @@
 					Tips: ''
 				},
 				editorOption: {
-					events: {
-						'froalaEditor.initialized': function () {
-							console.log('initialized')
-						}
-					},
-					placeholderText: '请输入...'
+					placeholder: '请输入...'
 				},
 				rules: {
 					ContentTopic_ID: [
@@ -192,7 +188,8 @@
 			}
 		},
 		components: {
-			ImageUpload
+			ImageUpload,
+			quillEditor
 		}
 	}
 </script>

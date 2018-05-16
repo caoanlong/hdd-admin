@@ -21,14 +21,9 @@ import './assets/icons'
 import { permissions } from './permission'
 
 // 富文本样式
-// Require Froala Editor js file.
-require('froala-editor/js/froala_editor.pkgd.min')
-
-// Require Froala Editor css files.
-require('froala-editor/css/froala_style.min.css')
-// Import and use Vue Froala lib.
-import VueFroala from 'vue-froala-wysiwyg'
-Vue.use(VueFroala)
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 import '../static/plugins/jquery.gridly.js'
 
 // register global utility filters.
