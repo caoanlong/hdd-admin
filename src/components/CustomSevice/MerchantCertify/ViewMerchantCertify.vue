@@ -134,7 +134,8 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="审核时间">
-							<p>{{meechantCertify.auditTime | getdatefromtimestamp()}}</p>
+							<p v-if="meechantCertify.auditTime">{{meechantCertify.auditTime | getdatefromtimestamp()}}</p>
+							<p v-else></p>
 						</el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -149,9 +150,6 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <!-- <el-form-item label="驳回原因" v-if="meechantCertify.auditStatus == 'Rejected'">
-                        <p v-text="meechantCertify.auditFailedReason"></p>
-                    </el-form-item> -->
                     <el-form-item label="驳回原因" v-if="meechantCertify.auditStatus == 'Commited'">
 						<el-input type="textarea" v-model="meechantCertify.auditFailedReason"></el-input>
                     </el-form-item>
@@ -214,6 +212,10 @@
 				this.$router.go(-1)
 			},
 			approve(auditStatus) {
+				if (auditStatus == 'Rejected' && !this.meechantCertify.auditFailedReason) {
+					Message.error('驳回原因不能为空！')
+					return
+				}
 				let data = {
 					businessApplyID: this.$route.query.businessApplyID,
 					auditFailedReason: this.meechantCertify.auditFailedReason,

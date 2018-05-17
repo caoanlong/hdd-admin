@@ -77,7 +77,7 @@
 				ref="tree"
 				highlight-current
 				:props="defaultProps"
-				@check-change="selectMenu" style="height:400px;overflow-y:auto">
+				style="height:400px;overflow-y:auto">
 			</el-tree>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showSetAuth = false">取 消</el-button>
@@ -129,7 +129,6 @@
 					children: 'children',
 					label: 'Name'
 				},
-				selectedMenuId: [],
 				selectedUsers: [],
 				sysDataScopes: [],
 				menus: []
@@ -252,18 +251,21 @@
 					this.showSetAuth = true
 					this.getRole(data.Role_ID, res => {
 						let menusID = res.sys_menu_2s.map(item => item.Menu_ID)
-						this.$nextTick(() => {
-							this.$refs.tree.setCheckedKeys(menusID)
-							this.getRoles()
-							this.$store.dispatch('getMenu')
-						})
+						for (let i = 0; i < menusID.length; i++) {
+							this.$refs.tree.setChecked(menusID[i], true)
+						}
+						this.getRoles()
+						this.$store.dispatch('getMenu')
 					})
 				})
 			},
 			submitSetAuth() {
+				let menuKeys = []
+				menuKeys.push(...this.$refs.tree.getCheckedKeys())
+				menuKeys.push(...this.$refs.tree.getHalfCheckedKeys())
 				let data = {
 					Role_ID: this.setAuthId,
-					sys_menus: this.selectedMenuId
+					sys_menus: menuKeys
 				}
 				request({
 					url: '/sys_role/update/menu',
@@ -277,13 +279,6 @@
 					}
 					this.showSetAuth = false
 				})
-			},
-			selectMenu(data, isSelected) {
-				if (isSelected) {
-					this.selectedMenuId.push(data.Menu_ID)
-				} else {
-					this.selectedMenuId.splice(this.selectedMenuId.indexOf(data.Menu_ID), 1)
-				}
 			},
 			// 获取当前角色详情
 			getRole(Role_ID, callback) {
@@ -330,7 +325,6 @@
 						let users = this.users.filter(user => {
 							return usersID.includes(user.User_ID)
 						})
-						console.log(users)
 						users.forEach(user => {
 							this.$refs.usersTable.toggleRowSelection(user)
 						})

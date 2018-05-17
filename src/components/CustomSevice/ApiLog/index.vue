@@ -29,7 +29,9 @@
 					<el-table-column label="用户ID" prop="Mem_ID" width="160" align="center"></el-table-column>
 					<el-table-column label="设备类型" width="100" align="center">
 						<template slot-scope="scope">
-							<span>{{scope.row.DeviceType == 'iOS' ? '苹果端' : '安卓端'}}</span>
+							<span v-if="scope.row.DeviceType == 'Android'">安卓端</span>
+							<span v-else-if="scope.row.DeviceType == 'iOS'">苹果端</span>
+							<span v-else></span>
 						</template>
 					</el-table-column>
 					<el-table-column label="日志类型" prop="LogType" width="100" align="center"></el-table-column>

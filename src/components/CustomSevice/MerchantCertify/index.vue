@@ -19,8 +19,8 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click.native="getList(1)">查询</el-button>
-						<el-button type="default" @click.native="reset">重置</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
+						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -42,14 +42,13 @@
 							<span v-if="scope.row.auditTime">{{scope.row.auditTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-                    <el-table-column label="审核失败原因" prop="auditFailedReason"></el-table-column>
-                    <el-table-column label="是否有效" prop="isValid"></el-table-column>
+                    <el-table-column label="审核失败原因" prop="auditFailedReason" width="120"></el-table-column>
                     <el-table-column label="创建时间" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">{{scope.row.createTime | getdatefromtimestamp()}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作">
+					<el-table-column label="操作" fixed="right">
                         <template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.businessApplyID)">查看</el-button>
 							<!-- <el-dropdown  @command="handleCommand"  trigger="click">
@@ -74,12 +73,12 @@
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{count}} 条记录每页显示</span>
 						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
+							<el-option label="10" :value="10"></el-option>
+							<el-option label="20" :value="20"></el-option>
+							<el-option label="30" :value="30"></el-option>
+							<el-option label="40" :value="40"></el-option>
+							<el-option label="50" :value="50"></el-option>
+							<el-option label="100" :value="100"></el-option>
 						</el-select>
 						<span>条记录</span>
 					</el-col>
@@ -100,7 +99,7 @@ import { Message } from 'element-ui'
 export default {
 	data() {
 		return {
-			pageNum: 1,
+			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
 			tableData: [],
@@ -114,11 +113,12 @@ export default {
 	},
 	methods: {
 		pageChange(index) {
-			this.getList(index)
+			this.pageIndex = index
+			this.getList()
 		},
-		getList(pageNum) {
+		getList() {
 			let params = {
-				pageNum: pageNum || 1,
+				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				// realName: this.findKeyWords,
 				// auditStatus: this.findAuditStatus
