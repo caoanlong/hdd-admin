@@ -93,3 +93,39 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
 input:-webkit-autofill {
     -webkit-animation: autofill-fix 1s infinite;
 }
+
+.gridly, .gridly > :not(.dragging) {
+	-webkit-transition: all 0.4s ease-in-out;
+	-moz-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+}
+		
+.gridly {
+	position: relative;
+	width: 960px;
+	margin: 0 auto;
+}
+.gridly .dragging {
+	z-index: 800;
+}
+.gridly .brick {
+	width: 100px;
+	height: 100px;
+}
+.tit {
+	display: flex;
+	position: relative;
+	width: 960px;
+	margin: 0 auto;
+}
+.tit > div {
+	flex: 0 0 100px;
+	margin-left: 60px;
+	width: 100px;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #606266;
+}

@@ -62,8 +62,8 @@
 	import request from '../../../../common/request'
 	import { Message } from 'element-ui'
 	import ImageUpload from '../../../CommonComponents/ImageUpload'
-	import { quillEditor } from 'vue-quill-editor'
 	import { checkURL } from '../../../../common/validator'
+	import { quillEditor } from 'vue-quill-editor'
 	export default {
 		data() {
 			return {
@@ -80,7 +80,9 @@
 					isEnable: true,
 					Tips: ''
 				},
-				editorOption: {},
+				editorOption: {
+					placeholder: '请输入...'
+				},
 				rules: {
 					ContentTopic_ID: [
 						{required: true, message: '请选择所属栏目'}
@@ -109,7 +111,13 @@
         },
         created() {
 			this.getContentTopics()
-        },
+		},
+		mounted() {
+			$(function() {
+				console.log($('.fr-wrapper:first-child'))
+				$('.fr-wrapper:first-child').hide()
+			})
+		},
 		methods: {
             editContent() {
 				let data= {
