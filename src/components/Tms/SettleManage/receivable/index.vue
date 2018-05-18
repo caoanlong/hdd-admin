@@ -1,9 +1,7 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span>应收列表</span>
-			</div>
+			<div slot="header">应收列表</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="mini">
 					<el-form-item label="发货单位">
@@ -49,8 +47,8 @@
 					</el-table-column>
 					<el-table-column label="调度单号" prop="dispatchOrderNo"></el-table-column>
 					<el-table-column label="签收日期" width="90" align="center">
-						<template slot-scope="scope" v-if="scope.row.signTime">
-							{{scope.row.signTime | getdatefromtimestamp(true)}}
+						<template slot-scope="scope">
+							<span v-if="scope.row.signTime">{{scope.row.signTime | getdatefromtimestamp(true)}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="车辆编号" prop="code"></el-table-column>

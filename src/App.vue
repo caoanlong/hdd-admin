@@ -8,16 +8,8 @@
 import { getMenus } from '../src/api/menu'
 export default {
 	name: 'App',
-	watch: {
-		$route(newVal, oldVal) {
-			if (oldVal.name) {
-				sessionStorage.removeItem('pageSize')
-				sessionStorage.removeItem('pageIndex')
-			}
-		}
-	},
 	created() {
-		if (this.$route.name != 'login' || sessionStorage.getItem('menus') == 'undefined') {
+		if (localStorage.getItem('token')) {
 			this.$store.dispatch('GetUserInfo')
 			this.$store.dispatch('getMenu')
 		}

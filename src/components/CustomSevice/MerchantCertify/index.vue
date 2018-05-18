@@ -16,6 +16,7 @@
 							<el-option label="成功" value="Success"></el-option>
 							<el-option label="失败" value="Failed"></el-option>
 							<el-option label="已拒绝" value="Rejected"></el-option>
+							<el-option label="三方审核中" value="Auditing"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -27,6 +28,7 @@
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="企业名称" prop="companyName"></el-table-column>
+					<el-table-column label="对公手机号" prop="companyPhone"></el-table-column>
 					<el-table-column label="信用代码" prop="socialCreditCode"></el-table-column>
 					<el-table-column label="法人姓名" prop="realName" width="80"></el-table-column>
 					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>

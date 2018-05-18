@@ -1,9 +1,7 @@
 <template>
 	<div class="main-content">
 		<el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span>结算模板</span>
-			</div>
+			<div slot="header">结算模板</div>
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="mini">
 					<el-form-item label="发货单位">

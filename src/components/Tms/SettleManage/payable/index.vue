@@ -1,7 +1,7 @@
 <template>
 	<div class="main-content">
-		<div class="wf-card">
-			<div class="header clearfix">应付列表</div>
+		<el-card class="box-card">
+			<div slot="header">应付列表</div>
 			<el-tabs v-model="tabSelected" type="card" @tab-click="handleTabSelected">
 				<el-tab-pane label="司机" name="driver"></el-tab-pane>
 				<el-tab-pane label="随车人员" name="superCargo"></el-tab-pane>
@@ -130,7 +130,7 @@
 					</el-col>
 				</el-row>
 			</div>
-		</div>
+		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
