@@ -39,7 +39,7 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../../common/requestJava'
+	import { addConst } from '../../../../api/consts'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
@@ -83,11 +83,7 @@
                 data.stdConstFlag = this.info.stdConstFlag ? 'Y' : 'N'
 				this.$refs['ruleForm'].validate(valid => {
 					if (valid) {
-						requestJava({
-							url: '/admin/baseConst/add',
-							method: 'post',
-							data
-						}).then(res => {
+						addConst({data}).then(res => {
 							Message.success('成功！')
 							this.$router.push({name: 'tmsconstmanage'})
 						}).catch(err => {})

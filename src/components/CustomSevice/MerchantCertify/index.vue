@@ -28,7 +28,7 @@
 			<div class="table">
 				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="企业名称" prop="companyName"></el-table-column>
-					<el-table-column label="对公手机号" prop="companyPhone"></el-table-column>
+					<el-table-column label="手机号" prop="mobile"></el-table-column>
 					<el-table-column label="信用代码" prop="socialCreditCode"></el-table-column>
 					<el-table-column label="法人姓名" prop="realName" width="80"></el-table-column>
 					<el-table-column label="身份证号" prop="idCardNum"></el-table-column>
@@ -53,21 +53,6 @@
 					<el-table-column label="操作" fixed="right">
                         <template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-view" @click="viewWithDraw(scope.row.businessApplyID)">查看</el-button>
-							<!-- <el-dropdown  @command="handleCommand"  trigger="click">
-								<el-button type="default" size="mini">操作<i class="el-icon-arrow-down el-icon--right"></i></el-button>
-								<el-dropdown-menu slot="dropdown">
-									<el-dropdown-item :command="{
-                                        type: 'view', 
-                                        businessApplyID: scope.row.businessApplyID}" icon="el-icon-view">查看</el-dropdown-item>
-									<el-dropdown-item :command="{
-                                        type: '', 
-                                        businessApplyID: scope.row.businessApplyID}">审核通过</el-dropdown-item>
-									<el-dropdown-item :command="{
-                                        type: 'Rejected', 
-                                        businessApplyID: scope.row.businessApplyID
-                                        }">驳回</el-dropdown-item>
-								</el-dropdown-menu>
-							</el-dropdown> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -118,12 +103,17 @@ export default {
 			this.pageIndex = index
 			this.getList()
 		},
+		reset() {
+			this.findKeyWords = '',
+			this.findAuditStatus = '',
+			this.getList()
+        },
 		getList() {
 			let params = {
 				pageNum: this.pageIndex || 1,
 				pageSize: this.pageSize,
-				// realName: this.findKeyWords,
-				// auditStatus: this.findAuditStatus
+				realName: this.findKeyWords,
+				auditStatus: this.findAuditStatus
 			}
 			requestJava({
 				url: '/payBusinessApply/list',
@@ -150,21 +140,6 @@ export default {
 				this.auditStatusList = res.data.data
 				this.getList()
 			})
-		},
-		reset() {
-			this.findKeyWords = '',
-			this.findAuditStatus = '',
-			this.getList()
-        },
-        handleCommand(command) {
-			if(command.type == 'view'){
-				this.$router.push({ 
-                    name: 'viewmerchantcertify' , 
-                    query: { 'businessApplyID': command.businessApplyID } 
-                })
-			} else {
-                this.approve(command)
-			}
 		},
 		viewWithDraw(businessApplyID) {
 			this.$router.push({ 

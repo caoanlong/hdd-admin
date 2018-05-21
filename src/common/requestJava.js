@@ -30,36 +30,37 @@ service.interceptors.request.use(config => {
 
 // respone interceptor
 service.interceptors.response.use(
-response => {
-	if (response.data.code != 200) {
-		if (response.data.code == 10016) {
-			localStorage.clear()
+	response => {
+		if (response.data.code != 200) {
+			if (response.data.code == 10016) {
+				localStorage.clear()
+				if (response.data.msg) {
+					Message.error(response.data.msg)
+				} else {
+					Message.error(response.data.message)
+				}
+				window.location.href = '/#/login'
+				return Promise.reject('error')
+			}
 			if (response.data.msg) {
 				Message.error(response.data.msg)
 			} else {
 				Message.error(response.data.message)
 			}
-			window.location.href = '/#/login'
 			return Promise.reject('error')
 		}
-		if (response.data.msg) {
-			Message.error(response.data.msg)
-		} else {
-			Message.error(response.data.message)
-		}
-		return Promise.reject('error')
+		return response
+	},
+	error => {
+		console.log('err' + error)// for debug
+		Message({
+			message: error.message,
+			type: 'error',
+			duration: 5 * 1000
+		})
+		return Promise.reject(error)
 	}
-	return response
-},
-error => {
-	console.log('err' + error)// for debug
-	Message({
-		message: error.message,
-		type: 'error',
-		duration: 5 * 1000
-	})
-	return Promise.reject(error)
-})
+)
 
 // jquery ajax
 // jQuery.support.cors = true

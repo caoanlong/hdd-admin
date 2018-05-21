@@ -71,7 +71,7 @@
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../../common/requestJava'
+import { getConsts, getConstTypes, delConst } from '../../../../api/consts'
 import { Message } from 'element-ui'
 export default {
 	data() {
@@ -112,19 +112,13 @@ export default {
                 name: this.find.name,
                 type: this.find.type
 			}
-			requestJava({
-				url: '/admin/baseConst/list',
-				method: 'get',
-				params
-			}).then(res => {
+			getConsts({params}).then(res => {
 				this.count = res.data.data.total
-				this.tableData = res.data.data.list
+				this.tableData = res.data.data.records
 			})
 		},
 		getConstTypes() {
-			requestJava({
-				url: '/admin/baseConst/selectType',
-			}).then(res => {
+			getConstTypes().then(res => {
 				this.constTypeList = res.data.data
 			})
 		},
@@ -165,20 +159,11 @@ export default {
 			})
 		},
 		del(ids) {
-			let data = {
-				constStdIDs: ids.join(',')
-			}
-			requestJava({
-				url: '/admin/baseConst/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 200) {
-					Message.success('删除成功!')
-					this.getList()
-				}
+			delConst({id: ids.join(',')}).then(res => {
+				Message.success('删除成功!')
+				this.getList()
 			})
-		},
+		}
 	}
 }
 

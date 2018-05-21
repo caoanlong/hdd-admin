@@ -17,7 +17,7 @@
 							<el-input placeholder="请输入..." v-model="info.value"></el-input>
 						</el-form-item>
                         <el-form-item label="序号" prop="sortNumber">
-                            <el-input-number v-model="info.SortNumber" :min="1"></el-input-number>
+                            <el-input-number v-model="info.sortNumber" :min="1"></el-input-number>
 						</el-form-item>
 						<el-form-item label="常量类型" prop="type">
 							<el-input placeholder="请输入..." v-model="info.type"></el-input>
@@ -39,7 +39,7 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../../common/requestJava'
+	import { updateConst, getConst } from '../../../../api/consts'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
@@ -86,9 +86,8 @@
                 data.stdConstFlag = this.info.stdConstFlag ? 'Y' : 'N'
 				this.$refs['ruleForm'].validate(valid => {
 					if (valid) {
-						requestJava({
-							url: '/admin/baseConst/update',
-							method: 'post',
+						updateConst({
+							id: data.constStdID,
 							data
 						}).then(res => {
 							Message.success('成功！')
@@ -98,14 +97,8 @@
 				})
             },
             getInfo() {
-                let params = {
-					constStdID: this.$route.query.constStdID
-				}
-				requestJava({
-					url: '/admin/baseConst/detail',
-					params
-				}).then(res => {
-                    this.info = res.data.data
+				getConst({id: this.$route.query.constStdID}).then(res => {
+					this.info = res.data.data
                     this.info.stdConstFlag = res.data.data.stdConstFlag == 'Y' ? true : false
 				}).catch(err => {})
 			},

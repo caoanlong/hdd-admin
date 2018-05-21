@@ -38,7 +38,7 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../../common/requestJava'
+	import { getConst } from '../../../../api/consts'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
@@ -59,14 +59,8 @@
         },
 		methods: {
             getInfo() {
-                let params = {
-					constStdID: this.$route.query.constStdID
-				}
-				requestJava({
-					url: '/admin/baseConst/detail',
-					params
-				}).then(res => {
-                    this.info = res.data.data
+				getConst({id: this.$route.query.constStdID}).then(res => {
+					this.info = res.data.data
                     this.info.stdConstFlag = res.data.data.stdConstFlag == 'Y' ? true : false
 				}).catch(err => {})
 			},
