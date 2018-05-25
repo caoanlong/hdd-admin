@@ -15,7 +15,7 @@
 						<el-form-item label="跳转URL" prop="ForwardURL">
 							<el-input v-model="messagetemplate.ForwardURL"></el-input>
 						</el-form-item>
-						<el-form-item label="JSON跳转样例" prop="JSONForward">
+						<el-form-item label="JSON跳转样例">
 							<el-input v-model="messagetemplate.JSONForward"></el-input>
 						</el-form-item>
 						<el-form-item label="代码" prop="Code">
@@ -26,6 +26,14 @@
 						</el-form-item>
 						<el-form-item label="标题" prop="Title">
 							<el-input v-model="messagetemplate.Title"></el-input>
+						</el-form-item>
+						<el-form-item label="类型" prop="type">
+							<el-select style="width: 100%" placeholder="请选择" v-model="messagetemplate.type">
+								<el-option label="通知" value="SystemMsg"></el-option>
+								<el-option label="订阅" value="SubscribeMsg"></el-option>
+								<el-option label="货源" value="GoodsMsg"></el-option>
+								<el-option label="钱包" value="WalletMsg"></el-option>
+							</el-select>
 						</el-form-item>
 						<el-form-item label="图标">
 							<el-input v-model="messagetemplate.IconURL"></el-input>
@@ -68,23 +76,22 @@
 						{required: true, message: '请选择APP页面'}
 					],
 					ForwardURL: [
-						{required: true, message: '请输入跳转URL'},
-						{validator: checkURL}
-					],
-					JSONForward: [
-						{required: true, message: '请输入JSON跳转样例'}
+						{required: true, message: '请输入跳转URL'}
 					],
 					Code: [
 						{required: true, message: '请输入代码'},
-						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
 					],
 					Name: [
 						{required: true, message: '请输入名称'},
-						{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
+						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
 					],
 					Title: [
 						{required: true, message: '请输入标题'},
 						{min: 2, max: 50, message: '长度在 2 到 50 个字符'}
+					],
+					type: [
+						{required: true, message: '请选择类型'},
 					],
 					Content: [
 						{required: true, message: '请输入格式'},
@@ -109,6 +116,7 @@
 					Name: this.messagetemplate.Name,
 					Code: this.messagetemplate.Code,
 					Title: this.messagetemplate.Title,
+					type: this.messagetemplate.type,
 					IconURL: this.messagetemplate.IconURL,
 					Content: this.messagetemplate.Content,
 					JSONSample: this.messagetemplate.JSONSample,

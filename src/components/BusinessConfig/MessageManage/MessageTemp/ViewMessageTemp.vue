@@ -25,6 +25,12 @@
                         <el-form-item label="标题">
 							<p>{{setMessagetemplate.Title}}</p>
 						</el-form-item>
+						<el-form-item label="类型">
+							<p v-if="setMessagetemplate.type == 'SystemMsg'">通知</p>
+                            <p v-else-if="setMessagetemplate.type == 'SubscribeMsg'">订阅</p>
+                            <p v-else-if="setMessagetemplate.type == 'GoodsMsg'">货源</p>
+                            <p v-else-if="setMessagetemplate.type == 'WalletMsg'">钱包</p>
+						</el-form-item>
                         <el-form-item label="图标">
 							<p>{{setMessagetemplate.IconURL}}</p>
 						</el-form-item>

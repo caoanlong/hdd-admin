@@ -14,13 +14,21 @@
 		    </div>
 		    <div class="table">
                 <el-table :data="messagetemplates" @selection-change="selectionChange" border style="width: 100%" size="mini">
-                    <el-table-column type="selection" align="center"></el-table-column>
+                    <el-table-column type="selection" align="center" fixed></el-table-column>
                     <el-table-column label="APP页面" prop="AppPage.Name"></el-table-column>
                     <el-table-column label="跳转URL" prop="ForwardURL" width="70"></el-table-column>
                     <el-table-column label="代码" prop="Code"></el-table-column>
                     <el-table-column label="名称" prop="Name"></el-table-column>
                     <el-table-column label="标题" prop="Title" align="center" width="90"></el-table-column>
                     <el-table-column label="格式" prop="Content"></el-table-column>
+                    <el-table-column label="类型">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.type == 'SystemMsg'">通知</span>
+                            <span v-else-if="scope.row.type == 'SubscribeMsg'">订阅</span>
+                            <span v-else-if="scope.row.type == 'GoodsMsg'">货源</span>
+                            <span v-else-if="scope.row.type == 'WalletMsg'">钱包</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="是否有效" align="center" width="70">
                         <template slot-scope="scope">
                             <span>{{scope.row.IsEnable == 'Y' ? '是' : '否'}}</span>
@@ -32,7 +40,7 @@
                             <span>{{new Date(scope.row.CreateTime).getTime() | getdatefromtimestamp()}}</span>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column label="创建人" prop="createBy.Name" width="80"></el-table-column> -->
+                    <el-table-column label="创建人" prop="createBy.Name" width="80"></el-table-column>
                     <el-table-column label="操作" width="230" align="center" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="default" size="mini" @click="viewMessagetemplate(scope.row.MessageTemplate_ID)" icon="el-icon-view">查看</el-button>
@@ -74,6 +82,7 @@
         '代码':'Code',
         '名称':'Name',
         '标题':'Title',
+        '类型':'type',
         '格式':'Content',
         '是否有效':'IsEnable',
         '极光类型':'PushType',
@@ -99,8 +108,19 @@
             exportExcel() {
                 this.downloadLoading = true
                 import('../../../../common/Export2Excel').then(excel => {
-                    const tHeader = ['APP页面','跳转URL','代码','名称','标题','格式','是否有效','极光类型','创建时间']
-                    const filterVal = [userMap['APP页面'], userMap['跳转URL'], userMap['代码'], userMap['名称'], userMap['标题'], userMap['格式'], userMap['是否有效'], userMap['极光类型'], userMap['创建时间']]
+                    const tHeader = ['APP页面','跳转URL','代码','名称','标题', '类型', '格式','是否有效','极光类型','创建时间']
+                    const filterVal = [
+                        userMap['APP页面'],
+                        userMap['跳转URL'], 
+                        userMap['代码'], 
+                        userMap['名称'], 
+                        userMap['标题'], 
+                        userMap['类型'], 
+                        userMap['格式'], 
+                        userMap['是否有效'], 
+                        userMap['极光类型'], 
+                        userMap['创建时间']
+                    ]
                     const data = this.formatJson(filterVal, this.messagetemplates)
                     excel.export_json_to_excel(tHeader, data, this.filename)
                     this.downloadLoading = false
