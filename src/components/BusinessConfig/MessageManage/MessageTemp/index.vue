@@ -160,17 +160,16 @@
                     data
                 }).then(res => {
                     if (res.data.code == 0) {
-                        // console.log(res.data)
                         Message.success(res.data.msg)
-                        this.getMessagetemplates(1)
+                        this.getMessagetemplates()
                     } else {
                         Message.error(res.data.msg)
                     }
                 })
             },
-            getMessagetemplates(pageIndex) {
+            getMessagetemplates() {
                 let params = {
-                    pageIndex: pageIndex || 1,
+                    pageIndex: this.pageIndex || 1,
                     pageSize: this.pageSize
                 }
                 request({
@@ -187,7 +186,8 @@
                 })
             },
             pageChange(index) {
-                this.getMessagetemplates(index)
+                this.pageIndex = index
+                this.getMessagetemplates()
             },
 			viewMessagetemplate(id) {
                 this.$router.push({ name: 'viewmessagetemp', query: { MessageTemplate_ID: id} })
