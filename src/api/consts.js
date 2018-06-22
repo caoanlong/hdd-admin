@@ -1,8 +1,8 @@
-import requestSys from '../common/requestSys'
+import request from '../common/request'
 
 // 常量列表
 export function getConsts ({params}) {
-	return requestSys({
+	return request({
 		url: `/const`,
 		method: 'get',
 		params
@@ -11,7 +11,7 @@ export function getConsts ({params}) {
 
 // 常量详情
 export function getConst ({id}) {
-	return requestSys({
+	return request({
 		url: `/const/${id}`,
 		method: 'get'
 	})
@@ -19,7 +19,7 @@ export function getConst ({id}) {
 
 // 常量类型
 export function getConstTypes () {
-	return requestSys({
+	return request({
 		url: `/constType`,
 		method: 'get'
 	})
@@ -27,7 +27,7 @@ export function getConstTypes () {
 
 // 添加常量
 export function addConst ({data}) {
-	return requestSys({
+	return request({
 		url: `/const`,
 		method: 'put',
 		data
@@ -36,7 +36,7 @@ export function addConst ({data}) {
 
 // 修改常量
 export function updateConst ({id, data}) {
-	return requestSys({
+	return request({
 		url: `/const/${id}`,
 		method: 'post',
 		data
@@ -45,7 +45,7 @@ export function updateConst ({id, data}) {
 
 // 删除常量
 export function delConst ({id}) {
-	return requestSys({
+	return request({
 		url: `/const/${id}`,
 		method: 'delete'
 	})

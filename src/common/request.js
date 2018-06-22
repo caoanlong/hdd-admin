@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import store from '../store'
 
 // create an axios instance
 const service = axios.create({
