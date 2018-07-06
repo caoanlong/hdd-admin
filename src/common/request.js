@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 // create an axios instance
 const service = axios.create({
 	baseURL: process.env.BASE_API, // api的base_url
-	timeout: 45000, // request timeout,
+	timeout: 30000, // request timeout,
 	// headers: { 'Authorization': localStorage.getItem('token') }
 })
 

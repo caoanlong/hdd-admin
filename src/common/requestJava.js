@@ -1,14 +1,13 @@
 import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui'
-import store from '../store'
 
 export const javaUrl = process.env.BASE_JAVA_API
 
 // create an axios instance
 const service = axios.create({
 	baseURL: javaUrl, // api的base_url
-	timeout: 5000, // request timeout
+	timeout: 30000, // request timeout
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded'
 	}
