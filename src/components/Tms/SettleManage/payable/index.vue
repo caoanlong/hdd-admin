@@ -38,7 +38,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getDetail">查询</el-button>
+						<el-button type="primary" @click="getList">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -113,7 +113,7 @@
 				<el-row type="flex">
 					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
 						<span>总共 {{total}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getDetail">
+						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList">
 							<el-option label="10" :value="10"></el-option>
 							<el-option label="20" :value="20"></el-option>
 							<el-option label="30" :value="30"></el-option>
@@ -136,6 +136,7 @@
 <script type="text/javascript">
 import { Message } from 'element-ui'
 import requestJava, { javaUrl } from '../../../../common/requestJava'
+import Page from '../../../CommonComponents/Page'
 export default {
 	data() {
 		return {
@@ -154,30 +155,37 @@ export default {
 			findcode: ''
 		}
 	},
+	components: { Page },
 	created() {
-		this.getDetail()
+		this.getList()
 	},
 	methods: {
-		pageChange(index) {
-			this.pageIndex = index
-			this.getDetail()
-		},
 		selectDateRange(date) {
 			this.findshipperBeginDate = new Date(date[0]).getTime()
 			this.findshipperEndDate = new Date(date[1]).getTime()
 		},
-		reset() {
-			this.findRangeDate = [],
-			this.findshipperBeginDate = '',
-			this.findshipperEndDate = '',
-			this.findplateNo = '',
-			this.findName = '',
-			this.findshipperCompanyName = '',
-			this.findconsigneeCompanyName = '',
-			this.findcode = '',
-			this.getDetail()
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
 		},
-		getDetail() {
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findRangeDate = []
+			this.findshipperBeginDate = ''
+			this.findshipperEndDate = ''
+			this.findplateNo = ''
+			this.findName = ''
+			this.findshipperCompanyName = ''
+			this.findconsigneeCompanyName = ''
+			this.findcode = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
 			let params = {
 				current: this.pageIndex,
 				size: this.pageSize,

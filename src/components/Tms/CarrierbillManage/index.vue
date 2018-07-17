@@ -102,9 +102,7 @@
 					</el-table-column>
 					<el-table-column label="货物总量">
 						<template slot-scope="scope" >
-							<span v-if="scope.row.carrierCargo[0]">
-								  {{ SumDispatchCargoQuantity(scope.row.carrierCargo) }} 
-							</span>
+							<span v-if="scope.row.carrierCargo[0]">{{ SumDispatchCargoQuantity(scope.row.carrierCargo) }} </span>
 						</template>
 					</el-table-column>
 					<el-table-column label="发货单位" prop="shipperCompanyName"></el-table-column>
@@ -130,25 +128,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</div>
 	</div>
@@ -156,6 +136,7 @@
 <script type="text/javascript">
 import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
+import Page from '../../CommonComponents/Page'
 export default {
 	data() {
 		return {
@@ -177,6 +158,7 @@ export default {
 			tableData: []
 		}
 	},
+	components: { Page },
 	created() {
 		this.getList()
 	},
@@ -191,10 +173,6 @@ export default {
 				sumNum += (item.cargoNum ? item.cargoNum : 0)
 			})
 			return (sumWeight + '吨/' + sumVolume + '方/' + sumNum + '件')
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
 		},
 		// 创建时间选择回调
 		selectCreateTimeDateRange(date) {
@@ -211,7 +189,14 @@ export default {
 			this.find.consigneeBeginDate = new Date(date[0]).getTime()
 			this.find.consigneeEndDate = new Date(date[1]).getTime()
 		},
-		// 重置搜索表单
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
 		reset() {
 			this.find.searchInfo = ''
 			this.findCreateTimeRangeDate = []
@@ -224,11 +209,13 @@ export default {
 			this.find.consigneeBeginDate = ''
 			this.find.consigneeEndDate = ''
 			this.find.status = ''
+			this.pageIndex = 1
+			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
 			let params = {
-				"current": this.pageIndex || 1,
+				"current": this.pageIndex,
 				"size": this.pageSize,
 				"searchInfo": this.find.searchInfo,
 				"createTimeBegin": this.find.createTimeBegin,

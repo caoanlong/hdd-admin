@@ -49,210 +49,195 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getMessagetemplates()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+                <Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 		    </div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-    import request from '../../../../common/request'
-    import { Message } from 'element-ui'
-    import UploadExcel from '../../../CommonComponents/UploadExcel'
-    const userMap = {
-        'APP页面':'AppPage_ID',
-        '跳转URL':'ForwardURL',
-        '代码':'Code',
-        '名称':'Name',
-        '标题':'Title',
-        '类型':'type',
-        '格式':'Content',
-        '是否有效':'IsEnable',
-        '极光类型':'PushType',
-        '创建时间':'CreateTime',
-    }
-	export default {
-	    data() {
-	        return {
-                filename: '消息模板',
-                downloadLoading: false,
-                refreshing: false,
-                pageIndex: 1,
-                pageSize: 10,
-                count: 0,
-                messagetemplates: [],
-                selectedMessagetemplates: []
-	        }
-	  	},
-        created() {
-            this.getMessagetemplates()
-        },
-		methods: {
-            exportExcel() {
-                this.downloadLoading = true
-                import('../../../../common/Export2Excel').then(excel => {
-                    const tHeader = ['APP页面','跳转URL','代码','名称','标题', '类型', '格式','是否有效','极光类型','创建时间']
-                    const filterVal = [
-                        userMap['APP页面'],
-                        userMap['跳转URL'], 
-                        userMap['代码'], 
-                        userMap['名称'], 
-                        userMap['标题'], 
-                        userMap['类型'], 
-                        userMap['格式'], 
-                        userMap['是否有效'], 
-                        userMap['极光类型'], 
-                        userMap['创建时间']
-                    ]
-                    const data = this.formatJson(filterVal, this.messagetemplates)
-                    excel.export_json_to_excel(tHeader, data, this.filename)
-                    this.downloadLoading = false
-                })
-            },
-            formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => {
-                    if (j === 'timestamp') {
-                        return parseTime(v[j])
-                    } else {
-                        return v[j]
-                    }
-                }))
-            },
-            onSelectedFile(result) {
-                new Promise((resolve, reject) => {
-                    let uploadExcelMessagetemplates = []
-                    result.forEach(item => {
-                        let excelMessagetemplate = {}
-                        for (let key in item) {
-                            excelMessagetemplate[userMap[key]] = item[key]
-                        }
-                        uploadExcelMessagetemplates.push(excelMessagetemplate)
-                    })
-                    resolve(uploadExcelMessagetemplates)
-                }).then(messagetemplates => {
-                    this.addMutiple(messagetemplates)
-                })
-            },
-            addUserMutiple(messagetemplates) {
-                let data = {
-                    messagetemplates: messagetemplates,
-                }
-                request({
-                    url: '/set_messagetemplate/addmutip',
-                    method: 'post',
-                    data
-                }).then(res => {
-                    if (res.data.code == 0) {
-                        Message.success(res.data.msg)
-                        this.getMessagetemplates()
-                    } else {
-                        Message.error(res.data.msg)
-                    }
-                })
-            },
-            getMessagetemplates() {
-                let params = {
-                    pageIndex: this.pageIndex || 1,
-                    pageSize: this.pageSize
-                }
-                request({
-                    url: '/set_messagetemplate/list',
-                    method: 'get',
-                    params
-                }).then(res => {
-                    if (res.data.code == 0) {
-                        this.count = res.data.data.count
-                        this.messagetemplates = res.data.data.rows
-                    } else {
-                        Message.error(res.data.msg)
-                    }
-                })
-            },
-            pageChange(index) {
-                this.pageIndex = index
-                this.getMessagetemplates()
-            },
-			viewMessagetemplate(id) {
-                this.$router.push({ name: 'viewmessagetemp', query: { MessageTemplate_ID: id} })
-            },
-            editMessagetemplate(id) {
-                this.$router.push({ name: 'editmessagetemp', query: { MessageTemplate_ID: id} })
-            },
-            addMessagetemplate() {
-                this.$router.push({ name: 'addmessagetemp'})
-            },
-            deleteConfirm(id) {
-                let ids = []
-                if (id && (typeof id == 'string' || typeof id == 'number')) {
-                    ids = [].concat(id)
-                } else {
-                    if (this.selectedMessagetemplates.length == 0) {
-                        this.$message({
-                            type: 'warning',
-                            message: '请选择'
-                        })
-                        return
-                    }
-                    ids = this.selectedMessagetemplates
-                }
-                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.delMessagetemplates(ids)
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    })
-                })
-            },
-            delMessagetemplates(ids) {
-                let data = {
-                    ids: ids
-                }
-                request({
-                    url: '/set_messagetemplate/delete',
-                    method: 'post',
-                    data
-                }).then(res => {
-                    if (res.data.code == 0) {
-                        this.getMessagetemplates()
-                    } else {
-                        Message.error(res.data.msg)
-                    }
-                })
-            },
-            selectionChange(data) {
-                this.selectedMessagetemplates = data.map(item => item.MessageTemplate_ID)
-            },
-        },
-        components: {
-            UploadExcel
+import request from '../../../../common/request'
+import { Message } from 'element-ui'
+import UploadExcel from '../../../CommonComponents/UploadExcel'
+import Page from '../../../CommonComponents/Page'
+const userMap = {
+    'APP页面':'AppPage_ID',
+    '跳转URL':'ForwardURL',
+    '代码':'Code',
+    '名称':'Name',
+    '标题':'Title',
+    '类型':'type',
+    '格式':'Content',
+    '是否有效':'IsEnable',
+    '极光类型':'PushType',
+    '创建时间':'CreateTime',
+}
+export default {
+    data() {
+        return {
+            filename: '消息模板',
+            downloadLoading: false,
+            refreshing: false,
+            pageIndex: 1,
+            pageSize: 10,
+            count: 0,
+            messagetemplates: [],
+            selectedMessagetemplates: []
         }
-	}
+    },
+    components: { UploadExcel, Page },
+    created() {
+        this.getList()
+    },
+    methods: {
+        exportExcel() {
+            this.downloadLoading = true
+            import('../../../../common/Export2Excel').then(excel => {
+                const tHeader = ['APP页面','跳转URL','代码','名称','标题', '类型', '格式','是否有效','极光类型','创建时间']
+                const filterVal = [
+                    userMap['APP页面'],
+                    userMap['跳转URL'], 
+                    userMap['代码'], 
+                    userMap['名称'], 
+                    userMap['标题'], 
+                    userMap['类型'], 
+                    userMap['格式'], 
+                    userMap['是否有效'], 
+                    userMap['极光类型'], 
+                    userMap['创建时间']
+                ]
+                const data = this.formatJson(filterVal, this.messagetemplates)
+                excel.export_json_to_excel(tHeader, data, this.filename)
+                this.downloadLoading = false
+            })
+        },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => {
+                if (j === 'timestamp') {
+                    return parseTime(v[j])
+                } else {
+                    return v[j]
+                }
+            }))
+        },
+        onSelectedFile(result) {
+            new Promise((resolve, reject) => {
+                let uploadExcelMessagetemplates = []
+                result.forEach(item => {
+                    let excelMessagetemplate = {}
+                    for (let key in item) {
+                        excelMessagetemplate[userMap[key]] = item[key]
+                    }
+                    uploadExcelMessagetemplates.push(excelMessagetemplate)
+                })
+                resolve(uploadExcelMessagetemplates)
+            }).then(messagetemplates => {
+                this.addMutiple(messagetemplates)
+            })
+        },
+        addUserMutiple(messagetemplates) {
+            let data = {
+                messagetemplates: messagetemplates,
+            }
+            request({
+                url: '/set_messagetemplate/addmutip',
+                method: 'post',
+                data
+            }).then(res => {
+                if (res.data.code == 0) {
+                    Message.success(res.data.msg)
+                    this.getList()
+                } else {
+                    Message.error(res.data.msg)
+                }
+            })
+        },
+        getList() {
+            let params = {
+                pageIndex: this.pageIndex || 1,
+                pageSize: this.pageSize
+            }
+            request({
+                url: '/set_messagetemplate/list',
+                method: 'get',
+                params
+            }).then(res => {
+                if (res.data.code == 0) {
+                    this.count = res.data.data.count
+                    this.messagetemplates = res.data.data.rows
+                } else {
+                    Message.error(res.data.msg)
+                }
+            })
+        },
+        pageChange(index) {
+            this.pageIndex = index
+            this.getList()
+        },
+        pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+        viewMessagetemplate(id) {
+            this.$router.push({ name: 'viewmessagetemp', query: { MessageTemplate_ID: id} })
+        },
+        editMessagetemplate(id) {
+            this.$router.push({ name: 'editmessagetemp', query: { MessageTemplate_ID: id} })
+        },
+        addMessagetemplate() {
+            this.$router.push({ name: 'addmessagetemp'})
+        },
+        deleteConfirm(id) {
+            let ids = []
+            if (id && (typeof id == 'string' || typeof id == 'number')) {
+                ids = [].concat(id)
+            } else {
+                if (this.selectedMessagetemplates.length == 0) {
+                    this.$message({
+                        type: 'warning',
+                        message: '请选择'
+                    })
+                    return
+                }
+                ids = this.selectedMessagetemplates
+            }
+            this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.delMessagetemplates(ids)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })
+            })
+        },
+        delMessagetemplates(ids) {
+            let data = {
+                ids: ids
+            }
+            request({
+                url: '/set_messagetemplate/delete',
+                method: 'post',
+                data
+            }).then(res => {
+                if (res.data.code == 0) {
+                    this.getList()
+                } else {
+                    Message.error(res.data.msg)
+                }
+            })
+        },
+        selectionChange(data) {
+            this.selectedMessagetemplates = data.map(item => item.MessageTemplate_ID)
+        },
+    }
+}
 </script>
 <style lang="stylus" scoped>
 	.main-content

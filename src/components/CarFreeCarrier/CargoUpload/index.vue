@@ -10,7 +10,7 @@
 						<el-input placeholder="报文参考号" v-model="findMessageReferenceNumber"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click.native="getCargoList()">查询</el-button>
+						<el-button type="primary"  @click.native="getList()">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -72,26 +72,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<!--endprint-->
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getCargoList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
@@ -100,16 +81,7 @@
 import requestJava, { javaUrl } from '../../../common/requestJava'
 import { Message } from 'element-ui'
 import UploadExcel from '../../CommonComponents/UploadExcel'
-// function doPrint() {
-// 	bdhtml=window.document.body.innerHTML; //获取当前页的html代码  
-// 	sprnstr="<!--startprint-->"; //设置打印开始区域   
-// 	eprnstr="<!--endprint-->";  //设置打印结束区域   
-// 	prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);  //从开始代码向后取html   
-// 	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));  //从结束代码向前取html   
-// 	window.document.body.innerHTML=prnhtml;  
-// 	window.print();  
-// 	window.document.body.innerHTML=bdhtml;    //还原页面  
-// }
+import Page from '../../CommonComponents/Page'
 export default {
 	data() {
 		return {
@@ -125,25 +97,28 @@ export default {
 			findMessageReferenceNumber:''
 		}
 	},
+	components: { Page },
 	created() {
-		this.getCargoList()
+		this.getList()
 	},
 	methods: {
-		// 打印
-		doPrint() {
-			//获取当前页的html代码
-			var bdhtml = window.document.body.innerHTML  
-			window.document.body.innerHTML = document.getElementById('table').innerHTML  
-			window.print()
-			// 重新加载页面，以刷新数据
-    		window.location.reload()
+		pageChange() {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
 		},
 		reset() {
 			this.findMessageReferenceNumber = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
 		},
-		getCargoList() {
+		getList() {
 			let params = {
-				pageNum: this.pageIndex || 1,
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				messageReferenceNumber: this.findMessageReferenceNumber
 			}
@@ -160,10 +135,6 @@ export default {
 				}
 			})
 		},
-		pageChange() {
-			this.pageIndex = index
-			this.getCargoList()
-		},
 		AddCargo() {
 			this.$router.push({ name: 'addcargo' })
 		},
@@ -176,7 +147,7 @@ export default {
 		// 导入
 		uploadSuccess (response) {
 			Message.success(response.message)
-			this.getCargoList()
+			this.getList()
 		},
 		// 上传错误
 		uploadError (response) {

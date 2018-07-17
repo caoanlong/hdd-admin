@@ -10,7 +10,7 @@
 						<el-input placeholder="请输入..." v-model="findBusinessType"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getTranSms()">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -41,91 +41,65 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTranSms()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :current-page="pageIndex" :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	import request from '../../../common/request'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				findBusinessType: '',
-				refreshing: false,
-				pageIndex: Number(sessionStorage.getItem('pageIndex')) || 1,
-				pageSize: Number(sessionStorage.getItem('pageSize')) || 10,
-				count: 0,
-				tranSms: []
+import request from '../../../common/request'
+import { Message } from 'element-ui'
+import Page from '../../CommonComponents/Page'
+export default {
+	data() {
+		return {
+			findBusinessType: '',
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			tranSms: []
+		}
+	},
+	components: { Page },
+	created() {
+		this.getList()
+	},
+	methods: {
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findBusinessType = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
+			let params = {
+				pageIndex: this.pageIndex,
+				pageSize: this.pageSize,
+				BusinessType: this.findBusinessType
 			}
-		},
-		watch: {
-			pageSize(newVal) {
-				sessionStorage.setItem('pageSize', newVal)
-			},
-			pageIndex(newVal) {
-				sessionStorage.setItem('pageIndex', newVal)
-			},
-		},
-		created() {
-			this.getTranSms()
-		},
-		methods: {
-			getTranSms() {
-				let params = {
-					pageIndex: this.pageIndex || 1,
-					pageSize: this.pageSize,
-					BusinessType: this.findBusinessType
+			request({
+				url: '/sys_logsms/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.tranSms = res.data.data.rows
+				} else {
+					Message.error(res.data.msg)
 				}
-				request({
-					url: '/sys_logsms/list',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.count = res.data.data.count
-						this.tranSms = res.data.data.rows
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			pageChange(index) {
-				this.pageIndex = index
-				this.getTranSms()
-			},
-			// 重置搜索表单
-			reset() {
-				this.findBusinessType = ''
-			},
-			refresh() {
-				this.refreshing = true
-				this.getTranSms()
-				setTimeout(() => {
-					this.refreshing = false
-				}, 500)
-			}
+			})
 		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 

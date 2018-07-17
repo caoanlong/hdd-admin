@@ -6,6 +6,7 @@
 			:collapse="isCollapse" 
 			background-color="#304156" 
 			text-color="#bfcbd9" 
+			:unique-opened="true" 
 			active-text-color="#409EFF"
 			@select="selectIndex">
 			<sidebar-item :routes="menus"></sidebar-item>

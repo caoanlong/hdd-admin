@@ -29,7 +29,7 @@
 						<el-switch v-model="findIsException"></el-switch>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getLogs()">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -49,96 +49,85 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getLogs()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	import request from '../../../../common/request'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				findTitle: '',
-				findCreateBy: '',
-				findRequestUri: '',
-				findDataRange: '',
-				startDate: '',
-				endDate: '',
-				findIsException: false,
-				refreshing: false,
-				pageIndex: 1,
-				pageSize: 10,
-				count: 0,
-				logs: []
+import request from '../../../../common/request'
+import { Message } from 'element-ui'
+import Page from '../../../CommonComponents/Page'
+export default {
+	data() {
+		return {
+			findTitle: '',
+			findCreateBy: '',
+			findRequestUri: '',
+			findDataRange: '',
+			startDate: '',
+			endDate: '',
+			findIsException: false,
+			refreshing: false,
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			logs: []
+		}
+	},
+	components: { Page },
+	created() {
+		this.getList()
+	},
+	methods: {
+		selectDateRange(date) {
+			this.startDate = date[0]
+			this.endDate = date[1]
+		},
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findTitle = ''
+			this.findCreateBy = ''
+			this.findRequestUri = ''
+			this.findDataRange = ''
+			this.findIsException = false
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
+			let params = {
+				pageIndex: this.pageIndex,
+				pageSize: this.pageSize,
+				Title: this.findTitle,
+				CreateBy: this.findCreateBy,
+				RequestUri: this.findRequestUri,
+				startDate: this.startDate,
+				endDate: this.endDate,
+				isException: this.findIsException,
 			}
-		},
-		created() {
-			this.getLogs()
-		},
-		methods: {
-			selectDateRange(date) {
-				this.startDate = date[0]
-				this.endDate = date[1]
-			},
-			getLogs() {
-				let params = {
-					pageIndex: this.pageIndex || 1,
-					pageSize: this.pageSize,
-					Title: this.findTitle,
-					CreateBy: this.findCreateBy,
-					RequestUri: this.findRequestUri,
-					startDate: this.startDate,
-					endDate: this.endDate,
-					isException: this.findIsException,
+			request({
+				url: '/sys_log/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.logs = res.data.data.rows
+				} else {
+					Message.error(res.data.msg)
 				}
-				request({
-					url: '/sys_log/list',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.count = res.data.data.count
-						this.logs = res.data.data.rows
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			pageChange(index) {
-				this.pageIndex = index
-				this.getLogs()
-			},
-			// 重置搜索表单
-			reset() {
-				this.findTitle = ''
-				this.findCreateBy = ''
-				this.findRequestUri = ''
-				this.findDataRange = ''
-				this.findIsException = false
-				this.getLogs()
-			}
+			})
 		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 		

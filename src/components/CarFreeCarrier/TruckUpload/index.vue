@@ -13,7 +13,7 @@
 						<el-input  placeholder="单证名称" v-model="findDocumentName"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"  @click.native="getTruckList()">查询</el-button>
+						<el-button type="primary"  @click.native="getList()">查询</el-button>
 						<el-button type="default" @click.native="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -71,112 +71,103 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getTruckList()">
-							<el-option label="10" value="10"></el-option>
-							<el-option label="20" value="20"></el-option>
-							<el-option label="30" value="30"></el-option>
-							<el-option label="40" value="40"></el-option>
-							<el-option label="50" value="50"></el-option>
-							<el-option label="100" value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava, { javaUrl } from '../../../common/requestJava'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				downloadLoading: false,
-				importFileUrl: javaUrl + '/notruckTrucksource/importExcel',
-				exportExcelUrl: javaUrl + '/notruckTrucksource/export',
-				templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=trucksource.xlsx ',
-				uploadHeaders: {'Authorization': localStorage.getItem('token')},
-				pageIndex: 1,
-				pageSize: 10,
-				count: 0,
-				tableData: [],
-				findMessageReferenceNumber:'',
-				findDocumentName:''
-			}
-		},
-		created() {
-			this.getTruckList()
-		},
-		methods: {
-			reset() {
-				this.findMessageReferenceNumber = ''
-				this.findDocumentName=''
-			},
-			pageChange(index) {
-				this.pageIndex = index
-				this.getTruckList()
-			},
-			getTruckList() {
-				let params = {
-					pageNum: this.pageIndex || 1,
-					pageSize: this.pageSize,
-					messageReferenceNumber: this.findMessageReferenceNumber,
-					documentName: this.findDocumentName
-				}
-				requestJava({
-					url: '/notruckTrucksource/list',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 200) {
-						this.count = res.data.data.total
-						this.tableData = res.data.data.list
-					} else {
-						Message.error(res.data.message)
-					}
-				})
-			},
-			AddTruck() {
-				this.$router.push({ name: 'addtruck'})
-			},
-			EditTruck(notrucksourceId) {
-				this.$router.push({ name: 'edittruck', query: { notrucksourceId}})
-			},
-			ViewTruck(notrucksourceId) {
-				this.$router.push({ name: 'viewtruck', query: { notrucksourceId}})
-			},
-			// 导入
-			uploadSuccess (response) {
-				Message.success(response.message)
-				this.getTruckList()
-			},
-			// 上传错误
-			uploadError (response) {
-				Message.error('response.message')
-			},
-			beforeFileUpload (file) {
-				const extension = file.name.split('.')[1] === 'xls'
-				const extension2 = file.name.split('.')[1] === 'xlsx'
-				const isLt2M = file.size / 1024 / 1024 < 10
-				if (!extension && !extension2) {
-					Message.error('上传模板只能是 xls、xlsx格式!')
-				}
-				if (!isLt2M) {
-					Message.error('上传模板大小不能超过 10MB!')
-				}
-				return extension || extension2 && isLt2M
-			}
+import requestJava, { javaUrl } from '../../../common/requestJava'
+import { Message } from 'element-ui'
+import Page from '../../CommonComponents/Page'
+export default {
+	data() {
+		return {
+			downloadLoading: false,
+			importFileUrl: javaUrl + '/notruckTrucksource/importExcel',
+			exportExcelUrl: javaUrl + '/notruckTrucksource/export',
+			templateUrl: javaUrl + '/notruckUser/export/excelTemplate?fileName=trucksource.xlsx ',
+			uploadHeaders: {'Authorization': localStorage.getItem('token')},
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			tableData: [],
+			findMessageReferenceNumber:'',
+			findDocumentName:''
 		}
-	}	
+	},
+	components: { Page },
+	created() {
+		this.getList()
+	},
+	methods: {
+		reset() {
+			this.findMessageReferenceNumber = ''
+			this.findDocumentName = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		getList() {
+			let params = {
+				pageNum: this.pageIndex,
+				pageSize: this.pageSize,
+				messageReferenceNumber: this.findMessageReferenceNumber,
+				documentName: this.findDocumentName
+			}
+			requestJava({
+				url: '/notruckTrucksource/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		AddTruck() {
+			this.$router.push({ name: 'addtruck'})
+		},
+		EditTruck(notrucksourceId) {
+			this.$router.push({ name: 'edittruck', query: { notrucksourceId}})
+		},
+		ViewTruck(notrucksourceId) {
+			this.$router.push({ name: 'viewtruck', query: { notrucksourceId}})
+		},
+		// 导入
+		uploadSuccess (response) {
+			Message.success(response.message)
+			this.getList()
+		},
+		// 上传错误
+		uploadError (response) {
+			Message.error('response.message')
+		},
+		beforeFileUpload (file) {
+			const extension = file.name.split('.')[1] === 'xls'
+			const extension2 = file.name.split('.')[1] === 'xlsx'
+			const isLt2M = file.size / 1024 / 1024 < 10
+			if (!extension && !extension2) {
+				Message.error('上传模板只能是 xls、xlsx格式!')
+			}
+			if (!isLt2M) {
+				Message.error('上传模板大小不能超过 10MB!')
+			}
+			return extension || extension2 && isLt2M
+		}
+	}
+}	
 </script>
 <style lang="stylus" scoped>
 .download-btn

@@ -39,138 +39,128 @@
                         </template>
                     </el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getList()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../common/requestJava'
-	import { Message } from 'element-ui'
-	import { defaultImg } from '../../../assets/icons/icons'
-	export default {
-		data() {
-			return {
-				pageIndex: 1,
-				pageSize: 10,
-				count: 0,
-				tableData: [],
-				selectedBanks: []
-			}
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
+import { defaultImg } from '../../../assets/icons/icons'
+import Page from '../../CommonComponents/Page'
+export default {
+	data() {
+		return {
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			tableData: [],
+			selectedBanks: []
+		}
+	},
+	computed: {
+		defaultImg: () => defaultImg
+	},
+	components: { Page },
+	created() {
+		this.getList()
+	},
+	methods: {
+		selectionChange(data) {
+			this.selectedBanks = data.map(item => item.supportBankCode)
 		},
-		computed: {
-			defaultImg: () => defaultImg
-		},
-		created() {
+		pageChange(index) {
+			this.pageIndex = index
 			this.getList()
 		},
-		methods: {
-			pageChange(index) {
-				this.pageIndex = index
-				this.getList()
-			},
-			reset() {
-				this.findType = '',
-				this.getList()
-			},
-			selectionChange(data) {
-                this.selectedBanks = data.map(item => item.supportBankCode)
-            },
-			getList() {
-				let params = {
-					pageNum: this.pageIndex || 1,
-					pageSize: this.pageSize
-				}
-				requestJava({
-					url: '/paySupportBank/list',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 200) {
-						this.count = res.data.data.total
-						this.tableData = res.data.data.list
-					} else {
-						Message.error(res.data.message)
-					}
-				})
-			},
-			addBank() {
-                this.$router.push({name: 'addbank'})
-			},
-			viewBank(supportBankCode) {
-				this.$router.push({name: 'viewbank', query: {supportBankCode}})
-			},
-			editBank(supportBankCode) {
-				this.$router.push({name: 'editbank', query: {supportBankCode}})
-			},
-			deleteConfirm(id) {
-				let ids = ''
-				if (id && typeof id == 'string') {
-					ids = id
-				} else {
-					if (this.selectedBanks.length == 0) {
-						this.$message({
-							type: 'warning',
-							message: '请选择'
-						})
-						return
-					}
-					ids = this.selectedBanks.join(',')
-				}
-				this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.delBank(ids)
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
-				})
-			},
-			delBank(supportBankCodes) {
-				console.log(supportBankCodes)
-				let data = {
-					supportBankCodes
-				}
-				requestJava({
-					url: '/paySupportBank/del',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 200) {
-						this.getList()
-					} else {
-						Message.error(res.data.message)
-					}
-				})
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findType = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
+			let params = {
+				pageNum: this.pageIndex,
+				pageSize: this.pageSize
 			}
+			requestJava({
+				url: '/paySupportBank/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.count = res.data.data.total
+					this.tableData = res.data.data.list
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		addBank() {
+			this.$router.push({name: 'addbank'})
+		},
+		viewBank(supportBankCode) {
+			this.$router.push({name: 'viewbank', query: {supportBankCode}})
+		},
+		editBank(supportBankCode) {
+			this.$router.push({name: 'editbank', query: {supportBankCode}})
+		},
+		deleteConfirm(id) {
+			let ids = ''
+			if (id && typeof id == 'string') {
+				ids = id
+			} else {
+				if (this.selectedBanks.length == 0) {
+					this.$message({
+						type: 'warning',
+						message: '请选择'
+					})
+					return
+				}
+				ids = this.selectedBanks.join(',')
+			}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.delBank(ids)
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				})
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				})
+			})
+		},
+		delBank(supportBankCodes) {
+			console.log(supportBankCodes)
+			let data = {
+				supportBankCodes
+			}
+			requestJava({
+				url: '/paySupportBank/del',
+				method: 'post',
+				data
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.getList()
+				} else {
+					Message.error(res.data.message)
+				}
+			})
 		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 .table

@@ -25,7 +25,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getSmsLogs()">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -57,83 +57,72 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{count}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getSmsLogs()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="count" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-	import request from '../../../common/request'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				findPhones: '',
-				findBusinessType: '',
-				findStatus: '',
-				refreshing: false,
-				pageIndex: 1,
-				pageSize: 10,
-				count: 0,
-				smsLogs: []
+import request from '../../../common/request'
+import { Message } from 'element-ui'
+import Page from '../../CommonComponents/Page'
+export default {
+	data() {
+		return {
+			findPhones: '',
+			findBusinessType: '',
+			findStatus: '',
+			refreshing: false,
+			pageIndex: 1,
+			pageSize: 10,
+			count: 0,
+			smsLogs: []
+		}
+	},
+	components: { Page },
+	created() {
+		this.getList()
+	},
+	methods: {
+		pageChange(index) {
+			this.pageIndex = index
+			this.getList()
+		},
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findPhones = ''
+			this.findBusinessType = ''
+			this.findStatus = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
+			let params = {
+				pageIndex: this.pageIndex,
+				pageSize: this.pageSize,
+				Phones: this.findPhones,
+				BusinessType: this.findBusinessType,
+				Status: this.findStatus
 			}
-		},
-		created() {
-			this.getSmsLogs()
-		},
-		methods: {
-			getSmsLogs() {
-				let params = {
-					pageIndex: this.pageIndex || 1,
-					pageSize: this.pageSize,
-					Phones: this.findPhones,
-					BusinessType: this.findBusinessType,
-					Status: this.findStatus
+			request({
+				url: '/sys_logsms/list',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.count = res.data.data.count
+					this.smsLogs = res.data.data.rows
+				} else {
+					Message.error(res.data.msg)
 				}
-				request({
-					url: '/sys_logsms/list',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.count = res.data.data.count
-						this.smsLogs = res.data.data.rows
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			pageChange(index) {
-				this.pageIndex = index
-				this.getSmsLogs()
-			},
-			// 重置搜索表单
-			reset() {
-				this.findPhones = ''
-				this.findBusinessType = ''
-				this.findStatus = ''
-				this.getSmsLogs()
-			}
+			})
 		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 

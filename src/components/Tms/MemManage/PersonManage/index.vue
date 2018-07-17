@@ -44,7 +44,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getPersonList()">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -129,25 +129,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row type="flex">
-					<el-col :span="12" style="padding-top: 15px; font-size: 12px; color: #909399">
-						<span>总共 {{total}} 条记录每页显示</span>
-						<el-select size="mini" style="width: 90px; padding: 0 5px" v-model="pageSize" @change="getPersonList()">
-							<el-option label="10" :value="10"></el-option>
-							<el-option label="20" :value="20"></el-option>
-							<el-option label="30" :value="30"></el-option>
-							<el-option label="40" :value="40"></el-option>
-							<el-option label="50" :value="50"></el-option>
-							<el-option label="100" :value="100"></el-option>
-						</el-select>
-						<span>条记录</span>
-					</el-col>
-					<el-col :span="12">
-						<div class="pagination">
-							<el-pagination :page-size="pageSize" align="right" background layout="prev, pager, next" :total="total" @current-change="pageChange"></el-pagination>
-						</div>
-					</el-col>
-				</el-row>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
@@ -155,6 +137,7 @@
 <script type="text/javascript">
 import requestJava, { javaUrl } from '../../../../common/requestJava'
 import { Message } from 'element-ui'
+import Page from '../../../CommonComponents/Page'
 const postMap = {
 	'Operator': '操作员',
 	'Driver': '驾驶员',
@@ -172,46 +155,52 @@ export default {
 			total: 0,
 			tableData: [],
 			findRangeDate: [],
-			createTimeBegin:'',
-			createTimeEnd:'',
-			findrealName:'',
-			findmobile:'',
-			findintegrityExamineGrade:'',
-			findposition:'',
-			
+			createTimeBegin: '',
+			createTimeEnd: '',
+			findrealName: '',
+			findmobile: '',
+			findintegrityExamineGrade: '',
+			findposition: ''
 		}
 	},
 	computed: {
 		postMap: () => postMap
 	},
+	components: { Page },
 	created() {
-		this.getPersonList()
+		this.getList()
 	},
 	methods: {
-		reset(){
-			this.findrealName=''
-			this.findmobile=''
-			this.findintegrityExamineGrade=''
-			this.findposition=''
-			this.findRangeDate= []
-			this.createTimeBegin=''
-			this.createTimeEnd=''
-			this.getPersonList()
-		},
 		pageChange(index) {
 			this.pageIndex = index
-			this.getPersonList()
+			this.getList()
 		},
-		getPersonList() {
+		pageSizeChange(size) {
+			this.pageSize = size
+			this.getList() 
+		},
+		reset() {
+			this.findrealName = ''
+			this.findmobile = ''
+			this.findintegrityExamineGrade = ''
+			this.findposition = ''
+			this.findRangeDate = []
+			this.createTimeBegin = ''
+			this.createTimeEnd = ''
+			this.pageIndex = 1
+			this.pageSize = 10
+			this.getList()
+		},
+		getList() {
 			let params = {
 				current: this.pageIndex,
 				size: this.pageSize,
-				realName:this.findrealName,
-				mobile:this.findmobile,
-				integrityExamineGrade:this.findintegrityExamineGrade,
-				position:this.findposition,
-				createTimeBegin:this.createTimeBegin,
-				createTimeEnd:this.createTimeEnd
+				realName: this.findrealName,
+				mobile: this.findmobile,
+				integrityExamineGrade: this.findintegrityExamineGrade,
+				position: this.findposition,
+				createTimeBegin: this.createTimeBegin,
+				createTimeEnd: this.createTimeEnd
 			}
 			requestJava({
 				url: '/staff/findList',
