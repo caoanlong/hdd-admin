@@ -23,6 +23,7 @@
 							<span v-if="scope.row.type =='Shipper'">货主端</span>
 						</template>
 					</el-table-column>
+					<el-table-column label="APP名称" prop="appName"></el-table-column>
 					<el-table-column label="版本大小" prop="versionSize"></el-table-column>
 					<el-table-column label="主版本号" prop="version"></el-table-column>
 					<el-table-column label="最低版本号" prop="versionMin"></el-table-column>

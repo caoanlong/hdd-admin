@@ -6,32 +6,49 @@
 			</div>
 			<el-form label-width="120px">
 				<el-row>
-					<el-col :span="8">
+					<el-col :span="6">
 						<el-form-item label="用户设备">
 							<p v-if="Version.deviceType =='Android'">安卓端</p>
 							<p v-else-if="Version.deviceType =='iOS'">苹果端</p>
 						</el-form-item>
-						<el-form-item label="最低版本号">
-							<p>{{Version.versionMin}}</p>
-						</el-form-item>
+						
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="6">
 						<el-form-item label="类型">
 							<p v-if="Version.type =='Driver'">司机端</p>
 							<p v-else-if="Version.type =='Shipper'">货主端</p>
 						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="APP名称">
+							<p>{{Version.appName}}</p>
+						</el-form-item>
+						
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="6">
+						<el-form-item label="最低版本号">
+							<p>{{Version.versionMin}}</p>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="主版本号">
+							<p>{{Version.version}}</p>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
 						<el-form-item label="版本大小">
 							<p>{{Version.versionSize}}</p>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="主版本号">
-							<p>{{Version.version}}</p>
-						</el-form-item>
+					<el-col :span="6">
 						<el-form-item label="是否最新版本">
 							<p>{{Version.isLatest=='Y'?'是':'否'}}</p>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row>
 					<el-col :span="24">
 						<el-form-item label="下载URL">
 							<p>{{Version.downloadURL}}</p>
@@ -40,6 +57,8 @@
 							<p>{{Version.content}}</p>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row>
 					<el-col :span="24">
 						<el-form-item>
 							<el-button @click="back">返回</el-button>

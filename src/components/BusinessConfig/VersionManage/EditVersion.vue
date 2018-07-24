@@ -6,36 +6,54 @@
 			</div>
 			<el-form label-width="120px" :model="Version" :rules="rules" ref="ruleForm">
 				<el-row>
-					<el-col :span="8">
+					<el-col :span="6">
 						<el-form-item label="用户设备" prop="deviceType">
-							<el-select v-model="Version.deviceType" placeholder="请选择">
+							<el-select v-model="Version.deviceType" placeholder="请选择" style="width:100%">
 								<el-option label="安卓端" value="Android"></el-option>
 								<el-option label="苹果端" value="IOS"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="最低版本号" prop="versionMin">
-							<el-input v-model="Version.versionMin"></el-input>
-						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="6">
 						<el-form-item label="类型" prop="type">
-							<el-select v-model="Version.type" placeholder="请选择">
+							<el-select v-model="Version.type" placeholder="请选择" style="width:100%">
 								<el-option label="司机端" value="Driver"></el-option>
 								<el-option label="货主端" value="Shipper"></el-option>
 							</el-select>
 						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="APP名称" prop="appID">
+							<el-select v-model="Version.appID" placeholder="请选择" style="width:100%">
+								<el-option v-for="item in appNameList" :key="item.appID" :label="item.name" :value="item.appID">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>	
+					<el-col :span="6">
+						<el-form-item label="最低版本号" prop="versionMin">
+							<el-input v-model="Version.versionMin"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="主版本号" prop="version">
+							<el-input v-model="Version.version"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
 						<el-form-item label="版本大小" prop="versionSize">
 							<el-input v-model="Version.versionSize"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="主版本号" prop="version">
-							<el-input v-model="Version.version"></el-input>
-						</el-form-item>
+					<el-col :span="6">
 						<el-form-item label="是否最新版本">
 							<el-switch v-model="Version.isLatest"></el-switch>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row>
 					<el-col :span="24">
 						<el-form-item label="下载URL" prop="downloadURL">
 							<el-input v-model="Version.downloadURL"></el-input>
@@ -62,6 +80,7 @@ import { checkURL } from '../../../common/validator'
 export default {
 	data() {
 		return {
+			appNameList:[],
 			Version: {
 				deviceType: '',
 				type: '',
@@ -70,7 +89,8 @@ export default {
 				versionMin: '',
 				isLatest: true,
 				downloadURL: '',
-				content: ''
+				content: '',
+				appID:''
 			},
 			rules: {
 				deviceType: [
@@ -94,12 +114,16 @@ export default {
 				downloadURL: [
 					{required: true, message: '请输入下载URL'},
 					{validator: checkURL}
+				],
+				appID:[
+					{required: true, message: '请选择App名称'}
 				]
 			}
 		}
 	},
 	created() {
 		this.getVersion()
+		this.getAppNameList()
 	},
 	methods: {
 		getVersion() {
@@ -120,6 +144,18 @@ export default {
 				}
 			})
 		},
+		getAppNameList(){
+			requestJava({
+				url: '/sys/apps',
+				method: 'get'
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.appNameList = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
 		saveVersion() {
 			let data = {
 				appVersionID: this.$route.query.appVersionID,
@@ -130,7 +166,8 @@ export default {
 				versionMin: this.Version.versionMin,
 				isLatest: this.Version.isLatest ? 'Y' : 'N',
 				downloadURL: this.Version.downloadURL,
-				content: this.Version.content
+				content: this.Version.content,
+				appID:this.Version.appID
 			}
 			this.$refs['ruleForm'].validate(valid => {
 				if (valid) {
