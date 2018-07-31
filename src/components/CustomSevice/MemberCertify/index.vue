@@ -148,7 +148,7 @@
 </template>
 <script type="text/javascript">
 import request from '../../../common/request'
-import requestJava , { javaUrl }from '../../../common/requestJava'
+import requestJava , { javaUrl } from '../../../common/requestJava'
 import { Message } from 'element-ui'
 import Page from '../../CommonComponents/Page'
 export default {
@@ -171,7 +171,7 @@ export default {
 			certifyStatus: [],
 			realNameStatus: [],
 			selectedMembers: [],
-			exportExcelUrl: javaUrl + '/mem/memMember/export',
+			exportExcelUrl:'',
 		}
 	},
 	components: { Page },
@@ -179,6 +179,7 @@ export default {
 		this.getMemberTypes()
 		this.getCertifyStatus()
 		this.getRealNameStatus()
+		this.resetExportExcelUrl()
 		this.getList()
 	},
 	methods: {
@@ -202,6 +203,7 @@ export default {
 			this.endDate = ''
 			this.pageIndex = 1
 			this.pageSize = 10
+			this.resetExportExcelUrl()
 			this.getList()
 		},
 		selectionChange(data) {
@@ -257,7 +259,13 @@ export default {
 		},
 		selectDateRange(date) {
 			this.startDate = new Date(date[0]).getTime()
-			this.endDate = new Date(date[0]).getTime()
+			this.endDate = new Date(date[1]).getTime()
+			this.resetExportExcelUrl()
+		},
+		resetExportExcelUrl() {
+			this.exportExcelUrl = javaUrl + '/mem/memMember/export?Authorization=' + localStorage.getItem("token") 
+				+ '&createBeginDate=' + this.startDate 
+				+ '&createEndDate=' + this.endDate
 		},
 		getList() {
 			let params = {
