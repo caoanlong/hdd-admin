@@ -36,22 +36,36 @@
 							<el-option v-for="realStatus in realNameStatus" :key="realStatus.VALUE" :label="realStatus.NAME" :value="realStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="注册时间">
+						<el-date-picker 
+							v-model="findDataRange" 
+							type="daterange" 
+							range-separator="至" 
+							start-placeholder="开始日期" 
+							end-placeholder="结束日期" 
+							@change="selectDateRange">
+						</el-date-picker>
+					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
+			<div class="tableControl">
+				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
+			</div>
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="会员类型" width="100">
+					<el-table-column label="会员类型" width="100" align="center">
 						<template slot-scope="scope">
 							<span v-for="memberType in memberTypes" :key="memberType.Dict_ID" v-if="scope.row.type == memberType.VALUE">{{memberType.NAME}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="姓名" prop="realName" width="90"></el-table-column>
+					<el-table-column label="姓名" prop="realName" width="90" align="center"></el-table-column>
 					<el-table-column label="手机号" align="center" prop="mobile" width="100"></el-table-column>
 					<el-table-column label="车牌/企业名" prop="companyOrPlateNo"></el-table-column>
+					<el-table-column label="所属企业" prop="companyName"></el-table-column>
 					<el-table-column label="注册时间" align="center" prop="regDate" width="140">
 						<template slot-scope="scope">
 							<span>{{scope.row.createTime | getdatefromtimestamp()}}</span>
@@ -134,7 +148,7 @@
 </template>
 <script type="text/javascript">
 import request from '../../../common/request'
-import requestJava from '../../../common/requestJava'
+import requestJava , { javaUrl }from '../../../common/requestJava'
 import { Message } from 'element-ui'
 import Page from '../../CommonComponents/Page'
 export default {
@@ -146,6 +160,9 @@ export default {
 			findCertifyStatus: '',
 			findRealNameStatus: '',
 			findWalletStatus: '',
+			findDataRange: [],
+			startDate: '',
+			endDate: '',
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
@@ -153,7 +170,8 @@ export default {
 			memberTypes: [],
 			certifyStatus: [],
 			realNameStatus: [],
-			selectedMembers: []
+			selectedMembers: [],
+			exportExcelUrl: javaUrl + '/notruckCargosource/export',
 		}
 	},
 	components: { Page },
@@ -179,6 +197,9 @@ export default {
 			this.findCertifyStatus = ''
 			this.findRealNameStatus = ''
 			this.findWalletStatus = ''
+			this.findDataRange = ''
+			this.startDate = ''
+			this.endDate = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
@@ -234,6 +255,10 @@ export default {
 				}
 			})
 		},
+		selectDateRange(date) {
+			this.startDate = new Date(date[0]).getTime()
+			this.endDate = new Date(date[0]).getTime()
+		},
 		getList() {
 			let params = {
 				pageNum: this.pageIndex || 1,
@@ -243,7 +268,9 @@ export default {
 				status: this.findMemberStatus,
 				certifyStatus: this.findCertifyStatus,
 				realNameStatus: this.findRealNameStatus,
-				walletStatus: this.findWalletStatus
+				walletStatus: this.findWalletStatus,
+				createBeginDate: this.startDate,
+				createEndDate: this.endDate
 			}
 			requestJava({
 				url: '/mem/memMember/list',
@@ -293,4 +320,24 @@ export default {
 	p
 		margin 0
 		padding 0
+.download-btn
+.exportExcel
+	font-size 12px
+	color #606266
+	height 29px
+	line-height 29px
+	padding 0 15px
+	border 1px solid #dcdfe6
+	border-radius 3px
+	background #fff
+	margin-right 10px
+	display inline-block
+	vertical-align top
+	&:hover
+		border-color #c6e2ff
+		color #409eff
+		background #ecf5ff
+	&:active
+		border-color #3a8ee6
+		color #3a8ee6
 </style>

@@ -6,6 +6,8 @@
 			</div>
 			<el-form label-width="120px">
 				<el-row>
+					<el-col :span="24" class="certifyPic">
+						<el-form-item label="车辆照片">
 					<div class="tit">
 						<div style="margin-left: 0">车辆照片(前)</div>
 						<div>车辆照片(侧)</div>
@@ -26,11 +28,13 @@
 							<ImageUpload :files="[certifyTruck.DrivingLicensePic]" :isUseCropper="false" @imgUrlBack="handleDrivingLicensePicSuccess"/>
 						</div>
 					</div>
+					</el-form-item>
+					</el-col>
 				</el-row>
 				<el-row>
 					<el-col :span="8">
 						<el-form-item label="车牌号码">
-							<p>{{certifyTruck.PlateNo}}</p>
+							<el-input v-model="certifyTruck.PlateNo"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
@@ -210,6 +214,7 @@ export default {
 				drivingLicensePic: this.updateImgs['DrivingLicensePic'],
 				frontPic: this.updateImgs['FrontPic'],
 				sidePic: this.updateImgs['SidePic'],
+				plateNo:this.certifyTruck.PlateNo
 				// transportLicencePic: this.updateImgs['TransportLicencePic']
 			}
 			requestJava({

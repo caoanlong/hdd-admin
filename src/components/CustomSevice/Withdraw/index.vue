@@ -109,8 +109,8 @@ export default {
 	},
 	methods: {
 		selectDateRange(date) {
-			this.startDate = date[0]
-			this.endDate = date[1]
+			this.startDate = new Date(date[0]).getTime()
+			this.endDate = new Date(date[1]).getTime()
 		},
 		pageChange(index) {
 			this.pageIndex = index

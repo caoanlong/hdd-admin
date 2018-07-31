@@ -8,7 +8,7 @@
 				<el-row>
 					<el-col :span="12">
 						<el-form-item label="姓名">
-							<p>{{certifyPerson.RealName}}</p>
+							<el-input v-model="certifyPerson.RealName"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -20,7 +20,7 @@
 				<el-row>
 					<el-col :span="12">
 						<el-form-item label="身份证编号">
-							<p>{{certifyPerson.IDCardNum}}</p>
+							<el-input v-model="certifyPerson.IDCardNum"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -43,34 +43,45 @@
 					</el-col>
 				</el-row>
 				<el-row>
-					<div class="tit">
-						<div style="margin-left: 0">个人头像</div>
-						<div>手持身份证照片</div>
-						<div>身份证正面</div>
-						<div>身份证背面</div>
-						<div v-if="$route.query.type == 'Driver'">驾驶证正面</div>
-						<div v-if="$route.query.type == 'Driver'">驾驶证副本</div>
-					</div>
-					<div class="gridly">
-						<div class="brick" data-attribute="Picture_Front">
-							<ImageUpload :files="[certifyPerson.Picture_Front]" :isUseCropper="false" @imgUrlBack="handlePicture_FrontSuccess"/>
-						</div>
-						<div class="brick" data-attribute="IDHandheldPic">
-							<ImageUpload :files="[certifyPerson.IDHandheldPic]" :isUseCropper="false" @imgUrlBack="handleIDHandheldPicSuccess"/>
-						</div>
-						<div class="brick" data-attribute="IDCardFrontPic">
-							<ImageUpload :files="[certifyPerson.IDCardFrontPic]" :isUseCropper="false" @imgUrlBack="handleIDCardFrontPicSuccess"/>
-						</div>
-						<div class="brick" data-attribute="IDCardBackPic">
-							<ImageUpload :files="[certifyPerson.IDCardBackPic]" :isUseCropper="false" @imgUrlBack="handleIDCardBackPicSuccess"/>
-						</div>
-						<div class="brick" data-attribute="DriverLicensePic" v-if="$route.query.type == 'Driver'">
-							<ImageUpload :files="[certifyPerson.DriverLicensePic]" :isUseCropper="false" @imgUrlBack="handleDriverLicensePicSuccess"/>
-						</div>
-						<div class="brick" data-attribute="DriverLicenseCopyPic" v-if="$route.query.type == 'Driver'">
-							<ImageUpload :files="[certifyPerson.DriverLicenseCopyPic]" :isUseCropper="false" @imgUrlBack="handleDriverLicenseCopyPicSuccess"/>
-						</div>
-					</div>
+					<el-col :span="12">
+						<el-form-item label="所属企业">
+							<p>{{certifyPerson.companyName}}</p>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24" class="certifyPic">
+						<el-form-item  label="相关照片">
+							<div class="tit">
+								<div style="margin-left: 0">个人头像</div>
+								<div>手持身份证照片</div>
+								<div>身份证正面</div>
+								<div>身份证背面</div>
+								<div v-if="$route.query.type == 'Driver'">驾驶证正面</div>
+								<div v-if="$route.query.type == 'Driver'">驾驶证副本</div>
+							</div>
+							<div class="gridly">
+								<div class="brick" data-attribute="Picture_Front">
+									<ImageUpload :files="[certifyPerson.Picture_Front]" :isUseCropper="false" @imgUrlBack="handlePicture_FrontSuccess"/>
+								</div>
+								<div class="brick" data-attribute="IDHandheldPic">
+									<ImageUpload :files="[certifyPerson.IDHandheldPic]" :isUseCropper="false" @imgUrlBack="handleIDHandheldPicSuccess"/>
+								</div>
+								<div class="brick" data-attribute="IDCardFrontPic">
+									<ImageUpload :files="[certifyPerson.IDCardFrontPic]" :isUseCropper="false" @imgUrlBack="handleIDCardFrontPicSuccess"/>
+								</div>
+								<div class="brick" data-attribute="IDCardBackPic">
+									<ImageUpload :files="[certifyPerson.IDCardBackPic]" :isUseCropper="false" @imgUrlBack="handleIDCardBackPicSuccess"/>
+								</div>
+								<div class="brick" data-attribute="DriverLicensePic" v-if="$route.query.type == 'Driver'">
+									<ImageUpload :files="[certifyPerson.DriverLicensePic]" :isUseCropper="false" @imgUrlBack="handleDriverLicensePicSuccess"/>
+								</div>
+								<div class="brick" data-attribute="DriverLicenseCopyPic" v-if="$route.query.type == 'Driver'">
+									<ImageUpload :files="[certifyPerson.DriverLicenseCopyPic]" :isUseCropper="false" @imgUrlBack="handleDriverLicenseCopyPicSuccess"/>
+								</div>
+							</div>
+						</el-form-item>
+					</el-col>
 				</el-row>
 				<el-form-item label="企业审批状态" v-if="$route.query.type == 'Staff'">
 					<p>{{certifyPerson.approvalStatus}}</p>
@@ -251,6 +262,8 @@
 			},
 			update() {
 				let data = {
+					realName:this.certifyPerson.RealName,
+					idCardNum:this.certifyPerson.IDCardNum,
 					certifyPersonID: this.$route.query.certifyPersonId,
 					driverLicenseCopyPic: this.updateImgs['DriverLicenseCopyPic'] || '',
 					driverLicensePic: this.updateImgs['DriverLicensePic'] || '',

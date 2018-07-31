@@ -94,38 +94,40 @@ input:-webkit-autofill {
     -webkit-animation: autofill-fix 1s infinite;
 }
 
-.gridly, .gridly > :not(.dragging) {
+.certifyPic .gridly, .certifyPic .gridly > :not(.dragging) {
 	-webkit-transition: all 0.4s ease-in-out;
 	-moz-transition: all 0.4s ease-in-out;
 	transition: all 0.4s ease-in-out;
 }
 		
-.gridly {
+.certifyPic .gridly {
 	position: relative;
-	width: 960px;
-	margin: 0 auto;
 }
-.gridly .dragging {
+.certifyPic .gridly .dragging {
 	z-index: 800;
 }
-.gridly .brick {
+.certifyPic .gridly .brick {
 	width: 100px;
 	height: 100px;
 }
-.tit {
+.certifyPic .tit {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
 	display: flex;
 	position: relative;
-	width: 960px;
-	margin: 0 auto;
 }
-.tit > div {
-	flex: 0 0 100px;
+.certifyPic .tit > div {
+	-webkit-box-flex: 0;
+	   -moz-box-flex: 0;
+	    -ms-flex: 0 0 100px;
+	        flex: 0 0 100px;
 	margin-left: 60px;
 	width: 100px;
 	text-align: center;
 	height: 40px;
 	line-height: 40px;
-	font-size: 13px;
+	font-size: 12px;
 	font-weight: 700;
-	color: #606266;
+	color: #999;
 }
