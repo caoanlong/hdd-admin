@@ -171,7 +171,7 @@ export default {
 			certifyStatus: [],
 			realNameStatus: [],
 			selectedMembers: [],
-			exportExcelUrl: javaUrl + '/notruckCargosource/export',
+			exportExcelUrl: javaUrl + '/mem/memMember/export',
 		}
 	},
 	components: { Page },
