@@ -52,9 +52,9 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="tableControl">
+			<!-- <div class="tableControl">
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
-			</div>
+			</div> -->
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="会员类型" width="100" align="center">

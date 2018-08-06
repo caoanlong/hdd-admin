@@ -1,7 +1,7 @@
 {
-	"name": "hdd-admin",
-	"version": "1.0.0",
-	"description": "A project for hddAdmin System with vue.js and elementUI",
+	"name": "hdd-boss",
+	"version": "2.2.0",
+	"description": "A project for hddBoss System with vue.js and elementUI",
 	"author": "Caoanlong <caoanlong@gmail.com>",
 	"private": true,
 	"scripts": {
