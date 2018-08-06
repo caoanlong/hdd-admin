@@ -261,9 +261,9 @@
 				})
 			},
 			update() {
-				let data = {
-					realName:this.certifyPerson.RealName,
-					idCardNum:this.certifyPerson.IDCardNum,
+				const data = {
+					realName: this.certifyPerson.RealName,
+					iDCardNum: this.certifyPerson.IDCardNum,
 					certifyPersonID: this.$route.query.certifyPersonId,
 					driverLicenseCopyPic: this.updateImgs['DriverLicenseCopyPic'] || '',
 					driverLicensePic: this.updateImgs['DriverLicensePic'] || '',
