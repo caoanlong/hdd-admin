@@ -260,7 +260,7 @@ let routerMap = [
 						meta: {
 							title: '提现详情'
 						},
-						component: () => import('../components/CustomSevice/Withdraw/ViewWithDraw')
+						component: () => import('../components/CustomSevice/Withdraw/ViewWithDraw.vue')
 					},
 					{
 						path: '/editwithdraw',
