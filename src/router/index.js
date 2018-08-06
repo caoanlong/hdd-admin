@@ -254,14 +254,14 @@ let routerMap = [
 						},
 						component: () => import('../components/CustomSevice/Withdraw')
 					},
-					{
-						path: '/viewwithdraw',
-						name: 'viewwithdraw',
-						meta: {
-							title: '提现详情'
-						},
-						component: () => import('../components/CustomSevice/Withdraw/ViewWithDraw.vue')
-					},
+					// {
+					// 	path: '/viewwithdraw',
+					// 	name: 'viewwithdraw',
+					// 	meta: {
+					// 		title: '提现详情'
+					// 	},
+					// 	component: () => import('../components/CustomSevice/Withdraw/ViewWithDraw')
+					// },
 					{
 						path: '/editwithdraw',
 						name: 'editwithdraw',
