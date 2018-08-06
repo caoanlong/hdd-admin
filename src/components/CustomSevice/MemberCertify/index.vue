@@ -7,32 +7,32 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="会员类型">
-						<el-select placeholder="请选择" v-model="findMemberType">
+						<el-select placeholder="请选择" v-model="find.memberType">
 							<el-option v-for="memberType in memberTypes" :key="memberType.Dict_ID" :label="memberType.NAME" :value="memberType.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="关键字">
-						<el-input placeholder="请输入..." v-model="findKeywords"></el-input>
+						<el-input placeholder="请输入..." v-model="find.keywords"></el-input>
 					</el-form-item>
 					<el-form-item label="状态">
-						<el-select placeholder="请选择" v-model="findMemberStatus">
+						<el-select placeholder="请选择" v-model="find.memberStatus">
 							<el-option label="启用" value="N"></el-option>
 							<el-option label="封停" value="Y"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="认证状态">
-						<el-select placeholder="请选择" v-model="findCertifyStatus">
+						<el-select placeholder="请选择" v-model="find.certifyStatus">
 							<el-option v-for="cerStatus in certifyStatus" :key="cerStatus.VALUE" :label="cerStatus.NAME" :value="cerStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="钱包状态">
-						<el-select placeholder="请选择" v-model="findWalletStatus">
+						<el-select placeholder="请选择" v-model="find.walletStatus">
 							<el-option label="已激活" value="Y"></el-option>
 							<el-option label="未激活" value="N"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="实名状态">
-						<el-select placeholder="请选择" v-model="findRealNameStatus">
+						<el-select placeholder="请选择" v-model="find.realNameStatus">
 							<el-option v-for="realStatus in realNameStatus" :key="realStatus.VALUE" :label="realStatus.NAME" :value="realStatus.VALUE"></el-option>
 						</el-select>
 					</el-form-item>
@@ -47,7 +47,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="primary" @click="search">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -154,15 +154,17 @@ import Page from '../../CommonComponents/Page'
 export default {
 	data() {
 		return {
-			findMemberType: '',
-			findKeywords: '',
-			findMemberStatus: '',
-			findCertifyStatus: '',
-			findRealNameStatus: '',
-			findWalletStatus: '',
+			find: {
+				memberType: '',
+				keywords: '',
+				memberStatus: '',
+				certifyStatus: '',
+				walletStatus: '',
+				realNameStatus: '',
+				startDate: '',
+				endDate: ''
+			},
 			findDataRange: [],
-			startDate: '',
-			endDate: '',
 			pageIndex: 1,
 			pageSize: 10,
 			count: 0,
@@ -176,6 +178,8 @@ export default {
 	},
 	components: { Page },
 	created() {
+		this.find = JSON.parse(sessionStorage.getItem('find')) || {}
+		if (this.find.startDate && this.find.endDate) this.findDataRange = [this.find.startDate, this.find.endDate]
 		this.getMemberTypes()
 		this.getCertifyStatus()
 		this.getRealNameStatus()
@@ -183,24 +187,32 @@ export default {
 		this.getList()
 	},
 	methods: {
+		search() {
+			this.pageIndex = 1
+			this.pageSize = 10
+			sessionStorage.setItem('find', JSON.stringify(this.find))
+			this.getList()
+		},
 		pageChange(index) {
 			this.pageIndex = index
 			this.getList()
 		},
 		pageSizeChange(size) {
 			this.pageSize = size
+			this.pageIndex = 1
 			this.getList() 
 		},
 		reset() {
-			this.findMemberType = ''
-			this.findKeywords = ''
-			this.findMemberStatus = ''
-			this.findCertifyStatus = ''
-			this.findRealNameStatus = ''
-			this.findWalletStatus = ''
-			this.findDataRange = ''
-			this.startDate = ''
-			this.endDate = ''
+			sessionStorage.removeItem('find')
+			this.find.memberType = ''
+			this.find.keywords = ''
+			this.find.memberStatus = ''
+			this.find.certifyStatus = ''
+			this.find.realNameStatus = ''
+			this.find.walletStatus = ''
+			this.findDataRange = []
+			this.find.startDate = ''
+			this.find.endDate = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.resetExportExcelUrl()
@@ -210,9 +222,7 @@ export default {
 			this.selectedMembers = data.map(item => item.memId)
 		},
 		getMemberTypes() {
-			let params = {
-				TYPE: 'memberType',
-			}
+			const params = { TYPE: 'memberType' }
 			request({
 				url: '/sys_dict/list/type',
 				method: 'get',
@@ -226,9 +236,7 @@ export default {
 			})
 		},
 		getCertifyStatus() {
-			let params = {
-				TYPE: 'CertifyStatus',
-			}
+			const params = { TYPE: 'CertifyStatus' }
 			request({
 				url: '/sys_dict/list/type',
 				method: 'get',
@@ -242,9 +250,7 @@ export default {
 			})
 		},
 		getRealNameStatus() {
-			let params = {
-				TYPE: 'realNameStatus',
-			}
+			const params = { TYPE: 'realNameStatus' }
 			request({
 				url: '/sys_dict/list/type',
 				method: 'get',
@@ -258,8 +264,8 @@ export default {
 			})
 		},
 		selectDateRange(date) {
-			this.startDate = new Date(date[0]).getTime()
-			this.endDate = new Date(date[1]).getTime()
+			this.find.startDate = new Date(date[0]).getTime()
+			this.find.endDate = new Date(date[1]).getTime()
 			this.resetExportExcelUrl()
 		},
 		resetExportExcelUrl() {
@@ -268,17 +274,17 @@ export default {
 				+ '&createEndDate=' + this.endDate
 		},
 		getList() {
-			let params = {
-				pageNum: this.pageIndex || 1,
+			const params = {
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
-				type: this.findMemberType,
-				keyword: this.findKeywords,
-				status: this.findMemberStatus,
-				certifyStatus: this.findCertifyStatus,
-				realNameStatus: this.findRealNameStatus,
-				walletStatus: this.findWalletStatus,
-				createBeginDate: this.startDate,
-				createEndDate: this.endDate
+				type: this.find.memberType,
+				keyword: this.find.keywords,
+				status: this.find.memberStatus,
+				certifyStatus: this.find.certifyStatus,
+				realNameStatus: this.find.realNameStatus,
+				walletStatus: this.find.walletStatus,
+				createBeginDate: this.find.startDate,
+				createEndDate: this.find.endDate
 			}
 			requestJava({
 				url: '/mem/memMember/list',
@@ -294,7 +300,7 @@ export default {
 			})
 		},
 		updateStatus(memId, status) {
-			let data = {
+			const data = {
 				memId,
 				status
 			}
