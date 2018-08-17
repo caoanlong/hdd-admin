@@ -13,12 +13,12 @@
 						</el-form-item>
 						
 					</el-col>
-					<el-col :span="6">
+					<!-- <el-col :span="6">
 						<el-form-item label="类型">
 							<p v-if="Version.type =='Driver'">司机端</p>
 							<p v-else-if="Version.type =='Shipper'">货主端</p>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 					<el-col :span="6">
 						<el-form-item label="APP名称">
 							<p>{{Version.appName}}</p>

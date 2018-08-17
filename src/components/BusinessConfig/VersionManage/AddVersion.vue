@@ -14,14 +14,14 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :span="6">
+					<!-- <el-col :span="6">
 						<el-form-item label="类型" prop="type">
 							<el-select v-model="Version.type" placeholder="请选择" style="width:100%">
 								<el-option label="司机端" value="Driver"></el-option>
 								<el-option label="货主端" value="Shipper"></el-option>
 							</el-select>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 					<el-col :span="6">
 						<el-form-item label="APP名称" prop="appID">
 							<el-select v-model="Version.appID" placeholder="请选择" style="width:100%" @change="selectAppName">
@@ -96,9 +96,9 @@ export default {
 				deviceType: [
 					{required: true, message: '请选择设备类型'}
 				],
-				type: [
-					{required: true, message: '请选择类型'}
-				],
+				// type: [
+				// 	{required: true, message: '请选择类型'}
+				// ],
 				version: [
 					{required: true, message: '请输入主版本号'},
 					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}

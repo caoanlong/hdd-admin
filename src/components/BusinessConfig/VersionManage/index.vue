@@ -17,12 +17,12 @@
 							<span v-if="scope.row.deviceType =='IOS'">苹果端</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="类型" align="center" width="80">
+					<!-- <el-table-column label="类型" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type =='Driver'">司机端</span>
 							<span v-if="scope.row.type =='Shipper'">货主端</span>
 						</template>
-					</el-table-column>
+					</el-table-column> -->
 					<el-table-column label="APP名称" prop="appName"></el-table-column>
 					<el-table-column label="版本大小" prop="versionSize"></el-table-column>
 					<el-table-column label="主版本号" prop="version"></el-table-column>
@@ -53,8 +53,8 @@
 							<el-button type="default" size="mini" @click="viewVersion(scope.row.appVersionID)" icon="el-icon-view">查看</el-button>
 							<el-button type="default" size="mini" @click="editVersion(scope.row.appVersionID)" icon="el-icon-edit" title>编辑</el-button>
 							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.appVersionID)">删除</el-button>
-							<el-button type="default" size="mini" v-if="scope.row.releaseStatus=='Y'" icon="el-icon-upload2" @click="releaseVersion(scope.row.appVersionID, 'N')">下架</el-button>
-							<el-button type="default" size="mini" icon="el-icon-download" v-else @click="releaseVersion(scope.row.appVersionID, 'Y')">上架</el-button>
+							<el-button type="default" size="mini" v-if="scope.row.releaseStatus=='Y'" icon="el-icon-download" @click="releaseVersion(scope.row.appVersionID, 'N')">下架</el-button>
+							<el-button type="default" size="mini" icon="el-icon-upload2" v-else @click="releaseVersion(scope.row.appVersionID, 'Y')">上架</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

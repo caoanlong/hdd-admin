@@ -306,6 +306,14 @@ let routerMap = [
 				redirect: '/contentmanage',
 				children: [
 					{
+						path: '/appcustomer',
+						name: 'appcustomer',
+						meta: {
+							title: 'App客户'
+						},
+						component: () => import('../components/BusinessConfig/AppCustomer'),
+					},
+					{
 						path: '/contentmanage',
 						name: 'contentmanage',
 						meta: {

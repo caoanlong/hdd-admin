@@ -12,6 +12,11 @@
 								<el-option v-for="contentTopic in contentTopics" :key="contentTopic.ContentTopic_ID" :label="contentTopic.Name" :value="contentTopic.ContentTopic_ID"></el-option>
 							</el-select>
 						</el-form-item>
+						<el-form-item label="App客户">
+							<el-select style="width: 100%" placeholder="请选择">
+								<el-option>？？？</el-option>
+							</el-select>
+						</el-form-item>
 						<el-form-item label="代码" prop="Code">
 							<el-input v-model="content.Code"></el-input>
 						</el-form-item>
