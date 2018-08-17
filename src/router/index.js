@@ -244,6 +244,30 @@ const routerMap = [
 						component: () => import('../components/BusinessConfig/AppCustomer'),
 					},
 					{
+						path: '/appmanage',
+						name: 'appmanage',
+						meta: { title: 'App管理' },
+						component: () => import('../components/BusinessConfig/AppManage'),
+					},
+					{
+						path: '/addapp',
+						name: 'addapp',
+						meta: { title: '添加App' },
+						component: () => import('../components/BusinessConfig/AppManage/Add'),
+					},
+					{
+						path: '/editapp',
+						name: 'editapp',
+						meta: { title: '编辑App' },
+						component: () => import('../components/BusinessConfig/AppManage/Edit'),
+					},
+					{
+						path: '/viewapp',
+						name: 'viewapp',
+						meta: { title: '查看App' },
+						component: () => import('../components/BusinessConfig/AppManage/View'),
+					},
+					{
 						path: '/contentmanage',
 						name: 'contentmanage',
 						meta: { title: '内容管理' },
