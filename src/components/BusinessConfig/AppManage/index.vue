@@ -94,9 +94,12 @@ export default {
             ]
         },
         add() {
-
+            this.$router.push({name: 'addapp'})
         },
-        del() {
+        edit(appID) {
+            this.$router.push({name: 'editapp', query: { appID }})
+        },
+        del(appID) {
 
 		}
     }
