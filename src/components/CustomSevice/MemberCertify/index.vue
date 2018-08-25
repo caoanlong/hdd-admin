@@ -12,7 +12,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="关键字">
-						<el-input placeholder="请输入..." v-model="find.keywords"></el-input>
+						<el-input placeholder="请输入..." v-model="find.keyword"></el-input>
 					</el-form-item>
 					<el-form-item label="状态">
 						<el-select placeholder="请选择" v-model="find.memberStatus">
@@ -52,11 +52,11 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<!-- <div class="tableControl">
+			<div class="tableControl">
 				<a :href="exportExcelUrl" download="goodssource.xlsx" class="exportExcel el-icon-download">导出</a>
-			</div> -->
+			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
 					<el-table-column label="会员类型" width="100" align="center">
 						<template slot-scope="scope">
 							<span v-for="memberType in memberTypes" :key="memberType.Dict_ID" v-if="scope.row.type == memberType.VALUE">{{memberType.NAME}}</span>
@@ -141,22 +141,25 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../common/request'
-import requestJava , { javaUrl } from '../../../common/requestJava'
 import { Message } from 'element-ui'
-import Page from '../../CommonComponents/Page'
+import { PAGEINDEX, PAGESIZE } from '../../../common/const'
+import request from '../../../common/request'
+import { javaUrl } from '../../../common/requestJava'
+import { baseMixin } from '../../../common/mixin'
+import Member from '../../../api/Member'
 export default {
+    mixins: [baseMixin],
 	data() {
 		return {
 			find: {
 				memberType: '',
-				keywords: '',
+				keyword: '',
 				memberStatus: '',
 				certifyStatus: '',
 				walletStatus: '',
@@ -165,18 +168,12 @@ export default {
 				endDate: ''
 			},
 			findDataRange: [],
-			pageIndex: 1,
-			pageSize: 10,
-			count: 0,
-			tableData: [],
 			memberTypes: [],
 			certifyStatus: [],
 			realNameStatus: [],
-			selectedMembers: [],
-			exportExcelUrl:'',
+			exportExcelUrl: '',
 		}
 	},
-	components: { Page },
 	created() {
 		this.find = JSON.parse(sessionStorage.getItem('find')) || {}
 		if (this.find.startDate && this.find.endDate) this.findDataRange = [this.find.startDate, this.find.endDate]
@@ -188,24 +185,16 @@ export default {
 	},
 	methods: {
 		search() {
-			this.pageIndex = 1
-			this.pageSize = 10
+			this.pageIndex = PAGEINDEX
+			this.pageSize = PAGESIZE
 			sessionStorage.setItem('find', JSON.stringify(this.find))
+			this.resetExportExcelUrl()
 			this.getList()
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.pageIndex = 1
-			this.getList() 
 		},
 		reset() {
 			sessionStorage.removeItem('find')
 			this.find.memberType = ''
-			this.find.keywords = ''
+			this.find.keyword = ''
 			this.find.memberStatus = ''
 			this.find.certifyStatus = ''
 			this.find.realNameStatus = ''
@@ -213,13 +202,10 @@ export default {
 			this.findDataRange = []
 			this.find.startDate = ''
 			this.find.endDate = ''
-			this.pageIndex = 1
-			this.pageSize = 10
+			this.pageIndex = PAGEINDEX
+			this.pageSize = PAGESIZE
 			this.resetExportExcelUrl()
 			this.getList()
-		},
-		selectionChange(data) {
-			this.selectedMembers = data.map(item => item.memId)
 		},
 		getMemberTypes() {
 			const params = { TYPE: 'memberType' }
@@ -270,51 +256,41 @@ export default {
 		},
 		resetExportExcelUrl() {
 			this.exportExcelUrl = javaUrl + '/mem/memMember/export?Authorization=' + localStorage.getItem("token") 
+				+ '&pageNum=' + this.pageIndex 
+				+ '&pageSize=' + this.pageSize 
+				+ '&type=' + this.find.memberType 
+				+ '&keyword=' + this.find.keyword 
+				+ '&status=' + this.find.memberStatus 
+				+ '&certifyStatus=' + this.find.certifyStatus 
+				+ '&realNameStatus=' + this.find.realNameStatus 
+				+ '&walletStatus=' + this.find.walletStatus 
 				+ '&createBeginDate=' + this.startDate 
 				+ '&createEndDate=' + this.endDate
 		},
 		getList() {
-			const params = {
+			Member.find({
 				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				type: this.find.memberType,
-				keyword: this.find.keywords,
+				keyword: this.find.keyword,
 				status: this.find.memberStatus,
 				certifyStatus: this.find.certifyStatus,
 				realNameStatus: this.find.realNameStatus,
 				walletStatus: this.find.walletStatus,
 				createBeginDate: this.find.startDate,
 				createEndDate: this.find.endDate
-			}
-			requestJava({
-				url: '/mem/memMember/list',
-				method: 'get',
-				params
 			}).then(res => {
-				if (res.data.code == 200) {
-					this.count = res.data.data.total
-					this.tableData = res.data.data.list
-				} else {
-					Message.error(res.data.message || res.data.msg)
-				}
+				this.total = res.total
+				this.tableData = res.list
 			})
 		},
 		updateStatus(memId, status) {
-			const data = {
+			Member.updateStatus({
 				memId,
 				status
-			}
-			requestJava({
-				url: '/mem/memMember/updateStatus',
-				method: 'post',
-				data
 			}).then(res => {
-				if (res.data.code == 200) {
-					Message.success(res.data.message)
-					this.getList()
-				} else {
-					Message.error(res.data.message || res.data.msg)
-				}
+				Message.success(res.data.message)
+				this.getList()
 			})
 		},
 		viewPersionCertify(certifyPersonId, memId, type) {
