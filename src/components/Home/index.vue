@@ -1,7 +1,7 @@
 <template>
 	<div class="dashboard-editor-container">
-		<panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
-		<el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+		<panel-group @handleSetLineChartData="handleSetLineChartData" style="margin-top:0"></panel-group>
+		<el-row style="background:#fff;padding:16px 16px 0;">
 			<line-chart :chart-data="lineChartData"></line-chart>
 		</el-row>
 	</div>
@@ -47,7 +47,7 @@
 </script>
 <style lang="stylus" scoped>
 	.dashboard-editor-container
-		padding 32px
+		padding 20px
 		background-color rgb(240, 242, 245)
 		.chart-wrapper
 			background #fff
