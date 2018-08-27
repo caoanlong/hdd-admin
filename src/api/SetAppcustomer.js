@@ -4,7 +4,7 @@ import request from '../common/requestJava'
 class SetAppcustomer extends Base {
     constructor(url, req) {
         super(url, req).initURI({
-            findById: 'info'
+            findById: '/info'
         })
     }
     save(data) {
