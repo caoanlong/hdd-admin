@@ -29,18 +29,18 @@
 					<el-table-column label="客户名称" align="center" prop="customerName"></el-table-column>
 					<el-table-column label="使用状态" align="center">
 						<template slot-scope="scope">
-							<span v-if="scope.row.useFlag=='Y'">使用中</span>
-							<span v-else>已停用</span>
+							<el-tag size="mini" v-if="scope.row.useFlag=='Y'">使用中</el-tag>
+							<el-tag size="mini" type="warning" v-else>已停用</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column label="修改人" align="center" prop="updateBy">
+					<el-table-column label="修改人" align="center" prop="updateByName">
 					</el-table-column>
 					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.updateTime">{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" align="center">
+					<el-table-column label="操作" align="center" width="160">
 						<template slot-scope="scope">
 							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.appCstID)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-check" @click="Confirm(scope.row.appCstID,'Y')" v-if="scope.row.useFlag=='N'">启用</el-button>
