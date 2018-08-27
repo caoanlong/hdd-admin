@@ -1,21 +1,18 @@
 <template>
-	<scroll-bar>
-		<el-menu 
-			mode="vertical" 
-			:default-active="$route.name" 
-			:collapse="isCollapse" 
-			background-color="#304156" 
-			text-color="#bfcbd9" 
-			:unique-opened="true" 
-			active-text-color="#409EFF"
-			@select="selectIndex">
-			<sidebar-item :routes="menus"></sidebar-item>
-		</el-menu>
-	</scroll-bar>
+	<el-menu 
+		mode="vertical" 
+		:default-active="$route.name" 
+		:collapse="isCollapse" 
+		background-color="#304156" 
+		text-color="#bfcbd9" 
+		:unique-opened="true" 
+		active-text-color="#409EFF"
+		@select="selectIndex">
+		<sidebar-item :routes="menus"></sidebar-item>
+	</el-menu>
 </template>
 <script type="text/javascript">
 import { mapGetters } from 'vuex'
-import ScrollBar from '../ScrollBar'
 import SidebarItem from './SidebarItem'
 export default {
 	name: 'sideBar',
@@ -38,7 +35,6 @@ export default {
 		}
 	},
 	components: { 
-		ScrollBar,
 		SidebarItem
 	}
 }

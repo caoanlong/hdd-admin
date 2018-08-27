@@ -1,5 +1,5 @@
 <template>
-	<el-row class="panel-group" :gutter="40">
+	<el-row class="panel-group" :gutter="20">
 		<el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
 		<div class='card-panel' @click="handleSetLineChartData('newVisitis')">
 			<div class="card-panel-icon-wrapper icon-people">
@@ -63,10 +63,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-	.panel-group
-		margin-top 18px
 	.card-panel-col
-		margin-bottom 32px
+		margin-bottom 20px
 	.card-panel
 		height 108px
 		cursor pointer
