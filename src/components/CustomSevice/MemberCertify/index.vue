@@ -255,17 +255,18 @@ export default {
 			this.resetExportExcelUrl()
 		},
 		resetExportExcelUrl() {
-			this.exportExcelUrl = javaUrl + '/mem/memMember/export?Authorization=' + localStorage.getItem("token") 
-				+ '&pageNum=' + this.pageIndex 
-				+ '&pageSize=' + this.pageSize 
-				+ '&type=' + this.find.memberType 
-				+ '&keyword=' + this.find.keyword 
-				+ '&status=' + this.find.memberStatus 
-				+ '&certifyStatus=' + this.find.certifyStatus 
-				+ '&realNameStatus=' + this.find.realNameStatus 
-				+ '&walletStatus=' + this.find.walletStatus 
-				+ '&createBeginDate=' + this.startDate 
-				+ '&createEndDate=' + this.endDate
+			this.exportExcelUrl = javaUrl 
+				+ `/mem/memMember/export?Authorization=${localStorage.getItem("token")}
+				&pageNum=${this.pageIndex}
+				&pageSize=${this.pageSize}
+				&type=${this.find.memberType || ''}
+				&keyword=${this.find.keyword || ''}
+				&status=${this.find.memberStatus || ''}
+				&certifyStatus=${this.find.certifyStatus || ''}
+				&realNameStatus=${this.find.realNameStatus || ''}
+				&walletStatus=${this.find.walletStatus || ''}
+				&createBeginDate=${this.startDate || ''}
+				&createEndDate=${this.endDate || ''}`
 		},
 		getList() {
 			Member.find({

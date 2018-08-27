@@ -31,13 +31,16 @@
 					<el-table-column label="Id" type="selection" align="center" width="40" fixed></el-table-column>
 					<el-table-column label="AppID" align="center" prop="appID"></el-table-column>
 					<el-table-column label="App名称" align="center" prop="name"></el-table-column>
-					<el-table-column label="App类型" align="center" prop="type"></el-table-column>
 					<el-table-column label="App客户" align="center" prop="customerName"></el-table-column>
 					<el-table-column label="极光Key" align="center" prop="jiGuangPushKey"></el-table-column>
 					<el-table-column label="短信账号" align="center" prop="smsAccount"></el-table-column>
 					<el-table-column label="短信标签" align="center" prop="smsFlag"></el-table-column>
-					<el-table-column label="使用状态" align="center" prop="useFlag"></el-table-column>
-					<el-table-column label="修改人" align="center" width="120" prop="updateBy"></el-table-column>
+					<el-table-column label="使用状态" align="center">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.useFlag == 'Y' ? '使用中' : '已停用'}}</span>
+                        </template>
+                    </el-table-column>
+					<el-table-column label="修改人" align="center" width="120" prop="updateByName"></el-table-column>
 					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope">
 							<span v-if="scope.row.updateTime">{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
@@ -47,7 +50,8 @@
 						<template slot-scope="scope">
                             <el-button type="default" size="mini" @click="view(scope.row.appID)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.appID)">编辑</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-close" @click="disable(scope.row.appID)">停用</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-check" v-if="scope.row.useFlag=='N'" @click="disable(scope.row.appID, 'Y')">启用</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-close" v-else @click="disable(scope.row.appID, 'N')">停用</el-button>
                         </template>
 					</el-table-column>
 				</el-table>
@@ -60,13 +64,14 @@
 <script>
 import { baseMixin } from '../../../common/mixin'
 import SetApp from '../../../api/SetApp'
+import { PAGEINDEX, PAGESIZE } from '../../../common/const'
 export default {
     mixins: [baseMixin],
     data() {
         return {
             find: { 
                 keyword: '',
-                useFlag: 'Y'
+                useFlag: ''
             }
         }
     },
@@ -76,7 +81,14 @@ export default {
     methods: {
         selectionChange(data) {
 			this.selectedList = data.map(item => item.appID)
-		},
+        },
+        reset() {
+            this.pageIndex = PAGEINDEX
+            this.pageSize = PAGESIZE
+            this.find.keyword = ''
+            this.find.useFlag = ''
+            this.getList()
+        },
         getList() {
             SetApp.find({
                 pageNum: this.pageIndex,
@@ -94,8 +106,11 @@ export default {
         edit(appID) {
             this.$router.push({name: 'editapp', query: { appID }})
         },
-        disable(appID) {
-
+        disable(appID, useFlag) {
+            SetApp.switchOperation({ appID, useFlag }).then(res => {
+                Message.success(res.data.message)
+				this.getList()
+            })
 		}
     }
 }

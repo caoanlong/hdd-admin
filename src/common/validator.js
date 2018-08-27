@@ -92,6 +92,14 @@ export function checkURL(rule, value, callback) {
 	}
 }
 
+export const checkInt = (rule, value, callback) => {
+	const r = /^[1-9]\d*$/
+	if (r.test(value)) {
+		callback()
+	} else {
+		callback(new Error('请输入正确的数字'))
+	}
+}
 
 // 验证非负浮点数（正浮点数 + 0） 2位小数
 export const checkFloat2 = (rule, value, callback) => {
