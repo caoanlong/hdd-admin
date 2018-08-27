@@ -76,10 +76,11 @@
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
-import Page from '../../CommonComponents/Page'
+import { baseMixin } from '../../../common/mixin'
+import SetAppcustomer from '../../../api/SetAppcustomer'
 export default {
+	mixins: [baseMixin],
 	data() {
       	return {
       		findKeyword:'',
@@ -127,23 +128,14 @@ export default {
 			this.getList()
 		},
 		getList() {
-			let params = {
+			SetAppcustomer.find({
 				keyword :this.findKeyword,
 				useFlag :this.findStatus,
 				pageNum: this.pageIndex,
 				pageSize: this.pageSize
-			}
-			requestJava({
-				url: 'setAppcustomer/list',
-				method: 'get',
-				params
 			}).then(res => {
-				if (res.data.code == 200) {
-					this.tableData = res.data.data.list
-					this.total= res.data.data.total
-				} else {
-					Message.error(res.data.message)
-				}
+				this.total = res.total
+				this.tableData = res.list
 			})
 		},
 		getInfo(appCstID) {
@@ -255,8 +247,7 @@ export default {
 			})
 		}
 		
-	},
-	components: { Page }
+	}
 }
 </script>
 <style lang="stylus" scoped>
