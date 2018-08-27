@@ -7,6 +7,13 @@
 					<el-form-item label="关键字">
 						<el-input placeholder="请输入关键字" v-model="findKeyword"></el-input>
 					</el-form-item>
+					<el-form-item label="使用状态">
+						<el-select placeholder="请选择" v-model="findStatus">
+							<el-option label="全部" value=""></el-option>
+							<el-option label="使用中" value="Y"></el-option>
+							<el-option label="已停用" value="N"></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
@@ -15,40 +22,55 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
-					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
-					<el-table-column label="App客户ID" align="center"></el-table-column>
-					<el-table-column label="客户名称" align="center"></el-table-column>
-					<el-table-column label="修改人" align="center" width="120"></el-table-column>
-					<el-table-column label="修改时间" align="center" width="140">
+				<el-table :data="tableData" border style="width: 100%" size="mini">
+					<el-table-column label="App客户ID" align="center" prop="appCstID"></el-table-column>
+					<el-table-column label="客户名称" align="center" prop="customerName"></el-table-column>
+					<el-table-column label="使用状态" align="center">
 						<template slot-scope="scope">
-							<!-- <span>{{ new Date(scope.row.UpdateTime).getTime() | getdatefromtimestamp() }}</span> -->
+							<span v-if="scope.row.useFlag=='Y'">使用中</span>
+							<span v-else>已停用</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="90" align="center">
+					<el-table-column label="修改人" align="center" prop="updateBy">
+					</el-table-column>
+					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.User_ID)">删除</el-button>
+							<span v-if="scope.row.updateTime">{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" align="center">
+						<template slot-scope="scope">
+							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.appCstID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-check" @click="Confirm(scope.row.appCstID,'Y')" v-if="scope.row.useFlag=='N'">启用</el-button>
+							<el-button size="mini" icon="el-icon-close" @click="Confirm(scope.row.appCstID,'N')" v-else>停用</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
-		<el-dialog title="添加App客户" :visible.sync="addCustomerDialog">
-			<el-form  label-width="100px">
-				<el-form-item label="App客户ID">
-					<el-input placeholder="请输入App客户ID"></el-input>
-				</el-form-item>
-				<el-form-item label="客户名称">
-					<el-input placeholder="请输入客户名称"></el-input>
+		<el-dialog title="添加App客户" :visible.sync="addCustomerDialog" :append-to-body="true">
+			<el-form label-width="100px" :model="newCustomer" :rules="rules" ref="addCustomer">
+				<el-form-item label="客户名称" prop="customerName">
+					<el-input placeholder="请输入客户名称" v-model="newCustomer.customerName"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="text-center">
 				<el-button @click="addCustomerDialog = false">取消</el-button>
 				<el-button type="primary" @click="save">保存</el-button>
+			</div>
+		</el-dialog>
+		<el-dialog title="编辑App客户" :visible.sync="editCustomerDialog" :append-to-body="true">
+			<el-form  label-width="100px" :model="customerDetail" :rules="rules" ref="ruleForm">
+				<el-form-item label="客户名称" prop="customerName">
+					<el-input placeholder="请输入客户名称" v-model="customerDetail.customerName"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="text-center">
+				<el-button @click="editCustomerDialog = false">取消</el-button>
+				<el-button type="primary" @click="modify">保存</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -61,12 +83,28 @@ export default {
 	data() {
       	return {
       		findKeyword:'',
+			findStatus:'',
       		tableData:[],
       		pageIndex: 1,
 			pageSize: 10,
 			total: 0,
-			selectedCustomers:[],
-			addCustomerDialog:false
+			addCustomerDialog:false,
+			editCustomerDialog:false,
+			customerDetail:{
+				appCstID:'',
+				customerName:'',
+				deleteFlag:'',
+				useFlag:''
+			},
+			newCustomer:{
+				customerName:''
+			},
+			rules: {
+				customerName: [
+					{required: true, message: '请输入客户名称'},
+				],
+				
+			}
 		}
     },
 	created() {
@@ -83,17 +121,42 @@ export default {
 		},
 		reset() {
 			this.findKeyword = ''
+			this.findStatus = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
+			let params = {
+				keyword :this.findKeyword,
+				useFlag :this.findStatus,
+				pageNum: this.pageIndex,
+				pageSize: this.pageSize
+			}
 			requestJava({
-				url: '/setAppPage/configuration/list',
-				method: 'get'
+				url: 'setAppcustomer/list',
+				method: 'get',
+				params
 			}).then(res => {
 				if (res.data.code == 200) {
-					this.tableData = res.data.data
+					this.tableData = res.data.data.list
+					this.total= res.data.data.total
+				} else {
+					Message.error(res.data.message)
+				}
+			})
+		},
+		getInfo(appCstID) {
+			let params= {
+				appCstID
+			}
+			requestJava({
+				url: 'setAppcustomer/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 200) {
+					this.customerDetail= res.data.data
 				} else {
 					Message.error(res.data.message)
 				}
@@ -101,60 +164,97 @@ export default {
 		},
 		add() {
 			this.addCustomerDialog = true
+			
 		},
-		save(){
-
+		edit(appCstID){
+			this.editCustomerDialog = true
+			this.getInfo(appCstID)
 		},
-		deleteConfirm(id) {
-			let ids = []
-			if (id && typeof id == 'string') {
-				ids = [].concat(id)
-			} else {
-				if (this.selectedCustomers.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
-					return
-				}
-				ids = this.selectedCustomers
-			}
-			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+		Confirm(appCstID,val) {
+			this.$confirm('此操作将改变用户使用状态, 是否继续?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delItem(ids)
+				this.changeStatus(appCstID,val)
 				this.$message({
 					type: 'success',
-					message: '删除成功!'
+					message: '操作成功!'
 				})
 			}).catch(() => {
 				this.$message({
 					type: 'info',
-					message: '已取消删除'
+					message: '已取消操作'
 				})
 			})
 		},
-		delItem(ids) {
-			let data = {
-				ids: ids
+		changeStatus(appCstID,val){
+			let data= {
+				appCstID,
+				useFlag:val,
 			}
-			request({
-				url: '/sys_user/delete',
+			requestJava({
+				url: '/setAppcustomer/switchOperation',
 				method: 'post',
 				data
 			}).then(res => {
-				if (res.data.code == 0) {
+				if (res.data.code == 200) {
+					Message.success(res.data.message)
 					this.getList()
 				} else {
-					Message.error(res.data.msg)
+					Message.error(res.data.message)
 				}
 			})
 		},
-		selectionChange(data) {
-			this.selectedCustomers = data.map(item => item.User_ID)
+		save(){
+			let data= {
+				customerName:this.newCustomer.customerName,
+			}
+			this.$refs['addCustomer'].validate(valid => {
+				if (valid) {
+					requestJava({
+						url: '/setAppcustomer/save',
+						method: 'post',
+						data
+					}).then(res => {
+						if (res.data.code == 200) {
+							Message.success(res.data.message)
+							this.addCustomerDialog = false
+							this.$refs['addCustomer'].resetFields()
+							this.getList()
+						} else {
+							Message.error(res.data.message)
+						}
+					})
+				}
+			})
+		},
+		modify(){
+			let data= {
+				appCstID:this.customerDetail.appCstID,
+				customerName:this.customerDetail.customerName,
+				deleteFlag:this.customerDetail.deleteFlag,
+				useFlag:this.customerDetail.useFlag,
+			}
+			this.$refs['ruleForm'].validate(valid => {
+				if (valid) {
+					requestJava({
+						url: '/setAppcustomer/save',
+						method: 'post',
+						data
+					}).then(res => {
+						if (res.data.code == 200) {
+							Message.success(res.data.message)
+							this.editCustomerDialog = false
+							this.getList()
+						} else {
+							Message.error(res.data.message)
+						}
+					})
+				}
+			})
 		}
+		
 	},
 	components: { Page }
 }
