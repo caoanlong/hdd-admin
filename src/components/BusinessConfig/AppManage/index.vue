@@ -24,23 +24,23 @@
                     border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40" fixed></el-table-column>
 					<el-table-column label="AppID" align="center" prop="appID"></el-table-column>
-					<el-table-column label="App名称" align="center" prop="appName"></el-table-column>
-					<el-table-column label="App类型" align="center" prop="appType"></el-table-column>
-					<el-table-column label="App客户" align="center" prop="appCustomer"></el-table-column>
-					<el-table-column label="极光Key" align="center" prop="JGKey"></el-table-column>
+					<el-table-column label="App名称" align="center" prop="name"></el-table-column>
+					<el-table-column label="App类型" align="center" prop="type"></el-table-column>
+					<el-table-column label="App客户" align="center" prop="customerName"></el-table-column>
+					<el-table-column label="极光Key" align="center" prop="jiGuangPushKey"></el-table-column>
 					<el-table-column label="短信账号" align="center" prop="smsAccount"></el-table-column>
-					<el-table-column label="短信标签" align="center" prop="smsLabel"></el-table-column>
+					<el-table-column label="短信标签" align="center" prop="smsFlag"></el-table-column>
 					<el-table-column label="修改人" align="center" width="120" prop="updateBy"></el-table-column>
 					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{ new Date(scope.row.updateDate).getTime() | getdatefromtimestamp() }}</span>
+							<span>{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
                             <el-button type="default" size="mini" @click="view(scope.row.appID)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.appID)">编辑</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-delete" @click="del(scope.row.appID)">删除</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-delete" @click="disable(scope.row.appID)">停用</el-button>
                         </template>
 					</el-table-column>
 				</el-table>
@@ -99,7 +99,7 @@ export default {
         edit(appID) {
             this.$router.push({name: 'editapp', query: { appID }})
         },
-        del(appID) {
+        disable(appID) {
 
 		}
     }
