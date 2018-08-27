@@ -50,7 +50,7 @@
 				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
-		<el-dialog title="权限设置" :visible.sync="showSetAuth" width="30%">
+		<el-dialog title="权限设置" :visible.sync="showSetAuth" width="30%" :append-to-body="true">
 			<el-tree
 				:data="menus"
 				show-checkbox
@@ -66,7 +66,7 @@
 				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px">
+		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px" :append-to-body="true">
 			<el-table 
 				ref="usersTable"
 				:data="users" 

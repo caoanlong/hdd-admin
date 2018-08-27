@@ -56,7 +56,7 @@
 				</el-form-item>
 			</el-form>
 		</el-card>
-		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%">
+		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%" :append-to-body="true">
 			<ul class="iconList clearfix">
 				<li v-for="icon in svgicons" :key="icon" :class="{'selected':selectedIcon == icon}" @click="selectIcon(icon)">
 					<svg-icon :iconClass="icon"></svg-icon>
