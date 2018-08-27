@@ -63,31 +63,14 @@ export default {
 				smsLabel: ''
 			},
 			rules: {
-				appID: [
-					{required: true, message: '请输入AppID'}
-				],
-				appCstID: [
-					{required: true, message: '请选择appCstID'}
-				],
-				appName: [
-					{required: true, message: '请输入App名称'},
-					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
-				],
-				appType: [
-					{required: true, message: '请输入App类型'}
-				],
-				appCustomer: [
-					{required: true, message: '请输入App客户'}
-				],
-				JGKey: [
-					{required: true, message: '请输入极光Key'}
-				],
-				smsAccount: [
-					{required: true, message: '请输入短信账号'}
-				],
-				smsLabel: [
-					{required: true, message: '请输入短信标签'}
-				]
+				appID: [ {required: true, message: '请输入AppID'} ],
+				appCstID: [ {required: true, message: '请选择appCstID'} ],
+				appName: [ {required: true, message: '请输入App名称'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
+				appType: [ {required: true, message: '请输入App类型'} ],
+				appCustomer: [ {required: true, message: '请输入App客户'} ],
+				JGKey: [ {required: true, message: '请输入极光Key'} ],
+				smsAccount: [ {required: true, message: '请输入短信账号'} ],
+				smsLabel: [ {required: true, message: '请输入短信标签'} ]
 			}
 		}
 	},
