@@ -10,6 +10,15 @@
 						<el-form-item label="AppID" prop="appID">
 							<el-input v-model="info.appID"></el-input>
 						</el-form-item>
+						<el-form-item label="App客户ID" prop="appCstID">
+							<el-autocomplete  style="width:100%"
+								value-key="appCstName" 
+								v-model="info.appCstName"
+								:fetch-suggestions="getAppCst"
+								placeholder="请输入..."
+								@select="handSelectAppCst">
+							</el-autocomplete>
+						</el-form-item>
 						<el-form-item label="App名称" prop="appName">
 							<el-input v-model="info.appName"></el-input>
 						</el-form-item>
@@ -45,6 +54,7 @@ export default {
 		return {
 			info: {
 				appID: '',
+				appCstID: '',
 				appName: '',
 				appType: '',
 				appCustomer: '',
@@ -55,6 +65,9 @@ export default {
 			rules: {
 				appID: [
 					{required: true, message: '请输入AppID'}
+				],
+				appCstID: [
+					{required: true, message: '请选择appCstID'}
 				],
 				appName: [
 					{required: true, message: '请输入App名称'},
@@ -79,6 +92,13 @@ export default {
 		}
 	},
 	methods: {
+		getAppCst(queryString, cb) {
+			this.info.appCstID = ''
+			Customer.find({
+				customerType: 'Shipper',
+				keyword: queryString
+			}).then(res => {cb(res.records) })
+		},
 		// 添加银行
 		add() {
 			this.$refs['ruleForm'].validate(valid => {

@@ -7,6 +7,13 @@
 					<el-form-item label="关键字">
 						<el-input placeholder="请输入关键字" v-model="find.keyword"></el-input>
 					</el-form-item>
+                    <el-form-item label="使用状态">
+						<el-select placeholder="请选择" v-model="find.useFlag">
+							<el-option label="全部" value=""></el-option>
+							<el-option label="使用中" value="Y"></el-option>
+							<el-option label="已停用" value="N"></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
@@ -15,7 +22,6 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click="del">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table 
@@ -30,17 +36,18 @@
 					<el-table-column label="极光Key" align="center" prop="jiGuangPushKey"></el-table-column>
 					<el-table-column label="短信账号" align="center" prop="smsAccount"></el-table-column>
 					<el-table-column label="短信标签" align="center" prop="smsFlag"></el-table-column>
+					<el-table-column label="使用状态" align="center" prop="useFlag"></el-table-column>
 					<el-table-column label="修改人" align="center" width="120" prop="updateBy"></el-table-column>
 					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
+							<span v-if="scope.row.updateTime">{{ new Date(scope.row.updateTime).getTime() | getdatefromtimestamp() }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
                             <el-button type="default" size="mini" @click="view(scope.row.appID)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.appID)">编辑</el-button>
-                            <el-button type="default" size="mini" icon="el-icon-delete" @click="disable(scope.row.appID)">停用</el-button>
+                            <el-button type="default" size="mini" icon="el-icon-close" @click="disable(scope.row.appID)">停用</el-button>
                         </template>
 					</el-table-column>
 				</el-table>
@@ -52,11 +59,15 @@
 
 <script>
 import { baseMixin } from '../../../common/mixin'
+import SetApp from '../../../api/SetApp'
 export default {
     mixins: [baseMixin],
     data() {
         return {
-            find: { keyword: '' }
+            find: { 
+                keyword: '',
+                useFlag: 'Y'
+            }
         }
     },
     created() {
@@ -67,31 +78,15 @@ export default {
 			this.selectedList = data.map(item => item.appID)
 		},
         getList() {
-            this.total = 2
-            this.tableData = [
-                {
-                    appID: 123,
-                    appName: '华新智运',
-                    appType: '货主端',
-                    appCustomer: '华新水泥有限公司',
-                    JGKey: '12346567',
-                    smsAccount: '12346567',
-                    smsLabel: '华新',
-                    updateBy: '罗凯',
-                    updateDate: '2018-04-17 21:35:32'
-                },
-                {
-                    appID: 1,
-                    appName: '货多多',
-                    appType: '车主端',
-                    appCustomer: '云南微服物流有限公司',
-                    JGKey: '12346567',
-                    smsAccount: '12346567',
-                    smsLabel: '货多多',
-                    updateBy: '罗凯',
-                    updateDate: '2018-04-17 21:35:32'
-                },
-            ]
+            SetApp.find({
+                pageNum: this.pageIndex,
+                pageSize: this.pageSize,
+                keyword: this.find.keyword,
+                useFlag: this.find.useFlag
+            }).then(res => {
+                this.total = res.total
+                this.tableData = res.list
+            })
         },
         add() {
             this.$router.push({name: 'addapp'})
