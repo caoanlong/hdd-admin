@@ -139,24 +139,14 @@ export default {
 			})
 		},
 		getInfo(appCstID) {
-			let params= {
+			SetAppcustomer.findById({
 				appCstID
-			}
-			requestJava({
-				url: 'setAppcustomer/info',
-				method: 'get',
-				params
 			}).then(res => {
-				if (res.data.code == 200) {
-					this.customerDetail= res.data.data
-				} else {
-					Message.error(res.data.message)
-				}
+				this.customerDetail= res
 			})
 		},
 		add() {
 			this.addCustomerDialog = true
-			
 		},
 		edit(appCstID){
 			this.editCustomerDialog = true
@@ -181,14 +171,9 @@ export default {
 			})
 		},
 		changeStatus(appCstID,val){
-			let data= {
+			SetAppcustomer.switchOperation({
 				appCstID,
 				useFlag:val,
-			}
-			requestJava({
-				url: '/setAppcustomer/switchOperation',
-				method: 'post',
-				data
 			}).then(res => {
 				if (res.data.code == 200) {
 					Message.success(res.data.message)
@@ -199,15 +184,10 @@ export default {
 			})
 		},
 		save(){
-			let data= {
-				customerName:this.newCustomer.customerName,
-			}
 			this.$refs['addCustomer'].validate(valid => {
 				if (valid) {
-					requestJava({
-						url: '/setAppcustomer/save',
-						method: 'post',
-						data
+					SetAppcustomer.save({
+						customerName:this.newCustomer.customerName
 					}).then(res => {
 						if (res.data.code == 200) {
 							Message.success(res.data.message)
@@ -222,18 +202,13 @@ export default {
 			})
 		},
 		modify(){
-			let data= {
-				appCstID:this.customerDetail.appCstID,
-				customerName:this.customerDetail.customerName,
-				deleteFlag:this.customerDetail.deleteFlag,
-				useFlag:this.customerDetail.useFlag,
-			}
 			this.$refs['ruleForm'].validate(valid => {
 				if (valid) {
-					requestJava({
-						url: '/setAppcustomer/save',
-						method: 'post',
-						data
+					SetAppcustomer.save({
+						appCstID:this.customerDetail.appCstID,
+						customerName:this.customerDetail.customerName,
+						deleteFlag:this.customerDetail.deleteFlag,
+						useFlag:this.customerDetail.useFlag,
 					}).then(res => {
 						if (res.data.code == 200) {
 							Message.success(res.data.message)
