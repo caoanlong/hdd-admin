@@ -54,20 +54,19 @@
 					</el-col>
 				</el-row>
 				<el-row>
-					<el-col :span="24">
-						<el-form-item label="下载URL" prop="downloadURL">
-							<el-input v-model="Version.downloadURL"></el-input>
-						</el-form-item>
-						<el-form-item label="版本说明">
-							<el-input type="textarea" resize="none" v-model="Version.content"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="24">
-						<el-form-item>
-							<el-button type="primary" @click="saveVersion">立即保存</el-button>
-							<el-button @click="back">取消</el-button>
-						</el-form-item>
-					</el-col>
+					<el-form-item label="下载URL" prop="downloadURL">
+						<el-input v-model="Version.downloadURL"></el-input>
+					</el-form-item>
+					<el-form-item label="版本说明">
+						<el-input type="textarea" resize="none" v-model="Version.content"></el-input>
+					</el-form-item>
+					<el-form-item label="版本详情">
+						<el-input type="textarea" resize="none" v-model="Version.content"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="saveVersion">立即保存</el-button>
+						<el-button @click="back">取消</el-button>
+					</el-form-item>
 				</el-row>
 			</el-form>
 		</el-card>
@@ -138,7 +137,7 @@ export default {
 			})
 		},
 		saveVersion() {
-			let data = {
+			const data = {
 				deviceType: this.Version.deviceType,
 				type: this.Version.type,
 				versionSize: this.Version.versionSize,
@@ -147,7 +146,8 @@ export default {
 				isLatest: this.Version.isLatest ? 'Y' : 'N',
 				downloadURL: this.Version.downloadURL,
 				content: this.Version.content,
-				appID:this.Version.appID
+				appID: this.Version.appID,
+				richTextContent: this.Version.richTextContent
 			}
 			// console.log(data)
 			this.$refs['ruleForm'].validate(valid => {
