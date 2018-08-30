@@ -8,94 +8,72 @@
 				<el-row>
 					<el-col :span="6">
 						<el-form-item label="用户设备">
-							<p v-if="Version.deviceType =='Android'">安卓端</p>
-							<p v-else-if="Version.deviceType =='iOS'">苹果端</p>
+							<p v-if="version.deviceType =='Android'">安卓端</p>
+							<p v-else-if="version.deviceType =='iOS'">苹果端</p>
 						</el-form-item>
 						
 					</el-col>
-					<!-- <el-col :span="6">
-						<el-form-item label="类型">
-							<p v-if="Version.type =='Driver'">司机端</p>
-							<p v-else-if="Version.type =='Shipper'">货主端</p>
-						</el-form-item>
-					</el-col> -->
 					<el-col :span="6">
 						<el-form-item label="APP名称">
-							<p>{{Version.appName}}</p>
+							<p>{{version.appName}}</p>
 						</el-form-item>
-						
 					</el-col>
 				</el-row>
 				<el-row>
 					<el-col :span="6">
 						<el-form-item label="最低版本号">
-							<p>{{Version.versionMin}}</p>
+							<p>{{version.versionMin}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="主版本号">
-							<p>{{Version.version}}</p>
+							<p>{{version.version}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="版本大小">
-							<p>{{Version.versionSize}}</p>
+							<p>{{version.versionSize}}</p>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="是否最新版本">
-							<p>{{Version.isLatest=='Y'?'是':'否'}}</p>
+							<p>{{version.isLatest=='Y'?'是':'否'}}</p>
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-row>
-					<el-col :span="24">
-						<el-form-item label="下载URL">
-							<p>{{Version.downloadURL}}</p>
-						</el-form-item>
-						<el-form-item label="版本说明">
-							<p>{{Version.content}}</p>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row>
-					<el-col :span="24">
-						<el-form-item>
-							<el-button @click="back">返回</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
+				<el-form-item label="下载URL">
+					<p>{{version.downloadURL}}</p>
+				</el-form-item>
+				<el-form-item label="版本说明">
+					<p>{{version.content}}</p>
+				</el-form-item>
+				<el-form-item label="版本详情">
+					<p v-html="version.richTextContent"></p>
+				</el-form-item>
+				<el-form-item>
+					<el-button @click="back">返回</el-button>
+				</el-form-item>
 			</el-form>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
+import SetAppVersion from '../../../api/SetAppVersion'
 export default {
 	data() {
 		return {
-			Version: {}
+			version: {}
 		}
 	},
 	created() {
-		this.ViewVersion()
+		this.getInfo()
 	},
 	methods: {
-		ViewVersion() {
-			let params = {
-				appVersionID: this.$route.query.appVersionID
-			}
-			requestJava({
-				url: '/setAppVersion/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 200) {
-					this.Version = res.data.data
-				} else {
-					Message.error(res.data.message)
-				}
+		getInfo() {
+			const appVersionID = this.$route.query.appVersionID
+			SetAppVersion.findById({ appVersionID }).then(res => {
+				this.version = res
 			})
 		},
 		back() {
@@ -113,7 +91,7 @@ export default {
 		border 1px solid #fff
 		border-bottom-color #dcdfe6
 		padding 0 15px
-		height 40px
+		min-height 40px
 		font-family 'sans-serif'
 		line-height 40px
 		color #999
