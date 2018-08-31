@@ -20,10 +20,6 @@ import './assets/icons'
  // permission control 判断是否登录
 import { permissions } from './permission'
 
-// 富文本样式
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 import '../static/plugins/jquery.gridly.js'
 
 // register global utility filters.
