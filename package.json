@@ -64,7 +64,6 @@
     "vue-cropper": "^0.2.9",
     "vue-froala-wysiwyg": "^2.8.4",
     "vue-loader": "^15.2.6",
-    "vue-quill-editor": "^3.0.6",
     "vue-style-loader": "^4.1.1",
     "vue-template-compiler": "^2.5.17",
     "wangeditor": "^3.1.1",
