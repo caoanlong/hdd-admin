@@ -18,7 +18,7 @@ import globals from './common/global'
 // icon
 import './assets/icons'
  // permission control 判断是否登录
-import { permissions } from './permission'
+// import { permissions } from './permission'
 
 import '../static/plugins/jquery.gridly.js'
 
