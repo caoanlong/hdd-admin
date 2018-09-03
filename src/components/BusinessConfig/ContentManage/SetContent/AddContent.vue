@@ -11,9 +11,13 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="App客户">
-					<el-select style="width: 100%" placeholder="请选择" v-model="content.a">
-						<el-option value="a">？？？</el-option>
-					</el-select>
+					<el-autocomplete  style="width:100%"
+						value-key="customerName" 
+						v-model="content.customerName"
+						:fetch-suggestions="getCustomers"
+						placeholder="请输入..."
+						@select="handSelectCustomer">
+					</el-autocomplete>
 				</el-form-item>
 				<el-form-item label="代码" prop="Code">
 					<el-input v-model="content.Code"></el-input>
@@ -57,6 +61,7 @@
 import { Message } from 'element-ui'
 import E from 'wangeditor'
 import request from '../../../../common/request'
+import SetAppcustomer from "../../../../api/SetAppcustomer"
 import ImageUpload from '../../../CommonComponents/ImageUpload'
 import { checkURL } from '../../../../common/validator'
 export default {
@@ -64,6 +69,7 @@ export default {
 	data() {
 		return {
 			contentTopics: [],
+			customers: [],
 			content: {
 				ContentTopic_ID: '',
 				Code: '',
@@ -90,6 +96,7 @@ export default {
 	},
 	created() {
 		this.getContentTopics()
+		this.getCustomers()
 	},
 	mounted() {
 		this.editor = new E('#editor')
@@ -105,6 +112,9 @@ export default {
 		this.editor.create()
 	},
 	methods: {
+		/**
+		 * 所属栏目
+		 */
 		getContentTopics() {
 			request({
 				url: '/set_contenttopic/list2',
@@ -116,6 +126,19 @@ export default {
 					Message.error(res.data.msg)
 				}
 			})
+		},
+		/**
+		 * 获取客户列表
+		 */
+		getCustomers(queryString, cb) {
+			this.content.appCstID = ''
+			SetAppcustomer.find({
+				keyword: queryString
+			}).then(res => {cb(res.list) })
+		},
+		handSelectCustomer(data) {
+			this.content.appCstID = data.appCstID
+			this.content.customerName = data.customerName
 		},
 		addContent() {
 			this.content.Content = this.editor.txt.html()
