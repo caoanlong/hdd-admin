@@ -129,7 +129,7 @@ export default {
 				isEnable: this.content.isEnable ? 'Y' : 'N',
 				Tips: this.content.Tips
 			}
-			data.Content = this.editor.txt.html()
+			data.content.Content = this.editor.txt.html()
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
 				request({

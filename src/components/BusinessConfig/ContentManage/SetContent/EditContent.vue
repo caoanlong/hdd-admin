@@ -84,9 +84,8 @@ export default {
 				Name: [ {required: true, message: '请输入名称'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
 				Title: [ {required: true, message: '请输入标题'}, {min: 2, max: 50, message: '长度在 2 到 50 个字符'} ],
 				Content: [ {required: true, message: '请输入内容'} ],
-				URL: [
-					{required: true, message: '请输入URL'},
-					// {validator: checkURL}
+				URL: [ {required: true, message: '请输入URL'}, 
+				// {validator: checkURL}
 				]
 			}
 		}
@@ -115,13 +114,13 @@ export default {
 				Code: this.content.Code,
 				Name: this.content.Name,
 				Title: this.content.Title,
-				Content: this.content.Content,
 				PictureURL: this.content.PictureURL,
 				URL: this.content.URL,
 				Sort: this.content.Sort,
 				isEnable: this.content.isEnable ? 'Y' : 'N',
 				Tips: this.content.Tips
 			}
+			data.content.Content = this.editor.txt.html()
 			this.$refs['ruleForm'].validate(valid => {
 				if (valid) {
 					request({
