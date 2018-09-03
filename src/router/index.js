@@ -908,4 +908,21 @@ const router = new Router({
 	routes: routerMap
 })
 
+router.beforeEach((to, from, next) => {
+	if (localStorage.getItem('token') && localStorage.getItem('token') != 'undefined') {
+		if (to.path === '/login') {
+			next({ path: '/' })
+		} else {
+			next()
+		}
+	} else {
+		/* has no token*/
+		if (to.path === '/login') {
+			next()
+		} else {
+			next('/login')
+		}
+	}
+})
+
 export default router

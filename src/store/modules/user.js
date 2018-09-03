@@ -42,17 +42,13 @@ const user = {
 		},
 		LogOut({ commit, state }) {
 			return new Promise((resolve, reject) => {
-				logout(state.token).then(() => {
-					commit('SET_LOGIN_NAME', '')
-					commit('SET_NAME', '')
-					commit('SET_PHOTO', '')
-					commit('SET_TOKEN', '')
-					localStorage.clear()
-					sessionStorage.clear()
-					resolve()
-				}).catch(error => {
-					reject(error)
-				})
+				commit('SET_LOGIN_NAME', '')
+				commit('SET_NAME', '')
+				commit('SET_PHOTO', '')
+				commit('SET_TOKEN', '')
+				localStorage.clear()
+				sessionStorage.clear()
+				resolve()
 			})
 		},
 		GetUserInfo({ commit }) {
