@@ -108,19 +108,20 @@ export default {
 	},
 	methods: {
 		editContent() {
+			this.content.Content = this.editor.txt.html()
 			const data= {
 				Content_ID: this.$route.query.Content_ID,
 				ContentTopic_ID: this.content.ContentTopic_ID,
 				Code: this.content.Code,
 				Name: this.content.Name,
 				Title: this.content.Title,
+				Content: this.content.Content,
 				PictureURL: this.content.PictureURL,
 				URL: this.content.URL,
 				Sort: this.content.Sort,
 				isEnable: this.content.isEnable ? 'Y' : 'N',
 				Tips: this.content.Tips
 			}
-			data.content.Content = this.editor.txt.html()
 			this.$refs['ruleForm'].validate(valid => {
 				if (valid) {
 					request({
