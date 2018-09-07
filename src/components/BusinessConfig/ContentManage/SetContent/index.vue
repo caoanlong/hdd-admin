@@ -16,7 +16,7 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addContent">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="add">添加</el-button>
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
@@ -31,7 +31,7 @@
 					<el-table-column label="排序" prop="Sort" width="100"></el-table-column>
 					<el-table-column label="操作" width="160" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-edit" @click="editContent(scope.row.Content_ID)">修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.Content_ID)">修改</el-button>
 							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Content_ID)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -42,13 +42,13 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
 import { Message } from 'element-ui'
+import request from '../../../../common/request'
+import SetContent from '../../../../api/SetContent'
 import Page from '../../../CommonComponents/Page'
 export default {
 	data() {
       	return {
-			refreshing: false,
 			findKeyword:'',
 			pageIndex: 1,
 			pageSize: 10,
@@ -94,11 +94,11 @@ export default {
 			this.pageSize = 10
 			this.getList()
 		},
-		addContent() {
+		add() {
 			this.$router.push({name: 'addcontent'})
 		},
-		editContent(id) {
-			this.$router.push({name: 'editcontent', query: {Content_ID: id}})
+		edit(Content_ID) {
+			this.$router.push({name: 'editcontent', query: { Content_ID }})
 		},
 		deleteConfirm(id) {
 			let ids = []
@@ -119,7 +119,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delContents(ids)
+				this.del(ids)
 				this.$message({
 					type: 'success',
 					message: '删除成功!'
@@ -131,9 +131,9 @@ export default {
 				})
 			})
 		},
-		delContents(ids) {
+		del(contentIDs) {
 			let data = {
-				ids: ids
+				contentIDs
 			}
 			request({
 				url: '/set_content/delete',

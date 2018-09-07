@@ -1,7 +1,7 @@
 import Base from './Base'
 import request from '../common/requestJava'
 
-class Member extends Base {
+class SetApp extends Base {
     constructor(url, req) {
         super(url, req).initURI({
             findById: '/info'
@@ -23,4 +23,4 @@ class Member extends Base {
     }
 }
 
-export default new Member('/setApp', request)
+export default new SetApp('/setApp', request)

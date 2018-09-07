@@ -9,7 +9,7 @@
 			</div>
 			<el-tree
 				class="expand-tree"
-				:data="setContenttopics"
+				:data="list"
 				:props="defaultProps"
 				node-key="name"
 				highlight-current
@@ -23,14 +23,14 @@
 				<span>{{title}}</span>
 			</div>
 			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
-				<el-form-item label="栏目名称" prop="Name">
-					<el-input v-model="currentNode.Name"></el-input>
+				<el-form-item label="栏目名称" prop="name">
+					<el-input v-model="currentNode.name"></el-input>
 				</el-form-item>
-				<el-form-item label="代码" prop="Code">
-					<el-input v-model="currentNode.Code"></el-input>
+				<el-form-item label="代码" prop="code">
+					<el-input v-model="currentNode.code"></el-input>
 				</el-form-item>
-				<el-form-item label="类型" prop="Type">
-					<el-input v-model="currentNode.Type"></el-input>
+				<el-form-item label="类型" prop="type">
+					<el-input v-model="currentNode.type"></el-input>
 				</el-form-item>
 				<el-form-item label="是否启用">
 					<el-switch v-model="currentNode.isEnable"></el-switch>
@@ -44,32 +44,35 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
-import TreeRender from '../../../CommonComponents/TreeRender/Column'
 import { Message } from 'element-ui'
+import request from '../../../../common/request'
+import SetContentTopic from '../../../../api/SetContentTopic'
+import TreeRender from '../../../CommonComponents/TreeRender/SetContentTopic'
 export default {
 	data() {
       	return {
 			defaultProps: {
 				children: 'children',
-				label: 'Name'
+				label: 'name'
 			},
-			setContenttopics: [],
+			list: [],
 			currentNode: {
-				Name: '',
-				Code: '',
-				Type: 'public',
-				isEnable: true
+				id: '', // 栏目ID
+				contentTopicPID: '', // 栏目父ID
+				type: 'public', // 类型
+				code: '', // 代码
+				name: '', // 名称
+				isEnable: true //是否启用
 			},
 			title: '添加顶级节点',
 			button: '立即创建',
 			selectedColumns: [],
 			rules: {
-				Name: [
+				name: [
 					{required: true, message: '请输入名称'},
 					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				],
-				Code: [
+				code: [
 					{required: true, message: '请输入代码'},
 					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				]
@@ -77,23 +80,23 @@ export default {
 		}
     },
 	created() {
-		this.getColumns()
+		this.getList()
 	},
     methods: {
 		addRoot() {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Name: '',
-				Code: '',
-				Type: 'public',
-				isEnable: true
+				type: 'public', // 类型
+				code: '', // 代码
+				name: '', // 名称
+				isEnable: true //是否启用
 			}
 		},
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			this.getColumn(d.ContentTopic_ID)
+			this.getInfo(d.id)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this //指向vue
@@ -114,11 +117,11 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				ContentTopic_PID: this.currentNode.ContentTopic_ID,
-				Name: '',
-				Code: '',
-				Type: 'public',
-				isEnable: true
+				contentTopicPID: this.currentNode.id,
+				type: 'public', // 类型
+				code: '', // 代码
+				name: '', // 名称
+				isEnable: true //是否启用
 			}
 			this.iconTxt='添加图标'
 		},
@@ -128,7 +131,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delColumn(d.ContentTopic_ID)
+				this.delColumn(d.id)
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -139,92 +142,47 @@ export default {
 		submitForm(type) {
 			// 创建
 			if (type == '立即创建') {
-				let params = {
-					Name: this.currentNode.Name,
-					Code: this.currentNode.Code,
-					Type: this.currentNode.Type,
-					ContentTopic_PID: this.currentNode.ContentTopic_PID,
-					isEnable: this.isShow ? 'Y' : 'N'
+				const params = {
+					name: this.currentNode.name,
+					code: this.currentNode.code,
+					type: this.currentNode.type,
+					contentTopicPID: this.currentNode.contentTopicPID,
+					isEnable: this.currentNode.isEnable ? 'Y' : 'N'
 				}
 				this.$refs['ruleForm'].validate(valid => {
-					if (valid) {
-						this.addColumn(params)
-					}
+					if (!valid) return
+					this.saveContentTopic(params)
 				})
 			// 编辑
 			} else {
-				let params = {
-					ContentTopic_ID: this.currentNode.ContentTopic_ID,
-					Name: this.currentNode.Name,
-					Code: this.currentNode.Code,
-					Type: this.currentNode.Type,
-					ContentTopic_PID: this.currentNode.ContentTopic_PID,
-					isEnable: this.isShow ? 'Y' : 'N'
+				const params = {
+					id: this.currentNode.id,
+					name: this.currentNode.name,
+					code: this.currentNode.code,
+					type: this.currentNode.type,
+					contentTopicPID: this.currentNode.contentTopicPID,
+					isEnable: this.currentNode.isEnable ? 'Y' : 'N'
 				}
 				this.$refs['ruleForm'].validate(valid => {
-					if (valid) {
-						this.updatetColumn(params)
-					}
+					if (!valid) return
+					this.saveContentTopic(params)
 				})
 			}
 		},
-		getColumns() {
-			request({
-				url: '/set_contenttopic/list',
-				method: 'get'
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.setContenttopics = res.data.data
-				} else {
-					Message.error(res.data.msg)
-				}
+		getList() {
+			SetContentTopic.find().then(res => { this.list = res })
+		},
+		getInfo(id) {
+			SetContentTopic.findById({ id }).then(res => {
+				this.currentNode = res
+				this.currentNode.isEnable = res.isEnable == 'Y' ? true : false
 			})
 		},
-		getColumn(ContentTopic_ID) {
-			let params = {
-				ContentTopic_ID
-			}
-			request({
-				url: '/set_contenttopic/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.currentNode = res.data.data
-					this.currentNode.isEnable = res.data.data.isEnable == 'Y' ? true : false
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
-		},
-		addColumn(data) {
-			request({
-				url: '/set_contenttopic/add',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getColumns()
-					this.addRoot()
-					this.$message.success('创建成功！')
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
-		},
-		updatetColumn(data) {
-			request({
-				url: '/set_contenttopic/update',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getColumns()
-					this.addRoot()
-					this.$message.success('编辑成功！')
-				} else {
-					Message.error(res.data.msg)
-				}
+		saveContentTopic(data) {
+			SetContentTopic.add(data).then(res => {
+				this.getList()
+				this.addRoot()
+				Message.success('成功')
 			})
 		},
 		delColumn(ContentTopic_ID) {
@@ -237,7 +195,7 @@ export default {
 				data
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.getColumns()
+					this.getList()
 					this.addRoot()
 					this.$message.success('删除成功！')
 				} else {
