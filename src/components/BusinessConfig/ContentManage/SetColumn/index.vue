@@ -45,7 +45,6 @@
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
-import request from '../../../../common/request'
 import SetContentTopic from '../../../../api/SetContentTopic'
 import TreeRender from '../../../CommonComponents/TreeRender/SetContentTopic'
 export default {
@@ -83,16 +82,6 @@ export default {
 		this.getList()
 	},
     methods: {
-		addRoot() {
-			this.title = '添加顶级节点'
-			this.button = '立即创建'
-			this.currentNode = {
-				type: 'public', // 类型
-				code: '', // 代码
-				name: '', // 名称
-				isEnable: true //是否启用
-			}
-		},
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
@@ -113,7 +102,23 @@ export default {
 				}
 			})
 		},
-		handleAdd(s, d, n){//增加节点
+		/**
+		 * 点击添加根节点
+		 */
+		addRoot() {
+			this.title = '添加顶级节点'
+			this.button = '立即创建'
+			this.currentNode = {
+				type: 'public', // 类型
+				code: '', // 代码
+				name: '', // 名称
+				isEnable: true //是否启用
+			}
+		},
+		/**
+		 * 点击添加子节点
+		 */
+		handleAdd(s, d, n){
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
@@ -125,37 +130,37 @@ export default {
 			}
 			this.iconTxt='添加图标'
 		},
-		handleDelete(s, d, n){//删除节点
+		/**
+		 * 点击删除
+		 */
+		handleDelete(s, d, n){
 			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.delColumn(d.id)
+				this.del(d.id)
 			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})         
+				Message.info('已取消删除')         
 			})
 		},
+		/**
+		 * 提交保存
+		 */
 		submitForm(type) {
+			let params = null
 			// 创建
 			if (type == '立即创建') {
-				const params = {
+				params = {
 					name: this.currentNode.name,
 					code: this.currentNode.code,
 					type: this.currentNode.type,
-					contentTopicPID: this.currentNode.contentTopicPID,
+					contentTopicPID: this.currentNode.contentTopicPID || 1,
 					isEnable: this.currentNode.isEnable ? 'Y' : 'N'
 				}
-				this.$refs['ruleForm'].validate(valid => {
-					if (!valid) return
-					this.saveContentTopic(params)
-				})
 			// 编辑
 			} else {
-				const params = {
+				params = {
 					id: this.currentNode.id,
 					name: this.currentNode.name,
 					code: this.currentNode.code,
@@ -163,44 +168,45 @@ export default {
 					contentTopicPID: this.currentNode.contentTopicPID,
 					isEnable: this.currentNode.isEnable ? 'Y' : 'N'
 				}
-				this.$refs['ruleForm'].validate(valid => {
-					if (!valid) return
-					this.saveContentTopic(params)
-				})
 			}
+			this.$refs['ruleForm'].validate(valid => {
+				if (!valid) return
+				this.save(params)
+			})
 		},
+		/**
+		 * 获取列表
+		 */
 		getList() {
 			SetContentTopic.find().then(res => { this.list = res })
 		},
+		/**
+		 * 获取详情
+		 */
 		getInfo(id) {
 			SetContentTopic.findById({ id }).then(res => {
 				this.currentNode = res
 				this.currentNode.isEnable = res.isEnable == 'Y' ? true : false
 			})
 		},
-		saveContentTopic(data) {
+		/**
+		 * 保存
+		 */
+		save(data) {
 			SetContentTopic.add(data).then(res => {
 				this.getList()
 				this.addRoot()
 				Message.success('成功')
 			})
 		},
-		delColumn(ContentTopic_ID) {
-			let data = {
-				ContentTopic_ID
-			}
-			request({
-				url: '/set_contenttopic/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getList()
-					this.addRoot()
-					this.$message.success('删除成功！')
-				} else {
-					Message.error(res.data.msg)
-				}
+		/**
+		 * 删除
+		 */
+		del(id) {
+			SetContentTopic.del({ id }).then(res => {
+				Message.success('删除成功！')
+				this.getList()
+				this.addRoot()
 			})
 		}
 	}

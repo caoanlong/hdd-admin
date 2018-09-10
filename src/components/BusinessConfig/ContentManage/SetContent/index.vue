@@ -20,19 +20,19 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="setContent" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
-					<el-table-column label="所属栏目" prop="set_contenttopic.Name"></el-table-column>
-					<el-table-column label="App客户"></el-table-column>
-					<el-table-column label="代码" prop="Code"></el-table-column>
-					<el-table-column label="名称" prop="Name"></el-table-column>
-					<el-table-column label="标题" prop="Title"></el-table-column>
-					<el-table-column label="描述" prop="Tips"></el-table-column>
-					<el-table-column label="排序" prop="Sort" width="100"></el-table-column>
+					<el-table-column label="所属栏目" prop="contentTopicName"></el-table-column>
+					<el-table-column label="App客户" prop="customerName"></el-table-column>
+					<el-table-column label="代码" prop="code"></el-table-column>
+					<el-table-column label="名称" prop="name"></el-table-column>
+					<el-table-column label="标题" prop="title"></el-table-column>
+					<el-table-column label="描述" prop="tips"></el-table-column>
+					<el-table-column label="排序" prop="sort" width="100"></el-table-column>
 					<el-table-column label="操作" width="160" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.Content_ID)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Content_ID)">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.id)">修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.id)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -53,8 +53,8 @@ export default {
 			pageIndex: 1,
 			pageSize: 10,
 			total: 0,
-			setContent: [],
-			selectedContents: []
+			tableData: [],
+			selectedList: []
 		}
 	},
 	components: { Page },
@@ -62,23 +62,8 @@ export default {
 		this.getList()
 	},
 	methods: {
-		getList() {
-			let params = {
-				pageIndex: this.pageIndex,
-				pageSize: this.pageSize
-			}
-			request({
-				url: '/set_content/list',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.total = res.data.data.count
-					this.setContent = res.data.data.rows
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
+		selectionChange(data) {
+			this.selectedList = data.map(item => item.id)
 		},
 		pageChange(index) {
 			this.pageIndex = index
@@ -94,25 +79,32 @@ export default {
 			this.pageSize = 10
 			this.getList()
 		},
+		getList() {
+			SetContent.find({
+				pageIndex: this.pageIndex,
+				pageSize: this.pageSize,
+				keyword: this.findKeyword
+			}).then(res => {
+				this.total = res.total
+				this.tableData = res.list
+			})
+		},
 		add() {
 			this.$router.push({name: 'addcontent'})
 		},
-		edit(Content_ID) {
-			this.$router.push({name: 'editcontent', query: { Content_ID }})
+		edit(id) {
+			this.$router.push({name: 'editcontent', query: { id }})
 		},
 		deleteConfirm(id) {
 			let ids = []
 			if (id && typeof id == 'string') {
-				ids = [].concat(id)
+				ids = id
 			} else {
-				if (this.selectedContents.length == 0) {
-					this.$message({
-						type: 'warning',
-						message: '请选择'
-					})
+				if (this.selectedList.length == 0) {
+					Message.warning('请选择')
 					return
 				}
-				ids = this.selectedContents
+				ids = this.selectedList.join(',')
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -120,36 +112,15 @@ export default {
 				type: 'warning'
 			}).then(() => {
 				this.del(ids)
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
 			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})
+				Message.info('已取消删除')
 			})
 		},
 		del(contentIDs) {
-			let data = {
-				contentIDs
-			}
-			request({
-				url: '/set_content/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.getList()
-				} else {
-					Message.error(res.data.msg)
-				}
+			SetContent.del({ contentIDs }).then(res => {
+				Message.success('删除成功!')
+				this.getList()
 			})
-		},
-		selectionChange(data) {
-			this.selectedContents = data.map(item => item.Content_ID)
-			console.log(this.selectedContents)
 		}
 	}
 }
