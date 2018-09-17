@@ -10,7 +10,7 @@
 						<el-form-item label="用户设备" prop="deviceType">
 							<el-select v-model="version.deviceType" placeholder="请选择" style="width:100%">
 								<el-option label="安卓端" value="Android"></el-option>
-								<el-option label="苹果端" value="IOS"></el-option>
+								<el-option label="苹果端" value="iOS"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
