@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { baseMixin } from '../../../common/mixin'
 import SetApp from '../../../api/SetApp'
 import { PAGEINDEX, PAGESIZE } from '../../../common/const'
