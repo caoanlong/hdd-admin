@@ -144,8 +144,10 @@ export default {
 			this.content.customerName = data.customerName
 		},
 		add() {
+			const id = this.$route.query.id
 			this.content.content = this.editor.txt.html()
 			const data= {
+				id,
 				contentTopicID: this.content.contentTopicID,
 				code: this.content.code,
 				name: this.content.name,
