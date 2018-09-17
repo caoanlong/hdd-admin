@@ -54,7 +54,7 @@ export default {
 			total: 0,
 			tableData: [],
 			selectedList: []
-		}
+		} 
 	},
 	components: { Page },
 	created() {
