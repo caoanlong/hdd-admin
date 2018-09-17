@@ -102,7 +102,6 @@ export default {
 	},
 	created() {
 		this.getContentTopics()
-		this.getCustomers()
 	},
 	mounted() {
 		this.editor = new E('#editor')
@@ -134,7 +133,7 @@ export default {
 			this.content.appCstID = ''
 			SetAppcustomer.find({
 				keyword: queryString
-			}).then(res => {cb(res.list) })
+			}).then(res => { cb(res.list) })
 		},
 		/**
 		 * 选择客户
@@ -149,6 +148,7 @@ export default {
 			const data= {
 				id,
 				contentTopicID: this.content.contentTopicID,
+				appCstID: this.content.appCstID,
 				code: this.content.code,
 				name: this.content.name,
 				title: this.content.title,
@@ -162,7 +162,7 @@ export default {
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
 				SetContent.add(data).then(res => {
-					Message.success(res.data.msg)
+					Message.success(res.data.message)
 					this.$router.push({name: 'setcontent'})
 				})
 			})
