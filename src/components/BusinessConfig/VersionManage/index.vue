@@ -14,7 +14,7 @@
 					<el-table-column label="用户设备" align="center" width="80">
 						<template slot-scope="scope">
 							<span v-if="scope.row.deviceType =='Android'">安卓端</span>
-							<span v-if="scope.row.deviceType =='IOS'">苹果端</span>
+							<span v-if="scope.row.deviceType =='iOS'">苹果端</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="APP名称" prop="appName"></el-table-column>
