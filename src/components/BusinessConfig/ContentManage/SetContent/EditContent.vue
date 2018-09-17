@@ -166,6 +166,7 @@ export default {
 			})
 		},
 		getInfo() {
+			const id = this.$route.query.id
 			SetContent.findById({ id }).then(res => {
 				this.content = res
 				this.content.isEnable = res.isEnable == 'Y' ? true : false
