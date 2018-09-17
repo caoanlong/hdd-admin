@@ -43,7 +43,6 @@
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
-import request from '../../../../common/request'
 import SetContent from '../../../../api/SetContent'
 import Page from '../../../CommonComponents/Page'
 export default {
@@ -70,6 +69,7 @@ export default {
 			this.getList()
 		},
 		pageSizeChange(size) {
+			this.pageIndex = 1
 			this.pageSize = size
 			this.getList() 
 		},
