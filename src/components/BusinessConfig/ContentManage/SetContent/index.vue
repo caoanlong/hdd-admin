@@ -81,7 +81,7 @@ export default {
 		},
 		getList() {
 			SetContent.find({
-				pageIndex: this.pageIndex,
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				keyword: this.findKeyword
 			}).then(res => {
