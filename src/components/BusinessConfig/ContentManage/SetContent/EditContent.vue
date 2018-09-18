@@ -170,8 +170,9 @@ export default {
 		getInfo() {
 			const id = this.$route.query.id
 			SetContent.findById({ id }).then(res => {
-				this.content = res
-				this.content.isEnable = res.isEnable == 'Y' ? true : false
+				const content = Object.assign({}, res)
+				content.isEnable = res.setContentTopic.isEnable == 'Y' ? true : false
+				this.content = content
 				this.$nextTick(() => {
 					this.editor.txt.html(this.content.content)
 				})
