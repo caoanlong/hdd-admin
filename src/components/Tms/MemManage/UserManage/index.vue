@@ -57,21 +57,21 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
+import Company from '../../../../api/Company'
 import Page from '../../../CommonComponents/Page'
 export default {
 	data() {
 		return {
 			pageIndex: 1,
 			pageSize: 10,
-			count: 0,
+			total: 0,
 			findRangeDate: [],
 			findStartDate: '',
 			findEndDate: '',
@@ -106,19 +106,15 @@ export default {
 			this.getList()
 		},
 		getList() {
-			let params = {
+			Company.apply().find({
 				current: this.pageIndex,
 				size: this.pageSize,
 				keyword: this.findKeyword,
 				applyTimeBegin: this.findStartDate,
 				applyTimeEnd: this.findEndDate
-			}
-			requestJava({
-				url: '/admin/applyrecord/getList',
-				params
 			}).then(res => {
-				this.count = res.data.data.total
-				this.tableData = res.data.data.list
+				this.total = res.total
+				this.tableData = res.records
 			})
 		},
 		view(applyRecordID) {

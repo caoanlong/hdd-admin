@@ -76,81 +76,73 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../../common/requestJava'
-	import { Message } from 'element-ui'
-	import ImageUpload from '../../../CommonComponents/ImageUpload'
-	export default {
-		data() {
-			return {
-				user: {
-					memberID: '',
-					userName: '',
-					contact: '',
-					companyName: '',
-					companyArea: '',
-					roadTransportLicUrl: '',
-					businessLicUrl: '',
-					remark: ''
-				}
+import { Message } from 'element-ui'
+import Company from '../../../../api/Company'
+import requestJava from '../../../../common/requestJava'
+import ImageUpload from '../../../CommonComponents/ImageUpload'
+export default {
+	data() {
+		return {
+			user: {
+				memberID: '',
+				userName: '',
+				contact: '',
+				companyName: '',
+				companyArea: '',
+				roadTransportLicUrl: '',
+				businessLicUrl: '',
+				remark: ''
 			}
-        },
-        created() {
-            this.getInfo()
-        },
-		methods: {
-            getInfo() {
-                let params= {
-					applyRecordID: this.$route.query.applyRecordID
-				}
-				requestJava({
-					url: '/admin/applyrecord/info',
-					params
-				}).then(res => {
-					this.user = res.data.data
-					this.user.roadTransportLicUrl = res.data.data.roadTransportLicUrl
-					this.user.businessLicUrl = res.data.data.businessLicUrl
-				})
-			},
-			handleLogoUrlSuccess(res) {
-				this.user.logoUrl = res[0]
-			},
-			handleRoadTransportLicUrlSuccess(res) {
-				this.user.roadTransportLicUrl = res[0]
-			},
-			handleBusinessLicUrlSuccess(res) {
-				this.user.businessLicUrl = res[0]
-			},
-			audit(status) {
-				let data = {
-					BusinessLicUrl: this.user.businessLicUrl, //	运输许可证图片	string	
-					RoadTransportLicUrl: this.user.roadTransportLicUrl, //	营业执照图片	string	
-					applyRecordID: this.user.applyRecordID, //	审核ID	number	
-					auditStatus: status, //	审核状态	string	Draft :草稿 ；Pending :待审核；Passed：已开通；Rejected：已拒绝
-					businessLicNo: this.user.businessLicNo, //	许可证号码	string	
-					remark: this.user.remark,
-					logoUrl: this.user.logoUrl
-				}
-				requestJava({
-					url: '/admin/applyrecord/auditing',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 200) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'tmsusermanage'})
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			back() {
-				this.$router.go(-1)
-			}
-		},
-		components: {
-			ImageUpload
 		}
+	},
+	created() {
+		this.getInfo()
+	},
+	methods: {
+		getInfo() {
+			const params= {
+				applyRecordID: this.$route.query.applyRecordID
+			}
+			requestJava({
+				url: '/admin/applyrecord/info',
+				params
+			}).then(res => {
+				this.user = res.data.data
+				this.user.roadTransportLicUrl = res.data.data.roadTransportLicUrl
+				this.user.businessLicUrl = res.data.data.businessLicUrl
+			})
+		},
+		handleLogoUrlSuccess(res) {
+			this.user.logoUrl = res[0]
+		},
+		handleRoadTransportLicUrlSuccess(res) {
+			this.user.roadTransportLicUrl = res[0]
+		},
+		handleBusinessLicUrlSuccess(res) {
+			this.user.businessLicUrl = res[0]
+		},
+		audit(status) {
+			Company.apply().audit({
+				BusinessLicUrl: this.user.businessLicUrl, //	运输许可证图片	string	
+				RoadTransportLicUrl: this.user.roadTransportLicUrl, //	营业执照图片	string	
+				applyRecordID: this.user.applyRecordID, //	审核ID	number	
+				auditStatus: status, //	审核状态	string	Draft :草稿 ；Pending :待审核；Passed：已开通；Rejected：已拒绝
+				businessLicNo: this.user.businessLicNo, //	许可证号码	string	
+				remark: this.user.remark,
+				logoUrl: this.user.logoUrl
+			}).then(res => {
+				Message.success(res.data.msg)
+				this.$router.push({ name: 'tmsusermanage'})
+			})
+		},
+		back() {
+			this.$router.go(-1)
+		}
+	},
+	components: {
+		ImageUpload
 	}
+}
 </script>
 <style lang="stylus" scoped>
 .avatar-uploader
