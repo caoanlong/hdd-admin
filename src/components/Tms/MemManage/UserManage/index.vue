@@ -105,7 +105,7 @@ export default {
 				applyTimeEnd: this.findEndDate
 			}).then(res => {
 				this.total = res.total
-				this.tableData = res.records
+				this.tableData = res.list
 			})
 		},
 		view(applyRecordID) {
