@@ -7,7 +7,7 @@
 			<div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
 					<el-form-item label="关键字">
-						<el-input style="width: 300px" placeholder="手机号、用户名、公司名、联系人" v-model="findKeyword"></el-input>
+						<el-input style="width: 300px" placeholder="手机号、用户名、公司名、联系人" v-model="find.keyword"></el-input>
 					</el-form-item>
 					<el-form-item label="申请时间">
 						<el-date-picker
@@ -20,7 +20,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getList">查询</el-button>
+						<el-button type="primary" @click="search">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -57,29 +57,28 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../../common/requestJava'
 import { Message } from 'element-ui'
-import Page from '../../../CommonComponents/Page'
+import Company from '../../../../api/Company'
+import { baseMixin } from "../../../../common/mixin"
+import { PAGEINDEX, PAGESIZE } from '../../../../common/const'
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
-			pageIndex: 1,
-			pageSize: 10,
-			count: 0,
 			findRangeDate: [],
-			findStartDate: '',
-			findEndDate: '',
-			findKeyword: '',
-			tableData: []
+			find: {
+				startDate: '',
+				endDate: '',
+				keyword: ''
+			}
 		}
 	},
-	components: { Page },
 	created() {
 		this.getList()
 	},
@@ -88,37 +87,25 @@ export default {
 			this.findStartDate = new Date(date[0]).getTime()
 			this.findEndDate = new Date(date[1]).getTime()
 		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
-		},
 		reset() {
 			this.findRangeDate = []
-			this.findStartDate = ''
-			this.findEndDate = ''
-			this.findKeyword = ''
-			this.pageIndex = 1
-			this.pageSize = 10
+			this.find.startDate = ''
+			this.find.endDate = ''
+			this.find.keyword = ''
+			this.pageIndex = PAGEINDEX
+			this.pageSize = PAGESIZE
 			this.getList()
 		},
 		getList() {
-			let params = {
+			Company.apply().find({
 				current: this.pageIndex,
 				size: this.pageSize,
 				keyword: this.findKeyword,
 				applyTimeBegin: this.findStartDate,
 				applyTimeEnd: this.findEndDate
-			}
-			requestJava({
-				url: '/admin/applyrecord/getList',
-				params
 			}).then(res => {
-				this.count = res.data.data.total
-				this.tableData = res.data.data.list
+				this.total = res.total
+				this.tableData = res.records
 			})
 		},
 		view(applyRecordID) {

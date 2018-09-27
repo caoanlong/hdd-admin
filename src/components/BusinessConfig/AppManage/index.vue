@@ -48,7 +48,6 @@
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center" fixed="right">
 						<template slot-scope="scope">
-                            <el-button type="default" size="mini" @click="view(scope.row.appID)" icon="el-icon-view">查看</el-button>
                             <el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.appID)">编辑</el-button>
                             <el-button type="default" size="mini" icon="el-icon-check" v-if="scope.row.useFlag=='N'" @click="disable(scope.row.appID, 'Y')">启用</el-button>
                             <el-button type="default" size="mini" icon="el-icon-close" v-else @click="disable(scope.row.appID, 'N')">停用</el-button>
@@ -62,6 +61,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { baseMixin } from '../../../common/mixin'
 import SetApp from '../../../api/SetApp'
 import { PAGEINDEX, PAGESIZE } from '../../../common/const'

@@ -5,12 +5,16 @@
 				<span>添加内容</span>
 			</div>
 			<el-form label-width="120px" :model="content" :rules="rules" ref="ruleForm">
-				<el-form-item label="所属栏目" prop="ContentTopic_ID">
-					<el-select style="width: 100%" placeholder="请选择" v-model="content.ContentTopic_ID">
-						<el-option v-for="contentTopic in contentTopics" :key="contentTopic.ContentTopic_ID" :label="contentTopic.Name" :value="contentTopic.ContentTopic_ID"></el-option>
-					</el-select>
+				<el-form-item label="所属栏目" prop="contentTopicID">
+					<el-autocomplete style="width:100%"
+						value-key="name" 
+						v-model="content.contentTopicName"
+						:fetch-suggestions="getContentTopics"
+						placeholder="请输入..."
+						@select="handSelectContentTopic">
+					</el-autocomplete>
 				</el-form-item>
-				<el-form-item label="App客户">
+				<el-form-item label="App客户" prop="appCstID">
 					<el-autocomplete  style="width:100%"
 						value-key="customerName" 
 						v-model="content.customerName"
@@ -19,38 +23,38 @@
 						@select="handSelectCustomer">
 					</el-autocomplete>
 				</el-form-item>
-				<el-form-item label="代码" prop="Code">
-					<el-input v-model="content.Code"></el-input>
+				<el-form-item label="代码" prop="code">
+					<el-input v-model="content.code"></el-input>
 				</el-form-item>
-				<el-form-item label="名称" prop="Name">
-					<el-input v-model="content.Name"></el-input>
+				<el-form-item label="名称" prop="name">
+					<el-input v-model="content.name"></el-input>
 				</el-form-item>
-				<el-form-item label="标题" prop="Title">
-					<el-input v-model="content.Title"></el-input>
+				<el-form-item label="标题" prop="title">
+					<el-input v-model="content.title"></el-input>
 				</el-form-item>
-				<el-form-item label="内容" prop="Content">
+				<el-form-item label="内容" prop="content">
 					<div id="editor"></div>
 				</el-form-item>
 				<el-form-item label="图片上传">
-					<ImageUpload :files="[content.PictureURL]" @imgUrlBack="handleAvatarSuccess"/>
+					<ImageUpload :files="[content.pictureURL]" @imgUrlBack="handlePicSuccess"/>
 				</el-form-item>
 				<el-form-item label="图片URL">
-					<el-input v-model="content.PictureURL"></el-input>
+					<el-input v-model="content.pictureURL"></el-input>
 				</el-form-item>
-				<el-form-item label="URL" prop="URL">
-					<el-input v-model="content.URL"></el-input>
+				<el-form-item label="URL" prop="url">
+					<el-input v-model="content.url"></el-input>
 				</el-form-item>
 				<el-form-item label="是否启用">
 					<el-switch v-model="content.isEnable"></el-switch>
 				</el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="content.Sort" :min="1"></el-input-number>
+					<el-input-number v-model="content.sort" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item label="备注">
-					<el-input type="textarea" v-model="content.Tips"></el-input>
+					<el-input type="textarea" v-model="content.tips"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="addContent">立即保存</el-button>
+					<el-button type="primary" @click="add">立即保存</el-button>
 					<el-button @click="back">取消</el-button>
 				</el-form-item>
 			</el-form>
@@ -60,8 +64,9 @@
 <script type="text/javascript">
 import { Message } from 'element-ui'
 import E from 'wangeditor'
-import request from '../../../../common/request'
 import SetAppcustomer from "../../../../api/SetAppcustomer"
+import SetContent from "../../../../api/SetContent"
+import SetContentTopic from "../../../../api/SetContentTopic"
 import ImageUpload from '../../../CommonComponents/ImageUpload'
 import { checkURL } from '../../../../common/validator'
 export default {
@@ -71,32 +76,32 @@ export default {
 			contentTopics: [],
 			customers: [],
 			content: {
-				ContentTopic_ID: '',
-				Code: '',
-				Name: '',
-				Title: '',
-				Content: '',
-				PictureURL: '',
-				URL: '',
-				Sort: 1,
+				contentTopicID: '',
+				appCstID: '',
+				code: '',
+				name: '',
+				title: '',
+				content: '',
+				pictureURL: '',
+				url: '',
+				sort: 1,
 				isEnable: true,
-				Tips: ''
+				tips: ''
 			},
 			rules: {
-				ContentTopic_ID: [ {required: true, message: '请选择所属栏目'} ],
-				Code: [ {required: true, message: '请输入代码'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
-				Name: [ {required: true, message: '请输入名称'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
-				Title: [ {required: true, message: '请输入标题'}, {min: 2, max: 50, message: '长度在 2 到 50 个字符'} ],
-				Content: [ {required: true, message: '请输入内容'} ],
-				URL: [ {required: true, message: '请输入URL'}, 
+				contentTopicID: [ {required: true, message: '请选择所属栏目'} ],
+				code: [ {required: true, message: '请输入代码'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
+				name: [ {required: true, message: '请输入名称'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
+				title: [ {required: true, message: '请输入标题'}, {min: 2, max: 50, message: '长度在 2 到 50 个字符'} ],
+				content: [ {required: true, message: '请输入内容'} ],
+				url: [ {required: true, message: '请输入URL'}, 
 				// {validator: checkURL}
 				]
 			}
 		}
 	},
 	created() {
-		this.getContentTopics()
-		this.getCustomers()
+		
 	},
 	mounted() {
 		this.editor = new E('#editor')
@@ -115,17 +120,11 @@ export default {
 		/**
 		 * 所属栏目
 		 */
-		getContentTopics() {
-			request({
-				url: '/set_contenttopic/list2',
-				method: 'get'
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.contentTopics = res.data.data
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
+		getContentTopics(queryString, cb) {
+			this.content.contentTopicID = ''
+			SetContentTopic.suggest({
+				keyword: queryString
+			}).then(res => { cb(res) })
 		},
 		/**
 		 * 获取客户列表
@@ -134,44 +133,47 @@ export default {
 			this.content.appCstID = ''
 			SetAppcustomer.find({
 				keyword: queryString
-			}).then(res => {cb(res.list) })
+			}).then(res => { cb(res.list) })
 		},
+		/**
+		 * 选择栏目
+		 */
+		handSelectContentTopic(data) {
+			this.content.contentTopicID = data.id
+			this.content.contentTopicName = data.name
+		},
+		/**
+		 * 选择客户
+		 */
 		handSelectCustomer(data) {
 			this.content.appCstID = data.appCstID
 			this.content.customerName = data.customerName
 		},
-		addContent() {
-			this.content.Content = this.editor.txt.html()
+		add() {
+			this.content.content = this.editor.txt.html()
 			const data= {
-				ContentTopic_ID: this.content.ContentTopic_ID,
-				Code: this.content.Code,
-				Name: this.content.Name,
-				Title: this.content.Title,
-				Content: this.content.Content,
-				PictureURL: this.content.PictureURL,
-				URL: this.content.URL,
-				Sort: this.content.Sort,
+				contentTopicID: this.content.contentTopicID,
+				appCstID: this.content.appCstID,
+				code: this.content.code,
+				name: this.content.name,
+				title: this.content.title,
+				content: this.content.content,
+				pictureURL: this.content.pictureURL,
+				url: this.content.url,
+				sort: this.content.sort,
 				isEnable: this.content.isEnable ? 'Y' : 'N',
-				Tips: this.content.Tips
+				tips: this.content.tips
 			}
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
-				request({
-					url: '/set_content/add',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						Message.success(res.data.msg)
-						this.$router.push({name: 'setcontent'})
-					} else {
-						Message.error(res.data.msg)
-					}
+				SetContent.add(data).then(res => {
+					Message.success(res.data.message)
+					this.$router.push({name: 'setcontent'})
 				})
 			})
 		},
-		handleAvatarSuccess(res) {
-			this.content.PictureURL = res[0]
+		handlePicSuccess(res) {
+			this.content.pictureURL = res[0]
 		},
 		back() {
 			this.$router.go(-1)

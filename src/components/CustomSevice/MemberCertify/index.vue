@@ -265,8 +265,8 @@ export default {
 				&certifyStatus=${this.find.certifyStatus || ''}
 				&realNameStatus=${this.find.realNameStatus || ''}
 				&walletStatus=${this.find.walletStatus || ''}
-				&createBeginDate=${this.startDate || ''}
-				&createEndDate=${this.endDate || ''}`
+				&createBeginDate=${this.find.startDate || ''}
+				&createEndDate=${this.find.endDate || ''}`
 		},
 		getList() {
 			Member.find({
