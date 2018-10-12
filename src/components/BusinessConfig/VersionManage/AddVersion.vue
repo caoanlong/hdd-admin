@@ -54,8 +54,11 @@
 					<el-form-item label="版本详情">
 						<div id="editor"></div>
 					</el-form-item>
+					<el-form-item label="App下载页面">
+						<div id="editor2"></div>
+					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="saveVersion">立即保存</el-button>
+						<el-button type="primary" @click="save">立即保存</el-button>
 						<el-button @click="back">取消</el-button>
 					</el-form-item>
 				</el-row>
@@ -73,9 +76,10 @@ export default {
 	data() {
 		return {
 			appNameList:[],
+			editor: null,
+			editor2: null,
 			version: {
 				deviceType: '',
-				type: '',
 				versionSize: '',
 				version: '',
 				versionMin: '',
@@ -115,10 +119,13 @@ export default {
 	},
 	mounted() {
 		this.editor = new E('#editor')
+		this.editor2 = new E('#editor2')
 		this.editor.customConfig.zIndex = 100
+		this.editor2.customConfig.zIndex = 100
 		// this.editor.customConfig.uploadImgServer = `${this.imgApi}/upload/multiple`
 		// this.editor.customConfig.uploadFileName = 'files'
 		this.editor.customConfig.uploadImgShowBase64 = true
+		this.editor2.customConfig.uploadImgShowBase64 = true
 		this.editor.customConfig.uploadImgHooks = {
 			customInsert: (insertImg, result, editor) => {
 				result.data.forEach(item => {
@@ -126,10 +133,19 @@ export default {
 				})
 			}
 		}
+		this.editor2.customConfig.uploadImgHooks = {
+			customInsert: (insertImg, result, editor) => {
+				result.data.forEach(item => {
+					insertImg(this.imgUrl + item)
+				})
+			}
+		}
 		this.editor.create()
+		this.editor2.create()
 	},
 	beforeDestroy() {
 		this.editor = null
+		this.editor2 = null
 	},
 	methods: {
 		getAppNameList(){
@@ -137,18 +153,11 @@ export default {
 				this.appNameList = res
 			})
 		},
-		saveVersion() {
-			const data = {
-				deviceType: this.version.deviceType,
-				versionSize: this.version.versionSize,
-				version: this.version.version,
-				versionMin: this.version.versionMin,
-				isLatest: this.version.isLatest ? 'Y' : 'N',
-				downloadURL: this.version.downloadURL,
-				content: this.version.content,
-				appID: this.version.appID
-			}
+		save() {
+			const data = Object.assign({}, this.version)
+			data.isLatest = this.version.isLatest ? 'Y' : 'N'
 			data.richTextContent = this.editor.txt.html()
+			data.downloadRichText = this.editor2.txt.html()
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
 				SetAppVersion.save(data).then(res => {

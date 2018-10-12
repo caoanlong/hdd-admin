@@ -50,6 +50,9 @@
 				<el-form-item label="版本详情">
 					<p v-html="version.richTextContent"></p>
 				</el-form-item>
+				<el-form-item label="App下载页面">
+					<p v-html="version.downloadRichText"></p>
+				</el-form-item>
 				<el-form-item>
 					<el-button @click="back">返回</el-button>
 				</el-form-item>
