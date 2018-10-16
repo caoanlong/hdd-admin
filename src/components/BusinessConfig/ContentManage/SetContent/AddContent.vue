@@ -33,7 +33,7 @@
 					<el-input v-model="content.title"></el-input>
 				</el-form-item>
 				<el-form-item label="内容" prop="content">
-					<div id="editor"></div>
+					<textarea name="editor" id="editor" rows="10" cols="80"></textarea>
 				</el-form-item>
 				<el-form-item label="图片上传">
 					<ImageUpload :files="[content.pictureURL]" @imgUrlBack="handlePicSuccess"/>
@@ -63,7 +63,6 @@
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
-import E from 'wangeditor'
 import SetAppcustomer from "../../../../api/SetAppcustomer"
 import SetContent from "../../../../api/SetContent"
 import SetContentTopic from "../../../../api/SetContentTopic"
@@ -104,17 +103,7 @@ export default {
 		
 	},
 	mounted() {
-		this.editor = new E('#editor')
-		this.editor.customConfig.zIndex = 100
-		this.editor.customConfig.uploadImgShowBase64 = true
-		this.editor.customConfig.uploadImgHooks = {
-			customInsert: (insertImg, result, editor) => {
-				result.data.forEach(item => {
-					insertImg(this.imgUrl + item)
-				})
-			}
-		}
-		this.editor.create()
+		CKEDITOR.replace('editor')
 	},
 	methods: {
 		/**
@@ -157,7 +146,7 @@ export default {
 				code: this.content.code,
 				name: this.content.name,
 				title: this.content.title,
-				content: this.content.content,
+				content: CKEDITOR.instances.editor.getData(),
 				pictureURL: this.content.pictureURL,
 				url: this.content.url,
 				sort: this.content.sort,

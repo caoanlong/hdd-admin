@@ -52,10 +52,10 @@
 						<el-input type="textarea" resize="none" v-model="version.content"></el-input>
 					</el-form-item>
 					<el-form-item label="版本详情">
-						<div id="editor"></div>
+						<textarea name="editor" id="editor" rows="10" cols="80"></textarea>
 					</el-form-item>
 					<el-form-item label="App下载页面">
-						<div id="editor2"></div>
+						<textarea name="editor2" id="editor2" rows="10" cols="80"></textarea>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="save">立即保存</el-button>
@@ -68,10 +68,10 @@
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
-import E from 'wangeditor'
 import SetAppVersion from '../../../api/SetAppVersion'
 import Sys from '../../../api/Sys'
 import { checkURL } from '../../../common/validator'
+import { javaUrl } from '../../../common/requestJava'
 export default {
 	data() {
 		return {
@@ -118,30 +118,8 @@ export default {
 		this.getAppNameList()
 	},
 	mounted() {
-		this.editor = new E('#editor')
-		this.editor2 = new E('#editor2')
-		this.editor.customConfig.zIndex = 100
-		this.editor2.customConfig.zIndex = 100
-		// this.editor.customConfig.uploadImgServer = `${this.imgApi}/upload/multiple`
-		// this.editor.customConfig.uploadFileName = 'files'
-		this.editor.customConfig.uploadImgShowBase64 = true
-		this.editor2.customConfig.uploadImgShowBase64 = true
-		this.editor.customConfig.uploadImgHooks = {
-			customInsert: (insertImg, result, editor) => {
-				result.data.forEach(item => {
-					insertImg(this.imgUrl + item)
-				})
-			}
-		}
-		this.editor2.customConfig.uploadImgHooks = {
-			customInsert: (insertImg, result, editor) => {
-				result.data.forEach(item => {
-					insertImg(this.imgUrl + item)
-				})
-			}
-		}
-		this.editor.create()
-		this.editor2.create()
+		CKEDITOR.replace('editor')
+		CKEDITOR.replace('editor2')
 	},
 	beforeDestroy() {
 		this.editor = null
@@ -156,8 +134,8 @@ export default {
 		save() {
 			const data = Object.assign({}, this.version)
 			data.isLatest = this.version.isLatest ? 'Y' : 'N'
-			data.richTextContent = this.editor.txt.html()
-			data.downloadRichText = this.editor2.txt.html()
+			data.richTextContent = CKEDITOR.instances.editor.getData()
+			data.downloadRichText = CKEDITOR.instances.editor2.getData()
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
 				SetAppVersion.save(data).then(res => {
