@@ -76,8 +76,6 @@ export default {
 	data() {
 		return {
 			appNameList:[],
-			editor: null,
-			editor2: null,
 			version: {
 				deviceType: '',
 				versionSize: '',
@@ -120,10 +118,6 @@ export default {
 	mounted() {
 		CKEDITOR.replace('editor')
 		CKEDITOR.replace('editor2')
-	},
-	beforeDestroy() {
-		this.editor = null
-		this.editor2 = null
 	},
 	methods: {
 		getAppNameList(){

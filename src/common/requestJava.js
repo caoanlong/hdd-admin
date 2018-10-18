@@ -31,7 +31,9 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
 	response => {
 		if (response.data.code != 200) {
-			if (response.data.code == 10016) {
+			if (   response.data.code == 10016 // 用户未登录
+				|| response.data.code == 10014 // token缺失, 无法验证!
+				|| response.data.code == 10015) { // Token验证失败, 请求重新登录!
 				localStorage.clear()
 				if (response.data.msg) {
 					Message.error(response.data.msg)

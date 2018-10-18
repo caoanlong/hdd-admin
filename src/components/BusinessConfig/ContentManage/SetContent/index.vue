@@ -44,34 +44,21 @@
 <script type="text/javascript">
 import { Message } from 'element-ui'
 import SetContent from '../../../../api/SetContent'
-import Page from '../../../CommonComponents/Page'
+import { baseMixin } from '../../../../common/mixin'
 export default {
+	mixins: [baseMixin],
 	data() {
       	return {
 			findKeyword:'',
-			pageIndex: 1,
-			pageSize: 10,
-			total: 0,
-			tableData: [],
 			selectedList: []
 		} 
 	},
-	components: { Page },
 	created() {
 		this.getList()
 	},
 	methods: {
 		selectionChange(data) {
 			this.selectedList = data.map(item => item.id)
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageIndex = 1
-			this.pageSize = size
-			this.getList() 
 		},
 		reset() {
 			this.findKeyword = ''
