@@ -5,10 +5,10 @@
         <div class="search">
             <el-form :inline="true" class="demo-form-inline" size="small">
                 <el-form-item label="关键字">
-                    <el-input placeholder="请输入关键字" v-model="findKeyword"></el-input>
+                    <el-input placeholder="请输入关键字" v-model="find.keyword"></el-input>
                 </el-form-item>
                 <el-form-item label="使用状态">
-                    <el-select placeholder="请选择" v-model="findStatus">
+                    <el-select placeholder="请选择" v-model="find.status">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="使用中" value="Y"></el-option>
                         <el-option label="已停用" value="N"></el-option>
@@ -84,51 +84,36 @@ export default {
   mixins: [baseMixin],
   data() {
     return {
-      findKeyword: "",
-      findStatus: "",
-      tableData: [],
-      pageIndex: 1,
-      pageSize: 10,
-      total: 0,
-      addCustomerDialog: false,
-      editCustomerDialog: false,
-      customerDetail: {
-        appCstID: "",
-        customerName: "",
-        deleteFlag: "",
-        useFlag: ""
-      },
-      newCustomer: {
-        customerName: ""
-      },
-      rules: {
-        customerName: [
-          {
-            required: true,
-            message: "请输入客户名称"
-          }
-        ]
-      }
-    };
+		find: {
+			keyword: '',
+			status: ''
+		},
+		addCustomerDialog: false,
+		editCustomerDialog: false,
+		customerDetail: {
+			appCstID: "",
+			customerName: "",
+			deleteFlag: "",
+			useFlag: ""
+		},
+		newCustomer: {
+			customerName: ""
+		},
+		rules: {
+			customerName: [{ required: true, message: "请输入客户名称" }]
+		}
+	}
   },
   created() {
-    this.getList();
+    this.getList()
   },
   methods: {
-    pageChange(index) {
-      this.pageIndex = index;
-      this.getList();
-    },
-    pageSizeChange(size) {
-      this.pageSize = size;
-      this.getList();
-    },
     reset() {
-      this.findKeyword = "";
-      this.findStatus = "";
-      this.pageIndex = 1;
-      this.pageSize = 10;
-      this.getList();
+      this.find.keyword = ""
+      this.find.status = ""
+      this.pageIndex = 1
+      this.pageSize = 10
+      this.getList()
     },
     getList() {
       SetAppcustomer.find({
@@ -137,23 +122,23 @@ export default {
         pageNum: this.pageIndex,
         pageSize: this.pageSize
       }).then(res => {
-        this.total = res.total;
-        this.tableData = res.list;
-      });
+        this.total = res.total
+        this.tableData = res.list
+      })
     },
     getInfo(appCstID) {
       SetAppcustomer.findById({
         appCstID
       }).then(res => {
-        this.customerDetail = res;
-      });
+        this.customerDetail = res
+      })
     },
     add() {
-      this.addCustomerDialog = true;
+      this.addCustomerDialog = true
     },
     edit(appCstID) {
-      this.editCustomerDialog = true;
-      this.getInfo(appCstID);
+      this.editCustomerDialog = true
+      this.getInfo(appCstID)
     },
     Confirm(appCstID, val) {
       this.$confirm("此操作将改变用户使用状态, 是否继续?", "提示", {
@@ -162,18 +147,18 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.changeStatus(appCstID, val);
+          this.changeStatus(appCstID, val)
           this.$message({
             type: "success",
             message: "操作成功!"
-          });
+          })
         })
         .catch(() => {
           this.$message({
             type: "info",
             message: "已取消操作"
-          });
-        });
+          })
+        })
     },
     changeStatus(appCstID, val) {
       SetAppcustomer.switchOperation({
@@ -181,12 +166,12 @@ export default {
         useFlag: val
       }).then(res => {
         if (res.data.code == 200) {
-          Message.success(res.data.message);
-          this.getList();
+          Message.success(res.data.message)
+          this.getList()
         } else {
-          Message.error(res.data.message);
+          Message.error(res.data.message)
         }
-      });
+      })
     },
     save() {
       this.$refs["addCustomer"].validate(valid => {
@@ -195,16 +180,16 @@ export default {
             customerName: this.newCustomer.customerName
           }).then(res => {
             if (res.data.code == 200) {
-              Message.success(res.data.message);
-              this.addCustomerDialog = false;
-              this.$refs["addCustomer"].resetFields();
-              this.getList();
+              Message.success(res.data.message)
+              this.addCustomerDialog = false
+              this.$refs["addCustomer"].resetFields()
+              this.getList()
             } else {
-              Message.error(res.data.message);
+              Message.error(res.data.message)
             }
-          });
+          })
         }
-      });
+      })
     },
     modify() {
       this.$refs["ruleForm"].validate(valid => {
@@ -216,18 +201,18 @@ export default {
             useFlag: this.customerDetail.useFlag
           }).then(res => {
             if (res.data.code == 200) {
-              Message.success(res.data.message);
-              this.editCustomerDialog = false;
-              this.getList();
+              Message.success(res.data.message)
+              this.editCustomerDialog = false
+              this.getList()
             } else {
-              Message.error(res.data.message);
+              Message.error(res.data.message)
             }
-          });
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

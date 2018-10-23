@@ -7,15 +7,20 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="类型">
-						<el-select placeholder="请选择" v-model="findDictType">
-							<el-option v-for="dictType in dictTypes" :label="dictType.TYPE" :value="dictType.TYPE" :key="dictType.TYPE"></el-option>
+						<el-select placeholder="请选择" v-model="find.dictType">
+							<el-option 
+								v-for="dictType in dictTypes" 
+								:label="dictType.TYPE" 
+								:value="dictType.TYPE" 
+								:key="dictType.TYPE">
+							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="描述">
-						<el-input placeholder="描述" v-model="findDesc"></el-input>
+						<el-input placeholder="描述" v-model="find.desc"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getDict()">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -25,7 +30,7 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="dicts" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="键值" prop="VALUE"></el-table-column>
 					<el-table-column label="标签" prop="NAME"></el-table-column>
@@ -34,61 +39,53 @@
 					<el-table-column label="排序" prop="SortNumber" align="center" width="60"></el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" icon="el-icon-view" @click="viewDict(scope.row.Dict_ID)">查看</el-button>
-							<el-button size="mini" icon="el-icon-edit" @click="editDict(scope.row.Dict_ID)">编辑</el-button>
+							<el-button size="mini" icon="el-icon-view" @click="view(scope.row.Dict_ID)">查看</el-button>
+							<el-button size="mini" icon="el-icon-edit" @click="edit(scope.row.Dict_ID)">编辑</el-button>
 							<el-button size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.Dict_ID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
 import { Message } from 'element-ui'
-import Page from '../../../CommonComponents/Page'
+import request from '../../../../common/request'
+import { baseMixin } from '../../../../common/mixin'
 export default {
+	mixins: [ baseMixin ],
 	data() {
 		return {
-			dicts:[],
 			dictTypes: [],
-			count:0,
-			pageIndex: 1,
-			pageSize: 10,
-			selectedDicts: [],
-			findDictType: '',
-			findDesc: ''
+			find: {
+				dictType: '',
+				desc: ''
+			}
 		}
 	},
-	components: { Page },
 	created() {
 		this.getList()
 		this.getDictType()
 	},
 	methods: {
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
+		selectionChange(data) {
+			this.selectedList = data.map(item => item.Dict_ID)
 		},
 		reset() {
-			this.findDictType = ''
-			this.findDesc = ''
+			this.find.dictType = ''
+			this.find.desc = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
-			let params = {
+			const params = {
 				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
-				TYPE: this.findDictType,
-				Description: this.findDesc
+				TYPE: this.find.dictType,
+				Description: this.find.desc
 			}
 			request({
 				url: '/sys_dict/list',
@@ -96,8 +93,8 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.dicts = res.data.data.rows
+					this.total = res.data.data.count
+					this.tableData = res.data.data.rows
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -111,14 +108,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				if (this.selectedDicts.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedDicts
+				ids = this.selectedList
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -138,9 +135,7 @@ export default {
 			})
 		},
 		delDict(ids) {
-			let data = {
-				ids: ids
-			}
+			const data = { ids }
 			request({
 				url: '/sys_dict/delete',
 				method: 'post',
@@ -153,15 +148,11 @@ export default {
 				}
 			})
 		},
-		editDict(id) {
-			this.$router.push({ name: 'editdict', query: { Dict_ID: id} })
+		edit(Dict_ID) {
+			this.$router.push({ name: 'editdict', query: { Dict_ID } })
 		},
-		viewDict(id) {
-			this.$router.push({ name: 'viewdict', query: { Dict_ID: id} })
-		},
-		selectionChange(data) {
-			this.selectedDicts = data.map(item => item.Dict_ID)
-			console.log(this.selectedDicts)
+		view(Dict_ID) {
+			this.$router.push({ name: 'viewdict', query: { Dict_ID } })
 		},
 		getDictType() {
 			request({
