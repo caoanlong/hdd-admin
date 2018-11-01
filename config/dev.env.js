@@ -13,5 +13,5 @@ module.exports = merge(prodEnv, {
     // BASE_JAVA_API: '"http://192.168.1.99:8888"',  // 军良
     BASE_JAVA_API: '"http://192.168.1.48:9898/huaxin"', // java测试环境
     BASE_SYS_API: '"http://192.168.1.29:8080"', // 系统服务
-    BASE_IMG_API: '"http://develop.we-service.cn/hdd/image/"' // img测试环境
+    BASE_IMG_API: '"http://develop.we-service.cn/hx/image/"' // img测试环境
 })
