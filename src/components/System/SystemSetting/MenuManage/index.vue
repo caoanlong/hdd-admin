@@ -110,6 +110,20 @@ export default {
 	created() {
 		this.getRoles()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.currentNode = {
+				Target: '', // name
+				Name: '', // title
+				SortNumber: '',
+				Href: '', // path
+				Icon: '',
+				IsShow: '',
+				sys_roles: []
+			}
+			this.getRoles()
+		}
+	},
 	methods: {
 		addRoot() {
 			this.title = '添加顶级节点'
@@ -195,7 +209,7 @@ export default {
 			}
 			// 创建
 			if (type == '立即创建') {
-				let params = {
+				const params = {
 					Href: this.currentNode.Href,
 					Target: this.currentNode.Target,
 					Name: this.currentNode.Name,
@@ -211,7 +225,7 @@ export default {
 				this.$message.success('创建成功！')
 			// 编辑
 			} else {
-				let params = {
+				const params = {
 					Menu_ID: this.currentNode.Menu_ID,
 					Href: this.currentNode.Href,
 					Target: this.currentNode.Target,

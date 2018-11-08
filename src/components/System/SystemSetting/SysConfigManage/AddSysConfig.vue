@@ -62,6 +62,18 @@
 				}
 			}
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.config = {
+					Setting_ID: '',
+					Code: '',
+					Name: '',
+					Value: '',
+					SortNumber: '',
+					Description: ''
+				}
+			}
+		},
 		methods: {
 			addConfig() {
 				let data= {

@@ -108,6 +108,22 @@
 			this.getOrganizations()
 			this.getDataScope()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.role = {
+					Name: '',
+					EnName: '',
+					Organization_ID: '',
+					RoleType: '',
+					DataScope: '',
+					Issys: 'Y',
+					Useable: 'Y',
+					Remark: ''
+				}
+				this.getOrganizations()
+				this.getDataScope()
+			}
+		},
 		methods: {
 			addRole() {
 				let data = {

@@ -109,6 +109,13 @@
 			this.getOrganizations()
 			this.getDataScope()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.getRole()
+				this.getOrganizations()
+				this.getDataScope()
+			}
+		},
 		methods: {
 			getRole() {
 				let params = {

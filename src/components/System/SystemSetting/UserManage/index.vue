@@ -7,18 +7,18 @@
 			<div class="search">
 				<el-form :inline="true" class="demo-form-inline" size="small">
 					<el-form-item label="姓名">
-						<el-input placeholder="姓名" v-model="findName"></el-input>
+						<el-input placeholder="姓名" v-model="find.name"></el-input>
 					</el-form-item>
 					<el-form-item label="登录名">
-						<el-input placeholder="登录名" v-model="findLoginName"></el-input>
+						<el-input placeholder="登录名" v-model="find.loginName"></el-input>
 					</el-form-item>
 					<el-form-item label="归属公司">
-						<el-select v-model="findCompany" placeholder="请选择" @change="changeCompany">
+						<el-select v-model="find.company" placeholder="请选择" @change="changeCompany">
 							<el-option :label="company.Name" :value="company.Organization_ID" v-for="company in companys" :key="company.Organization_ID"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="归属部门">
-						<el-select v-model="findDepartment" placeholder="请选择">
+						<el-select v-model="find.department" placeholder="请选择">
 							<el-option :label="department.Name" :value="department.Organization_ID" v-for="department in departments" :key="department.Organization_ID"></el-option>
 						</el-select>
 					</el-form-item>
@@ -36,7 +36,7 @@
 				<!-- <a href="../../../../../static/user_template.xlsx" download="user_template.xlsx" class="download-btn"><svg-icon iconClass="excel-icon"></svg-icon> 下载模板</a> -->
 			</div>
 			<div class="table">
-				<el-table :data="users" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="登录名" prop="LoginName"></el-table-column>
 					<el-table-column label="姓名" prop="Name"></el-table-column>
@@ -52,7 +52,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
@@ -62,7 +62,7 @@ import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import UploadExcel from '../../../CommonComponents/UploadExcel'
 import { validUploadFile } from '../../../../common/utils'
-import Page from '../../../CommonComponents/Page'
+import { baseMixin } from '../../../../common/mixin'
 const userMap = {
 	'登录名': 'LoginName',
 	'姓名': 'Name',
@@ -72,27 +72,31 @@ const userMap = {
 	'归属部门': 'department.Name'
 }
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
 			downloadLoading: false,
 			filename: '用户数据',
-			users: [],
-			pageIndex: 1,
-			pageSize: 10,
-			findName: '',
-			findLoginName: '',
-			findCompany: '',
-			findDepartment: '',
-			count: 0,
-			selectedUsers: [],
+			tableData: [],
+			find: {
+				name: '',
+				loginName: '',
+				company: '',
+				department: ''
+			},
 			companys: [],
 			departments: []
 		}
 	},
-	components: { UploadExcel, Page },
+	components: { UploadExcel },
 	created() {
 		this.getList()
 		this.getOrgs()
+	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.reset()
+		}
 	},
 	methods: {
 		exportExcel() {
@@ -100,7 +104,7 @@ export default {
 			import('../../../../common/Export2Excel').then(excel => {
 				const tHeader = ['登录名', '姓名', '电话', '手机', '归属公司', '归属部门']
 				const filterVal = [userMap['登录名'], userMap['姓名'], userMap['电话'], userMap['手机'], userMap['归属公司'], userMap['归属部门']]
-				const data = this.formatJson(filterVal, this.users)
+				const data = this.formatJson(filterVal, this.tableData)
 				excel.export_json_to_excel(tHeader, data, this.filename)
 				this.downloadLoading = false
 			})
@@ -126,9 +130,7 @@ export default {
 		},
 		// 导入
 		addMutiple(users) {
-			let data = {
-				users: users,
-			}
+			const data = { users }
 			request({
 				url: '/sys_user/addmutip',
 				method: 'post',
@@ -142,31 +144,23 @@ export default {
 				}
 			})
 		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
-		},
 		reset() {
-			this.findName = ''
-			this.findLoginName = ''
-			this.findCompany = ''
-			this.findDepartment = ''
+			this.find.name = ''
+			this.find.loginName = ''
+			this.find.company = ''
+			this.find.department = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
-			let params = {
+			const params = {
 				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
-				LoginName: this.findLoginName,
-				Name: this.findName,
-				Company_ID: this.findCompany,
-				Organization_ID: this.findDepartment
+				LoginName: this.find.loginName,
+				Name: this.find.name,
+				Company_ID: this.find.company,
+				Organization_ID: this.find.department
 			}
 			request({
 				url: '/sys_user/list',
@@ -174,8 +168,8 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.users = res.data.data.rows
+					this.total = res.data.data.count
+					this.tableData = res.data.data.rows
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -189,14 +183,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				if (this.selectedUsers.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedUsers
+				ids = this.selectedList
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -238,7 +232,7 @@ export default {
 			this.$router.push({ name: 'viewuser', query: { User_ID: id} })
 		},
 		getOrgs(Organization_PID) {
-			let params = {
+			const params = {
 				Organization_PID: Organization_PID || ''
 			}
 			request({
@@ -258,12 +252,11 @@ export default {
 			})
 		},
 		changeCompany(id) {
-			this.findDepartment = ''
+			this.find.department = ''
 			this.getOrgs(id)
 		},
 		selectionChange(data) {
-			this.selectedUsers = data.map(item => item.User_ID)
-			console.log(this.selectedUsers )
+			this.selectedList = data.map(item => item.User_ID)
 		}
 	}
 }

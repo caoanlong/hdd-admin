@@ -61,6 +61,11 @@
 		created() {
 			this.getRole()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.getRole()
+			}
+		},
 		methods: {
 			getRole() {
 				let params = {

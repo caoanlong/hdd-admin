@@ -198,10 +198,35 @@ export default {
 		this.getRoles()
 		this.getCompanys()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.user = {
+				Company_ID: '',
+				Organization_ID: '',
+				LoginName: '',
+				Password: '',
+				Password2: '',
+				PayPassword: '',
+				JobNo: '',
+				Name: '',
+				Sex: '',
+				Email: '',
+				Phone: '',
+				Mobile: '',
+				Type: '',
+				Photo: '',
+				PCID: '',
+				LoginFlag: 'N',
+				Remark: '',
+				sys_roles: []
+			}
+			this.getRoles()
+			this.getCompanys()
+		}
+	},
 	methods: {
 		addUser() {
 			let data = this.user
-			console.log(data)
 			this.$refs['ruleForm'].validate(valid => {
 				if (valid) {
 					request({

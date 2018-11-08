@@ -50,9 +50,14 @@
 		created() {
 			this.getDict()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.getDict()
+			}
+		},
 		methods: {
 			getDict() {
-				let params = {
+				const params = {
 					Dict_ID: this.$route.query.Dict_ID
 				}
 				request({

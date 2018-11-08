@@ -181,6 +181,13 @@ export default {
 		this.getRoles()
 		this.getCompanys()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.getUser()
+			this.getRoles()
+			this.getCompanys()
+		}
+	},
 	methods: {
 		getUser() {
 			let params = {

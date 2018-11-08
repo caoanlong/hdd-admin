@@ -234,6 +234,30 @@ export default {
 	created() {
 		this.getUsers()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.currentNode = {
+				Area_ID: '',
+				Name: '',
+				Grade: '',
+				PrimaryPerson: '',
+				DeputyPerson: '',
+				Master: '',
+				Phone: '',
+				Useable: true,
+				Code: '',
+				Type: '',
+				ZipCode: '',
+				Fax: '',
+				Email: '',
+				Address: '',
+				Remark: '',
+				SortNumber:''
+			}
+			this.selectArea = []
+			this.getUsers()
+		}
+	},
 	methods: {
 		addRoot() {
 			this.title = '添加顶级节点'

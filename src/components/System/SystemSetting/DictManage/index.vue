@@ -69,6 +69,11 @@ export default {
 		this.getList()
 		this.getDictType()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.reset()
+		}
+	},
 	methods: {
 		selectionChange(data) {
 			this.selectedList = data.map(item => item.Dict_ID)

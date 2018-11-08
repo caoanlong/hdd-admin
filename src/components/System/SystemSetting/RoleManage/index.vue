@@ -22,7 +22,7 @@
 			<div class="table">
 				<el-table 
 					ref="roleTable" 
-					:data="roles" 
+					:data="tableData" 
 					@selection-change="selectRoleChange" 
 					border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center" width="40"></el-table-column>
@@ -47,7 +47,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 		<el-dialog title="权限设置" :visible.sync="showSetAuth" width="30%" :append-to-body="true">
@@ -88,20 +88,16 @@
 	</div>
 </template>
 <script type="text/javascript">
+import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import request from '../../../../common/request'
-import { Message } from 'element-ui'
-import Page from '../../../CommonComponents/Page'
+import { baseMixin } from '../../../../common/mixin';
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
-			roles: [],
 			role: {},
-			pageIndex: 1,
-			pageSize: 10,
-			count: 0,
 			findRoleName: '',
-			selectedRoles: [],
 			setAuthId: '',
 			setUserId: '',
 			// 所有的用户
@@ -117,9 +113,13 @@ export default {
 			menus: []
 		}
 	},
-	components: { Page },
 	created() {
 		this.getDataScope()
+	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.reset()
+		}
 	},
 	methods: {
 		addRole() {
@@ -132,18 +132,10 @@ export default {
 			this.$router.push({name: 'viewrole', query: {Role_ID: id}})
 		},
 		selectRoleChange(data) {
-			this.selectedRoles = data.map(item => item.Role_ID)
+			this.selectedList = data.map(item => item.Role_ID)
 		},
 		selectUserChange(data) {
 			this.selectedUsers = data
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
 		},
 		// 重置搜索表单
 		reset() {
@@ -153,7 +145,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			let params = {
+			const params = {
 				pageIndex: this.pageIndex || 1,
 				pageSize: this.pageSize,
 				Name: this.findRoleName
@@ -164,8 +156,8 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.roles = res.data.data.rows
+					this.total = res.data.data.count
+					this.tableData = res.data.data.rows
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -193,14 +185,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				if (this.selectedRoles.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedRoles
+				ids = this.selectedList
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',

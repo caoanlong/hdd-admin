@@ -65,9 +65,20 @@
 				}
 			}
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.dict = {
+					TYPE:'',
+					NAME:'',
+					VALUE:'',
+					Description:'',
+					SortNumber:''
+				}
+			}
+		},
 		methods: {
 			addDict() {
-				let data= {
+				const data= {
 					TYPE: this.dict.TYPE,
 					NAME: this.dict.NAME,
 					VALUE: this.dict.VALUE,

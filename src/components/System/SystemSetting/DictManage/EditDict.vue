@@ -69,6 +69,11 @@
 		created() {
 			this.getDict()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.getDict()
+			}
+		},
 		methods: {
 			getDict() {
 				let params = {

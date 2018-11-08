@@ -106,6 +106,11 @@ export default {
 	created() {
 		this.getUser()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.getUser()
+		}
+	},
 	methods: {
 		getUser() {
 			let params = {

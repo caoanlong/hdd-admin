@@ -32,46 +32,51 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import request from '../../../../common/request'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				config: {
-					Setting_ID:'',
-					Code:'',
-					Name:'',
-					Value:'',
-					SortNumber:'',
-					Description:''
-				}
-			}
-		},
-		created() {
-			this.getConfig()
-		},
-		methods: {
-			getConfig() {
-				let params = {
-					Setting_ID: this.$route.query.Setting_ID
-				}
-				request({
-					url: '/sys_settings/info',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.config = res.data.data
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			back() {
-				this.$router.go(-1)
+import request from '../../../../common/request'
+import { Message } from 'element-ui'
+export default {
+	data() {
+		return {
+			config: {
+				Setting_ID:'',
+				Code:'',
+				Name:'',
+				Value:'',
+				SortNumber:'',
+				Description:''
 			}
 		}
+	},
+	created() {
+		this.getConfig()
+	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.getConfig()
+		}
+	},
+	methods: {
+		getConfig() {
+			let params = {
+				Setting_ID: this.$route.query.Setting_ID
+			}
+			request({
+				url: '/sys_settings/info',
+				method: 'get',
+				params
+			}).then(res => {
+				if (res.data.code == 0) {
+					this.config = res.data.data
+				} else {
+					Message.error(res.data.msg)
+				}
+			})
+		},
+		back() {
+			this.$router.go(-1)
+		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 .el-form-item__content

@@ -23,7 +23,7 @@
 				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
-				<el-table :data="config" @selection-change="selectionChange" border style="width: 100%" size="mini">
+				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column label="Id" type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="代码" prop="Code"></el-table-column>
 					<el-table-column label="名称" prop="Name"></el-table-column>
@@ -44,40 +44,33 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
 import { Message } from 'element-ui'
-import Page from '../../../CommonComponents/Page'
+import request from '../../../../common/request'
+import { baseMixin } from '../../../../common/mixin';
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
-			config:[],
-			count:0,
-			pageIndex: 1,
-			pageSize: 10,
-			selectedConfig: [],
+			tableData:[],
 			findCode: '',
 			findName: ''
 		}
 	},
-	components: { Page },
 	created() {
 		this.getList()
 	},
+	activated() {
+		if(!this.$route.query.cache) {
+			this.reset()
+		}
+	},
 	methods: {
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
-		},
 		reset() {
 			this.findCode = ''
 			this.findName = ''
@@ -86,7 +79,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			let params = {
+			const params = {
 				pageIndex: this.pageIndex,
 				pageSize: this.pageSize,
 				Code: this.findCode,
@@ -98,8 +91,8 @@ export default {
 				params
 			}).then(res => {
 				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.config = res.data.data.rows
+					this.total = res.data.data.count
+					this.tableData = res.data.data.rows
 				} else {
 					Message.error(res.data.msg)
 				}
@@ -113,14 +106,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = [].concat(id)
 			} else {
-				if (this.selectedConfig.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedConfig
+				ids = this.selectedList
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -162,8 +155,7 @@ export default {
 			this.$router.push({ name: 'viewsysconfig', query: { Setting_ID: id} })
 		},
 		selectionChange(data) {
-			this.selectedConfig = data.map(item => item.Setting_ID)
-			console.log(this.selectedConfig)
+			this.selectedList = data.map(item => item.Setting_ID)
 		}
 	}
 }

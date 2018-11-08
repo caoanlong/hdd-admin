@@ -65,6 +65,11 @@
 		created() {
 			this.getConfig()
 		},
+		activated() {
+			if(!this.$route.query.cache) {
+				this.getConfig()
+			}
+		},
 		methods: {
 			getConfig() {
 				let params = {
