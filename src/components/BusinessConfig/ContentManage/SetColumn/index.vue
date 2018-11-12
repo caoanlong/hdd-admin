@@ -56,7 +56,7 @@ export default {
 			},
 			list: [],
 			currentNode: {
-				id: '', // 栏目ID
+				contentTopicID: '', // 栏目ID
 				contentTopicPID: '', // 栏目父ID
 				type: 'public', // 类型
 				code: '', // 代码
@@ -85,7 +85,7 @@ export default {
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			this.getInfo(d.id)
+			this.getInfo(d.contentTopicID)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this //指向vue
@@ -122,7 +122,7 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				contentTopicPID: this.currentNode.id,
+				contentTopicPID: this.currentNode.contentTopicID,
 				type: 'public', // 类型
 				code: '', // 代码
 				name: '', // 名称
@@ -139,7 +139,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.del(d.id)
+				this.del(d.contentTopicID)
 			}).catch(() => {
 				Message.info('已取消删除')         
 			})
@@ -161,7 +161,7 @@ export default {
 			// 编辑
 			} else {
 				params = {
-					id: this.currentNode.id,
+					contentTopicID: this.currentNode.contentTopicID,
 					name: this.currentNode.name,
 					code: this.currentNode.code,
 					type: this.currentNode.type,
@@ -183,8 +183,8 @@ export default {
 		/**
 		 * 获取详情
 		 */
-		getInfo(id) {
-			SetContentTopic.findById({ id }).then(res => {
+		getInfo(contentTopicID) {
+			SetContentTopic.findById({ contentTopicID }).then(res => {
 				this.currentNode = res
 				this.currentNode.isEnable = res.isEnable == 'Y' ? true : false
 			})
@@ -202,8 +202,8 @@ export default {
 		/**
 		 * 删除
 		 */
-		del(id) {
-			SetContentTopic.del({ id }).then(res => {
+		del(contentTopicID) {
+			SetContentTopic.del({ contentTopicID }).then(res => {
 				Message.success('删除成功！')
 				this.getList()
 				this.addRoot()

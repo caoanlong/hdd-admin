@@ -18,8 +18,8 @@
 						<el-form-item label="模板代码">
 							<p>{{smsTemp.businessType}}</p>
 						</el-form-item>
-						<el-form-item label="模板内容" prop="templateContent">
-							<el-input type="textarea" v-model="smsTemp.templateContent"></el-input>
+						<el-form-item label="模板内容" prop="content">
+							<el-input type="textarea" v-model="smsTemp.content"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click="editSmsTemp">立即保存</el-button>
@@ -32,77 +32,58 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import requestJava from '../../../common/requestJava'
-	import { Message } from 'element-ui'
-	export default {
-		data() {
-			return {
-				smsTemp: {
-                    businessType: '',
-                    code: '',
-                    templateContent: ''
-                },
-				appPages: [],
-				rules: {
-					businessType: [
-						{required: true, message: '请选择任务类型'}
-					],
-					templateContent: [
-						{required: true, message: '请输入模板内容'},
-						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
-					]
-				}
+import requestJava from '../../../common/requestJava'
+import { Message } from 'element-ui'
+import SysSmsTemplate from '../../../api/SysSmsTemplate'
+export default {
+	data() {
+		return {
+			smsTemp: {
+				businessType: '',
+				code: '',
+				content: ''
+			},
+			appPages: [],
+			rules: {
+				businessType: [
+					{required: true, message: '请选择任务类型'}
+				],
+				content: [
+					{required: true, message: '请输入模板内容'},
+					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+				]
 			}
-		},
-		created() {
-			this.getSmsTemp()
-		},
-		methods: {
-			editSmsTemp() {
-				let data= {
+		}
+	},
+	created() {
+		this.getSmsTemp()
+	},
+	methods: {
+		editSmsTemp() {
+			this.$refs['ruleForm'].validate(valid => {
+				if (valid) return
+				SysSmsTemplate.add({
 					smsTemplateId: this.$route.query.smsTemplateId,
 					businessType: this.smsTemp.businessType,
 					code: this.smsTemp.businessType,
-					templateContent: this.smsTemp.templateContent,
-				}
-				this.$refs['ruleForm'].validate(valid => {
-					if (valid) {
-						requestJava({
-							url: '/sysSmsTemplate/save',
-							method: 'post',
-							data
-						}).then(res => {
-							if (res.data.code == 200) {
-								Message.success(res.data.message)
-								this.$router.push({name: 'messagetemp'})
-							} else {
-								Message.error(res.data.message)
-							}
-						})
-					}
-				})
-			},
-			getSmsTemp() {
-				let params = {
-					smsTemplateId: this.$route.query.smsTemplateId
-				}
-				requestJava({
-					url: '/sysSmsTemplate/info',
-					method: 'get',
-					params
+					content: this.smsTemp.content
 				}).then(res => {
-					if (res.data.code == 200) {
-						this.smsTemp = res.data.data
-					} else {
-						Message.error(res.data.message)
-					}
+					Message.success(res.data.message)
+					this.$router.push({name: 'messagetemp'})
 				})
-			},
-			back() {
-				this.$router.go(-1)
-			}
+			})
+		},
+		getSmsTemp() {
+			const smsTemplateId = this.$route.query.smsTemplateId
+			SysSmsTemplate.findById({ smsTemplateId }).then(res => {
+				this.smsTemp = res
+			})
+		},
+		back() {
+			this.$router.go(-1)
 		}
 	}
+}
 </script>
 <style lang="stylus" scoped>
 .avatar-uploader

@@ -7,7 +7,7 @@
 			<div class="search">
 				<el-form :inline="true"  class="form-inline"  size="small">
 					<el-form-item label="业务类型">
-						<el-select placeholder="请选择" v-model="findBusinessType">
+						<el-select placeholder="请选择" v-model="find.businessType">
 							<el-option label="注册" value="VERFIFY_CODE_REGISTER"></el-option>
 							<el-option label="登录" value="VERFIFY_CODE_SINGIN"></el-option>
 							<el-option label="更换手机号" value="VERFIFY_CODE_UPDATE_PHONE"></el-option>
@@ -15,7 +15,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="getList(1)">查询</el-button>
+						<el-button type="primary" @click="getList()">查询</el-button>
 						<el-button type="default" @click="reset">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -38,7 +38,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="模板代码" prop="code"></el-table-column>
-					<el-table-column label="模板内容" prop="templateContent"></el-table-column>
+					<el-table-column label="模板内容" prop="content"></el-table-column>
 					<el-table-column label="修改人" align="center" prop="updateBy" width="120"></el-table-column>
 					<el-table-column label="修改时间" align="center" width="140">
 						<template slot-scope="scope" v-if="scope.row.updateTime">
@@ -53,72 +53,52 @@
                         </template>
                     </el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import requestJava from '../../../common/requestJava'
 import { Message } from 'element-ui'
-import Page from '../../CommonComponents/Page'
+import { baseMixin } from '../../../common/mixin'
+import SysSmsTemplate from '../../../api/SysSmsTemplate'
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
-			findBusinessType: '',
-			pageIndex: 1,
-			pageSize: 10,
-			count: 0,
-			tableData: [],
-			selectedSmsTemps: []
+			find: {
+				businessType: ''
+			}
 		}
 	},
-	components: { Page },
 	created() {
 		this.getList()
 	},
 	methods: {
 		selectionChange(data) {
-			this.selectedSmsTemps = data.map(item => item.smsTemplateId)
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
+			this.selectedList = data.map(item => item.smsTemplateId)
 		},
 		reset() {
-			this.findBusinessType = ''
+			this.find.businessType = ''
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
-			let params = {
+			SysSmsTemplate.find({
 				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
-				businessType: this.findBusinessType
-			}
-			requestJava({
-				url: '/sysSmsTemplate/list',
-				method: 'get',
-				params
+				businessType: this.find.businessType
 			}).then(res => {
-				if (res.data.code == 200) {
-					this.count = res.data.data.total
-					this.tableData = res.data.data.list
-				} else {
-					Message.error(res.data.message)
-				}
+				this.total = res.total
+				this.tableData = res.list
 			})
 		},
 		viewSmsTemp(smsTemplateId) {
-			this.$router.push({name: 'viewsmstemp', query: {smsTemplateId}})
+			this.$router.push({name: 'viewsmstemp', query: { smsTemplateId }})
 		},
 		editSmsTemp(smsTemplateId) {
-			this.$router.push({name: 'editsmstemp', query: {smsTemplateId}})
+			this.$router.push({name: 'editsmstemp', query: { smsTemplateId }})
 		},
 		addSmsTemp() {
 			this.$router.push({name: 'addsmstemp'})
@@ -128,14 +108,14 @@ export default {
 			if (id && typeof id == 'string') {
 				ids = id
 			} else {
-				if (this.selectedSmsTemps.length == 0) {
+				if (this.selectedList.length == 0) {
 					this.$message({
 						type: 'warning',
 						message: '请选择'
 					})
 					return
 				}
-				ids = this.selectedSmsTemps.join(',')
+				ids = this.selectedList.join(',')
 			}
 			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
@@ -155,20 +135,9 @@ export default {
 			})
 		},
 		delSmsTemp(smsTemplateIds) {
-			console.log(smsTemplateIds)
-			let data = {
-				smsTemplateIds
-			}
-			requestJava({
-				url: '/sysSmsTemplate/del',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 200) {
-					this.getList()
-				} else {
-					Message.error(res.data.message)
-				}
+			SysSmsTemplate.del({ smsTemplateIds }).then(res => {
+				Message.error(res.data.message)
+				this.getList()
 			})
 		}
 	}

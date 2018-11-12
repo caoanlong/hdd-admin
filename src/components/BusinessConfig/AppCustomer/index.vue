@@ -109,16 +109,16 @@ export default {
   },
   methods: {
     reset() {
-      this.find.keyword = ""
-      this.find.status = ""
-      this.pageIndex = 1
-      this.pageSize = 10
-      this.getList()
+		this.find.keyword = ""
+		this.find.status = ""
+		this.pageIndex = 1
+		this.pageSize = 10
+		this.getList()
     },
     getList() {
       SetAppcustomer.find({
-        keyword: this.findKeyword,
-        useFlag: this.findStatus,
+        keyword: this.find.keyword,
+        useFlag: this.find.status,
         pageNum: this.pageIndex,
         pageSize: this.pageSize
       }).then(res => {
@@ -142,23 +142,21 @@ export default {
     },
     Confirm(appCstID, val) {
       this.$confirm("此操作将改变用户使用状态, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.changeStatus(appCstID, val)
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          })
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消操作"
-          })
-        })
+			confirmButtonText: "确定",
+			cancelButtonText: "取消",
+			type: "warning"
+		}).then(() => {
+			this.changeStatus(appCstID, val)
+			this.$message({
+				type: "success",
+				message: "操作成功!"
+			})
+		}).catch(() => {
+			this.$message({
+				type: "info",
+				message: "已取消操作"
+			})
+		})
     },
     changeStatus(appCstID, val) {
       SetAppcustomer.switchOperation({
