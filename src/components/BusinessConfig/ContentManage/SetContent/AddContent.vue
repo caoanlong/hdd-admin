@@ -6,13 +6,14 @@
 			</div>
 			<el-form label-width="120px" :model="content" :rules="rules" ref="ruleForm">
 				<el-form-item label="所属栏目" prop="contentTopicID">
-					<el-autocomplete style="width:100%"
-						value-key="name" 
-						v-model="content.contentTopicName"
-						:fetch-suggestions="getContentTopics"
-						placeholder="请输入..."
-						@select="handSelectContentTopic">
-					</el-autocomplete>
+					<el-select style="width: 100%" placeholder="请选择" v-model="content.contentTopicID">
+						<el-option 
+							v-for="contentTopic in contentTopics" 
+							:key="contentTopic.contentTopicID" 
+							:label="contentTopic.name" 
+							:value="contentTopic.contentTopicID">
+						</el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="App客户" prop="appCstID">
 					<el-autocomplete  style="width:100%"
@@ -100,7 +101,7 @@ export default {
 		}
 	},
 	created() {
-		
+		this.getContentTopics()
 	},
 	mounted() {
 		CKEDITOR.replace('editor')
@@ -109,11 +110,10 @@ export default {
 		/**
 		 * 所属栏目
 		 */
-		getContentTopics(queryString, cb) {
-			this.content.contentTopicID = ''
-			SetContentTopic.suggest({
-				keyword: queryString
-			}).then(res => { cb(res) })
+		getContentTopics() {
+			SetContentTopic.suggest().then(res => {
+				this.contentTopics = res
+			})
 		},
 		/**
 		 * 获取客户列表
