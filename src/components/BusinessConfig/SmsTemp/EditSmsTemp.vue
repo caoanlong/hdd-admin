@@ -8,10 +8,13 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="smsTemp" :rules="rules" ref="ruleForm">
 						<el-form-item label="任务类型" prop="businessType">
-							<el-input type="textarea" v-model="smsTemp.businessType"></el-input>
+							<el-input v-model="smsTemp.businessType"></el-input>
+						</el-form-item>
+						<el-form-item label="短信服务商模版代码" prop="smsProviderTemplateCode">
+							<el-input v-model="smsTemp.smsProviderTemplateCode"></el-input>
 						</el-form-item>
 						<el-form-item label="模板代码" prop="code">
-							<el-input type="textarea" v-model="smsTemp.code"></el-input>
+							<el-input v-model="smsTemp.code"></el-input>
 						</el-form-item>
 						<el-form-item label="模板内容" prop="content">
 							<el-input type="textarea" v-model="smsTemp.content"></el-input>
@@ -35,12 +38,14 @@ export default {
 		return {
 			smsTemp: {
 				businessType: '',
+				smsProviderTemplateCode: '',
 				code: '',
 				content: ''
 			},
 			rules: {
-				businessType: [{required: true, message: '请选择任务类型'}],
-				code: [{required: true, message: '请选择模板代码'}],
+				businessType: [{required: true, message: '请输入任务类型'}],
+				smsProviderTemplateCode: [{required: true, message: '请输入短信服务商模版代码'}],
+				code: [{required: true, message: '请输入模板代码'}],
 				content: [
 					{required: true, message: '请输入模板内容'},
 					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}

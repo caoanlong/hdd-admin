@@ -6,14 +6,13 @@
 			</div>
 			<el-form label-width="120px" :model="content" :rules="rules" ref="ruleForm">
 				<el-form-item label="所属栏目" prop="contentTopicID">
-					<el-select style="width: 100%" placeholder="请选择" v-model="content.contentTopicID">
-						<el-option 
-							v-for="contentTopic in contentTopics" 
-							:key="contentTopic.contentTopicID" 
-							:label="contentTopic.name" 
-							:value="contentTopic.contentTopicID">
-						</el-option>
-					</el-select>
+					<el-autocomplete style="width:100%"
+						value-key="name" 
+						v-model="content.contentTopicName"
+						:fetch-suggestions="getContentTopics"
+						placeholder="请输入..."
+						@select="handSelectContentTopic">
+					</el-autocomplete>
 				</el-form-item>
 				<el-form-item label="App客户">
 					<el-autocomplete  style="width:100%"
@@ -100,7 +99,7 @@ export default {
 		}
 	},
 	created() {
-		this.getContentTopics()
+		this.getInfo()
 	},
 	mounted() {
 		CKEDITOR.replace('editor')
@@ -109,11 +108,11 @@ export default {
 		/**
 		 * 所属栏目
 		 */
-		getContentTopics() {
-			SetContentTopic.find().then(res => {
-				this.contentTopics = res
-				this.getInfo()
-			})
+		getContentTopics(queryString, cb) {
+			this.content.contentTopicID = ''
+			SetContentTopic.suggest({
+				keyword: queryString
+			}).then(res => { cb(res) })
 		},
 		/**
 		 * 获取客户列表
@@ -121,8 +120,17 @@ export default {
 		getCustomers(queryString, cb) {
 			this.content.appCstID = ''
 			SetAppcustomer.find({
-				keyword: queryString
+				keyword: queryString,
+				pageNum: 1,
+				pageSize: 1000
 			}).then(res => { cb(res.list) })
+		},
+		/**
+		 * 选择栏目
+		 */
+		handSelectContentTopic(data) {
+			this.content.contentTopicID = data.contentTopicID
+			this.content.contentTopicName = data.name
 		},
 		/**
 		 * 选择客户
@@ -133,7 +141,6 @@ export default {
 		},
 		add() {
 			const contentID = this.$route.query.contentID
-			this.content.content = this.editor.txt.html()
 			const data= {
 				contentID,
 				contentTopicID: this.content.contentTopicID,

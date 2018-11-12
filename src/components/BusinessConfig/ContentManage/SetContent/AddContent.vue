@@ -121,14 +121,16 @@ export default {
 		getCustomers(queryString, cb) {
 			this.content.appCstID = ''
 			SetAppcustomer.find({
-				keyword: queryString
+				keyword: queryString,
+				pageNum: 1,
+				pageSize: 1000
 			}).then(res => { cb(res.list) })
 		},
 		/**
 		 * 选择栏目
 		 */
 		handSelectContentTopic(data) {
-			this.content.contentTopicID = data.id
+			this.content.contentTopicID = data.contentTopicID
 			this.content.contentTopicName = data.name
 		},
 		/**
@@ -139,7 +141,6 @@ export default {
 			this.content.customerName = data.customerName
 		},
 		add() {
-			this.content.content = this.editor.txt.html()
 			const data= {
 				contentTopicID: this.content.contentTopicID,
 				appCstID: this.content.appCstID,
