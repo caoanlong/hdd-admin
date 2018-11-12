@@ -29,14 +29,7 @@
 			<div class="table">
 				<el-table :data="tableData" @selection-change="selectionChange" border style="width: 100%" size="mini">
 					<el-table-column type="selection" align="center"></el-table-column>
-					<el-table-column label="任务类型" prop="businessType">
-						<template slot-scope="scope">
-							<span v-if="scope.row.businessType == 'VERFIFY_CODE_REGISTER'">注册</span>
-							<span v-else-if="scope.row.businessType == 'VERFIFY_CODE_SINGIN'">登录</span>
-							<span v-else-if="scope.row.businessType == 'VERFIFY_CODE_UPDATE_PHONE'">更换手机号</span>
-							<span v-else-if="scope.row.businessType == 'VERIFY_CODE_PAY_PASSWORD_RESET'">重置支付密码</span>
-						</template>
-					</el-table-column>
+					<el-table-column label="任务类型" prop="businessType"></el-table-column>
 					<el-table-column label="模板代码" prop="code"></el-table-column>
 					<el-table-column label="模板内容" prop="content"></el-table-column>
 					<el-table-column label="修改人" align="center" prop="updateBy" width="120"></el-table-column>
