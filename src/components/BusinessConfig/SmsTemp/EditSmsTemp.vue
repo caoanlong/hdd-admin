@@ -6,7 +6,7 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px" :model="smsTemp" :rules="rules" ref="ruleForm">
+					<el-form label-width="150px" :model="smsTemp" :rules="rules" ref="ruleForm">
 						<el-form-item label="任务类型" prop="businessType">
 							<el-input v-model="smsTemp.businessType"></el-input>
 						</el-form-item>

@@ -6,15 +6,18 @@
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
-					<el-form label-width="120px">
+					<el-form label-width="150px">
 						<el-form-item label="任务类型">
                             <p>{{smsTemp.businessType}}</p>
+						</el-form-item>
+						<el-form-item label="短信服务商模版代码">
+							<p>{{smsTemp.smsProviderTemplateCode}}</p>
 						</el-form-item>
 						<el-form-item label="模板代码">
 							<p>{{smsTemp.code}}</p>
 						</el-form-item>
 						<el-form-item label="模板内容">
-							<p>{{smsTemp.templateContent}}</p>
+							<p>{{smsTemp.content}}</p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click="back">返回</el-button>
