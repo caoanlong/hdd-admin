@@ -132,10 +132,10 @@ export default {
 			this.content.customerName = data.customerName
 		},
 		add() {
-			const id = this.$route.query.id
+			const contentID = this.$route.query.contentID
 			this.content.content = this.editor.txt.html()
 			const data= {
-				id,
+				contentID,
 				contentTopicID: this.content.contentTopicID,
 				appCstID: this.content.appCstID,
 				code: this.content.code,
@@ -157,8 +157,8 @@ export default {
 			})
 		},
 		getInfo() {
-			const id = this.$route.query.id
-			SetContent.findById({ id }).then(res => {
+			const contentID = this.$route.query.contentID
+			SetContent.findById({ contentID }).then(res => {
 				const content = Object.assign({}, res)
 				content.isEnable = res.setContentTopic.isEnable == 'Y' ? true : false
 				this.content = content

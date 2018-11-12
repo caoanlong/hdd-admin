@@ -58,7 +58,7 @@ export default {
 	},
 	methods: {
 		selectionChange(data) {
-			this.selectedList = data.map(item => item.id)
+			this.selectedList = data.map(item => item.contentID)
 		},
 		reset() {
 			this.findKeyword = ''
@@ -79,8 +79,8 @@ export default {
 		add() {
 			this.$router.push({name: 'addcontent'})
 		},
-		edit(id) {
-			this.$router.push({name: 'editcontent', query: { id }})
+		edit(contentID) {
+			this.$router.push({name: 'editcontent', query: { contentID }})
 		},
 		deleteConfirm(id) {
 			let ids = []
