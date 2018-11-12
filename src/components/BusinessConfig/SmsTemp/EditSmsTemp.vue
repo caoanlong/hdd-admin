@@ -63,6 +63,7 @@ export default {
 				SysSmsTemplate.add({
 					smsTemplateId: this.$route.query.smsTemplateId,
 					businessType: this.smsTemp.businessType,
+					smsProviderTemplateCode: this.smsTemp.smsProviderTemplateCode,
 					code: this.smsTemp.code,
 					content: this.smsTemp.content
 				}).then(res => {

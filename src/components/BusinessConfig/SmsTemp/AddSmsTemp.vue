@@ -58,6 +58,7 @@ export default {
 				if (!valid) return
 				SysSmsTemplate.add({
 					businessType: this.smsTemp.businessType,
+					smsProviderTemplateCode: this.smsTemp.smsProviderTemplateCode,
 					code: this.smsTemp.code,
 					content: this.smsTemp.content,
 				}).then(res => {
