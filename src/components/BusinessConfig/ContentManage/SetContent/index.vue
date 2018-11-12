@@ -31,8 +31,8 @@
 					<el-table-column label="排序" prop="sort" width="100"></el-table-column>
 					<el-table-column label="操作" width="160" align="center">
 						<template slot-scope="scope">
-							<el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.id)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.id)">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-edit" @click="edit(scope.row.contentID)">修改</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.contentID)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
