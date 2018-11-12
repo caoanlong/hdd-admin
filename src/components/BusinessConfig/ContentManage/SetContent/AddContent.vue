@@ -42,8 +42,8 @@
 				<el-form-item label="图片URL">
 					<el-input v-model="content.pictureURL"></el-input>
 				</el-form-item>
-				<el-form-item label="URL" prop="url">
-					<el-input v-model="content.url"></el-input>
+				<el-form-item label="URL" prop="urL">
+					<el-input v-model="content.urL"></el-input>
 				</el-form-item>
 				<el-form-item label="是否启用">
 					<el-switch v-model="content.isEnable"></el-switch>
@@ -83,7 +83,7 @@ export default {
 				title: '',
 				content: '',
 				pictureURL: '',
-				url: '',
+				urL: '',
 				sort: 1,
 				isEnable: true,
 				tips: ''
@@ -94,7 +94,7 @@ export default {
 				name: [ {required: true, message: '请输入名称'}, {min: 2, max: 20, message: '长度在 2 到 20 个字符'} ],
 				title: [ {required: true, message: '请输入标题'}, {min: 2, max: 50, message: '长度在 2 到 50 个字符'} ],
 				content: [ {required: true, message: '请输入内容'} ],
-				url: [ {required: true, message: '请输入URL'}, 
+				urL: [ {required: true, message: '请输入URL'}, 
 				// {validator: checkURL}
 				]
 			}
@@ -150,7 +150,7 @@ export default {
 				title: this.content.title,
 				content: CKEDITOR.instances.editor.getData(),
 				pictureURL: this.content.pictureURL,
-				url: this.content.url,
+				urL: this.content.urL,
 				sort: this.content.sort,
 				isEnable: this.content.isEnable ? 'Y' : 'N',
 				tips: this.content.tips
