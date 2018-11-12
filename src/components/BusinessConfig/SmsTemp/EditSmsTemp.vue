@@ -68,7 +68,7 @@ export default {
 					content: this.smsTemp.content
 				}).then(res => {
 					Message.success(res.data.message)
-					this.$router.push({name: 'messagetemp'})
+					this.$router.push({name: 'smstemp'})
 				})
 			})
 		},
