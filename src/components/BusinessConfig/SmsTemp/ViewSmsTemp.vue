@@ -8,10 +8,7 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="任务类型">
-                            <p v-if="smsTemp.businessType == 'VERFIFY_CODE_REGISTER'">注册</p>
-							<p v-else-if="smsTemp.businessType == 'VERFIFY_CODE_SINGIN'">登录</p>
-							<p v-else-if="smsTemp.businessType == 'VERFIFY_CODE_UPDATE_PHONE'">更换手机号</p>
-							<p v-else-if="smsTemp.businessType == 'VERIFY_CODE_PAY_PASSWORD_RESET'">重置支付密码</p>
+                            <p>{{smsTemp.businessType}}</p>
 						</el-form-item>
 						<el-form-item label="模板代码">
 							<p>{{smsTemp.code}}</p>

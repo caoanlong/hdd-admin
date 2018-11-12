@@ -160,7 +160,7 @@ export default {
 			const contentID = this.$route.query.contentID
 			SetContent.findById({ contentID }).then(res => {
 				const content = Object.assign({}, res)
-				content.isEnable = res.setContentTopic.isEnable == 'Y' ? true : false
+				content.isEnable = res.isEnable == 'Y' ? true : false
 				this.content = content
 				this.$nextTick(() => {
 					CKEDITOR.instances.editor.setData(this.content.content)

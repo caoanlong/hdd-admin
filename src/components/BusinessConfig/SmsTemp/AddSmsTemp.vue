@@ -7,7 +7,7 @@
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="smsTemp" :rules="rules" ref="ruleForm">
-						<el-form-item label="任务类型" prop="businessType">
+						<!-- <el-form-item label="任务类型" prop="businessType">
 							<el-select style="width: 100%" placeholder="请选择" v-model="smsTemp.businessType">
 								<el-option label="注册" value="VERFIFY_CODE_REGISTER"></el-option>
                                 <el-option label="登录" value="VERFIFY_CODE_SINGIN"></el-option>
@@ -17,6 +17,12 @@
 						</el-form-item>
 						<el-form-item label="模板代码">
 							<p>{{smsTemp.businessType}}</p>
+						</el-form-item> -->
+						<el-form-item label="任务类型" prop="businessType">
+							<el-input type="textarea" v-model="smsTemp.businessType"></el-input>
+						</el-form-item>
+						<el-form-item label="模板代码" prop="code">
+							<el-input type="textarea" v-model="smsTemp.code"></el-input>
 						</el-form-item>
 						<el-form-item label="模板内容" prop="content">
 							<el-input type="textarea" v-model="smsTemp.content"></el-input>
@@ -42,11 +48,9 @@ export default {
 				code: '',
 				content: ''
 			},
-			appPages: [],
 			rules: {
-				businessType: [
-					{required: true, message: '请选择任务类型'}
-				],
+				businessType: [{required: true, message: '请选择任务类型'}],
+				code: [{required: true, message: '请选择模板代码'}],
 				content: [
 					{required: true, message: '请输入模板内容'},
 					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
@@ -60,7 +64,7 @@ export default {
 				if (!valid) return
 				SysSmsTemplate.add({
 					businessType: this.smsTemp.businessType,
-					code: this.smsTemp.businessType,
+					code: this.smsTemp.code,
 					content: this.smsTemp.content,
 				}).then(res => {
 					Message.success(res.data.message)
