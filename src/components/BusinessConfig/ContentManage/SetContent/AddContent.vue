@@ -141,6 +141,7 @@ export default {
 			this.content.customerName = data.customerName
 		},
 		add() {
+			this.content.content = CKEDITOR.instances.editor.getData()
 			const data= {
 				contentTopicID: this.content.contentTopicID,
 				appCstID: this.content.appCstID,

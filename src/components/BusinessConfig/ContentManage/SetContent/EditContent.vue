@@ -141,6 +141,7 @@ export default {
 		},
 		add() {
 			const contentID = this.$route.query.contentID
+			this.content.content = CKEDITOR.instances.editor.getData()
 			const data= {
 				contentID,
 				contentTopicID: this.content.contentTopicID,
