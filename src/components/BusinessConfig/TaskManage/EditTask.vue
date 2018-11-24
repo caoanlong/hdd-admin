@@ -13,8 +13,8 @@
 						<el-form-item label="类的BeanId" prop="springBeanId">
 							<el-input v-model="schedule.springBeanId"></el-input>
 						</el-form-item>
-						<el-form-item label="类名" prop="beanClass">
-							<el-input v-model="schedule.beanClass"></el-input>
+						<el-form-item label="类名" prop="jobClassName">
+							<el-input v-model="schedule.jobClassName"></el-input>
 						</el-form-item>
 						<el-form-item label="方法名" prop="methodName">
 							<el-input v-model="schedule.methodName"></el-input>
@@ -25,8 +25,8 @@
                         <el-form-item label="任务别名" prop="aliasName">
 							<el-input v-model="schedule.aliasName"></el-input>
 						</el-form-item>
-                        <el-form-item label="时间表达式" prop="cronExpression">
-							<el-input v-model="schedule.cronExpression"></el-input>
+                        <el-form-item label="时间表达式" prop="cron">
+							<el-input v-model="schedule.cron"></el-input>
 						</el-form-item>
                         <el-form-item label="是否异步">
                             <el-switch v-model="schedule.isSync"></el-switch>
@@ -57,11 +57,11 @@
 				schedule: {
                     jobName: '',
                     springBeanId: '',
-                    beanClass: '',
+                    jobClassName: '',
                     methodName: '',
                     jobGroup: '',
                     aliasName: '',
-                    cronExpression: '',
+                    cron: '',
                     isSync: true,
                     url: '',
                     description: ''
@@ -75,7 +75,7 @@
 						{required: true, message: '请输入类的BeanId'},
 						{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
 					],
-					beanClass: [
+					jobClassName: [
 						{required: true, message: '请输入类名'},
 						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
 					],
@@ -91,7 +91,7 @@
 						{required: true, message: '请输入任务别名'},
 						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
 					],
-					cronExpression: [
+					cron: [
 						{required: true, message: '请输入时间表达式'},
 						{min: 2, max: 100, message: '长度在 2 到 100 个字符'}
 					],
@@ -107,14 +107,14 @@
 		methods: {
 			updateSchedule() {
 				let data= {
-                    jobId: this.$route.query.jobId,
+                    scheduleJobID: this.$route.query.scheduleJobID,
 					jobName: this.schedule.jobName,
 					springBeanId: this.schedule.springBeanId,
-					beanClass: this.schedule.beanClass,
+					jobClassName: this.schedule.jobClassName,
 					methodName: this.schedule.methodName,
 					jobGroup: this.schedule.jobGroup,
 					aliasName: this.schedule.aliasName,
-					cronExpression: this.schedule.cronExpression,
+					cron: this.schedule.cron,
 					isSync: this.schedule.isSync ? 'Y' : 'N',
 					url: this.schedule.url,
                     description: this.schedule.description,
@@ -139,7 +139,7 @@
             },
             getSchedule() {
                 let params = {
-                    jobId: this.$route.query.jobId
+                    scheduleJobID: this.$route.query.scheduleJobID
                 }
 				requestJava({
 					url: '/scheduler/inputScheduleJob',

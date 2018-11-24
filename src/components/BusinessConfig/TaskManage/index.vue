@@ -11,13 +11,13 @@
 				<el-table :data="scheduleJobList" border style="width: 100%" size="mini">
 					<el-table-column label="任务名称" prop="jobName"></el-table-column>
 					<el-table-column label="BeanId" prop="springBeanId"></el-table-column>
-					<el-table-column label="类名" prop="beanClass"></el-table-column>
+					<el-table-column label="类名" prop="jobClassName"></el-table-column>
 					<el-table-column label="方法名" prop="methodName"></el-table-column>
 					<el-table-column label="任务别名" prop="aliasName"></el-table-column>
 					<el-table-column label="任务分组" prop="jobGroup"></el-table-column>
 					<el-table-column label="触发器" prop="jobTrigger"></el-table-column>
 					<el-table-column label="任务状态" prop="status"></el-table-column>
-					<el-table-column label="时间表达式" prop="cronExpression"></el-table-column>
+					<el-table-column label="时间表达式" prop="cron"></el-table-column>
 					<el-table-column label="是否异步">
 						<template slot-scope="scope">
 							<span>{{scope.isSync == 'Y' ? '异步' : '同步'}}</span>
@@ -45,13 +45,13 @@
 				<el-table :data="executingJobList" border style="width: 100%" size="mini">
 					<el-table-column label="任务名称" prop="jobName"></el-table-column>
 					<el-table-column label="BeanId" prop="springBeanId"></el-table-column>
-					<el-table-column label="类名" prop="beanClass"></el-table-column>
+					<el-table-column label="类名" prop="jobClassName"></el-table-column>
 					<el-table-column label="方法名" prop="methodName"></el-table-column>
 					<el-table-column label="任务别名" prop="aliasName"></el-table-column>
 					<el-table-column label="任务分组" prop="jobGroup"></el-table-column>
 					<el-table-column label="触发器" prop="jobTrigger"></el-table-column>
 					<el-table-column label="任务状态" prop="status"></el-table-column>
-					<el-table-column label="时间表达式" prop="cronExpression"></el-table-column>
+					<el-table-column label="时间表达式" prop="cron"></el-table-column>
 					<el-table-column label="是否异步">
 						<template slot-scope="scope">
 							<span>{{scope.isSync == 'Y' ? '异步' : '同步'}}</span>
@@ -110,9 +110,9 @@
                     })
                 })
             },
-			delSchedule(jobId) {
+			delSchedule(scheduleJobID) {
                 let data = {
-                    jobId
+                    scheduleJobID
                 }
                 requestJava({
                     url: '/scheduler/deleteScheduleJob',
@@ -128,9 +128,9 @@
                 })
             },
 			// 暂停
-			pause(jobId) {
+			pause(scheduleJobID) {
 				let data = {
-					jobId
+					scheduleJobID
 				}
 				requestJava({
 					url: '/scheduler/pauseScheduleJob',
@@ -146,9 +146,9 @@
 				})
 			},
 			// 恢复
-			recovery(jobId) {
+			recovery(scheduleJobID) {
 				let data = {
-					jobId
+					scheduleJobID
 				}
 				requestJava({
 					url: '/scheduler/resumeScheduleJob',
@@ -164,9 +164,9 @@
 				})
 			},
 			// 运行一次
-			runOnce(jobId) {
+			runOnce(scheduleJobID) {
 				let data = {
-					jobId
+					scheduleJobID
 				}
 				requestJava({
 					url: '/scheduler/runOnceScheduleJob',
@@ -184,8 +184,8 @@
 			addSchedule() {
 				this.$router.push({name: 'addtask'})
 			},
-			editSchedule(jobId) {
-				this.$router.push({name: 'edittask', query: {jobId}})
+			editSchedule(scheduleJobID) {
+				this.$router.push({name: 'edittask', query: {scheduleJobID}})
 			},
 		}
 	}
