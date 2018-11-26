@@ -104,7 +104,7 @@ export default {
 			}
 			getConsts({params}).then(res => {
 				this.count = res.data.data.total
-				this.tableData = res.data.data.records
+				this.tableData = res.data.data.list
 			})
 		},
 		getConstTypes() {
