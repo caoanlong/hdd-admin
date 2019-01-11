@@ -2,7 +2,7 @@
 	<div class="login-container">
 		<el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
 			<div class="title-container">
-				<h3 class="title">货多多后台管理系统</h3>
+				<h3 class="title">华新智运后台管理系统</h3>
 			</div>
 			<el-form-item prop="LoginName">
 				<span class="svg-container svg-container_login">
