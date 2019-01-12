@@ -782,6 +782,24 @@ const routerMap = [
 				meta: { title: '编辑TMS常量' },
 				component: () => import('../components/Tms/SystemManage/ConstManage/EditConst')
 			},
+			{
+				path: '/tmsmenu',
+				name: 'tmsmenu',
+				meta: { title: '菜单管理' },
+				component: () => import('../components/Tms/MenuManage')
+			},
+			{
+				path: '/tmsaddmenu',
+				name: 'tmsaddmenu',
+				meta: { title: '添加菜单' },
+				component: () => import('../components/Tms/MenuManage/Add')
+			},
+			{
+				path: '/tmseditmenu',
+				name: 'tmseditmenu',
+				meta: { title: '修改菜单' },
+				component: () => import('../components/Tms/MenuManage/Edit')
+			},
 			// 用户信息  userprofile
 			{
 				path: '/userprofile',

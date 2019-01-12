@@ -9,6 +9,9 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/styles/index.css'
 import './assets/styles/sidebar.css'
+
+import ZkTable from 'vue-table-with-tree-grid'
+
 import App from './App'
 import router from './router'
 import store from './store'
@@ -21,9 +24,6 @@ import './assets/icons'
 // import { permissions } from './permission'
 
 import '../static/plugins/jquery.gridly.js'
-// import '../static/plugins/kindeditor/themes/default/default.css'
-// import '../static/plugins/kindeditor/kindeditor-all-min.js'
-// import '../static/plugins/kindeditor/zh-CN.js'
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
@@ -31,6 +31,7 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.use(Element)
+Vue.use(ZkTable)
 Vue.use(globals)
 
 Vue.config.productionTip = false
