@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import SysMenu from '../../../../api/SysMenu'
 export default {
     props: {
         isVisible: {
@@ -31,83 +32,7 @@ export default {
     },
     data() {
         return {
-            data: [
-                {
-                    id: 1,
-                    name: '系统管理',
-                    sort: 1,
-                    type: 'module',
-                    isShow: 'Y',
-                    children: [
-                        {
-                            id: 2,
-                            name: '系统设置',
-                            sort: 1,
-                            type: 'module',
-                            isShow: 'Y',
-                            children: [
-                                {
-                                    id: 3,
-                                    name: '用户管理',
-                                    sort: 1,
-                                    type: 'menu',
-                                    isShow: 'Y',
-                                    path: '/user'
-                                },
-                                {
-                                    id: 4,
-                                    name: '角色管理',
-                                    sort: 2,
-                                    type: 'menu',
-                                    isShow: 'Y',
-                                    path: '/role'
-                                }
-                            ],
-                        },
-                        {
-                            id: 5,
-                            name: '区域管理',
-                            sort: 2,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/area'
-                        }
-                    ]
-                },
-                {
-                    id: 6,
-                    name: '业务配置',
-                    sort: 2,
-                    type: 'module',
-                    isShow: 'Y',
-                    children: [
-                        {
-                            id: 7,
-                            name: 'App客户',
-                            sort: 2,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/customer'
-                        },
-                        {
-                            id: 8,
-                            name: 'App管理',
-                            sort: 3,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/app'
-                        }
-                    ]
-                },
-                {
-                    id: 9,
-                    name: 'TMS管理',
-                    sort: 3,
-                    type: 'menu',
-                    isShow: 'Y',
-                    path: '/tms'
-                }
-            ],
+            data: [],
             defaultProps: {
                 children: 'children',
                 label: 'name'
@@ -115,7 +40,33 @@ export default {
             selected: null
         }
     },
+    watch: {
+        isVisible(val) {
+            val && this.getList()
+        }
+    },
     methods: {
+        getList() {
+            SysMenu.find().then(res => {
+                this.walkMenus(res)
+            })
+        },
+        walkMenus(menus) {
+            const queue =  [...menus]
+            while (queue.length > 0) {
+                const item = queue.shift()
+                const curItem = Object.assign({}, item)
+                if (curItem.type == 'Module') {
+                    delete curItem.children
+                    this.data.push(curItem)
+                }
+                if (item.children && item.children.length > 0) {
+                    for (let i = 0; i < item.children.length; i++) {
+                        queue.push(item.children[i])
+                    }
+                }
+            }
+        },
         handleNodeClick(data) {
             this.selected = data
         },

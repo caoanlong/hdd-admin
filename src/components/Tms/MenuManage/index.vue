@@ -4,7 +4,7 @@
 			<div slot="header" class="clearfix">
 				<span>菜单列表</span>
 			</div>
-			<div class="search">
+			<!-- <div class="search">
 				<el-form :inline="true" class="form-inline" size="small">
                     <el-form-item label="菜单">
 						<el-input placeholder="请输入..." v-model="find.name"></el-input>
@@ -29,7 +29,7 @@
 						<el-button type="default">重置</el-button>
 					</el-form-item>
 				</el-form>
-			</div>
+			</div> -->
             <div class="tableControl">
 				<el-button 
                     type="default" 
@@ -49,9 +49,9 @@
                     :expand-type="false" 
                     :selection-type="false">
                     <template slot="type" slot-scope="scope">
-                        <el-tag size="mini" v-if="scope.row.type == 'module'">模块</el-tag>
-                        <el-tag type="success" size="mini" v-else-if="scope.row.type == 'menu'">菜单</el-tag>
-                        <el-tag type="warning" size="mini" v-else-if="scope.row.type == 'button'">按钮</el-tag>
+                        <el-tag size="mini" v-if="scope.row.type == 'Module'">模块</el-tag>
+                        <el-tag type="success" size="mini" v-else-if="scope.row.type == 'Menu'">菜单</el-tag>
+                        <el-tag type="warning" size="mini" v-else-if="scope.row.type == 'Button'">按钮</el-tag>
                     </template>
                     <template slot="isShow" slot-scope="scope">
                         <el-tag type="success" size="mini" v-if="scope.row.isShow == 'Y'">显示</el-tag>
@@ -81,6 +81,7 @@
 
 <script>
 import { Message } from 'element-ui'
+import SysMenu from '../../../api/SysMenu'
 export default {
     data() {
         return {
@@ -97,7 +98,7 @@ export default {
                 },
                 {
                     label: '排序',
-                    prop: 'sort',
+                    prop: 'totalSort',
                     minWidth: '50px'
                 },
                 {
@@ -114,7 +115,7 @@ export default {
                 },
                 {
                     label: '请求地址',
-                    prop: 'path'
+                    prop: 'apiUrl'
                 },
                 {
                     label: '操作',
@@ -124,88 +125,19 @@ export default {
                     template: 'operation'
                 }
             ],
-            data: [
-                {
-                    id: 1,
-                    name: '系统管理',
-                    sort: 1,
-                    type: 'module',
-                    isShow: 'Y',
-                    children: [
-                        {
-                            id: 2,
-                            name: '系统设置',
-                            sort: 1,
-                            type: 'module',
-                            isShow: 'Y',
-                            children: [
-                                {
-                                    id: 3,
-                                    name: '用户管理',
-                                    sort: 1,
-                                    type: 'menu',
-                                    isShow: 'Y',
-                                    path: '/user'
-                                },
-                                {
-                                    id: 4,
-                                    name: '角色管理',
-                                    sort: 2,
-                                    type: 'menu',
-                                    isShow: 'Y',
-                                    path: '/role'
-                                }
-                            ],
-                        },
-                        {
-                            id: 5,
-                            name: '区域管理',
-                            sort: 2,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/area'
-                        }
-                    ]
-                },
-                {
-                    id: 6,
-                    name: '业务配置',
-                    sort: 2,
-                    type: 'module',
-                    isShow: 'Y',
-                    children: [
-                        {
-                            id: 7,
-                            name: 'App客户',
-                            sort: 2,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/customer'
-                        },
-                        {
-                            id: 8,
-                            name: 'App管理',
-                            sort: 3,
-                            type: 'menu',
-                            isShow: 'Y',
-                            path: '/app'
-                        }
-                    ]
-                },
-                {
-                    id: 9,
-                    name: 'TMS管理',
-                    sort: 3,
-                    type: 'menu',
-                    isShow: 'Y',
-                    path: '/tms'
-                }
-            ]
+            data: []
         }
     },
+    created() {
+        this.getList()
+    },
     methods: {
+        getList() {
+            SysMenu.find().then(res => {
+                this.data = res
+            })
+        },
         edit(id) {
-            console.log(id)
             this.$router.push({name: 'tmseditmenu', query: { id }})
         },
         del(id) {

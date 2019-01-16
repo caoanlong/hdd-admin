@@ -7,33 +7,33 @@
 			<el-row :gutter="20">
 				<el-col :span="12" :offset="6">
 					<el-form label-width="120px" :model="menu" :rules="rules" ref="ruleForm">
-						<el-form-item label="上级菜单" prop="parent">
-							<el-input placeholder="请输入..." v-model="menu.parent" @focus="isAddVisible = true"></el-input>
+						<el-form-item label="上级菜单" prop="parentName">
+							<el-input placeholder="请输入..." v-model="menu.parentName" @focus="isAddVisible = true"></el-input>
 						</el-form-item>
 						<el-form-item label="菜单类型" prop="type">
                             <p>
-                                <span v-if="menu.type == 'module'">模块</span>
-                                <span v-else-if="menu.type == 'menu'">菜单</span>
-                                <span v-else-if="menu.type == 'button'">按钮</span>
+                                <span v-if="menu.type == 'Module'">模块</span>
+                                <span v-else-if="menu.type == 'Menu'">菜单</span>
+                                <span v-else-if="menu.type == 'Button'">按钮</span>
                             </p>
 						</el-form-item>
                         <el-form-item label="菜单名称" prop="name">
 							<el-input placeholder="请输入..." v-model="menu.name"></el-input>
 						</el-form-item>
-                        <el-form-item label="显示排序" prop="sort">
-							<el-input-number placeholder="请输入..." v-model="menu.sort"></el-input-number>
+                        <el-form-item label="目标" prop="target">
+							<el-input placeholder="请输入..." v-model="menu.target"></el-input>
 						</el-form-item>
-                        <el-form-item label="图标" prop="icon" v-if="menu.type == 'module'">
+                        <el-form-item label="显示排序" prop="totalSort">
+							<el-input-number placeholder="请输入..." v-model="menu.totalSort"></el-input-number>
+						</el-form-item>
+                        <el-form-item label="图标" prop="icon" v-if="menu.type == 'Module'">
                             <el-button type="primary" plain @click="selectIconVisible = true">
                                 <svg-icon :iconClass="menu.icon ? menu.icon : 'add-icon'"></svg-icon> 
                                 {{menu.icon ? menu.icon : iconTxt}}
                             </el-button>
                         </el-form-item>
-                        <el-form-item label="请求地址" prop="path" v-if="menu.type != 'module'">
-							<el-input placeholder="请输入..." v-model="menu.path"></el-input>
-						</el-form-item>
-                        <el-form-item label="接口URL" prop="url" v-if="menu.type == 'module'">
-							<el-input placeholder="请输入..." v-model="menu.url"></el-input>
+                        <el-form-item label="请求地址" prop="apiUrl" v-if="menu.type != 'Module'">
+							<el-input placeholder="请输入..." v-model="menu.apiUrl"></el-input>
 						</el-form-item>
                         <el-form-item label="显示/隐藏" prop="type">
                             <el-radio v-model="menu.isShow" label="Y">显示</el-radio>
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+import SysMenu from '../../../api/SysMenu'
 import SelectMenu from './components/SelectMenu'
 import { requireAllName, req } from '../../../assets/icons'
 export default {
@@ -77,13 +79,14 @@ export default {
             selectIconVisible: false,
             iconTxt: '添加图标',
             menu: {
-                parent: '',
-                type: 'module',
+                parentId: '',
+                parentName: '',
+                type: 'Module',
                 name: '',
-                sort: 1,
+                target: '',
+                totalSort: 1,
                 icon: '',
-                path: '',
-                url: '',
+                apiUrl: '',
                 isShow: 'Y'
             },
             rules: {
@@ -93,26 +96,42 @@ export default {
                     {min: 2, max: 10, message: '长度在 2 到 10 个字符'}
                 ],
                 icon: [{required: true, message: '请选择图标'}],
-                path: [{required: true, message: '请输入请求地址'}],
-                url: [{required: true, message: '请输入接口URL'}]
+                target: [{required: true, message: '请输入目标'}],
+                apiUrl: [{required: true, message: '请输入请求地址'}]
             }
         }
     },
     computed: {
 		svgicons: () => requireAllName(req)
-	},
+    },
+    created() {
+        this.getInfo()
+    },
     methods: {
         handSelectMenu(data) {
-            this.menu.parent = data ? data.name : ''
+            if (data) {
+                this.menu.parentId = data.id
+                this.menu.parentName = data.name
+            }
             this.isAddVisible = false
         },
         handSelectIcon() {
 			this.iconTxt = this.menu.icon
 			this.selectIconVisible = false
-		},
+        },
+        getInfo() {
+            const id = this.$route.query.id
+            SysMenu.findById({ id }).then(res => {
+                this.menu = res
+            })
+        },
         save() {
             this.$refs['ruleForm'].validate(valid => {
-                console.log(valid)
+                if (!valid) return
+                SysMenu.update(this.menu).then(res => {
+                    Message.success('成功！')
+					this.$router.push({name: 'tmsmenu'})
+                })
             })
         },
         back() {
