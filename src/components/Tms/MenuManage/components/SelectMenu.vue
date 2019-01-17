@@ -48,7 +48,8 @@ export default {
     methods: {
         getList() {
             SysMenu.find().then(res => {
-                this.walkMenus(res)
+                // this.walkMenus(res)
+                this.data = res
             })
         },
         walkMenus(menus) {
