@@ -53,6 +53,7 @@ export default {
             })
         },
         walkMenus(menus) {
+            this.data = []
             const queue =  [...menus]
             while (queue.length > 0) {
                 const item = queue.shift()
