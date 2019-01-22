@@ -2,6 +2,7 @@
  * form表单数据请求
  * @param json 请求参数 {key:value,key:value,...}
  */
+import { vueInstance } from '../main'
 export function formDataReq(json) {
 	var formData = new FormData()
 	for (let attr in json) {
@@ -77,4 +78,31 @@ export function validUploadFile(result, map, propertys) {
 		}
 		resolve(uploadExcelConstants)
 	})
+}
+
+/**
+ * 删除确认
+ * @param {单个id} id 
+ * @param {多个id} idList 
+ */
+export function deleteConfirm(id, callback, idList) {
+    let ids = ''
+    if (id && (typeof id == 'string' || typeof id == 'number')) {
+        ids = id
+    } else {
+        ids = idList.join(',')
+    }
+    if (!ids) {
+        Message({ type: 'warning', message: '请选择' })
+        return
+    }
+    vueInstance.$confirm('此操作将永久删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        callback && callback(ids)
+    }).catch(err => {
+        Message.info('已取消删除')
+    })
 }
