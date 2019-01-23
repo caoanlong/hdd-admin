@@ -47,7 +47,7 @@
 				:data="menus"
 				show-checkbox
 				default-expand-all
-				node-key="Menu_ID"
+				node-key="menuID"
 				ref="tree"
 				highlight-current
 				:props="defaultProps"
@@ -100,7 +100,7 @@ export default {
 			showSetUser:false,
 			defaultProps: {
 				children: 'children',
-				label: 'Name'
+				label: 'name'
 			},
 			selectedUsers: [],
 			sysDataScopes: [],
@@ -149,22 +149,19 @@ export default {
 			})
 		},
 		// 获取所有菜单
-		getMenus() {
-			return new Promise((resolve, reject) => {
-				request({
-					url: '/sys_menu/list/all',
-					method: 'get'
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.menus = res.data.data
-						resolve()
-					} else {
-						Message.error(res.data.msg)
-						reject(res.data.msg)
-					}
-				})
-			})
-		},
+		getMenus(roleID) {
+			SysRole.menuList({
+                roleID 
+            }).then(res => {
+                this.menus = res.menuList
+                console.log(typeof(this.menus))
+                console.log(res)
+            })
+        },
+         setAuth(roleID){
+            this.showSetAuth = true
+            this.getMenus(roleID)
+        },
         delRole(roleID) {
 			deleteConfirm(roleID, ids => {
 				SysRole.del({ ids }).then(res => {
@@ -173,20 +170,21 @@ export default {
 				})
 			}, this.selectedList)
 		},
-		setAuth(data) {
-			this.getMenus().then(() => {
-				this.setAuthId = data.roleID
-				this.showSetAuth = true
-				this.getRole(data.roleID, res => {
-					let menusID = res.sys_menu_2s.map(item => item.Menu_ID)
-					for (let i = 0; i < menusID.length; i++) {
-						this.$refs.tree.setChecked(menusID[i], true)
-					}
-					this.getList()
-					this.$store.dispatch('getMenu')
-				})
-			})
-		},
+		// setAuth(roleID) {
+        //     console.log(roleID,111)
+		// 	this.getMenus().then(() => {
+		// 		this.setAuthId = data
+		// 		this.showSetAuth = true
+		// 		this.getRole(roleID, res => {
+		// 			let menusID = res.sys_menu_2s.map(item => item.Menu_ID)
+		// 			for (let i = 0; i < menusID.length; i++) {
+		// 				this.$refs.tree.setChecked(menusID[i], true)
+		// 			}
+		// 			this.getList()
+		// 			this.$store.dispatch('getMenu')
+		// 		})
+		// 	})
+		// },
 		submitSetAuth() {
 			let menuKeys = []
 			menuKeys.push(...this.$refs.tree.getCheckedKeys())
