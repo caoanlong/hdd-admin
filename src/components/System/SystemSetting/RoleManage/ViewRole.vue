@@ -8,28 +8,27 @@
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px">
 						<el-form-item label="名称">
-							<p v-text="role.Name"></p>
+							<p v-text="role.name"></p>
 						</el-form-item>
 						<el-form-item label="英文名称">
-							<p v-text="role.EnName"></p>
+							<p v-text="role.enName"></p>
 						</el-form-item>
 						<el-form-item label="组织机构">
-							<p v-text="role.Organization_ID"></p>
+							<p v-text="role.organizationName"></p>
 						</el-form-item>
 						<el-form-item label="角色类型">
-							<p v-text="role.RoleType"></p>
-						</el-form-item>
-						<el-form-item label="数据范围">
-							<p v-text="role.DataScope"></p>
+							<p v-if="role.roleType=='assignment'">任务分配</p>
+							<p v-else-if="role.roleType=='security'">管理角色</p>
+							<p v-else>普通角色</p>
 						</el-form-item>
 						<el-form-item label="是否系统数据">
-							<p>{{role.Issys == 'Y' ? '是' : '否'}}</p>
+							<p>{{role.issys == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
 						<el-form-item label="是否可用">
-							<p>{{role.Useable == 'Y' ? '是' : '否'}}</p>
+							<p>{{role.useable == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
 						<el-form-item label="备注">
-							<p v-text="role.Remark"></p>
+							<p v-text="role.remark"></p>
 						</el-form-item>
 						<el-form-item>
 							<el-button @click.native="back">返回</el-button>
@@ -41,20 +40,21 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import request from '../../../../common/request'
+	import request from '../../../../common/requestJava'
+    import SysRole from '../../../../api/SysRole'
 	import { Message } from 'element-ui'
 	export default {
 		data() {
 			return {
 				role: {
-					Name: '',
-					EnName: '',
-					Organization_ID: '',
-					RoleType: '',
+					name: '',
+					enName: '',
+					sysOrganization: '',
+					roleType: '',
 					DataScope: '',
-					Issys: '',
-					Useable: '',
-					Remark: ''
+					issys: '',
+					useable: '',
+					remark: ''
 				}
 			}
 		},
@@ -67,40 +67,13 @@
 			}
 		},
 		methods: {
-			getRole() {
-				let params = {
-					Role_ID: this.$route.query.Role_ID
-				}
-				request({
-					url: '/sys_role/info',
-					method: 'get',
-					params
-				}).then(res => {
-					if (res.data.code == 0) {
-						this.role = res.data.data
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
-			editRole() {
-				let data = this.role
-				data.id = this.role._id
-				console.log(JSON.stringify(data))
-				request({
-					url: '/role/update',
-					method: 'post',
-					data
-				}).then(res => {
-					if (res.data.code == 0) {
-						console.log(res.data)
-						Message.success(res.data.msg)
-						this.$router.push({name: 'rolemanage'})
-					} else {
-						Message.error(res.data.msg)
-					}
-				})
-			},
+            getRole() {
+                SysRole.findById({
+                    roleID: this.$route.query.roleID
+                }).then(res => {
+                    this.role = res
+                })
+            },
 			back() {
 				this.$router.go(-1)
 			}
