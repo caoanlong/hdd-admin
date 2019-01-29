@@ -1,4 +1,7 @@
-import {getMenus, addMenu, updateMenu, delMenu} from '../../api/menu'
+import {getMenus, delMenu} from '../../api/menu'
+import SysMenuBoss from '../../api/SysMenuBoss'
+import SysUser from '../../api/SysUser'
+import { Message } from 'element-ui'
 
 const menu = {
 	state: {
@@ -6,35 +9,26 @@ const menu = {
 	},
 	mutations: {
 		GET_MENU: (state) => {
-			getMenus().then(res => {
-				state.menus = res.data.data
-				sessionStorage.setItem('menus', JSON.stringify(res.data.data))
+			SysUser.menuList().then(res => {
+				state.menus = res
+				sessionStorage.setItem('menus', JSON.stringify(res))
 			})
 		},
-		ADD_MENU: (state, menu, callback) => {
-			addMenu(menu).then(res => {
-				console.log(res.data)
-				getMenus().then(res => {
-					state.menus = res.data.data
-					sessionStorage.setItem('menus', JSON.stringify(res.data.data))
-				})
-			})
-		},
-		EDIT_MENU: (state, menu, callback) => {
-			updateMenu(menu).then(res => {
-				console.log(res.data)
-				getMenus().then(res => {
-					state.menus = res.data.data
-					sessionStorage.setItem('menus', JSON.stringify(res.data.data))
+		SAVE_MENU: (state, menu, callback) => {
+			SysMenuBoss.save(menu).then(response => {
+				Message.success(response.data.msg)
+				SysUser.menuList().then(res => {
+					state.menus = res
+					sessionStorage.setItem('menus', JSON.stringify(res))
 				})
 			})
 		},
 		DELETE_MENU: (state, menu, callback) => {
-			delMenu({Menu_ID: menu.Menu_ID}).then(res => {
-				console.log(res.data)
-				getMenus().then(res => {
-					state.menus = res.data.data
-					sessionStorage.setItem('menus', JSON.stringify(res.data.data))
+			SysMenuBoss.del({ menuID: menu.menuID}).then(response => {
+				Message.success(response.data.msg)
+				SysUser.menuList().then(res => {
+					state.menus = res
+					sessionStorage.setItem('menus', JSON.stringify(res))
 				})
 			})
 		}
@@ -43,11 +37,8 @@ const menu = {
 		getMenu ({commit}) {
 			commit('GET_MENU')
 		},
-		addMenu ({commit, state}, menu) {
-			commit('ADD_MENU', menu)
-		},
-		editMenu ({commit}, menu) {
-			commit('EDIT_MENU', menu)
+		saveMenu ({commit, state}, menu) {
+			commit('SAVE_MENU', menu)
 		},
 		deleteMenu ({commit}, menu) {
 			commit('DELETE_MENU', menu)

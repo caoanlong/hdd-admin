@@ -5,13 +5,20 @@
 				<span>菜单列表</span>
 			</div>
 			<div class="tableControl">
-				<el-button type="success" plain size="mini" icon="el-icon-plus" @click="addRoot">添加顶级节点</el-button>
+				<el-button 
+					type="success" 
+					plain 
+					size="mini" 
+					icon="el-icon-plus" 
+					@click="addRoot">
+					添加顶级节点
+				</el-button>
 			</div>
 			<el-tree
 				class="expand-tree"
 				:data="menus"
 				:props="defaultProps"
-				node-key="name"
+				node-key="menuID"
 				highlight-current
 				:expand-on-click-node="false"
 				:render-content="renderContent"
@@ -24,29 +31,40 @@
 			</div>
 			<el-form ref="form" :model="currentNode" label-width="80px">
 				<el-form-item label="标题">
-					<el-input v-model="currentNode.Name"></el-input>
+					<el-input v-model="currentNode.name"></el-input>
 				</el-form-item>
 				<el-form-item label="名字">
-					<el-input v-model="currentNode.Target"></el-input>
+					<el-input v-model="currentNode.target"></el-input>
 				</el-form-item>
 				<el-form-item label="路径">
-					<el-input v-model="currentNode.Href"></el-input>
+					<el-input v-model="currentNode.href"></el-input>
 				</el-form-item>
 				<el-form-item label="图标">
-					<el-button type="primary" plain @click="selectIcondialog = true">
-						<svg-icon :iconClass="currentNode.Icon ? currentNode.Icon : 'add-icon'"></svg-icon> 
-						{{currentNode.Icon ? currentNode.Icon : iconTxt}}
+					<el-button type="primary" plain @click="isSelectIconVisible = true">
+						<svg-icon 
+							:iconClass="currentNode.icon ? currentNode.icon : 'add-icon'">
+						</svg-icon> 
+						{{currentNode.icon ? currentNode.icon : iconTxt}}
 					</el-button>
 				</el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
+					<el-input-number v-model="currentNode.sortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item label="是否显示">
-					<el-switch v-model="isShow"></el-switch>
-				</el-form-item>
+                    <el-radio v-model="currentNode.isShow" label="1">是</el-radio>
+                    <el-radio v-model="currentNode.isShow" label="0">否</el-radio>
+                </el-form-item>
 				<el-form-item label="角色权限">
-					<el-select style="width: 100%" v-model="selectedRoles" multiple placeholder="请选择">
-						<el-option v-for="role in roles" :key="role.Role_ID" :label="role.Name" :value="role.Role_ID">
+					<el-select 
+						style="width: 100%" 
+						v-model="currentNode.roleIds" 
+						multiple 
+						placeholder="请选择">
+						<el-option 
+							v-for="role in roles" 
+							:key="role.roleID" 
+							:label="role.name" 
+							:value="role.roleID">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -56,96 +74,82 @@
 				</el-form-item>
 			</el-form>
 		</el-card>
-		<el-dialog title="选择图标" :visible.sync="selectIcondialog" width="30%" :append-to-body="true">
-			<ul class="iconList clearfix">
-				<li v-for="icon in svgicons" :key="icon" :class="{'selected':selectedIcon == icon}" @click="selectIcon(icon)">
-					<svg-icon :iconClass="icon"></svg-icon>
-				</li>
-			</ul>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="selectIcondialog = false">取 消</el-button>
-				<el-button type="primary" @click="submitSelect">确 定</el-button>
-			</span>
-		</el-dialog>
+		<select-icon 
+			:isVisible="isSelectIconVisible" 
+			:icon="selectedIcon" 
+			@control="handSelectIcon">
+		</select-icon>
 	</div>
 </template>
 <script type="text/javascript">
-import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender'
-import { requireAllName, req } from '../../../../assets/icons'
-import request from '../../../../common/request'
+import SelectIcon from './components/SelectIcon'
+import SysMenuBoss from '../../../../api/SysMenuBoss'
+import SysRole from '../../../../api/SysRole'
 export default {
+	components: { SelectIcon },
 	data() {
 		return {
+			isSelectIconVisible: false,
+			selectedIcon: '',
+			menus: [],
 			roles: [],
 			selectedRoles: [],
 			defaultProps: {
 				children: 'children',
-				label: 'title'
+				label: 'name'
 			},
 			currentNode: {
-				Target: '', // name
-				Name: '', // title
-				SortNumber: '',
-				Href: '', // path
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
+				target: '',
+				name: '',
+				sortNumber: '',
+				href: '',
+				icon: '',
+				isShow: '1',
+				roleIds: []
 			},
-			isShow: false,
 			title: '添加顶级节点',
 			button: '立即创建',
-			selectIcondialog: false,
-			selectedIcon: '',
 			iconTxt: '添加图标'
 		}
 	},
-	computed: {
-		...mapGetters([
-			'menus'
-		]),
-		svgicons: () => requireAllName(req)
-	},
 	created() {
+		this.getMenus()
 		this.getRoles()
 	},
-	activated() {
-		if(!this.$route.query.cache) {
-			this.currentNode = {
-				Target: '', // name
-				Name: '', // title
-				SortNumber: '',
-				Href: '', // path
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
-			}
-			this.getRoles()
-		}
-	},
 	methods: {
+		handSelectIcon(icon) {
+			if (icon) {
+				this.selectedIcon = icon
+				this.currentNode.icon = icon
+			} else {
+				this.selectedIcon = ''
+				this.currentNode.icon = ''
+			}
+			this.isSelectIconVisible = false
+		},
 		addRoot() {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
-			this.currentNode = {
-				Target: '',
-				Name: '',
-				SortNumber: '',
-				Href: '',
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
-			}
 			this.iconTxt='添加图标'
+			this.currentNode = {
+				target: '',
+				name: '',
+				sortNumber: '',
+				href: '',
+				icon: '',
+				isShow: '1',
+				roleIds: []
+			}
 		},
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			this.getMenu(d.Menu_ID)
+			this.getInfo(d.menuID)
 		},
 		renderContent(h, {node, data, store}) {
-			let that = this //指向vue
+			const that = this //指向vue
 			return h(TreeRender, {
 				props: {
 					DATA: data, //节点数据
@@ -162,17 +166,17 @@ export default {
 		handleAdd(s, d, n){//增加节点
 			this.title = '添加子节点'
 			this.button = '立即创建'
-			this.currentNode = {
-				Menu_PID: this.currentNode.Menu_ID,
-				Target: '',
-				Name: '',
-				SortNumber: '',
-				Href: '',
-				Icon: '',
-				IsShow: '',
-				sys_roles: []
-			}
 			this.iconTxt='添加图标'
+			this.currentNode = {
+				menuPID: this.currentNode.menuID,
+				target: '',
+				name: '',
+				sortNumber: '',
+				href: '',
+				icon: '',
+				isShow: '1',
+				roleIds: []
+			}
 		},
 		handleDelete(s, d, n){//删除节点
 			this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
@@ -180,115 +184,45 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.$store.dispatch('deleteMenu', d)
-				this.$store.dispatch('getMenu')
 				this.addRoot()
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				})
+				this.$store.dispatch('deleteMenu', d)
 			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				})         
+				this.$message.info('已取消删除')         
 			})
 		},
 		submitForm(type) {
-			if (!this.currentNode.Name) {
+			if (!this.currentNode.name) {
 				this.$message.error('标题不能为空！')
 				return
 			}
-			if (!this.currentNode.Target) {
+			if (!this.currentNode.target) {
 				this.$message.error('名字不能为空！')
 				return
 			}
-			if (!this.currentNode.Href) {
+			if (!this.currentNode.href) {
 				this.$message.error('路径不能为空！')
 				return
 			}
-			// 创建
-			if (type == '立即创建') {
-				const params = {
-					Href: this.currentNode.Href,
-					Target: this.currentNode.Target,
-					Name: this.currentNode.Name,
-					SortNumber: this.currentNode.SortNumber,
-					Icon: this.currentNode.Icon,
-					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isShow ? '1' : '0',
-					sys_roles: this.selectedRoles
-				}
-				this.$store.dispatch('addMenu', params)
-				this.$store.dispatch('getMenu')
-				this.addRoot()
-				this.$message.success('创建成功！')
-			// 编辑
-			} else {
-				const params = {
-					Menu_ID: this.currentNode.Menu_ID,
-					Href: this.currentNode.Href,
-					Target: this.currentNode.Target,
-					Name: this.currentNode.Name,
-					SortNumber: this.currentNode.SortNumber,
-					Icon: this.currentNode.Icon,
-					Menu_PID: this.currentNode.Menu_PID,
-					IsShow: this.isShow ? '1' : '0',
-					sys_roles: this.selectedRoles
-				}
-				this.$store.dispatch('editMenu', params)
-				this.$store.dispatch('getMenu')
-				this.addRoot()
-				this.$message.success('编辑成功！')
-			}
+			const params = Object.assign({}, this.currentNode)
+			params.roleIds = this.currentNode.roleIds.join(',')
+			this.addRoot()
+			this.$store.dispatch('saveMenu', params)
+			this.getMenus()
 		},
-		selectIcon(icon) {
-			this.selectedIcon= icon
-		},
-		submitSelect() {
-			this.iconTxt = this.currentNode.Icon = this.selectedIcon
-			this.selectIcondialog = false
-		},
-		// 获取菜单详情
-		getMenu(Menu_ID) {
-			let params = {
-				Menu_ID
-			}
-			request({
-				url: '/sys_menu/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.currentNode = res.data.data
-					this.isShow = res.data.data.IsShow == '1' ? true : false
-					this.selectedRoles = res.data.data.sys_roles.map(item => item.Role_ID)
-				} else {
-					Message.error(res.data.msg)
-				}
+		getMenus() {
+			SysMenuBoss.tree().then(res => {
+				this.menus = res
 			})
 		},
-		// 获取角色
+		getInfo(menuID) {
+			SysMenuBoss.findById({ menuID }).then(res => {
+				this.currentNode = res
+				this.selectedIcon = res.icon
+			})
+		},
 		getRoles() {
-			let params = {
-				pageSize: 100
-			}
-			request({
-				url: '/sys_role/list',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					let Oroles = res.data.data.rows
-					this.roles = Oroles.map(item => {
-						return {
-							Role_ID: item.Role_ID,
-							Name: item.Name
-						}
-					})
-				} else {
-					Message.error(res.data.msg)
-				}
+			SysRole.suggest().then(res => {
+				this.roles = res
 			})
 		}
 	}
@@ -309,24 +243,6 @@ export default {
 				flex 1
 			.expand-tree
 				font-size 14px
-	.svg-icon
-		vertical-align top
-	.iconList
-		padding 0
-		&:after
-			clearfix
-		li
-			list-style-type none
-			float left
-			font-size 18px
-			width 44px
-			height 44px
-			padding 10px
-			text-align center
-			cursor pointer
-			&:hover
-			&.selected
-				color #409EFF
 	.el-checkbox
 		margin 0 30px 0 0	
 </style>

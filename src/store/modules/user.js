@@ -1,24 +1,25 @@
-import { login, logout, getUserInfo } from '../../api/login'
+import { login } from '../../api/login'
+import SysUser from '../../api/SysUser'
 
 const user = {
 	state: {
-		Name: localStorage.getItem('Name'),
-		LoginName: localStorage.getItem('LoginName'),
+		name: localStorage.getItem('name'),
+		loginName: localStorage.getItem('loginName'),
 		token: localStorage.getItem('token'),
-		Photo: localStorage.getItem('Photo')
+		photo: localStorage.getItem('photo')
 	},
 	mutations: {
-		SET_LOGIN_NAME: (state, LoginName) => {
-			state.LoginName = LoginName
+		SET_LOGIN_NAME: (state, loginName) => {
+			state.loginName = loginName
 		},
-		SET_NAME: (state, Name) => {
-			state.Name = Name
+		SET_NAME: (state, name) => {
+			state.name = name
 		},
 		SET_TOKEN: (state, token) => {
 			state.token = token
 		},
-		SET_PHOTO: (state, Photo) => {
-			state.Photo = Photo
+		SET_PHOTO: (state, photo) => {
+			state.photo = photo
 		}
 	},
 	actions: {
@@ -53,15 +54,14 @@ const user = {
 		},
 		GetUserInfo({ commit }) {
 			return new Promise((resolve, reject) => {
-				getUserInfo().then(response => {
-					const data = response.data
-					commit('SET_LOGIN_NAME', data.data.LoginName)
-					commit('SET_NAME', data.data.Name)
-					commit('SET_PHOTO', data.data.Photo)
-					localStorage.setItem('LoginName', data.data.LoginName)
-					localStorage.setItem('Name', data.data.Name)
-					localStorage.setItem('Photo', data.data.Photo)
-					resolve(data)
+				SysUser.userInfo().then(res => {
+					commit('SET_LOGIN_NAME', res.loginName)
+					commit('SET_NAME', res.name)
+					commit('SET_PHOTO', res.photo)
+					localStorage.setItem('loginName', res.loginName)
+					localStorage.setItem('name', res.name)
+					localStorage.setItem('photo', res.photo)
+					resolve(res)
 				}).catch(error => {
 					reject(error)
 				})

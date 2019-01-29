@@ -17,10 +17,6 @@ import SidebarItem from './SidebarItem'
 export default {
 	name: 'sideBar',
 	computed: {
-		// ...mapGetters([
-		// 	'permission_routers',
-		// 	'sidebar'
-		// ]),
 		...mapGetters([
 			'menus',
 			'sidebar'

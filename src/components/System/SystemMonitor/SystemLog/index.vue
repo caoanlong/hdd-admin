@@ -6,17 +6,18 @@
 			</div>
 			<div class="search">
 				<el-form :inline="true"  class="form-inline"  size="small">
-					<el-form-item label="操作菜单">
+					<!-- <el-form-item label="操作菜单">
 						<el-input  placeholder="请输入..." v-model="findTitle"></el-input>
 					</el-form-item>
 					<el-form-item label="用户ID">
 						<el-input  placeholder="请输入..." v-model="findCreateBy"></el-input>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item label="URI">
-						<el-input  placeholder="请输入..." v-model="findRequestUri"></el-input>
+						<el-input  placeholder="请输入..." v-model="find.uri"></el-input>
 					</el-form-item>
 					<el-form-item label="日期范围">
-						<el-date-picker
+						<el-date-picker 
+							value-format="timestamp"
 							v-model="findDataRange"
 							type="daterange"
 							range-separator="至"
@@ -26,7 +27,8 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="只查询异常信息">
-						<el-switch v-model="findIsException"></el-switch>
+						<el-radio v-model="find.isException" label="Y">是</el-radio>
+						<el-radio v-model="find.isException" label="N">否</el-radio>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="getList()">查询</el-button>
@@ -36,94 +38,69 @@
 			</div>
 			<div class="table">
 				<el-table :data="logs" border style="width: 100%" size="mini">
-					<el-table-column label="操作菜单" prop="Title" width="150"></el-table-column>
-					<el-table-column label="操作用户" prop="sys_user.Name"></el-table-column>
-					<el-table-column label="所在公司" prop="sys_user.company.Name"></el-table-column>
-					<el-table-column label="所在部门" prop="sys_user.department.Name"></el-table-column>
-					<el-table-column label="URI" prop="RequestUri"></el-table-column>
-					<el-table-column label="提交方式" align="center" prop="Method" width="100"></el-table-column>
-					<el-table-column label="操作者IP" align="center" prop="RemoteAddr"></el-table-column>
+					<!-- <el-table-column label="操作菜单" prop="Title" width="150"></el-table-column>
+					<el-table-column label="操作用户" prop="sys_user.Name"></el-table-column> -->
+					<el-table-column label="URI" prop="uri"></el-table-column>
+					<el-table-column label="异常信息" prop="exceptionInfo"></el-table-column>
+					<el-table-column label="提交方式" align="center" prop="method" width="100"></el-table-column>
+					<el-table-column label="操作者IP" align="center" prop="ip"></el-table-column>
 					<el-table-column label="操作时间" align="center" width="140">
 						<template slot-scope="scope">
-							<span>{{ new Date(scope.row.CreateDate).getTime() | getdatefromtimestamp() }}</span>
+							<span>{{ scope.row.requestDate | getdatefromtimestamp() }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
-				<Page :total="count" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
+				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
 import { Message } from 'element-ui'
-import Page from '../../../CommonComponents/Page'
+import SysLog from '../../../../api/SysLog'
+import { baseMixin } from '../../../../common/mixin'
 export default {
+	mixins: [baseMixin],
 	data() {
 		return {
-			findTitle: '',
-			findCreateBy: '',
-			findRequestUri: '',
+			find: {
+				uri: '',
+				startDate: '',
+				endDate: '',
+				isException: 'N'
+			},
 			findDataRange: '',
-			startDate: '',
-			endDate: '',
-			findIsException: false,
-			refreshing: false,
-			pageIndex: 1,
-			pageSize: 10,
-			count: 0,
 			logs: []
 		}
 	},
-	components: { Page },
 	created() {
 		this.getList()
 	},
 	methods: {
 		selectDateRange(date) {
-			this.startDate = date[0]
-			this.endDate = date[1]
-		},
-		pageChange(index) {
-			this.pageIndex = index
-			this.getList()
-		},
-		pageSizeChange(size) {
-			this.pageSize = size
-			this.getList() 
+			console.log(date)
+			this.find.startDate = date[0]
+			this.find.endDate = date[1]
 		},
 		reset() {
-			this.findTitle = ''
-			this.findCreateBy = ''
-			this.findRequestUri = ''
+			this.find.uri = ''
 			this.findDataRange = ''
-			this.findIsException = false
+			this.find.isException = 'N'
 			this.pageIndex = 1
 			this.pageSize = 10
 			this.getList()
 		},
 		getList() {
-			let params = {
-				pageIndex: this.pageIndex,
-				pageSize: this.pageSize,
-				Title: this.findTitle,
-				CreateBy: this.findCreateBy,
-				RequestUri: this.findRequestUri,
-				startDate: this.startDate,
-				endDate: this.endDate,
-				isException: this.findIsException,
-			}
-			request({
-				url: '/sys_log/list',
-				method: 'get',
-				params
+			SysLog.apiList({
+				current: this.pageIndex,
+				size: this.pageSize,
+				uri: this.find.uri,
+				startDate: this.find.startDate,
+				endDate: this.find.endDate,
+				isException: this.find.isException
 			}).then(res => {
-				if (res.data.code == 0) {
-					this.count = res.data.data.count
-					this.logs = res.data.data.rows
-				} else {
-					Message.error(res.data.msg)
-				}
+				this.total = res.total
+				this.logs = res.records
 			})
 		}
 	}

@@ -8,45 +8,26 @@
 				<el-col :span="8">
 					<el-form label-width="120px">
 						<el-form-item label="头像">
-							<ImageUpload :files="[user.Photo]" :isPreview="true"/>
+							<ImageUpload :files="[user.photo]" :isPreview="true"/>
 						</el-form-item>
 						<el-form-item label="登录名">
-							<p>{{user.LoginName}}</p>
-						</el-form-item>
-						<el-form-item label="手机">
-							<p>{{user.Mobile}}</p>
+							<p>{{user.loginName}}</p>
 						</el-form-item>
 						<el-form-item label="用户角色">
-							<p>{{user.sys_roles.map(item => item.Name).join(',')}}</p>
+							<p>{{user.sysUserroleList.map(item => item.roleName).join(',')}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
 				<el-col :span="8">
 					<el-form label-width="120px">
-						<el-form-item label="归属公司">
-							<p>{{user.company && user.company.Name}}</p>
-						</el-form-item>
-						<el-form-item label="归属部门">
-							<p>{{user.department && user.department.Name}}</p>
-						</el-form-item>
 						<el-form-item label="邮箱">
-							<p>{{user.Email}}</p>
+							<p>{{user.email}}</p>
 						</el-form-item>
 						<el-form-item label="是否允许登录">
-							<p>{{isAllowLogin?'是':'否'}}</p>
+							<p>{{user.loginFlag == 'Y' ? '是' : '否'}}</p>
 						</el-form-item>
-					</el-form>
-				</el-col>
-				<el-col :span="8">
-					<el-form label-width="120px">
-						<el-form-item label="工号">
-							<p>{{user.JobNo}}</p>
-						</el-form-item>
-						<el-form-item label="姓名">
-							<p>{{user.Name}}</p>
-						</el-form-item>
-						<el-form-item label="电话">
-							<p>{{user.Phone}}</p>
+						<el-form-item label="手机">
+							<p>{{user.mobile}}</p>
 						</el-form-item>
 						<el-form-item label="用户类型">
 							<p v-if="user.Type == 0">系统管理</p>
@@ -55,10 +36,23 @@
 						</el-form-item>
 					</el-form>
 				</el-col>
-				<el-col :span="16">
+				<el-col :span="8">
+					<el-form label-width="120px">
+						<el-form-item label="工号">
+							<p>{{user.jobNo}}</p>
+						</el-form-item>
+						<el-form-item label="姓名">
+							<p>{{user.name}}</p>
+						</el-form-item>
+						<el-form-item label="电话">
+							<p>{{user.phone}}</p>
+						</el-form-item>
+					</el-form>
+				</el-col>
+				<el-col :span="24">
 					<el-form label-width="120px">
 						<el-form-item label="备注">
-							<p>{{user.Remark}}</p>
+							<p>{{user.remark}}</p>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -74,60 +68,25 @@
 	</div>
 </template>
 <script type="text/javascript">
-import request from '../../../../common/request'
 import { Message } from 'element-ui'
 import ImageUpload from '../../../CommonComponents/ImageUpload'
+import SysUser from '../../../../api/SysUser'
 export default {
 	data() {
 		return {
 			user: {
-				Company_ID: '',
-				Organization_ID: '',
-				LoginName: '',
-				Password: '',
-				Password2: '',
-				PayPassword: '',
-				JobNo: '',
-				Name: '',
-				Sex: '',
-				Email: '',
-				Phone: '',
-				Mobile: '',
-				Type: '',
-				Photo: '',
-				PCID: '',
-				LoginFlag: '',
-				Remark: '',
-				sys_roles: []
-			},
-			isAllowLogin: true
+				sysUserroleList: []
+			}
 		}
 	},
 	created() {
-		this.getUser()
-	},
-	activated() {
-		if(!this.$route.query.cache) {
-			this.getUser()
-		}
+		this.getInfo()
 	},
 	methods: {
-		getUser() {
-			let params = {
-				User_ID: this.$route.query.User_ID
-			}
-			request({
-				url: '/sys_user/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.user = res.data.data
-					console.log(this.user.sys_roles)
-					this.isAllowLogin = res.data.data.LoginFlag == 'Y' ? true : false
-				} else {
-					Message.error(res.data.msg)
-				}
+		getInfo() {
+			const userID = this.$route.query.userID
+			SysUser.findById({ userID }).then(res => {
+				this.user = res
 			})
 		},
 		back() {

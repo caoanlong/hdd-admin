@@ -16,8 +16,8 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="default" size="mini" icon="el-icon-plus" @click="addRole">添加</el-button>
-				<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole">批量删除</el-button>
+				<el-button type="default" size="mini" icon="el-icon-plus" @click="$router.push({name: 'addrole'})">添加</el-button>
+				<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table 
@@ -33,92 +33,41 @@
 						<template slot-scope="scope">
 							<el-button type="default" size="mini" icon="el-icon-view" @click="viewRole(scope.row.roleID)">查看</el-button>
 							<el-button type="default" size="mini" icon="el-icon-edit" @click="editRole(scope.row.roleID)">修改</el-button>
-							<el-button type="default" size="mini" icon="el-icon-delete" @click="delRole(scope.row.roleID)">删除</el-button>
-							<el-button type="default" size="mini" icon="el-icon-setting" @click="setAuth(scope.row.roleID)">权限设置</el-button>
-							<el-button type="default" size="mini" icon="el-icon-plus"  @click="setUser(scope.row)">分配用户</el-button>
+							<el-button type="default" size="mini" icon="el-icon-delete" @click="deleteConfirm(scope.row.roleID)">删除</el-button>
+							<el-button type="default" size="mini" icon="el-icon-setting" @click="setPermission(scope.row.roleID)">权限设置</el-button>
+							<el-button type="default" size="mini" icon="el-icon-plus"  @click="setUser(scope.row.roleID)">分配用户</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<Page :total="total" :pageIndex="pageIndex" :pageSize="pageSize" @pageChange="pageChange" @pageSizeChange="pageSizeChange"/>
 			</div>
 		</el-card>
-		<el-dialog title="权限设置" :visible.sync="showSetAuth" width="30%" :append-to-body="true">
-			<el-tree
-				:data="menus"
-				show-checkbox
-				default-expand-all
-				node-key="menuID"
-				ref="tree"
-				highlight-current
-				:props="defaultProps"
-				style="height:400px;overflow-y:auto">
-			</el-tree>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="showSetAuth = false">取 消</el-button>
-				<el-button type="primary" @click="submitSetAuth">确 定</el-button>
-			</span>
-		</el-dialog>
-		<el-dialog title="分配用户" :visible.sync="showSetUser" width="600px" :append-to-body="true">
-			<el-table 
-				ref="usersTable"
-				:data="users" 
-				height="400"
-				@selection-change="selectUserChange" 
-				border style="width: 100%" 
-				size="mini">
-				<el-table-column type="selection" align="center"></el-table-column>
-				<el-table-column label="登录名" prop="LoginName"></el-table-column>
-				<el-table-column label="姓名" prop="Name"></el-table-column>
-				<el-table-column label="电话" prop="Phone"></el-table-column>
-				<el-table-column label="手机" prop="Mobile"></el-table-column>
-			</el-table>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="showSetUser = false">取 消</el-button>
-				<el-button type="primary" @click="submitSetUser">确 定</el-button>
-			</span>
-		</el-dialog>
+		<set-user :isVisible="isSetUserVisible" :roleID="currentRoleID" @control="handSetUser"></set-user>
+		<set-permission :isVisible="isSetPermissionVisible" :roleID="currentRoleID" @control="handSetPermission"></set-permission>
 	</div>
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
-import request from '../../../../common/requestJava'
 import SysRole from '../../../../api/SysRole'
 import { baseMixin } from '../../../../common/mixin';
 import { deleteConfirm } from '../../../../common/utils'
+import SetUser from './components/SetUser'
+import SetPermission from './components/SetPermission'
 export default {
 	mixins: [baseMixin],
+	components: { SetUser, SetPermission },
 	data() {
 		return {
-			role: {},
 			findRoleName: '',
-			setAuthId: '',
-			setUserId: '',
-			// 所有的用户
-			users:[],
-			showSetAuth: false,
-			showSetUser:false,
-			defaultProps: {
-				children: 'children',
-				label: 'name'
-			},
-			selectedUsers: [],
-			sysDataScopes: [],
-			menus: []
+			isSetUserVisible: false,
+			isSetPermissionVisible: false,
+			currentRoleID: ''
 		}
 	},
 	created() {
 		this.getList()
 	},
-	activated() {
-		if(!this.$route.query.cache) {
-			this.reset()
-		}
-	},
 	methods: {
-		addRole() {
-			this.$router.push({name: 'addrole'})
-		},
 		editRole(roleID) {
 			this.$router.push({name: 'editrole', query: {roleID}})
 		},
@@ -128,8 +77,19 @@ export default {
 		selectRoleChange(data) {
 			this.selectedList = data.map(item => item.roleID)
 		},
-		selectUserChange(data) {
-			this.selectedUsers = data
+		setUser(roleID) {
+			this.currentRoleID = roleID
+			this.isSetUserVisible = true
+		},
+		setPermission(roleID) {
+			this.currentRoleID = roleID
+			this.isSetPermissionVisible = true
+		},
+		handSetUser() {
+			this.isSetUserVisible = false
+		},
+		handSetPermission() {
+			this.isSetPermissionVisible = false
 		},
 		// 重置搜索表单
 		reset() {
@@ -140,7 +100,7 @@ export default {
 		},
         getList() {
 			SysRole.find({
-				pageNum: this.pageIndex || 1,
+				pageNum: this.pageIndex,
 				pageSize: this.pageSize,
 				name: this.findRoleName
 			}).then(res => {
@@ -148,138 +108,33 @@ export default {
                 this.tableData = res.list
 			})
 		},
-		// 获取所有菜单
-		getMenus(roleID) {
-			SysRole.menuList({
-                roleID 
-            }).then(res => {
-                this.menus = res.menuList
-                console.log(typeof(this.menus))
-                console.log(res)
-            })
-        },
-         setAuth(roleID){
-            this.showSetAuth = true
-            this.getMenus(roleID)
-        },
-        delRole(roleID) {
-			deleteConfirm(roleID, ids => {
-				SysRole.del({ ids }).then(res => {
-					Message({ type: 'success', message: '删除成功!' })
-					this.getList()
-				})
-			}, this.selectedList)
-		},
-		// setAuth(roleID) {
-        //     console.log(roleID,111)
-		// 	this.getMenus().then(() => {
-		// 		this.setAuthId = data
-		// 		this.showSetAuth = true
-		// 		this.getRole(roleID, res => {
-		// 			let menusID = res.sys_menu_2s.map(item => item.Menu_ID)
-		// 			for (let i = 0; i < menusID.length; i++) {
-		// 				this.$refs.tree.setChecked(menusID[i], true)
-		// 			}
-		// 			this.getList()
-		// 			this.$store.dispatch('getMenu')
-		// 		})
-		// 	})
-		// },
-		submitSetAuth() {
-			let menuKeys = []
-			menuKeys.push(...this.$refs.tree.getCheckedKeys())
-			menuKeys.push(...this.$refs.tree.getHalfCheckedKeys())
-			let data = {
-				roleID: this.setAuthId,
-				sys_menus: menuKeys
-			}
-			request({
-				url: '/sysRole/update/menu',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					Message.success(res.data.msg)
-				} else {
-					Message.error(res.data.msg)
+		deleteConfirm(id) {
+			let ids = ''
+			if (id && typeof id == 'string') {
+				ids = id
+			} else {
+				if (this.selectedList.length == 0) {
+					Message.warning('请选择')
+					return
 				}
-				this.showSetAuth = false
-			})
-		},
-		// 获取当前角色详情
-		getRole(roleID, callback) {
-			let params = {
-				roleID
+				ids = this.selectedList.join(',')
 			}
-			request({
-				url: '/sysRole/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.role = res.data.data
-					callback && callback(res.data.data)
-				} else {
-					Message.error(res.data.msg)
-				}
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.del(ids)
+			}).catch(() => {
+				Message.info('已取消删除')
 			})
 		},
-		// 获取所有用户
-		getUsers(callback) {
-			let params = {
-				pageSize: 100
-			}
-			request({
-				url: '/sys_user/list',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.users = res.data.data.rows
-					callback && callback()
-				} else {
-					Message.error(res.data.msg)
-				}
+        del(ids) {
+			SysRole.del({ ids }).then(res => {
+				Message.success(res.data.msg)
+				this.getList()
 			})
 		},
-		setUser(data) {
-			this.setUserId = data.roleID
-			this.showSetUser = true
-			this.getUsers(() => {
-				this.getRole(data.roleID, res => {
-					let usersID = res.sys_users.map(item => item.User_ID)
-					let users = this.users.filter(user => {
-						return usersID.includes(user.User_ID)
-					})
-					users.forEach(user => {
-						this.$refs.usersTable.toggleRowSelection(user)
-					})
-					this.getList()
-				})
-			})
-		},
-		handleChange(value, direction, movedKeys) {
-			console.log(value, direction, movedKeys)
-		},
-		submitSetUser() {
-			this.showSetUser = false
-			let userIds = this.selectedUsers.map(item => item.User_ID)
-			let data = {
-				roleID: this.setUserId,
-				sys_users: userIds
-			}
-			request({
-				url: '/sysRole/update/user',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					Message.success(res.data.msg)
-				} else {
-					Message.error(res.data.msg)
-				}
-			})
-		}
 	}
 }
 </script>

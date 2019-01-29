@@ -25,31 +25,32 @@
 				<span>{{title}}</span>
 			</div>
 			<el-form label-width="80px" :model="currentNode" :rules="rules" ref="ruleForm">
-				<el-form-item label="区域类型" prop="Depth">
-					<el-select style="width: 100%" v-model="currentNode.Depth" placeholder="请选择">
+				<el-form-item label="区域类型" prop="depth">
+					<el-select style="width: 100%" v-model="currentNode.depth" placeholder="请选择">
 						<el-option :value="1" label="省份/直辖市"></el-option>
 						<el-option :value="2" label="地市/区县"></el-option>
 						<el-option :value="3" label="区县"></el-option>
-						<el-option :value="0" label="国家"></el-option>
+						<!-- <el-option :value="0" label="国家"></el-option> -->
 					</el-select>
 				</el-form-item>
-				<el-form-item label="区域编码" prop="Code">
-					<el-input v-model="currentNode.Code"></el-input>
+				<el-form-item label="区域编码" prop="code">
+					<el-input v-model="currentNode.code"></el-input>
 				</el-form-item>
-				<el-form-item label="区域名称" prop="Name">
-					<el-input v-model="currentNode.Name"></el-input>
+				<el-form-item label="区域名称" prop="name">
+					<el-input v-model="currentNode.name"></el-input>
 				</el-form-item>
-				<el-form-item label="经度" prop="Lng">
-					<el-input v-model="currentNode.Lng"></el-input>
+				<el-form-item label="经度" prop="lng">
+					<el-input v-model="currentNode.lng"></el-input>
 				</el-form-item>
-				<el-form-item label="纬度" prop="Lat">
-					<el-input v-model="currentNode.Lat"></el-input>
+				<el-form-item label="纬度" prop="lat">
+					<el-input v-model="currentNode.lat"></el-input>
 				</el-form-item>
 				<el-form-item label="是否热点">
-					<el-switch v-model="currentNode.HotspotStatus"></el-switch>
-				</el-form-item>
+                    <el-radio v-model="currentNode.hotspotStatus" label="Y">是</el-radio>
+                    <el-radio v-model="currentNode.hotspotStatus" label="N">否</el-radio>
+                </el-form-item>
 				<el-form-item label="排序">
-					<el-input-number v-model="currentNode.SortNumber" :min="1"></el-input-number>
+					<el-input-number v-model="currentNode.sortNumber" :min="1"></el-input-number>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="submitForm(button)">{{button}}</el-button>
@@ -64,46 +65,41 @@ import { Message } from 'element-ui'
 import TreeRender from '../../../CommonComponents/TreeRender/Area'
 import request from '../../../../common/request'
 import { checkFloat6 } from '../../../../common/validator'
+import BaseArea from '../../../../api/BaseArea'
+import Base from '../../../../api/Base'
 export default {
 	data() {
 		return {
 			defaultProps: {
 				children: 'children',
-				label: 'Name'
+				label: 'name'
 			},
 			currentNode: {
-				Area_PID: '',
-				Depth: '',
-				Code: '',
-				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: false,
-				SortNumber: 1
+				areaID: '',
+				areaPID: '',
+				code: '',
+				depth: '',
+				hotspotStatus: 'N',
+				lat: '',
+				lng: '',
+				name: '',
+				path: '',
+				sortNumber: 1
 			},
 			title: '添加顶级节点',
 			button: '立即创建',
-			selectIcondialog: false,
-			selectedIcon: '',
-			iconTxt: '添加图标',
 			rules: {
-				Depth: [
-					{required: true, message: '请选择类型'},
-				],
-				Code: [
+				depth: [ {required: true, message: '请选择类型'} ],
+				code: [
 					{required: true, message: '请输入编码'},
 					{min: 6, max: 6, message: '长度为 6 个字符'}
 				],
-				Name: [
+				name: [
 					{required: true, message: '请输入名称'},
 					{min: 2, max: 20, message: '长度在 2 到 20 个字符'}
 				],
-				Lng: [
-					{validator: checkFloat6}
-				],
-				Lat: [
-					{validator: checkFloat6}
-				],
+				lng: [ {validator: checkFloat6} ],
+				lat: [ {validator: checkFloat6} ]
 			}
 		}
 	},
@@ -112,20 +108,22 @@ export default {
 			this.title = '添加顶级节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Area_PID: '',
-				Depth: '',
-				Code: '',
-				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: false,
-				SortNumber: 1
+				areaID: '',
+				areaPID: '',
+				code: '',
+				depth: '',
+				hotspotStatus: 'N',
+				lat: '',
+				lng: '',
+				name: '',
+				path: '',
+				sortNumber: 1
 			}
 		},
 		handleNodeClick(d) {
 			this.title = '编辑'
 			this.button = '确认修改'
-			this.getArea(d.Area_ID)
+			this.getArea(d.areaID)
 		},
 		renderContent(h, {node, data, store}) {
 			let that = this//指向vue
@@ -146,14 +144,16 @@ export default {
 			this.title = '添加子节点'
 			this.button = '立即创建'
 			this.currentNode = {
-				Area_PID: this.currentNode.Area_ID,
-				Depth: '',
-				Code: '',
-				Name: '',
-				Lng: '',
-				Lat: '',
-				HotspotStatus: false,
-				SortNumber: 1
+				areaID: '',
+				areaPID: this.currentNode.areaID,
+				code: '',
+				depth: '',
+				hotspotStatus: 'N',
+				lat: '',
+				lng: '',
+				name: '',
+				path: '',
+				sortNumber: 1
 			}
 		},
 		handleDelete(s, d, n){//删除节点
@@ -162,11 +162,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				let params = {
-					Area_ID: d.Area_ID
-				}
-				this.deleteArea(params)
-				this.addRoot()
+				this.deleteArea(d.areaID)
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -175,51 +171,31 @@ export default {
 			})
 		},
 		submitForm(type) {
-			// 创建
-			if (type == '立即创建') {
-				let params = {
-					Area_PID: this.currentNode.Area_PID || '',
-					Depth: this.currentNode.Depth,
-					Code: this.currentNode.Code,
-					Name: this.currentNode.Name,
-					Lng: this.currentNode.Lng,
-					Lat: this.currentNode.Lat,
-					HotspotStatus: this.currentNode.HotspotStatus ? 'Y' : 'N',
-					SortNumber: this.currentNode.SortNumber
-				}
-				this.$refs['ruleForm'].validate(valid => {
-					if (valid) {
-						this.addArea(params)
-						this.addRoot()
-					}
-				})
-			// 编辑
-			} else {
-				let params = {
-					Area_ID: this.currentNode.Area_ID,
-					Area_PID: this.currentNode.Area_PID || '',
-					Depth: this.currentNode.Depth,
-					Code: this.currentNode.Code,
-					Name: this.currentNode.Name,
-					Lng: this.currentNode.Lng,
-					Lat: this.currentNode.Lat,
-					HotspotStatus: this.currentNode.HotspotStatus ? 'Y' : 'N',
-					SortNumber: this.currentNode.SortNumber
-				}
-				this.$refs['ruleForm'].validate(valid => {
-					if (valid) {
-						this.updateArea(params)
-						this.addRoot()
-					}
-				})
+			const data = {
+				areaPID: this.currentNode.areaPID,
+				depth: this.currentNode.depth,
+				code: this.currentNode.code,
+				name: this.currentNode.name,
+				lng: this.currentNode.lng,
+				lat: this.currentNode.lat,
+				hotspotStatus: this.currentNode.hotspotStatus,
+				sortNumber: this.currentNode.sortNumber
 			}
-		},
-		selectIcon(icon) {
-			this.selectedIcon = icon
-		},
-		submitSelect() {
-			this.iconTxt = this.currentNode.Icon = this.selectedIcon
-			this.selectIcondialog = false
+			this.$refs['ruleForm'].validate(valid => {
+				if (!valid) return
+				if (type == '立即创建') {
+					BaseArea.add(data).then(res => {
+						Message.success(res.data.msg)
+						this.addRoot()
+					})
+				} else {
+					data.areaID = this.currentNode.areaID
+					BaseArea.update(data).then(res => {
+						Message.success(res.data.msg)
+						this.addRoot()
+					})
+				}
+			})
 		},
 		loadNode(node, resolve) {
 			if (node.level === 0) {
@@ -229,45 +205,22 @@ export default {
 				return
 			}
 			if (node.level > 0) {
-				this.getAreas(node.data.Area_ID, areas => {
+				this.getAreas(node.data.areaID, areas => {
 					return resolve(areas)
 				})
 				return
 			}
 		},
 		// 获取区域列表
-		getAreas(Area_PID, callback) {
-			let params = {
-				Area_PID
-			}
-			request({
-				url: '/base_area/list',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					callback && callback(res.data.data)
-				} else {
-					Message.error(res.data.msg)
-				}
+		getAreas(pid, callback) {
+			BaseArea.getSubList({ pid }).then(res => {
+				callback && callback(res)
 			})
 		},
 		// 获取区域详情
-		getArea(Area_ID) {
-			let params = {
-				Area_ID
-			}
-			request({
-				url: '/base_area/info',
-				method: 'get',
-				params
-			}).then(res => {
-				if (res.data.code == 0) {
-					this.currentNode = res.data.data
-					this.currentNode.HotspotStatus = res.data.data.HotspotStatus == 'Y' ? true : false
-				} else {
-					Message.error(res.data.msg)
-				}
+		getArea(id) {
+			BaseArea.findById({ id }).then(res => {
+				this.currentNode = res
 			})
 		},
 		// 添加区域
@@ -301,20 +254,13 @@ export default {
 			})
 		},
 		// 删除区域
-		deleteArea(data) {
-			request({
-				url: '/base_area/delete',
-				method: 'post',
-				data
-			}).then(res => {
-				if (res.data.code == 0) {
-					Message.success(res.data.msg)
-					this.$refs['ruleForm'].resetFields()
-				} else {
-					Message.error(res.data.msg)
-				}
+		deleteArea(id) {
+			BaseArea.del({ id }).then(res => {
+				Message.success(res.data.msg)
+				this.addRoot()
+				this.$refs['ruleForm'].resetFields()
 			})
-		},
+		}
 	}
 }
 

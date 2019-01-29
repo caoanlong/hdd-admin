@@ -6,8 +6,8 @@
 			<el-tooltip effect="dark" content="navbar.theme" placement="bottom"></el-tooltip>
 			<el-dropdown class="avatar-container right-menu-item">
 				<div class="avatar-wrapper">
-					<img class="user-avatar" :src="imgUrl + Photo" @error="errorImg">
-					<span class="user-text">你好！{{Name}}</span>
+					<img class="user-avatar" :src="imgUrl + photo" @error="errorImg">
+					<span class="user-text">你好！{{name}}</span>
 					<i class="el-icon-caret-bottom"></i>
 				</div>
 				<el-dropdown-menu slot="dropdown">
@@ -35,8 +35,8 @@ export default {
 	computed: {
 		...mapGetters([
 			'sidebar',
-			'Name',
-			'Photo'
+			'name',
+			'photo'
 		])
 	},
 	methods: {
